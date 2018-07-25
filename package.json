@@ -1,0 +1,21 @@
+{
+  "name": "frank-back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "4.16.3",
+    "apollo-server": "rc",
+    "apollo-server-express": "rc",
+    "graphql-tools": "3.0.5",
+    "graphql": "0.13.2"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0"
+  }
+}
