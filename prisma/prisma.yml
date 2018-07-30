@@ -1,2 +1,2 @@
-endpoint: http://localhost:4466
+endpoint: http://prisma.frank-dev1.frank.ly
 datamodel: datamodel.graphql
