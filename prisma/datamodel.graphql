@@ -1,0 +1,40 @@
+type Team {
+	id: ID! @unique
+	name: String!
+    accounts: [Account!]!
+    users: [User!]!
+}
+
+type User {
+    id: ID! @unique
+    email: String! @unique
+    firstName: String!
+    lastName: String
+    team: Team!
+    passwordHash: String!
+}
+
+type Account {
+	id: ID! @unique
+    name: String!
+    balance: Float! @default(value: "0.0")
+    revenue: Float! @default(value: "0.0")
+    spendings: Float! @default(value: "0.0")
+    payments: [Payment!]!
+    team: Team!
+}
+
+type Payment {
+    id: ID! @unique
+    postedDate: DateTime!
+    amount: Float!
+    peerAccountName: String!
+    comments: [Comment!]!
+}
+
+type Comment {
+    id: ID! @unique
+    payment: Payment!
+    user: User
+    body: Json!
+}
