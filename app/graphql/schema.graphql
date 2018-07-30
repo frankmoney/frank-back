@@ -1,0 +1,6 @@
+# import Team from './generated_prisma_schema.graphql'
+# import User from './generated_prisma_schema.graphql'
+
+type Query {
+    me: User
+}
