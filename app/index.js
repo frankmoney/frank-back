@@ -7,13 +7,7 @@ const typeDefs = importSchema('app/graphql/schema.graphql')
 
 const resolvers = {
     Query: {
-        me: async (_, args, context, info) => {
-            const result = await context.prisma.query.users({
-                first: 1
-            }, info)
-
-            return result[0]
-        }
+        me: (_, args, context, info) => context.prisma.query.users({first: 1}, info).then((users) => users[0])
     }
 }
 
