@@ -5,7 +5,6 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "gen-prisma-schema": "graphql get-schema --dotenv config.env --project prisma",
     "gen": "node scripts gen",
     "lint-fix": "find ./src -name \"*.js[xs]\" | xargs eslint --fix",
     "lint": "eslint . --ext js,jsx,jss --cache && echo \"eslint: no lint errors\"",

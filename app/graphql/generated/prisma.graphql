@@ -1,5 +1,5 @@
 # source: http://prisma.frank-dev1.frank.ly
-# timestamp: Tue Jul 31 2018 15:09:24 GMT+0300 (Russia TZ 2 Standard Time)
+# timestamp: Tue Jul 31 2018 23:29:22 GMT+0300 (Russia TZ 2 Standard Time)
 
 type Account implements Node {
   id: ID!
