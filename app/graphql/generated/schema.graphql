@@ -1,0 +1,1005 @@
+type Query {
+  payments: [PaymentEx]
+  teams: [Team]
+}
+
+type Mutation {
+  addPayment(id: ID!): Payment
+}
+
+type PaymentEx implements Node {
+  id: ID!
+  payment: Payment!
+}
+
+type Team implements Node {
+  id: ID!
+  name: String!
+  accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account!]
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+}
+
+type Payment implements Node {
+  id: ID!
+  postedDate: DateTime!
+  amount: Float!
+  account(where: AccountWhereInput): Account!
+  peerAccountName: String!
+  comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
+}
+
+"""
+An object with an ID
+"""
+interface Node {
+  """
+  The id of the object.
+  """
+  id: ID!
+}
+
+scalar DateTime
+
+type Account implements Node {
+  id: ID!
+  name: String!
+  balance: Float!
+  revenue: Float!
+  spendings: Float!
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
+  team(where: TeamWhereInput): Team!
+}
+
+input AccountWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [AccountWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [AccountWhereInput!]
+  """
+  Logical NOT on all given filters combined by AND.
+  """
+  NOT: [AccountWhereInput!]
+  id: ID
+  """
+  All values that are not equal to given value.
+  """
+  id_not: ID
+  """
+  All values that are contained in given list.
+  """
+  id_in: [ID!]
+  """
+  All values that are not contained in given list.
+  """
+  id_not_in: [ID!]
+  """
+  All values less than the given value.
+  """
+  id_lt: ID
+  """
+  All values less than or equal the given value.
+  """
+  id_lte: ID
+  """
+  All values greater than the given value.
+  """
+  id_gt: ID
+  """
+  All values greater than or equal the given value.
+  """
+  id_gte: ID
+  """
+  All values containing the given string.
+  """
+  id_contains: ID
+  """
+  All values not containing the given string.
+  """
+  id_not_contains: ID
+  """
+  All values starting with the given string.
+  """
+  id_starts_with: ID
+  """
+  All values not starting with the given string.
+  """
+  id_not_starts_with: ID
+  """
+  All values ending with the given string.
+  """
+  id_ends_with: ID
+  """
+  All values not ending with the given string.
+  """
+  id_not_ends_with: ID
+  name: String
+  """
+  All values that are not equal to given value.
+  """
+  name_not: String
+  """
+  All values that are contained in given list.
+  """
+  name_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  name_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  name_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  name_lte: String
+  """
+  All values greater than the given value.
+  """
+  name_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  name_gte: String
+  """
+  All values containing the given string.
+  """
+  name_contains: String
+  """
+  All values not containing the given string.
+  """
+  name_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  name_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  name_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  name_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  name_not_ends_with: String
+  balance: Float
+  """
+  All values that are not equal to given value.
+  """
+  balance_not: Float
+  """
+  All values that are contained in given list.
+  """
+  balance_in: [Float!]
+  """
+  All values that are not contained in given list.
+  """
+  balance_not_in: [Float!]
+  """
+  All values less than the given value.
+  """
+  balance_lt: Float
+  """
+  All values less than or equal the given value.
+  """
+  balance_lte: Float
+  """
+  All values greater than the given value.
+  """
+  balance_gt: Float
+  """
+  All values greater than or equal the given value.
+  """
+  balance_gte: Float
+  revenue: Float
+  """
+  All values that are not equal to given value.
+  """
+  revenue_not: Float
+  """
+  All values that are contained in given list.
+  """
+  revenue_in: [Float!]
+  """
+  All values that are not contained in given list.
+  """
+  revenue_not_in: [Float!]
+  """
+  All values less than the given value.
+  """
+  revenue_lt: Float
+  """
+  All values less than or equal the given value.
+  """
+  revenue_lte: Float
+  """
+  All values greater than the given value.
+  """
+  revenue_gt: Float
+  """
+  All values greater than or equal the given value.
+  """
+  revenue_gte: Float
+  spendings: Float
+  """
+  All values that are not equal to given value.
+  """
+  spendings_not: Float
+  """
+  All values that are contained in given list.
+  """
+  spendings_in: [Float!]
+  """
+  All values that are not contained in given list.
+  """
+  spendings_not_in: [Float!]
+  """
+  All values less than the given value.
+  """
+  spendings_lt: Float
+  """
+  All values less than or equal the given value.
+  """
+  spendings_lte: Float
+  """
+  All values greater than the given value.
+  """
+  spendings_gt: Float
+  """
+  All values greater than or equal the given value.
+  """
+  spendings_gte: Float
+  payments_every: PaymentWhereInput
+  payments_some: PaymentWhereInput
+  payments_none: PaymentWhereInput
+  team: TeamWhereInput
+}
+
+type Comment implements Node {
+  id: ID!
+  payment(where: PaymentWhereInput): Payment!
+  user(where: UserWhereInput): User
+  body: Json!
+}
+
+input CommentWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [CommentWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [CommentWhereInput!]
+  """
+  Logical NOT on all given filters combined by AND.
+  """
+  NOT: [CommentWhereInput!]
+  id: ID
+  """
+  All values that are not equal to given value.
+  """
+  id_not: ID
+  """
+  All values that are contained in given list.
+  """
+  id_in: [ID!]
+  """
+  All values that are not contained in given list.
+  """
+  id_not_in: [ID!]
+  """
+  All values less than the given value.
+  """
+  id_lt: ID
+  """
+  All values less than or equal the given value.
+  """
+  id_lte: ID
+  """
+  All values greater than the given value.
+  """
+  id_gt: ID
+  """
+  All values greater than or equal the given value.
+  """
+  id_gte: ID
+  """
+  All values containing the given string.
+  """
+  id_contains: ID
+  """
+  All values not containing the given string.
+  """
+  id_not_contains: ID
+  """
+  All values starting with the given string.
+  """
+  id_starts_with: ID
+  """
+  All values not starting with the given string.
+  """
+  id_not_starts_with: ID
+  """
+  All values ending with the given string.
+  """
+  id_ends_with: ID
+  """
+  All values not ending with the given string.
+  """
+  id_not_ends_with: ID
+  payment: PaymentWhereInput
+  user: UserWhereInput
+}
+
+enum CommentOrderByInput {
+  id_ASC
+  id_DESC
+  body_ASC
+  body_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+enum AccountOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  balance_ASC
+  balance_DESC
+  revenue_ASC
+  revenue_DESC
+  spendings_ASC
+  spendings_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type User implements Node {
+  id: ID!
+  email: String!
+  firstName: String!
+  lastName: String
+  team(where: TeamWhereInput): Team!
+  passwordHash: String!
+}
+
+input UserWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [UserWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [UserWhereInput!]
+  """
+  Logical NOT on all given filters combined by AND.
+  """
+  NOT: [UserWhereInput!]
+  id: ID
+  """
+  All values that are not equal to given value.
+  """
+  id_not: ID
+  """
+  All values that are contained in given list.
+  """
+  id_in: [ID!]
+  """
+  All values that are not contained in given list.
+  """
+  id_not_in: [ID!]
+  """
+  All values less than the given value.
+  """
+  id_lt: ID
+  """
+  All values less than or equal the given value.
+  """
+  id_lte: ID
+  """
+  All values greater than the given value.
+  """
+  id_gt: ID
+  """
+  All values greater than or equal the given value.
+  """
+  id_gte: ID
+  """
+  All values containing the given string.
+  """
+  id_contains: ID
+  """
+  All values not containing the given string.
+  """
+  id_not_contains: ID
+  """
+  All values starting with the given string.
+  """
+  id_starts_with: ID
+  """
+  All values not starting with the given string.
+  """
+  id_not_starts_with: ID
+  """
+  All values ending with the given string.
+  """
+  id_ends_with: ID
+  """
+  All values not ending with the given string.
+  """
+  id_not_ends_with: ID
+  email: String
+  """
+  All values that are not equal to given value.
+  """
+  email_not: String
+  """
+  All values that are contained in given list.
+  """
+  email_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  email_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  email_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  email_lte: String
+  """
+  All values greater than the given value.
+  """
+  email_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  email_gte: String
+  """
+  All values containing the given string.
+  """
+  email_contains: String
+  """
+  All values not containing the given string.
+  """
+  email_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  email_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  email_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  email_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  email_not_ends_with: String
+  firstName: String
+  """
+  All values that are not equal to given value.
+  """
+  firstName_not: String
+  """
+  All values that are contained in given list.
+  """
+  firstName_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  firstName_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  firstName_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  firstName_lte: String
+  """
+  All values greater than the given value.
+  """
+  firstName_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  firstName_gte: String
+  """
+  All values containing the given string.
+  """
+  firstName_contains: String
+  """
+  All values not containing the given string.
+  """
+  firstName_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  firstName_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  firstName_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  firstName_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  firstName_not_ends_with: String
+  lastName: String
+  """
+  All values that are not equal to given value.
+  """
+  lastName_not: String
+  """
+  All values that are contained in given list.
+  """
+  lastName_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  lastName_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  lastName_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  lastName_lte: String
+  """
+  All values greater than the given value.
+  """
+  lastName_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  lastName_gte: String
+  """
+  All values containing the given string.
+  """
+  lastName_contains: String
+  """
+  All values not containing the given string.
+  """
+  lastName_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  lastName_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  lastName_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  lastName_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  lastName_not_ends_with: String
+  passwordHash: String
+  """
+  All values that are not equal to given value.
+  """
+  passwordHash_not: String
+  """
+  All values that are contained in given list.
+  """
+  passwordHash_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  passwordHash_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  passwordHash_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  passwordHash_lte: String
+  """
+  All values greater than the given value.
+  """
+  passwordHash_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  passwordHash_gte: String
+  """
+  All values containing the given string.
+  """
+  passwordHash_contains: String
+  """
+  All values not containing the given string.
+  """
+  passwordHash_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  passwordHash_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  passwordHash_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  passwordHash_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  passwordHash_not_ends_with: String
+  team: TeamWhereInput
+}
+
+enum UserOrderByInput {
+  id_ASC
+  id_DESC
+  email_ASC
+  email_DESC
+  firstName_ASC
+  firstName_DESC
+  lastName_ASC
+  lastName_DESC
+  passwordHash_ASC
+  passwordHash_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+input PaymentWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [PaymentWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [PaymentWhereInput!]
+  """
+  Logical NOT on all given filters combined by AND.
+  """
+  NOT: [PaymentWhereInput!]
+  id: ID
+  """
+  All values that are not equal to given value.
+  """
+  id_not: ID
+  """
+  All values that are contained in given list.
+  """
+  id_in: [ID!]
+  """
+  All values that are not contained in given list.
+  """
+  id_not_in: [ID!]
+  """
+  All values less than the given value.
+  """
+  id_lt: ID
+  """
+  All values less than or equal the given value.
+  """
+  id_lte: ID
+  """
+  All values greater than the given value.
+  """
+  id_gt: ID
+  """
+  All values greater than or equal the given value.
+  """
+  id_gte: ID
+  """
+  All values containing the given string.
+  """
+  id_contains: ID
+  """
+  All values not containing the given string.
+  """
+  id_not_contains: ID
+  """
+  All values starting with the given string.
+  """
+  id_starts_with: ID
+  """
+  All values not starting with the given string.
+  """
+  id_not_starts_with: ID
+  """
+  All values ending with the given string.
+  """
+  id_ends_with: ID
+  """
+  All values not ending with the given string.
+  """
+  id_not_ends_with: ID
+  postedDate: DateTime
+  """
+  All values that are not equal to given value.
+  """
+  postedDate_not: DateTime
+  """
+  All values that are contained in given list.
+  """
+  postedDate_in: [DateTime!]
+  """
+  All values that are not contained in given list.
+  """
+  postedDate_not_in: [DateTime!]
+  """
+  All values less than the given value.
+  """
+  postedDate_lt: DateTime
+  """
+  All values less than or equal the given value.
+  """
+  postedDate_lte: DateTime
+  """
+  All values greater than the given value.
+  """
+  postedDate_gt: DateTime
+  """
+  All values greater than or equal the given value.
+  """
+  postedDate_gte: DateTime
+  amount: Float
+  """
+  All values that are not equal to given value.
+  """
+  amount_not: Float
+  """
+  All values that are contained in given list.
+  """
+  amount_in: [Float!]
+  """
+  All values that are not contained in given list.
+  """
+  amount_not_in: [Float!]
+  """
+  All values less than the given value.
+  """
+  amount_lt: Float
+  """
+  All values less than or equal the given value.
+  """
+  amount_lte: Float
+  """
+  All values greater than the given value.
+  """
+  amount_gt: Float
+  """
+  All values greater than or equal the given value.
+  """
+  amount_gte: Float
+  peerAccountName: String
+  """
+  All values that are not equal to given value.
+  """
+  peerAccountName_not: String
+  """
+  All values that are contained in given list.
+  """
+  peerAccountName_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  peerAccountName_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  peerAccountName_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  peerAccountName_lte: String
+  """
+  All values greater than the given value.
+  """
+  peerAccountName_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  peerAccountName_gte: String
+  """
+  All values containing the given string.
+  """
+  peerAccountName_contains: String
+  """
+  All values not containing the given string.
+  """
+  peerAccountName_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  peerAccountName_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  peerAccountName_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  peerAccountName_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  peerAccountName_not_ends_with: String
+  account: AccountWhereInput
+  comments_every: CommentWhereInput
+  comments_some: CommentWhereInput
+  comments_none: CommentWhereInput
+}
+
+enum PaymentOrderByInput {
+  id_ASC
+  id_DESC
+  postedDate_ASC
+  postedDate_DESC
+  amount_ASC
+  amount_DESC
+  peerAccountName_ASC
+  peerAccountName_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+input TeamWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [TeamWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [TeamWhereInput!]
+  """
+  Logical NOT on all given filters combined by AND.
+  """
+  NOT: [TeamWhereInput!]
+  id: ID
+  """
+  All values that are not equal to given value.
+  """
+  id_not: ID
+  """
+  All values that are contained in given list.
+  """
+  id_in: [ID!]
+  """
+  All values that are not contained in given list.
+  """
+  id_not_in: [ID!]
+  """
+  All values less than the given value.
+  """
+  id_lt: ID
+  """
+  All values less than or equal the given value.
+  """
+  id_lte: ID
+  """
+  All values greater than the given value.
+  """
+  id_gt: ID
+  """
+  All values greater than or equal the given value.
+  """
+  id_gte: ID
+  """
+  All values containing the given string.
+  """
+  id_contains: ID
+  """
+  All values not containing the given string.
+  """
+  id_not_contains: ID
+  """
+  All values starting with the given string.
+  """
+  id_starts_with: ID
+  """
+  All values not starting with the given string.
+  """
+  id_not_starts_with: ID
+  """
+  All values ending with the given string.
+  """
+  id_ends_with: ID
+  """
+  All values not ending with the given string.
+  """
+  id_not_ends_with: ID
+  name: String
+  """
+  All values that are not equal to given value.
+  """
+  name_not: String
+  """
+  All values that are contained in given list.
+  """
+  name_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  name_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  name_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  name_lte: String
+  """
+  All values greater than the given value.
+  """
+  name_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  name_gte: String
+  """
+  All values containing the given string.
+  """
+  name_contains: String
+  """
+  All values not containing the given string.
+  """
+  name_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  name_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  name_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  name_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  name_not_ends_with: String
+  accounts_every: AccountWhereInput
+  accounts_some: AccountWhereInput
+  accounts_none: AccountWhereInput
+  users_every: UserWhereInput
+  users_some: UserWhereInput
+  users_none: UserWhereInput
+}
+
+"""
+Raw JSON value
+"""
+scalar Json

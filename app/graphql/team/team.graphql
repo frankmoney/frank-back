@@ -1,0 +1,5 @@
+# import Team from '../generated/prisma.graphql'
+
+extend type Query {
+  teams: [Team]
+}

@@ -1,2 +1,2 @@
-endpoint: http://prisma.frank-dev1.frank.ly
+endpoint: ${env:PRISMA_ENDPOINT}
 datamodel: datamodel.graphql
