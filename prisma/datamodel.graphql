@@ -10,4 +10,5 @@ type Post {
   content: String!
   published: Boolean! @default(value: "false")
   author: User!
+  date: String
 }
