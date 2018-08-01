@@ -49,8 +49,16 @@ jspm_packages
 
 # Yarn Integrity file
 .yarn-integrity
-.idea
-build
 
+# idea project - keep shared settings
+.idea/*
+!.idea/codeStyles
+!.idea/inspectionProfiles
+!.idea/angular-settings.xml
+!.idea/encodings.xml
+!.idea/frank-back.iml
+!.idea/jsLibraryMappings.xml
+!.idea/misc.xml
+!.idea/modules.xml
 
 /.eslintcache

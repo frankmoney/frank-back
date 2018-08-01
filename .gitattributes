@@ -3,3 +3,5 @@
 *.png binary
 
 yarn.lock eol=crlf
+
+.idea/** binary
