@@ -1,17 +1,25 @@
-import { Prisma } from '../app/graphql/generated/prisma'
 import { GraphQLResolveInfo } from "graphql";
-import { Context } from '../app/Context'
+import { Context } from 'app/Context'
+import { Prisma } from 'app/graphql/generated/prisma'
 
-export type Resolver<TArgs> = (
+export type ResolverArg<TArgs = any> = {
   args: TArgs,
   prisma: Prisma,
   info: GraphQLResolveInfo,
   context: Context,
-  parent: any
-) => any
+  parent: any,
+}
+
+export type Resolver<TArgs = any> = (arg: ResolverArg<TArgs>) => any
 
 const createResolver = <TArgs = any>(resolver: Resolver<TArgs>) =>
   (parent: any, args: TArgs, context: Context, info: GraphQLResolveInfo) =>
-    resolver(args, context.prisma, info, context, parent)
+    resolver({
+      parent,
+      args,
+      context,
+      info,
+      prisma: context.prisma,
+    })
 
 export default createResolver
