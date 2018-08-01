@@ -2,4 +2,16 @@
 
 extend type Query {
   teams: [Team]
+  team: TeamResult!
+}
+
+type TeamResult {
+  ownProfile: Profile!
+}
+
+type Profile {
+  id: String!
+  email: String!
+  lastName: String
+  firstName: String
 }

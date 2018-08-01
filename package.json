@@ -6,8 +6,10 @@
   "private": true,
   "scripts": {
     "gen": "node scripts gen",
-    "lint-fix": "find ./src -name \"*.js[xs]\" | xargs eslint --fix",
     "lint": "eslint . --ext js,jsx,jss --cache && echo \"eslint: no lint errors\"",
+    "lint-fix": "find ./src -name \"*.js[xs]\" | xargs eslint --fix",
+    "prettier": "node node_modules/prettier/bin-prettier.js -l **/*.js **/*.ts **/*.json",
+    "prettier-fix": "node node_modules/prettier/bin-prettier.js --write **/*.js **/*.ts **/*.json",
     "start": "node scripts start"
   },
   "lint-staged": {

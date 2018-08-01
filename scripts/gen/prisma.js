@@ -40,7 +40,10 @@ module.exports = () => {
           )
         : null
 
-      if (currentSchema === updatedSchema) {
+      if (
+        currentSchema === updatedSchema &&
+        existsSync(path.join('app', 'graphql', 'generated', 'prisma.ts'))
+      ) {
         console.warn(
           '- Aborting: app/graphql/generated/prisma.graphql did not change'
         )

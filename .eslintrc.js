@@ -1,25 +1,25 @@
 module.exports = {
   root: true,
-  extends: "frank",
-  plugins: ["flowtype", "import"],
+  extends: 'frank',
+  plugins: ['flowtype', 'import'],
   settings: {
-    "import/resolver": {
+    'import/resolver': {
       node: {
-        extensions: [".js", ".ts"],
-        moduleDirectory: ["node_modules", "."]
+        extensions: ['.js', '.ts'],
+        moduleDirectory: ['node_modules', '.'],
       },
-      "babel-module": {
-        extensions: [".js", ".ts", ".flow"],
+      'babel-module': {
+        extensions: ['.js', '.ts', '.flow'],
         alias: {
-          test: "./test"
-        }
-      }
-    }
+          test: './test',
+        },
+      },
+    },
   },
   rules: {
-    "jsx-a11y/no-static-element-interactions": "warn",
-    "import/extensions": 0,
-    "import/no-extraneous-dependencies": 1,
-    "import/order": 1
-  }
-};
+    'jsx-a11y/no-static-element-interactions': 'warn',
+    'import/extensions': 0,
+    'import/no-extraneous-dependencies': 1,
+    'import/order': 1,
+  },
+}

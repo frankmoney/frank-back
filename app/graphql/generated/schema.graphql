@@ -1,6 +1,7 @@
 type Query {
   payments: [PaymentEx]
   teams: [Team]
+  team: TeamResult!
 }
 
 type Mutation {
@@ -17,6 +18,10 @@ type Team implements Node {
   name: String!
   accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account!]
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+}
+
+type TeamResult {
+  ownProfile: Profile!
 }
 
 type Payment implements Node {
@@ -348,6 +353,13 @@ enum CommentOrderByInput {
   updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
+}
+
+type Profile {
+  id: String!
+  email: String!
+  lastName: String
+  firstName: String
 }
 
 enum AccountOrderByInput {
