@@ -121,4 +121,5 @@ module.exports = () => {
   const fullSchema = importSchema(indexSchema)
 
   fs.writeFileSync(outputFile, fullSchema, 'utf8')
+  console.log(`- Generated app schema in ${outputFile}`) // tslint:disable-line:no-console
 }

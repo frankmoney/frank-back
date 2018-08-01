@@ -1,4 +1,10 @@
-const scriptName = process.argv[2]
-
 // eslint-disable-next-line import/no-dynamic-require
-require(`./${scriptName}`)(...process.argv.slice(3))
+;(async () => {
+  try {
+    const scriptName = process.argv[2]
+    await Promise.resolve(require(`./${scriptName}`)(...process.argv.slice(3)))
+  } catch (exc) {
+    console.error(exc) // tslint:disable-line:no-console
+    process.exit(1)
+  }
+})()

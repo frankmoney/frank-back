@@ -1,14 +1,16 @@
 const path = require('path')
-const envcmd = require('env-cmd')
 const tsNodePkg = require('ts-node/package.json')
+const { envCmdAsync, spawnAsync } = require('./utils')
 
 const tsNodeBin = path.join(
   path.dirname(require.resolve('ts-node/package.json')),
   tsNodePkg.bin['ts-node']
 )
 
-module.exports = (...args) =>
-  envcmd.EnvCmd([
+const genSchemaAsync = () => spawnAsync('node', 'scripts', 'gen', 'schema')
+
+const startAsync = args =>
+  envCmdAsync(
     '--no-override',
     'config.env',
     'node',
@@ -17,5 +19,10 @@ module.exports = (...args) =>
     tsNodeBin,
     '--pretty',
     'app',
-    ...args,
-  ])
+    ...args
+  )
+
+module.exports = async (...args) => {
+  await genSchemaAsync()
+  await startAsync(args)
+}
