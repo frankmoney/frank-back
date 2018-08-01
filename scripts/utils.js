@@ -14,7 +14,7 @@ exports.spawnAsync = (command, ...args) =>
 
 exports.envCmdAsync = (...args) =>
   new Promise((resolve, reject) => {
-    const proc = EnvCmd(args)
+    const proc = EnvCmd(['--no-override', 'config.env', ...args])
     proc.on('error', reject)
     proc.on(
       'exit',

@@ -11,8 +11,6 @@ const genSchemaAsync = () => spawnAsync('node', 'scripts', 'gen', 'schema')
 
 const startAsync = args =>
   envCmdAsync(
-    '--no-override',
-    'config.env',
     'node',
     '-r',
     'tsconfig-paths/register',
