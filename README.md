@@ -1,5 +1,6 @@
 #### Scripts
 - `yarn start` - starts the server
+- `yarn deploy prisma` - deploys data model to prisma server (::= `prisma deploy` with proper env)
 - `yarn gen prisma` - generates schema and types for prisma server
 - `yarn gen schema` - generates schema file from source tree
 - `yarn lint` - runs linters
