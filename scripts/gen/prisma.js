@@ -1,8 +1,14 @@
-/* eslint-disable no-console */
+/* tslint:disable:no-console */
 const { existsSync, readFileSync } = require('fs')
 const path = require('path')
 const spawn = require('cross-spawn')
+const graphqlCliPkg = require('graphql-cli/package')
 const prismaBindingPkg = require('prisma-binding/package')
+
+const graphqlCliBin = path.join(
+  path.dirname(require.resolve('graphql-cli/package.json')),
+  graphqlCliPkg.bin.graphql
+)
 
 const prismaBindingBin = path.join(
   path.dirname(require.resolve('prisma-binding/package.json')),
@@ -22,8 +28,15 @@ module.exports = () => {
   console.log('- Generating schema in app/graphql/generated/prisma.graphql')
 
   const proc = spawn(
-    'graphql',
-    ['get-schema', '--dotenv', 'config.env', '--project', 'prisma'],
+    'node',
+    [
+      graphqlCliBin,
+      'get-schema',
+      '--dotenv',
+      'config.env',
+      '--project',
+      'prisma',
+    ],
     { stdio: 'inherit' }
   )
 

@@ -1,7 +1,10 @@
 import { ApolloServer } from 'apollo-server'
+import debug from 'debug'
 import { makeExecutableSchema } from 'graphql-tools'
 import { Prisma } from 'prisma-binding'
 import { resolvers, typeDefs } from 'app/graphql'
+
+const log = debug('app')
 
 const schema = makeExecutableSchema({ typeDefs, resolvers })
 
@@ -22,5 +25,5 @@ const server = new ApolloServer({
 })
 
 server.listen(process.env.PORT).then(({ url }) => {
-  console.log(`Listening at ${url}`)
+  log(`Listening at ${url}`)
 })
