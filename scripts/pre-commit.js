@@ -27,5 +27,10 @@ module.exports = async (...files) => {
 
   await spawnAsync('node', tslintBin, '-p', path.join(__dirname, '..'))
 
-  await spawnAsync('git', 'add', ...files)
+  await spawnAsync(
+    'git',
+    'add',
+    path.join(__dirname, '..', 'app', 'graphql', 'generated', 'schema.graphql'),
+    ...files
+  )
 }
