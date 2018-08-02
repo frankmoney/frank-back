@@ -1,6 +1,5 @@
 type Query {
   payments: [PaymentEx]
-  teams: [Team]
   team: TeamResult!
 }
 
@@ -13,15 +12,10 @@ type PaymentEx implements Node {
   payment: Payment!
 }
 
-type Team implements Node {
-  id: ID!
-  name: String!
-  accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account!]
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
-}
-
 type TeamResult {
-  ownProfile: Profile!
+  team: TeamResultTeam!
+  self: TeamResultProfile!
+  others: [TeamResultProfile!]!
 }
 
 type Payment implements Node {
@@ -355,28 +349,38 @@ enum CommentOrderByInput {
   createdAt_DESC
 }
 
-type Profile {
-  id: String!
+type TeamResultTeam {
+  id: ID!
+  name: String!
+  accounts: [TeamResultAccount!]!
+}
+
+type TeamResultProfile {
+  id: ID!
   email: String!
   lastName: String
   firstName: String
+  avatar: JSON
+  admin: Boolean!
+  canInvite: Boolean!
+  accountIds: [String!]!
+  acl: TeamResultAcl!
 }
 
-enum AccountOrderByInput {
-  id_ASC
-  id_DESC
-  name_ASC
-  name_DESC
-  balance_ASC
-  balance_DESC
-  revenue_ASC
-  revenue_DESC
-  spendings_ASC
-  spendings_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  createdAt_ASC
-  createdAt_DESC
+type Team implements Node {
+  id: ID!
+  name: String!
+  accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account!]
+  members(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMember!]
+}
+
+type TeamMember implements Node {
+  id: ID!
+  team(where: TeamWhereInput): Team!
+  user(where: UserWhereInput): User!
+  admin: Boolean!
+  canInvite: Boolean!
+  accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account!]
 }
 
 type User implements Node {
@@ -384,306 +388,8 @@ type User implements Node {
   email: String!
   firstName: String!
   lastName: String
-  team(where: TeamWhereInput): Team!
   passwordHash: String!
-}
-
-input UserWhereInput {
-  """
-  Logical AND on all given filters.
-  """
-  AND: [UserWhereInput!]
-  """
-  Logical OR on all given filters.
-  """
-  OR: [UserWhereInput!]
-  """
-  Logical NOT on all given filters combined by AND.
-  """
-  NOT: [UserWhereInput!]
-  id: ID
-  """
-  All values that are not equal to given value.
-  """
-  id_not: ID
-  """
-  All values that are contained in given list.
-  """
-  id_in: [ID!]
-  """
-  All values that are not contained in given list.
-  """
-  id_not_in: [ID!]
-  """
-  All values less than the given value.
-  """
-  id_lt: ID
-  """
-  All values less than or equal the given value.
-  """
-  id_lte: ID
-  """
-  All values greater than the given value.
-  """
-  id_gt: ID
-  """
-  All values greater than or equal the given value.
-  """
-  id_gte: ID
-  """
-  All values containing the given string.
-  """
-  id_contains: ID
-  """
-  All values not containing the given string.
-  """
-  id_not_contains: ID
-  """
-  All values starting with the given string.
-  """
-  id_starts_with: ID
-  """
-  All values not starting with the given string.
-  """
-  id_not_starts_with: ID
-  """
-  All values ending with the given string.
-  """
-  id_ends_with: ID
-  """
-  All values not ending with the given string.
-  """
-  id_not_ends_with: ID
-  email: String
-  """
-  All values that are not equal to given value.
-  """
-  email_not: String
-  """
-  All values that are contained in given list.
-  """
-  email_in: [String!]
-  """
-  All values that are not contained in given list.
-  """
-  email_not_in: [String!]
-  """
-  All values less than the given value.
-  """
-  email_lt: String
-  """
-  All values less than or equal the given value.
-  """
-  email_lte: String
-  """
-  All values greater than the given value.
-  """
-  email_gt: String
-  """
-  All values greater than or equal the given value.
-  """
-  email_gte: String
-  """
-  All values containing the given string.
-  """
-  email_contains: String
-  """
-  All values not containing the given string.
-  """
-  email_not_contains: String
-  """
-  All values starting with the given string.
-  """
-  email_starts_with: String
-  """
-  All values not starting with the given string.
-  """
-  email_not_starts_with: String
-  """
-  All values ending with the given string.
-  """
-  email_ends_with: String
-  """
-  All values not ending with the given string.
-  """
-  email_not_ends_with: String
-  firstName: String
-  """
-  All values that are not equal to given value.
-  """
-  firstName_not: String
-  """
-  All values that are contained in given list.
-  """
-  firstName_in: [String!]
-  """
-  All values that are not contained in given list.
-  """
-  firstName_not_in: [String!]
-  """
-  All values less than the given value.
-  """
-  firstName_lt: String
-  """
-  All values less than or equal the given value.
-  """
-  firstName_lte: String
-  """
-  All values greater than the given value.
-  """
-  firstName_gt: String
-  """
-  All values greater than or equal the given value.
-  """
-  firstName_gte: String
-  """
-  All values containing the given string.
-  """
-  firstName_contains: String
-  """
-  All values not containing the given string.
-  """
-  firstName_not_contains: String
-  """
-  All values starting with the given string.
-  """
-  firstName_starts_with: String
-  """
-  All values not starting with the given string.
-  """
-  firstName_not_starts_with: String
-  """
-  All values ending with the given string.
-  """
-  firstName_ends_with: String
-  """
-  All values not ending with the given string.
-  """
-  firstName_not_ends_with: String
-  lastName: String
-  """
-  All values that are not equal to given value.
-  """
-  lastName_not: String
-  """
-  All values that are contained in given list.
-  """
-  lastName_in: [String!]
-  """
-  All values that are not contained in given list.
-  """
-  lastName_not_in: [String!]
-  """
-  All values less than the given value.
-  """
-  lastName_lt: String
-  """
-  All values less than or equal the given value.
-  """
-  lastName_lte: String
-  """
-  All values greater than the given value.
-  """
-  lastName_gt: String
-  """
-  All values greater than or equal the given value.
-  """
-  lastName_gte: String
-  """
-  All values containing the given string.
-  """
-  lastName_contains: String
-  """
-  All values not containing the given string.
-  """
-  lastName_not_contains: String
-  """
-  All values starting with the given string.
-  """
-  lastName_starts_with: String
-  """
-  All values not starting with the given string.
-  """
-  lastName_not_starts_with: String
-  """
-  All values ending with the given string.
-  """
-  lastName_ends_with: String
-  """
-  All values not ending with the given string.
-  """
-  lastName_not_ends_with: String
-  passwordHash: String
-  """
-  All values that are not equal to given value.
-  """
-  passwordHash_not: String
-  """
-  All values that are contained in given list.
-  """
-  passwordHash_in: [String!]
-  """
-  All values that are not contained in given list.
-  """
-  passwordHash_not_in: [String!]
-  """
-  All values less than the given value.
-  """
-  passwordHash_lt: String
-  """
-  All values less than or equal the given value.
-  """
-  passwordHash_lte: String
-  """
-  All values greater than the given value.
-  """
-  passwordHash_gt: String
-  """
-  All values greater than or equal the given value.
-  """
-  passwordHash_gte: String
-  """
-  All values containing the given string.
-  """
-  passwordHash_contains: String
-  """
-  All values not containing the given string.
-  """
-  passwordHash_not_contains: String
-  """
-  All values starting with the given string.
-  """
-  passwordHash_starts_with: String
-  """
-  All values not starting with the given string.
-  """
-  passwordHash_not_starts_with: String
-  """
-  All values ending with the given string.
-  """
-  passwordHash_ends_with: String
-  """
-  All values not ending with the given string.
-  """
-  passwordHash_not_ends_with: String
-  team: TeamWhereInput
-}
-
-enum UserOrderByInput {
-  id_ASC
-  id_DESC
-  email_ASC
-  email_DESC
-  firstName_ASC
-  firstName_DESC
-  lastName_ASC
-  lastName_DESC
-  passwordHash_ASC
-  passwordHash_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  createdAt_ASC
-  createdAt_DESC
+  teams(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMember!]
 }
 
 input PaymentWhereInput {
@@ -1006,12 +712,423 @@ input TeamWhereInput {
   accounts_every: AccountWhereInput
   accounts_some: AccountWhereInput
   accounts_none: AccountWhereInput
-  users_every: UserWhereInput
-  users_some: UserWhereInput
-  users_none: UserWhereInput
+  members_every: TeamMemberWhereInput
+  members_some: TeamMemberWhereInput
+  members_none: TeamMemberWhereInput
+}
+
+input UserWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [UserWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [UserWhereInput!]
+  """
+  Logical NOT on all given filters combined by AND.
+  """
+  NOT: [UserWhereInput!]
+  id: ID
+  """
+  All values that are not equal to given value.
+  """
+  id_not: ID
+  """
+  All values that are contained in given list.
+  """
+  id_in: [ID!]
+  """
+  All values that are not contained in given list.
+  """
+  id_not_in: [ID!]
+  """
+  All values less than the given value.
+  """
+  id_lt: ID
+  """
+  All values less than or equal the given value.
+  """
+  id_lte: ID
+  """
+  All values greater than the given value.
+  """
+  id_gt: ID
+  """
+  All values greater than or equal the given value.
+  """
+  id_gte: ID
+  """
+  All values containing the given string.
+  """
+  id_contains: ID
+  """
+  All values not containing the given string.
+  """
+  id_not_contains: ID
+  """
+  All values starting with the given string.
+  """
+  id_starts_with: ID
+  """
+  All values not starting with the given string.
+  """
+  id_not_starts_with: ID
+  """
+  All values ending with the given string.
+  """
+  id_ends_with: ID
+  """
+  All values not ending with the given string.
+  """
+  id_not_ends_with: ID
+  email: String
+  """
+  All values that are not equal to given value.
+  """
+  email_not: String
+  """
+  All values that are contained in given list.
+  """
+  email_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  email_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  email_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  email_lte: String
+  """
+  All values greater than the given value.
+  """
+  email_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  email_gte: String
+  """
+  All values containing the given string.
+  """
+  email_contains: String
+  """
+  All values not containing the given string.
+  """
+  email_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  email_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  email_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  email_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  email_not_ends_with: String
+  firstName: String
+  """
+  All values that are not equal to given value.
+  """
+  firstName_not: String
+  """
+  All values that are contained in given list.
+  """
+  firstName_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  firstName_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  firstName_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  firstName_lte: String
+  """
+  All values greater than the given value.
+  """
+  firstName_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  firstName_gte: String
+  """
+  All values containing the given string.
+  """
+  firstName_contains: String
+  """
+  All values not containing the given string.
+  """
+  firstName_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  firstName_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  firstName_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  firstName_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  firstName_not_ends_with: String
+  lastName: String
+  """
+  All values that are not equal to given value.
+  """
+  lastName_not: String
+  """
+  All values that are contained in given list.
+  """
+  lastName_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  lastName_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  lastName_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  lastName_lte: String
+  """
+  All values greater than the given value.
+  """
+  lastName_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  lastName_gte: String
+  """
+  All values containing the given string.
+  """
+  lastName_contains: String
+  """
+  All values not containing the given string.
+  """
+  lastName_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  lastName_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  lastName_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  lastName_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  lastName_not_ends_with: String
+  passwordHash: String
+  """
+  All values that are not equal to given value.
+  """
+  passwordHash_not: String
+  """
+  All values that are contained in given list.
+  """
+  passwordHash_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  passwordHash_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  passwordHash_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  passwordHash_lte: String
+  """
+  All values greater than the given value.
+  """
+  passwordHash_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  passwordHash_gte: String
+  """
+  All values containing the given string.
+  """
+  passwordHash_contains: String
+  """
+  All values not containing the given string.
+  """
+  passwordHash_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  passwordHash_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  passwordHash_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  passwordHash_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  passwordHash_not_ends_with: String
+  teams_every: TeamMemberWhereInput
+  teams_some: TeamMemberWhereInput
+  teams_none: TeamMemberWhereInput
 }
 
 """
 Raw JSON value
 """
 scalar Json
+
+type TeamResultAccount {
+  id: ID!
+  name: String!
+}
+
+scalar JSON
+
+type TeamResultAcl {
+  remove: Boolean!
+  editRole: Boolean!
+  editAvatar: Boolean!
+  editProfile: Boolean!
+  editPassword: Boolean!
+}
+
+enum AccountOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  balance_ASC
+  balance_DESC
+  revenue_ASC
+  revenue_DESC
+  spendings_ASC
+  spendings_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+input TeamMemberWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [TeamMemberWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [TeamMemberWhereInput!]
+  """
+  Logical NOT on all given filters combined by AND.
+  """
+  NOT: [TeamMemberWhereInput!]
+  id: ID
+  """
+  All values that are not equal to given value.
+  """
+  id_not: ID
+  """
+  All values that are contained in given list.
+  """
+  id_in: [ID!]
+  """
+  All values that are not contained in given list.
+  """
+  id_not_in: [ID!]
+  """
+  All values less than the given value.
+  """
+  id_lt: ID
+  """
+  All values less than or equal the given value.
+  """
+  id_lte: ID
+  """
+  All values greater than the given value.
+  """
+  id_gt: ID
+  """
+  All values greater than or equal the given value.
+  """
+  id_gte: ID
+  """
+  All values containing the given string.
+  """
+  id_contains: ID
+  """
+  All values not containing the given string.
+  """
+  id_not_contains: ID
+  """
+  All values starting with the given string.
+  """
+  id_starts_with: ID
+  """
+  All values not starting with the given string.
+  """
+  id_not_starts_with: ID
+  """
+  All values ending with the given string.
+  """
+  id_ends_with: ID
+  """
+  All values not ending with the given string.
+  """
+  id_not_ends_with: ID
+  admin: Boolean
+  """
+  All values that are not equal to given value.
+  """
+  admin_not: Boolean
+  canInvite: Boolean
+  """
+  All values that are not equal to given value.
+  """
+  canInvite_not: Boolean
+  team: TeamWhereInput
+  user: UserWhereInput
+  accounts_every: AccountWhereInput
+  accounts_some: AccountWhereInput
+  accounts_none: AccountWhereInput
+}
+
+enum TeamMemberOrderByInput {
+  id_ASC
+  id_DESC
+  admin_ASC
+  admin_DESC
+  canInvite_ASC
+  canInvite_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}

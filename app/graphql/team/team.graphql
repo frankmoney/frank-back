@@ -1,17 +1,44 @@
 # import Team from '../generated/prisma.graphql'
 
+scalar JSON
+
 extend type Query {
-  teams: [Team]
   team: TeamResult!
 }
 
 type TeamResult {
-  ownProfile: Profile!
+  team: TeamResultTeam!
+  self: TeamResultProfile!
+  others: [TeamResultProfile!]!
 }
 
-type Profile {
-  id: String!
+type TeamResultTeam {
+  id: ID!
+  name: String!
+  accounts: [TeamResultAccount!]!
+}
+
+type TeamResultAccount {
+  id: ID!
+  name: String!
+}
+
+type TeamResultProfile {
+  id: ID!
   email: String!
   lastName: String
   firstName: String
+  avatar: JSON
+  admin: Boolean!
+  canInvite: Boolean!
+  accountIds: [String!]!
+  acl: TeamResultAcl!
+}
+
+type TeamResultAcl {
+  remove: Boolean!
+  editRole: Boolean!
+  editAvatar: Boolean!
+  editProfile: Boolean!
+  editPassword: Boolean!
 }

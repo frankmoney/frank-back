@@ -7,6 +7,6 @@ const prismaBin = path.join(
   prismaPkg.bin.prisma
 )
 
-module.exports = async () => {
-  await envCmdAsync('node', prismaBin, 'deploy')
+module.exports = async (...args) => {
+  await envCmdAsync('node', prismaBin, 'deploy', ...args)
 }
