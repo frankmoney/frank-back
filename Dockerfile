@@ -5,7 +5,7 @@ WORKDIR /var/app
 
 COPY . .
 
-RUN yarn install --production
+RUN yarn install
 
 EXPOSE 80
 
