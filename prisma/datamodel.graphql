@@ -14,12 +14,18 @@ type User {
   teams: [TeamMember!]!
 }
 
+enum TeamMemberRole {
+  ADMIN
+  MANAGER
+  MEMBER
+}
+
 type TeamMember {
   id: ID! @unique
   team: Team!
   user: User!
-  admin: Boolean!
-  canInvite: Boolean!
+  role: TeamMemberRole! @default(value: "MEMBER")
+  canInvite: Boolean! @default(value: "false")
   accounts: [Account!]!
 }
 
@@ -31,15 +37,19 @@ type Account {
   spendings: Float! @default(value: "0.0")
   payments: [Payment!]!
   team: Team!
+  members: [TeamMember!]!
+  rawData: Json
 }
 
 type Payment {
   id: ID! @unique
   postedDate: DateTime!
   amount: Float!
+  category: Category
   account: Account!
   peerAccountName: String!
   comments: [Comment!]!
+  rawData: Json!
 }
 
 type Comment {
@@ -47,4 +57,10 @@ type Comment {
   payment: Payment!
   user: User
   body: Json!
+}
+
+type Category {
+  id: ID! @unique
+  name: String!
+  color: String!
 }
