@@ -9,10 +9,24 @@ export type PrivateResolver<TArgs = any> = (
   arg: PrivateResolverArg<TArgs>
 ) => any
 
-export default <TArgs = any>(resolver: PrivateResolver<TArgs>) =>
-  createResolver((arg, ...args) => {
+export default <TArgs = any>(
+  resolver: string | PrivateResolver<TArgs>,
+  resolverImpl?: PrivateResolver<TArgs>
+) => {
+  let name: string | undefined
+  let impl: PrivateResolver<TArgs>
+  if (resolverImpl) {
+    name = <string>resolver
+    impl = resolverImpl
+  } else {
+    name = undefined
+    impl = <PrivateResolver<TArgs>>resolver
+  }
+
+  return createResolver(name, arg => {
     if (!arg.context.user) {
       throw new Error('Unauthorized')
     }
-    return resolver(<PrivateResolverArg<TArgs>>arg, ...args)
+    return impl(<PrivateResolverArg<TArgs>>arg)
   })
+}

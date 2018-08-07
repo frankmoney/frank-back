@@ -1,0 +1,12 @@
+extend type Query {
+  teammate(id: ID!): TeammateResult!
+}
+
+type TeammateResult {
+  id: ID!
+  lastName: String
+  firstName: String
+  admin: Boolean!
+  canInvite: Boolean!
+  accountIds: [ID!]!
+}

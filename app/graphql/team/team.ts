@@ -1,8 +1,6 @@
 import debug from 'debug'
 import createPrivateResolver from 'utils/createPrivateResolver'
 
-const log = debug('app:gql:team:team')
-
 type Result = {
   team: ResultTeam
   self: ResultProfile
@@ -41,12 +39,13 @@ type ResultAcl = {
 }
 
 export default createPrivateResolver(
-  async ({ user, prisma: { query } }): Promise<Result> => {
+  'team',
+  async ({ args, user, prisma: { query } }): Promise<Result> => {
     const prismaTeamAndSelf = (await query.teamMembers(
       {
         where: {
           user: {
-            id: user.id,
+            id: (args && args.userId) || user.id,
           },
         },
       },
@@ -65,15 +64,13 @@ export default createPrivateResolver(
         lastName
         firstName
       }
-      admin
+      role
       canInvite
       accounts {
         id
       }
     }`
     ))[0]
-
-    log('r1:', prismaTeamAndSelf)
 
     const prismaOthers = await query.teamMembers(
       {
@@ -99,10 +96,12 @@ export default createPrivateResolver(
         lastName
         firstName
       }
-      admin
+      role
       canInvite
       accounts {
-        id
+        account {
+          id
+        }
       }
     }`
     )
@@ -119,9 +118,9 @@ export default createPrivateResolver(
       lastName: prismaTeamAndSelf.user.lastName,
       firstName: prismaTeamAndSelf.user.firstName,
       avatar: null,
-      admin: prismaTeamAndSelf.admin,
+      admin: prismaTeamAndSelf.role !== 'MEMBER',
       canInvite: prismaTeamAndSelf.canInvite,
-      accountIds: (prismaTeamAndSelf.accounts || []).map(x => x.id),
+      accountIds: (prismaTeamAndSelf.accounts || []).map(x => x.account.id),
       acl: {
         remove: false,
         editRole: true,
@@ -137,9 +136,9 @@ export default createPrivateResolver(
       lastName: x.user.lastName,
       firstName: x.user.firstName,
       avatar: null,
-      admin: x.admin,
+      admin: x.role !== 'MEMBER',
       canInvite: x.canInvite,
-      accountIds: (x.accounts || []).map(y => y.id),
+      accountIds: (x.accounts || []).map(y => y.account.id),
       acl: {
         remove: self.admin,
         editRole: self.admin,

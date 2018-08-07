@@ -1,0 +1,8 @@
+extend type Query {
+  teamAccounts: [TeamAccountsResultAccount!]!
+}
+
+type TeamAccountsResultAccount {
+  id: ID!
+  name: String!
+}

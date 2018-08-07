@@ -6,80 +6,102 @@ import { makePrismaBindingClass, BasePrismaOptions } from 'prisma-binding'
 export interface Query {
     teams: <T = Team[]>(args: { where?: TeamWhereInput, orderBy?: TeamOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     teamMembers: <T = TeamMember[]>(args: { where?: TeamMemberWhereInput, orderBy?: TeamMemberOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    accounts: <T = Account[]>(args: { where?: AccountWhereInput, orderBy?: AccountOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    teamMemberAccounts: <T = TeamMemberAccount[]>(args: { where?: TeamMemberAccountWhereInput, orderBy?: TeamMemberAccountOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     payments: <T = Payment[]>(args: { where?: PaymentWhereInput, orderBy?: PaymentOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     comments: <T = Comment[]>(args: { where?: CommentWhereInput, orderBy?: CommentOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     users: <T = User[]>(args: { where?: UserWhereInput, orderBy?: UserOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    accounts: <T = Account[]>(args: { where?: AccountWhereInput, orderBy?: AccountOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    categories: <T = Category[]>(args: { where?: CategoryWhereInput, orderBy?: CategoryOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     team: <T = Team | null>(args: { where: TeamWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     teamMember: <T = TeamMember | null>(args: { where: TeamMemberWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    account: <T = Account | null>(args: { where: AccountWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    teamMemberAccount: <T = TeamMemberAccount | null>(args: { where: TeamMemberAccountWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     payment: <T = Payment | null>(args: { where: PaymentWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     comment: <T = Comment | null>(args: { where: CommentWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     user: <T = User | null>(args: { where: UserWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    account: <T = Account | null>(args: { where: AccountWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    category: <T = Category | null>(args: { where: CategoryWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     teamsConnection: <T = TeamConnection>(args: { where?: TeamWhereInput, orderBy?: TeamOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     teamMembersConnection: <T = TeamMemberConnection>(args: { where?: TeamMemberWhereInput, orderBy?: TeamMemberOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    accountsConnection: <T = AccountConnection>(args: { where?: AccountWhereInput, orderBy?: AccountOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    teamMemberAccountsConnection: <T = TeamMemberAccountConnection>(args: { where?: TeamMemberAccountWhereInput, orderBy?: TeamMemberAccountOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     paymentsConnection: <T = PaymentConnection>(args: { where?: PaymentWhereInput, orderBy?: PaymentOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     commentsConnection: <T = CommentConnection>(args: { where?: CommentWhereInput, orderBy?: CommentOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     usersConnection: <T = UserConnection>(args: { where?: UserWhereInput, orderBy?: UserOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    accountsConnection: <T = AccountConnection>(args: { where?: AccountWhereInput, orderBy?: AccountOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    categoriesConnection: <T = CategoryConnection>(args: { where?: CategoryWhereInput, orderBy?: CategoryOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     node: <T = Node | null>(args: { id: ID_Output }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> 
   }
 
 export interface Mutation {
     createTeam: <T = Team>(args: { data: TeamCreateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     createTeamMember: <T = TeamMember>(args: { data: TeamMemberCreateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    createAccount: <T = Account>(args: { data: AccountCreateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    createTeamMemberAccount: <T = TeamMemberAccount>(args: { data: TeamMemberAccountCreateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     createPayment: <T = Payment>(args: { data: PaymentCreateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     createComment: <T = Comment>(args: { data: CommentCreateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     createUser: <T = User>(args: { data: UserCreateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    createAccount: <T = Account>(args: { data: AccountCreateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    createCategory: <T = Category>(args: { data: CategoryCreateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     updateTeam: <T = Team | null>(args: { data: TeamUpdateInput, where: TeamWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     updateTeamMember: <T = TeamMember | null>(args: { data: TeamMemberUpdateInput, where: TeamMemberWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    updateAccount: <T = Account | null>(args: { data: AccountUpdateInput, where: AccountWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    updateTeamMemberAccount: <T = TeamMemberAccount | null>(args: { data: TeamMemberAccountUpdateInput, where: TeamMemberAccountWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     updatePayment: <T = Payment | null>(args: { data: PaymentUpdateInput, where: PaymentWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     updateComment: <T = Comment | null>(args: { data: CommentUpdateInput, where: CommentWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     updateUser: <T = User | null>(args: { data: UserUpdateInput, where: UserWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    updateAccount: <T = Account | null>(args: { data: AccountUpdateInput, where: AccountWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    updateCategory: <T = Category | null>(args: { data: CategoryUpdateInput, where: CategoryWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     deleteTeam: <T = Team | null>(args: { where: TeamWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     deleteTeamMember: <T = TeamMember | null>(args: { where: TeamMemberWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    deleteAccount: <T = Account | null>(args: { where: AccountWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    deleteTeamMemberAccount: <T = TeamMemberAccount | null>(args: { where: TeamMemberAccountWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     deletePayment: <T = Payment | null>(args: { where: PaymentWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     deleteComment: <T = Comment | null>(args: { where: CommentWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     deleteUser: <T = User | null>(args: { where: UserWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    deleteAccount: <T = Account | null>(args: { where: AccountWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    deleteCategory: <T = Category | null>(args: { where: CategoryWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     upsertTeam: <T = Team>(args: { where: TeamWhereUniqueInput, create: TeamCreateInput, update: TeamUpdateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     upsertTeamMember: <T = TeamMember>(args: { where: TeamMemberWhereUniqueInput, create: TeamMemberCreateInput, update: TeamMemberUpdateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    upsertAccount: <T = Account>(args: { where: AccountWhereUniqueInput, create: AccountCreateInput, update: AccountUpdateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    upsertTeamMemberAccount: <T = TeamMemberAccount>(args: { where: TeamMemberAccountWhereUniqueInput, create: TeamMemberAccountCreateInput, update: TeamMemberAccountUpdateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     upsertPayment: <T = Payment>(args: { where: PaymentWhereUniqueInput, create: PaymentCreateInput, update: PaymentUpdateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     upsertComment: <T = Comment>(args: { where: CommentWhereUniqueInput, create: CommentCreateInput, update: CommentUpdateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     upsertUser: <T = User>(args: { where: UserWhereUniqueInput, create: UserCreateInput, update: UserUpdateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    upsertAccount: <T = Account>(args: { where: AccountWhereUniqueInput, create: AccountCreateInput, update: AccountUpdateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    upsertCategory: <T = Category>(args: { where: CategoryWhereUniqueInput, create: CategoryCreateInput, update: CategoryUpdateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     updateManyTeams: <T = BatchPayload>(args: { data: TeamUpdateInput, where?: TeamWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     updateManyTeamMembers: <T = BatchPayload>(args: { data: TeamMemberUpdateInput, where?: TeamMemberWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    updateManyAccounts: <T = BatchPayload>(args: { data: AccountUpdateInput, where?: AccountWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    updateManyTeamMemberAccounts: <T = BatchPayload>(args: { data: TeamMemberAccountUpdateInput, where?: TeamMemberAccountWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     updateManyPayments: <T = BatchPayload>(args: { data: PaymentUpdateInput, where?: PaymentWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     updateManyComments: <T = BatchPayload>(args: { data: CommentUpdateInput, where?: CommentWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     updateManyUsers: <T = BatchPayload>(args: { data: UserUpdateInput, where?: UserWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    updateManyAccounts: <T = BatchPayload>(args: { data: AccountUpdateInput, where?: AccountWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    updateManyCategories: <T = BatchPayload>(args: { data: CategoryUpdateInput, where?: CategoryWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     deleteManyTeams: <T = BatchPayload>(args: { where?: TeamWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     deleteManyTeamMembers: <T = BatchPayload>(args: { where?: TeamMemberWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    deleteManyAccounts: <T = BatchPayload>(args: { where?: AccountWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
+    deleteManyTeamMemberAccounts: <T = BatchPayload>(args: { where?: TeamMemberAccountWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     deleteManyPayments: <T = BatchPayload>(args: { where?: PaymentWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     deleteManyComments: <T = BatchPayload>(args: { where?: CommentWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
     deleteManyUsers: <T = BatchPayload>(args: { where?: UserWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    deleteManyAccounts: <T = BatchPayload>(args: { where?: AccountWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> 
+    deleteManyCategories: <T = BatchPayload>(args: { where?: CategoryWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> 
   }
 
 export interface Subscription {
     team: <T = TeamSubscriptionPayload | null>(args: { where?: TeamSubscriptionWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<AsyncIterator<T>> ,
     teamMember: <T = TeamMemberSubscriptionPayload | null>(args: { where?: TeamMemberSubscriptionWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<AsyncIterator<T>> ,
+    account: <T = AccountSubscriptionPayload | null>(args: { where?: AccountSubscriptionWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<AsyncIterator<T>> ,
+    teamMemberAccount: <T = TeamMemberAccountSubscriptionPayload | null>(args: { where?: TeamMemberAccountSubscriptionWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<AsyncIterator<T>> ,
     payment: <T = PaymentSubscriptionPayload | null>(args: { where?: PaymentSubscriptionWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<AsyncIterator<T>> ,
     comment: <T = CommentSubscriptionPayload | null>(args: { where?: CommentSubscriptionWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<AsyncIterator<T>> ,
     user: <T = UserSubscriptionPayload | null>(args: { where?: UserSubscriptionWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<AsyncIterator<T>> ,
-    account: <T = AccountSubscriptionPayload | null>(args: { where?: AccountSubscriptionWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<AsyncIterator<T>> 
+    category: <T = CategorySubscriptionPayload | null>(args: { where?: CategorySubscriptionWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<AsyncIterator<T>> 
   }
 
 export interface Exists {
   Team: (where?: TeamWhereInput) => Promise<boolean>
   TeamMember: (where?: TeamMemberWhereInput) => Promise<boolean>
+  Account: (where?: AccountWhereInput) => Promise<boolean>
+  TeamMemberAccount: (where?: TeamMemberAccountWhereInput) => Promise<boolean>
   Payment: (where?: PaymentWhereInput) => Promise<boolean>
   Comment: (where?: CommentWhereInput) => Promise<boolean>
   User: (where?: UserWhereInput) => Promise<boolean>
-  Account: (where?: AccountWhereInput) => Promise<boolean>
+  Category: (where?: CategoryWhereInput) => Promise<boolean>
 }
 
 export interface Prisma {
@@ -112,6 +134,8 @@ const typeDefs = `type Account implements Node {
   spendings: Float!
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
   team(where: TeamWhereInput): Team!
+  members(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMemberAccount!]
+  rawData: Json
 }
 
 """A connection to a list of items."""
@@ -129,13 +153,10 @@ input AccountCreateInput {
   balance: Float
   revenue: Float
   spendings: Float
+  rawData: Json
   payments: PaymentCreateManyWithoutAccountInput
   team: TeamCreateOneWithoutAccountsInput!
-}
-
-input AccountCreateManyInput {
-  create: [AccountCreateInput!]
-  connect: [AccountWhereUniqueInput!]
+  members: TeamMemberAccountCreateManyWithoutAccountInput
 }
 
 input AccountCreateManyWithoutTeamInput {
@@ -143,9 +164,24 @@ input AccountCreateManyWithoutTeamInput {
   connect: [AccountWhereUniqueInput!]
 }
 
+input AccountCreateOneWithoutMembersInput {
+  create: AccountCreateWithoutMembersInput
+  connect: AccountWhereUniqueInput
+}
+
 input AccountCreateOneWithoutPaymentsInput {
   create: AccountCreateWithoutPaymentsInput
   connect: AccountWhereUniqueInput
+}
+
+input AccountCreateWithoutMembersInput {
+  name: String!
+  balance: Float
+  revenue: Float
+  spendings: Float
+  rawData: Json
+  payments: PaymentCreateManyWithoutAccountInput
+  team: TeamCreateOneWithoutAccountsInput!
 }
 
 input AccountCreateWithoutPaymentsInput {
@@ -153,7 +189,9 @@ input AccountCreateWithoutPaymentsInput {
   balance: Float
   revenue: Float
   spendings: Float
+  rawData: Json
   team: TeamCreateOneWithoutAccountsInput!
+  members: TeamMemberAccountCreateManyWithoutAccountInput
 }
 
 input AccountCreateWithoutTeamInput {
@@ -161,7 +199,9 @@ input AccountCreateWithoutTeamInput {
   balance: Float
   revenue: Float
   spendings: Float
+  rawData: Json
   payments: PaymentCreateManyWithoutAccountInput
+  members: TeamMemberAccountCreateManyWithoutAccountInput
 }
 
 """An edge in a connection."""
@@ -184,6 +224,8 @@ enum AccountOrderByInput {
   revenue_DESC
   spendings_ASC
   spendings_DESC
+  rawData_ASC
+  rawData_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -196,6 +238,7 @@ type AccountPreviousValues {
   balance: Float!
   revenue: Float!
   spendings: Float!
+  rawData: Json
 }
 
 type AccountSubscriptionPayload {
@@ -237,31 +280,15 @@ input AccountSubscriptionWhereInput {
   node: AccountWhereInput
 }
 
-input AccountUpdateDataInput {
-  name: String
-  balance: Float
-  revenue: Float
-  spendings: Float
-  payments: PaymentUpdateManyWithoutAccountInput
-  team: TeamUpdateOneWithoutAccountsInput
-}
-
 input AccountUpdateInput {
   name: String
   balance: Float
   revenue: Float
   spendings: Float
+  rawData: Json
   payments: PaymentUpdateManyWithoutAccountInput
   team: TeamUpdateOneWithoutAccountsInput
-}
-
-input AccountUpdateManyInput {
-  create: [AccountCreateInput!]
-  connect: [AccountWhereUniqueInput!]
-  disconnect: [AccountWhereUniqueInput!]
-  delete: [AccountWhereUniqueInput!]
-  update: [AccountUpdateWithWhereUniqueNestedInput!]
-  upsert: [AccountUpsertWithWhereUniqueNestedInput!]
+  members: TeamMemberAccountUpdateManyWithoutAccountInput
 }
 
 input AccountUpdateManyWithoutTeamInput {
@@ -273,6 +300,14 @@ input AccountUpdateManyWithoutTeamInput {
   upsert: [AccountUpsertWithWhereUniqueWithoutTeamInput!]
 }
 
+input AccountUpdateOneWithoutMembersInput {
+  create: AccountCreateWithoutMembersInput
+  connect: AccountWhereUniqueInput
+  delete: Boolean
+  update: AccountUpdateWithoutMembersDataInput
+  upsert: AccountUpsertWithoutMembersInput
+}
+
 input AccountUpdateOneWithoutPaymentsInput {
   create: AccountCreateWithoutPaymentsInput
   connect: AccountWhereUniqueInput
@@ -281,12 +316,24 @@ input AccountUpdateOneWithoutPaymentsInput {
   upsert: AccountUpsertWithoutPaymentsInput
 }
 
+input AccountUpdateWithoutMembersDataInput {
+  name: String
+  balance: Float
+  revenue: Float
+  spendings: Float
+  rawData: Json
+  payments: PaymentUpdateManyWithoutAccountInput
+  team: TeamUpdateOneWithoutAccountsInput
+}
+
 input AccountUpdateWithoutPaymentsDataInput {
   name: String
   balance: Float
   revenue: Float
   spendings: Float
+  rawData: Json
   team: TeamUpdateOneWithoutAccountsInput
+  members: TeamMemberAccountUpdateManyWithoutAccountInput
 }
 
 input AccountUpdateWithoutTeamDataInput {
@@ -294,12 +341,9 @@ input AccountUpdateWithoutTeamDataInput {
   balance: Float
   revenue: Float
   spendings: Float
+  rawData: Json
   payments: PaymentUpdateManyWithoutAccountInput
-}
-
-input AccountUpdateWithWhereUniqueNestedInput {
-  where: AccountWhereUniqueInput!
-  data: AccountUpdateDataInput!
+  members: TeamMemberAccountUpdateManyWithoutAccountInput
 }
 
 input AccountUpdateWithWhereUniqueWithoutTeamInput {
@@ -307,15 +351,14 @@ input AccountUpdateWithWhereUniqueWithoutTeamInput {
   data: AccountUpdateWithoutTeamDataInput!
 }
 
+input AccountUpsertWithoutMembersInput {
+  update: AccountUpdateWithoutMembersDataInput!
+  create: AccountCreateWithoutMembersInput!
+}
+
 input AccountUpsertWithoutPaymentsInput {
   update: AccountUpdateWithoutPaymentsDataInput!
   create: AccountCreateWithoutPaymentsInput!
-}
-
-input AccountUpsertWithWhereUniqueNestedInput {
-  where: AccountWhereUniqueInput!
-  update: AccountUpdateDataInput!
-  create: AccountCreateInput!
 }
 
 input AccountUpsertWithWhereUniqueWithoutTeamInput {
@@ -483,6 +526,9 @@ input AccountWhereInput {
   payments_some: PaymentWhereInput
   payments_none: PaymentWhereInput
   team: TeamWhereInput
+  members_every: TeamMemberAccountWhereInput
+  members_some: TeamMemberAccountWhereInput
+  members_none: TeamMemberAccountWhereInput
 }
 
 input AccountWhereUniqueInput {
@@ -490,6 +536,10 @@ input AccountWhereUniqueInput {
 }
 
 type AggregateAccount {
+  count: Int!
+}
+
+type AggregateCategory {
   count: Int!
 }
 
@@ -509,6 +559,10 @@ type AggregateTeamMember {
   count: Int!
 }
 
+type AggregateTeamMemberAccount {
+  count: Int!
+}
+
 type AggregateUser {
   count: Int!
 }
@@ -516,6 +570,258 @@ type AggregateUser {
 type BatchPayload {
   """The number of nodes that have been affected by the Batch operation."""
   count: Long!
+}
+
+type Category implements Node {
+  id: ID!
+  name: String!
+  color: String!
+}
+
+"""A connection to a list of items."""
+type CategoryConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [CategoryEdge]!
+  aggregate: AggregateCategory!
+}
+
+input CategoryCreateInput {
+  name: String!
+  color: String!
+}
+
+input CategoryCreateOneInput {
+  create: CategoryCreateInput
+  connect: CategoryWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type CategoryEdge {
+  """The item at the end of the edge."""
+  node: Category!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum CategoryOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  color_ASC
+  color_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type CategoryPreviousValues {
+  id: ID!
+  name: String!
+  color: String!
+}
+
+type CategorySubscriptionPayload {
+  mutation: MutationType!
+  node: Category
+  updatedFields: [String!]
+  previousValues: CategoryPreviousValues
+}
+
+input CategorySubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [CategorySubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [CategorySubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [CategorySubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: CategoryWhereInput
+}
+
+input CategoryUpdateDataInput {
+  name: String
+  color: String
+}
+
+input CategoryUpdateInput {
+  name: String
+  color: String
+}
+
+input CategoryUpdateOneInput {
+  create: CategoryCreateInput
+  connect: CategoryWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: CategoryUpdateDataInput
+  upsert: CategoryUpsertNestedInput
+}
+
+input CategoryUpsertNestedInput {
+  update: CategoryUpdateDataInput!
+  create: CategoryCreateInput!
+}
+
+input CategoryWhereInput {
+  """Logical AND on all given filters."""
+  AND: [CategoryWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [CategoryWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [CategoryWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  color: String
+
+  """All values that are not equal to given value."""
+  color_not: String
+
+  """All values that are contained in given list."""
+  color_in: [String!]
+
+  """All values that are not contained in given list."""
+  color_not_in: [String!]
+
+  """All values less than the given value."""
+  color_lt: String
+
+  """All values less than or equal the given value."""
+  color_lte: String
+
+  """All values greater than the given value."""
+  color_gt: String
+
+  """All values greater than or equal the given value."""
+  color_gte: String
+
+  """All values containing the given string."""
+  color_contains: String
+
+  """All values not containing the given string."""
+  color_not_contains: String
+
+  """All values starting with the given string."""
+  color_starts_with: String
+
+  """All values not starting with the given string."""
+  color_not_starts_with: String
+
+  """All values ending with the given string."""
+  color_ends_with: String
+
+  """All values not ending with the given string."""
+  color_not_ends_with: String
+}
+
+input CategoryWhereUniqueInput {
+  id: ID
 }
 
 type Comment implements Node {
@@ -717,40 +1023,52 @@ scalar Long
 type Mutation {
   createTeam(data: TeamCreateInput!): Team!
   createTeamMember(data: TeamMemberCreateInput!): TeamMember!
+  createAccount(data: AccountCreateInput!): Account!
+  createTeamMemberAccount(data: TeamMemberAccountCreateInput!): TeamMemberAccount!
   createPayment(data: PaymentCreateInput!): Payment!
   createComment(data: CommentCreateInput!): Comment!
   createUser(data: UserCreateInput!): User!
-  createAccount(data: AccountCreateInput!): Account!
+  createCategory(data: CategoryCreateInput!): Category!
   updateTeam(data: TeamUpdateInput!, where: TeamWhereUniqueInput!): Team
   updateTeamMember(data: TeamMemberUpdateInput!, where: TeamMemberWhereUniqueInput!): TeamMember
+  updateAccount(data: AccountUpdateInput!, where: AccountWhereUniqueInput!): Account
+  updateTeamMemberAccount(data: TeamMemberAccountUpdateInput!, where: TeamMemberAccountWhereUniqueInput!): TeamMemberAccount
   updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
   updateComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
-  updateAccount(data: AccountUpdateInput!, where: AccountWhereUniqueInput!): Account
+  updateCategory(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category
   deleteTeam(where: TeamWhereUniqueInput!): Team
   deleteTeamMember(where: TeamMemberWhereUniqueInput!): TeamMember
+  deleteAccount(where: AccountWhereUniqueInput!): Account
+  deleteTeamMemberAccount(where: TeamMemberAccountWhereUniqueInput!): TeamMemberAccount
   deletePayment(where: PaymentWhereUniqueInput!): Payment
   deleteComment(where: CommentWhereUniqueInput!): Comment
   deleteUser(where: UserWhereUniqueInput!): User
-  deleteAccount(where: AccountWhereUniqueInput!): Account
+  deleteCategory(where: CategoryWhereUniqueInput!): Category
   upsertTeam(where: TeamWhereUniqueInput!, create: TeamCreateInput!, update: TeamUpdateInput!): Team!
   upsertTeamMember(where: TeamMemberWhereUniqueInput!, create: TeamMemberCreateInput!, update: TeamMemberUpdateInput!): TeamMember!
+  upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
+  upsertTeamMemberAccount(where: TeamMemberAccountWhereUniqueInput!, create: TeamMemberAccountCreateInput!, update: TeamMemberAccountUpdateInput!): TeamMemberAccount!
   upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
   upsertComment(where: CommentWhereUniqueInput!, create: CommentCreateInput!, update: CommentUpdateInput!): Comment!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
-  upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
+  upsertCategory(where: CategoryWhereUniqueInput!, create: CategoryCreateInput!, update: CategoryUpdateInput!): Category!
   updateManyTeams(data: TeamUpdateInput!, where: TeamWhereInput): BatchPayload!
   updateManyTeamMembers(data: TeamMemberUpdateInput!, where: TeamMemberWhereInput): BatchPayload!
+  updateManyAccounts(data: AccountUpdateInput!, where: AccountWhereInput): BatchPayload!
+  updateManyTeamMemberAccounts(data: TeamMemberAccountUpdateInput!, where: TeamMemberAccountWhereInput): BatchPayload!
   updateManyPayments(data: PaymentUpdateInput!, where: PaymentWhereInput): BatchPayload!
   updateManyComments(data: CommentUpdateInput!, where: CommentWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
-  updateManyAccounts(data: AccountUpdateInput!, where: AccountWhereInput): BatchPayload!
+  updateManyCategories(data: CategoryUpdateInput!, where: CategoryWhereInput): BatchPayload!
   deleteManyTeams(where: TeamWhereInput): BatchPayload!
   deleteManyTeamMembers(where: TeamMemberWhereInput): BatchPayload!
+  deleteManyAccounts(where: AccountWhereInput): BatchPayload!
+  deleteManyTeamMemberAccounts(where: TeamMemberAccountWhereInput): BatchPayload!
   deleteManyPayments(where: PaymentWhereInput): BatchPayload!
   deleteManyComments(where: CommentWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
-  deleteManyAccounts(where: AccountWhereInput): BatchPayload!
+  deleteManyCategories(where: CategoryWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -784,9 +1102,11 @@ type Payment implements Node {
   id: ID!
   postedDate: DateTime!
   amount: Float!
+  category(where: CategoryWhereInput): Category
   account(where: AccountWhereInput): Account!
   peerAccountName: String!
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
+  rawData: Json!
 }
 
 """A connection to a list of items."""
@@ -803,6 +1123,8 @@ input PaymentCreateInput {
   postedDate: DateTime!
   amount: Float!
   peerAccountName: String!
+  rawData: Json!
+  category: CategoryCreateOneInput
   account: AccountCreateOneWithoutPaymentsInput!
   comments: CommentCreateManyWithoutPaymentInput
 }
@@ -821,6 +1143,8 @@ input PaymentCreateWithoutAccountInput {
   postedDate: DateTime!
   amount: Float!
   peerAccountName: String!
+  rawData: Json!
+  category: CategoryCreateOneInput
   comments: CommentCreateManyWithoutPaymentInput
 }
 
@@ -828,6 +1152,8 @@ input PaymentCreateWithoutCommentsInput {
   postedDate: DateTime!
   amount: Float!
   peerAccountName: String!
+  rawData: Json!
+  category: CategoryCreateOneInput
   account: AccountCreateOneWithoutPaymentsInput!
 }
 
@@ -849,6 +1175,8 @@ enum PaymentOrderByInput {
   amount_DESC
   peerAccountName_ASC
   peerAccountName_DESC
+  rawData_ASC
+  rawData_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -860,6 +1188,7 @@ type PaymentPreviousValues {
   postedDate: DateTime!
   amount: Float!
   peerAccountName: String!
+  rawData: Json!
 }
 
 type PaymentSubscriptionPayload {
@@ -905,6 +1234,8 @@ input PaymentUpdateInput {
   postedDate: DateTime
   amount: Float
   peerAccountName: String
+  rawData: Json
+  category: CategoryUpdateOneInput
   account: AccountUpdateOneWithoutPaymentsInput
   comments: CommentUpdateManyWithoutPaymentInput
 }
@@ -930,6 +1261,8 @@ input PaymentUpdateWithoutAccountDataInput {
   postedDate: DateTime
   amount: Float
   peerAccountName: String
+  rawData: Json
+  category: CategoryUpdateOneInput
   comments: CommentUpdateManyWithoutPaymentInput
 }
 
@@ -937,6 +1270,8 @@ input PaymentUpdateWithoutCommentsDataInput {
   postedDate: DateTime
   amount: Float
   peerAccountName: String
+  rawData: Json
+  category: CategoryUpdateOneInput
   account: AccountUpdateOneWithoutPaymentsInput
 }
 
@@ -1089,6 +1424,7 @@ input PaymentWhereInput {
 
   """All values not ending with the given string."""
   peerAccountName_not_ends_with: String
+  category: CategoryWhereInput
   account: AccountWhereInput
   comments_every: CommentWhereInput
   comments_some: CommentWhereInput
@@ -1102,22 +1438,28 @@ input PaymentWhereUniqueInput {
 type Query {
   teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team]!
   teamMembers(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMember]!
+  accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account]!
+  teamMemberAccounts(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMemberAccount]!
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
-  accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account]!
+  categories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category]!
   team(where: TeamWhereUniqueInput!): Team
   teamMember(where: TeamMemberWhereUniqueInput!): TeamMember
+  account(where: AccountWhereUniqueInput!): Account
+  teamMemberAccount(where: TeamMemberAccountWhereUniqueInput!): TeamMemberAccount
   payment(where: PaymentWhereUniqueInput!): Payment
   comment(where: CommentWhereUniqueInput!): Comment
   user(where: UserWhereUniqueInput!): User
-  account(where: AccountWhereUniqueInput!): Account
+  category(where: CategoryWhereUniqueInput!): Category
   teamsConnection(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamConnection!
   teamMembersConnection(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamMemberConnection!
+  accountsConnection(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AccountConnection!
+  teamMemberAccountsConnection(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamMemberAccountConnection!
   paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
   commentsConnection(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
-  accountsConnection(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AccountConnection!
+  categoriesConnection(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CategoryConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -1129,10 +1471,12 @@ type Query {
 type Subscription {
   team(where: TeamSubscriptionWhereInput): TeamSubscriptionPayload
   teamMember(where: TeamMemberSubscriptionWhereInput): TeamMemberSubscriptionPayload
+  account(where: AccountSubscriptionWhereInput): AccountSubscriptionPayload
+  teamMemberAccount(where: TeamMemberAccountSubscriptionWhereInput): TeamMemberAccountSubscriptionPayload
   payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
   comment(where: CommentSubscriptionWhereInput): CommentSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
-  account(where: AccountSubscriptionWhereInput): AccountSubscriptionPayload
+  category(where: CategorySubscriptionWhereInput): CategorySubscriptionPayload
 }
 
 type Team implements Node {
@@ -1191,9 +1535,219 @@ type TeamMember implements Node {
   id: ID!
   team(where: TeamWhereInput): Team!
   user(where: UserWhereInput): User!
-  admin: Boolean!
+  role: TeamMemberRole!
   canInvite: Boolean!
-  accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account!]
+  accounts(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMemberAccount!]
+}
+
+type TeamMemberAccount implements Node {
+  id: ID!
+  teamMember(where: TeamMemberWhereInput): TeamMember!
+  account(where: AccountWhereInput): Account!
+}
+
+"""A connection to a list of items."""
+type TeamMemberAccountConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [TeamMemberAccountEdge]!
+  aggregate: AggregateTeamMemberAccount!
+}
+
+input TeamMemberAccountCreateInput {
+  teamMember: TeamMemberCreateOneWithoutAccountsInput!
+  account: AccountCreateOneWithoutMembersInput!
+}
+
+input TeamMemberAccountCreateManyWithoutAccountInput {
+  create: [TeamMemberAccountCreateWithoutAccountInput!]
+  connect: [TeamMemberAccountWhereUniqueInput!]
+}
+
+input TeamMemberAccountCreateManyWithoutTeamMemberInput {
+  create: [TeamMemberAccountCreateWithoutTeamMemberInput!]
+  connect: [TeamMemberAccountWhereUniqueInput!]
+}
+
+input TeamMemberAccountCreateWithoutAccountInput {
+  teamMember: TeamMemberCreateOneWithoutAccountsInput!
+}
+
+input TeamMemberAccountCreateWithoutTeamMemberInput {
+  account: AccountCreateOneWithoutMembersInput!
+}
+
+"""An edge in a connection."""
+type TeamMemberAccountEdge {
+  """The item at the end of the edge."""
+  node: TeamMemberAccount!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum TeamMemberAccountOrderByInput {
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type TeamMemberAccountPreviousValues {
+  id: ID!
+}
+
+type TeamMemberAccountSubscriptionPayload {
+  mutation: MutationType!
+  node: TeamMemberAccount
+  updatedFields: [String!]
+  previousValues: TeamMemberAccountPreviousValues
+}
+
+input TeamMemberAccountSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [TeamMemberAccountSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [TeamMemberAccountSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [TeamMemberAccountSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: TeamMemberAccountWhereInput
+}
+
+input TeamMemberAccountUpdateInput {
+  teamMember: TeamMemberUpdateOneWithoutAccountsInput
+  account: AccountUpdateOneWithoutMembersInput
+}
+
+input TeamMemberAccountUpdateManyWithoutAccountInput {
+  create: [TeamMemberAccountCreateWithoutAccountInput!]
+  connect: [TeamMemberAccountWhereUniqueInput!]
+  disconnect: [TeamMemberAccountWhereUniqueInput!]
+  delete: [TeamMemberAccountWhereUniqueInput!]
+  update: [TeamMemberAccountUpdateWithWhereUniqueWithoutAccountInput!]
+  upsert: [TeamMemberAccountUpsertWithWhereUniqueWithoutAccountInput!]
+}
+
+input TeamMemberAccountUpdateManyWithoutTeamMemberInput {
+  create: [TeamMemberAccountCreateWithoutTeamMemberInput!]
+  connect: [TeamMemberAccountWhereUniqueInput!]
+  disconnect: [TeamMemberAccountWhereUniqueInput!]
+  delete: [TeamMemberAccountWhereUniqueInput!]
+  update: [TeamMemberAccountUpdateWithWhereUniqueWithoutTeamMemberInput!]
+  upsert: [TeamMemberAccountUpsertWithWhereUniqueWithoutTeamMemberInput!]
+}
+
+input TeamMemberAccountUpdateWithoutAccountDataInput {
+  teamMember: TeamMemberUpdateOneWithoutAccountsInput
+}
+
+input TeamMemberAccountUpdateWithoutTeamMemberDataInput {
+  account: AccountUpdateOneWithoutMembersInput
+}
+
+input TeamMemberAccountUpdateWithWhereUniqueWithoutAccountInput {
+  where: TeamMemberAccountWhereUniqueInput!
+  data: TeamMemberAccountUpdateWithoutAccountDataInput!
+}
+
+input TeamMemberAccountUpdateWithWhereUniqueWithoutTeamMemberInput {
+  where: TeamMemberAccountWhereUniqueInput!
+  data: TeamMemberAccountUpdateWithoutTeamMemberDataInput!
+}
+
+input TeamMemberAccountUpsertWithWhereUniqueWithoutAccountInput {
+  where: TeamMemberAccountWhereUniqueInput!
+  update: TeamMemberAccountUpdateWithoutAccountDataInput!
+  create: TeamMemberAccountCreateWithoutAccountInput!
+}
+
+input TeamMemberAccountUpsertWithWhereUniqueWithoutTeamMemberInput {
+  where: TeamMemberAccountWhereUniqueInput!
+  update: TeamMemberAccountUpdateWithoutTeamMemberDataInput!
+  create: TeamMemberAccountCreateWithoutTeamMemberInput!
+}
+
+input TeamMemberAccountWhereInput {
+  """Logical AND on all given filters."""
+  AND: [TeamMemberAccountWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [TeamMemberAccountWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [TeamMemberAccountWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  teamMember: TeamMemberWhereInput
+  account: AccountWhereInput
+}
+
+input TeamMemberAccountWhereUniqueInput {
+  id: ID
 }
 
 """A connection to a list of items."""
@@ -1207,11 +1761,11 @@ type TeamMemberConnection {
 }
 
 input TeamMemberCreateInput {
-  admin: Boolean!
-  canInvite: Boolean!
+  role: TeamMemberRole
+  canInvite: Boolean
   team: TeamCreateOneWithoutMembersInput!
   user: UserCreateOneWithoutTeamsInput!
-  accounts: AccountCreateManyInput
+  accounts: TeamMemberAccountCreateManyWithoutTeamMemberInput
 }
 
 input TeamMemberCreateManyWithoutTeamInput {
@@ -1224,18 +1778,30 @@ input TeamMemberCreateManyWithoutUserInput {
   connect: [TeamMemberWhereUniqueInput!]
 }
 
-input TeamMemberCreateWithoutTeamInput {
-  admin: Boolean!
-  canInvite: Boolean!
+input TeamMemberCreateOneWithoutAccountsInput {
+  create: TeamMemberCreateWithoutAccountsInput
+  connect: TeamMemberWhereUniqueInput
+}
+
+input TeamMemberCreateWithoutAccountsInput {
+  role: TeamMemberRole
+  canInvite: Boolean
+  team: TeamCreateOneWithoutMembersInput!
   user: UserCreateOneWithoutTeamsInput!
-  accounts: AccountCreateManyInput
+}
+
+input TeamMemberCreateWithoutTeamInput {
+  role: TeamMemberRole
+  canInvite: Boolean
+  user: UserCreateOneWithoutTeamsInput!
+  accounts: TeamMemberAccountCreateManyWithoutTeamMemberInput
 }
 
 input TeamMemberCreateWithoutUserInput {
-  admin: Boolean!
-  canInvite: Boolean!
+  role: TeamMemberRole
+  canInvite: Boolean
   team: TeamCreateOneWithoutMembersInput!
-  accounts: AccountCreateManyInput
+  accounts: TeamMemberAccountCreateManyWithoutTeamMemberInput
 }
 
 """An edge in a connection."""
@@ -1250,8 +1816,8 @@ type TeamMemberEdge {
 enum TeamMemberOrderByInput {
   id_ASC
   id_DESC
-  admin_ASC
-  admin_DESC
+  role_ASC
+  role_DESC
   canInvite_ASC
   canInvite_DESC
   updatedAt_ASC
@@ -1262,8 +1828,14 @@ enum TeamMemberOrderByInput {
 
 type TeamMemberPreviousValues {
   id: ID!
-  admin: Boolean!
+  role: TeamMemberRole!
   canInvite: Boolean!
+}
+
+enum TeamMemberRole {
+  ADMIN
+  MANAGER
+  MEMBER
 }
 
 type TeamMemberSubscriptionPayload {
@@ -1306,11 +1878,11 @@ input TeamMemberSubscriptionWhereInput {
 }
 
 input TeamMemberUpdateInput {
-  admin: Boolean
+  role: TeamMemberRole
   canInvite: Boolean
   team: TeamUpdateOneWithoutMembersInput
   user: UserUpdateOneWithoutTeamsInput
-  accounts: AccountUpdateManyInput
+  accounts: TeamMemberAccountUpdateManyWithoutTeamMemberInput
 }
 
 input TeamMemberUpdateManyWithoutTeamInput {
@@ -1331,18 +1903,33 @@ input TeamMemberUpdateManyWithoutUserInput {
   upsert: [TeamMemberUpsertWithWhereUniqueWithoutUserInput!]
 }
 
+input TeamMemberUpdateOneWithoutAccountsInput {
+  create: TeamMemberCreateWithoutAccountsInput
+  connect: TeamMemberWhereUniqueInput
+  delete: Boolean
+  update: TeamMemberUpdateWithoutAccountsDataInput
+  upsert: TeamMemberUpsertWithoutAccountsInput
+}
+
+input TeamMemberUpdateWithoutAccountsDataInput {
+  role: TeamMemberRole
+  canInvite: Boolean
+  team: TeamUpdateOneWithoutMembersInput
+  user: UserUpdateOneWithoutTeamsInput
+}
+
 input TeamMemberUpdateWithoutTeamDataInput {
-  admin: Boolean
+  role: TeamMemberRole
   canInvite: Boolean
   user: UserUpdateOneWithoutTeamsInput
-  accounts: AccountUpdateManyInput
+  accounts: TeamMemberAccountUpdateManyWithoutTeamMemberInput
 }
 
 input TeamMemberUpdateWithoutUserDataInput {
-  admin: Boolean
+  role: TeamMemberRole
   canInvite: Boolean
   team: TeamUpdateOneWithoutMembersInput
-  accounts: AccountUpdateManyInput
+  accounts: TeamMemberAccountUpdateManyWithoutTeamMemberInput
 }
 
 input TeamMemberUpdateWithWhereUniqueWithoutTeamInput {
@@ -1353,6 +1940,11 @@ input TeamMemberUpdateWithWhereUniqueWithoutTeamInput {
 input TeamMemberUpdateWithWhereUniqueWithoutUserInput {
   where: TeamMemberWhereUniqueInput!
   data: TeamMemberUpdateWithoutUserDataInput!
+}
+
+input TeamMemberUpsertWithoutAccountsInput {
+  update: TeamMemberUpdateWithoutAccountsDataInput!
+  create: TeamMemberCreateWithoutAccountsInput!
 }
 
 input TeamMemberUpsertWithWhereUniqueWithoutTeamInput {
@@ -1416,19 +2008,25 @@ input TeamMemberWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  admin: Boolean
+  role: TeamMemberRole
 
   """All values that are not equal to given value."""
-  admin_not: Boolean
+  role_not: TeamMemberRole
+
+  """All values that are contained in given list."""
+  role_in: [TeamMemberRole!]
+
+  """All values that are not contained in given list."""
+  role_not_in: [TeamMemberRole!]
   canInvite: Boolean
 
   """All values that are not equal to given value."""
   canInvite_not: Boolean
   team: TeamWhereInput
   user: UserWhereInput
-  accounts_every: AccountWhereInput
-  accounts_some: AccountWhereInput
-  accounts_none: AccountWhereInput
+  accounts_every: TeamMemberAccountWhereInput
+  accounts_some: TeamMemberAccountWhereInput
+  accounts_none: TeamMemberAccountWhereInput
 }
 
 input TeamMemberWhereUniqueInput {
@@ -2026,6 +2624,21 @@ export const Prisma = makePrismaBindingClass<BindingConstructor<Prisma>>({typeDe
  * Types
 */
 
+export type TeamMemberOrderByInput =   'id_ASC' |
+  'id_DESC' |
+  'role_ASC' |
+  'role_DESC' |
+  'canInvite_ASC' |
+  'canInvite_DESC' |
+  'updatedAt_ASC' |
+  'updatedAt_DESC' |
+  'createdAt_ASC' |
+  'createdAt_DESC'
+
+export type TeamMemberRole =   'ADMIN' |
+  'MANAGER' |
+  'MEMBER'
+
 export type TeamOrderByInput =   'id_ASC' |
   'id_DESC' |
   'name_ASC' |
@@ -2045,6 +2658,8 @@ export type AccountOrderByInput =   'id_ASC' |
   'revenue_DESC' |
   'spendings_ASC' |
   'spendings_DESC' |
+  'rawData_ASC' |
+  'rawData_DESC' |
   'updatedAt_ASC' |
   'updatedAt_DESC' |
   'createdAt_ASC' |
@@ -2058,6 +2673,8 @@ export type PaymentOrderByInput =   'id_ASC' |
   'amount_DESC' |
   'peerAccountName_ASC' |
   'peerAccountName_DESC' |
+  'rawData_ASC' |
+  'rawData_DESC' |
   'updatedAt_ASC' |
   'updatedAt_DESC' |
   'createdAt_ASC' |
@@ -2072,12 +2689,12 @@ export type CommentOrderByInput =   'id_ASC' |
   'createdAt_ASC' |
   'createdAt_DESC'
 
-export type TeamMemberOrderByInput =   'id_ASC' |
+export type MutationType =   'CREATED' |
+  'UPDATED' |
+  'DELETED'
+
+export type TeamMemberAccountOrderByInput =   'id_ASC' |
   'id_DESC' |
-  'admin_ASC' |
-  'admin_DESC' |
-  'canInvite_ASC' |
-  'canInvite_DESC' |
   'updatedAt_ASC' |
   'updatedAt_DESC' |
   'createdAt_ASC' |
@@ -2098,13 +2715,20 @@ export type UserOrderByInput =   'id_ASC' |
   'createdAt_ASC' |
   'createdAt_DESC'
 
-export type MutationType =   'CREATED' |
-  'UPDATED' |
-  'DELETED'
+export type CategoryOrderByInput =   'id_ASC' |
+  'id_DESC' |
+  'name_ASC' |
+  'name_DESC' |
+  'color_ASC' |
+  'color_DESC' |
+  'updatedAt_ASC' |
+  'updatedAt_DESC' |
+  'createdAt_ASC' |
+  'createdAt_DESC'
 
-export interface AccountCreateOneWithoutPaymentsInput {
-  create?: AccountCreateWithoutPaymentsInput
-  connect?: AccountWhereUniqueInput
+export interface TeamMemberAccountCreateInput {
+  teamMember: TeamMemberCreateOneWithoutAccountsInput
+  account: AccountCreateOneWithoutMembersInput
 }
 
 export interface TeamWhereInput {
@@ -2147,11 +2771,470 @@ export interface TeamWhereInput {
   members_none?: TeamMemberWhereInput
 }
 
+export interface UserCreateOneInput {
+  create?: UserCreateInput
+  connect?: UserWhereUniqueInput
+}
+
+export interface UserUpdateWithoutTeamsDataInput {
+  email?: String
+  firstName?: String
+  lastName?: String
+  passwordHash?: String
+}
+
+export interface UserCreateInput {
+  email: String
+  firstName: String
+  lastName?: String
+  passwordHash: String
+  teams?: TeamMemberCreateManyWithoutUserInput
+}
+
 export interface PaymentCreateWithoutCommentsInput {
   postedDate: DateTime
   amount: Float
   peerAccountName: String
+  rawData: Json
+  category?: CategoryCreateOneInput
   account: AccountCreateOneWithoutPaymentsInput
+}
+
+export interface TeamMemberCreateManyWithoutUserInput {
+  create?: TeamMemberCreateWithoutUserInput[] | TeamMemberCreateWithoutUserInput
+  connect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
+}
+
+export interface CategorySubscriptionWhereInput {
+  AND?: CategorySubscriptionWhereInput[] | CategorySubscriptionWhereInput
+  OR?: CategorySubscriptionWhereInput[] | CategorySubscriptionWhereInput
+  NOT?: CategorySubscriptionWhereInput[] | CategorySubscriptionWhereInput
+  mutation_in?: MutationType[] | MutationType
+  updatedFields_contains?: String
+  updatedFields_contains_every?: String[] | String
+  updatedFields_contains_some?: String[] | String
+  node?: CategoryWhereInput
+}
+
+export interface TeamMemberCreateWithoutUserInput {
+  role?: TeamMemberRole
+  canInvite?: Boolean
+  team: TeamCreateOneWithoutMembersInput
+  accounts?: TeamMemberAccountCreateManyWithoutTeamMemberInput
+}
+
+export interface CommentSubscriptionWhereInput {
+  AND?: CommentSubscriptionWhereInput[] | CommentSubscriptionWhereInput
+  OR?: CommentSubscriptionWhereInput[] | CommentSubscriptionWhereInput
+  NOT?: CommentSubscriptionWhereInput[] | CommentSubscriptionWhereInput
+  mutation_in?: MutationType[] | MutationType
+  updatedFields_contains?: String
+  updatedFields_contains_every?: String[] | String
+  updatedFields_contains_some?: String[] | String
+  node?: CommentWhereInput
+}
+
+export interface TeamCreateOneWithoutMembersInput {
+  create?: TeamCreateWithoutMembersInput
+  connect?: TeamWhereUniqueInput
+}
+
+export interface PaymentSubscriptionWhereInput {
+  AND?: PaymentSubscriptionWhereInput[] | PaymentSubscriptionWhereInput
+  OR?: PaymentSubscriptionWhereInput[] | PaymentSubscriptionWhereInput
+  NOT?: PaymentSubscriptionWhereInput[] | PaymentSubscriptionWhereInput
+  mutation_in?: MutationType[] | MutationType
+  updatedFields_contains?: String
+  updatedFields_contains_every?: String[] | String
+  updatedFields_contains_some?: String[] | String
+  node?: PaymentWhereInput
+}
+
+export interface TeamCreateWithoutMembersInput {
+  name: String
+  accounts?: AccountCreateManyWithoutTeamInput
+}
+
+export interface CategoryWhereInput {
+  AND?: CategoryWhereInput[] | CategoryWhereInput
+  OR?: CategoryWhereInput[] | CategoryWhereInput
+  NOT?: CategoryWhereInput[] | CategoryWhereInput
+  id?: ID_Input
+  id_not?: ID_Input
+  id_in?: ID_Input[] | ID_Input
+  id_not_in?: ID_Input[] | ID_Input
+  id_lt?: ID_Input
+  id_lte?: ID_Input
+  id_gt?: ID_Input
+  id_gte?: ID_Input
+  id_contains?: ID_Input
+  id_not_contains?: ID_Input
+  id_starts_with?: ID_Input
+  id_not_starts_with?: ID_Input
+  id_ends_with?: ID_Input
+  id_not_ends_with?: ID_Input
+  name?: String
+  name_not?: String
+  name_in?: String[] | String
+  name_not_in?: String[] | String
+  name_lt?: String
+  name_lte?: String
+  name_gt?: String
+  name_gte?: String
+  name_contains?: String
+  name_not_contains?: String
+  name_starts_with?: String
+  name_not_starts_with?: String
+  name_ends_with?: String
+  name_not_ends_with?: String
+  color?: String
+  color_not?: String
+  color_in?: String[] | String
+  color_not_in?: String[] | String
+  color_lt?: String
+  color_lte?: String
+  color_gt?: String
+  color_gte?: String
+  color_contains?: String
+  color_not_contains?: String
+  color_starts_with?: String
+  color_not_starts_with?: String
+  color_ends_with?: String
+  color_not_ends_with?: String
+}
+
+export interface TeamMemberAccountCreateManyWithoutTeamMemberInput {
+  create?: TeamMemberAccountCreateWithoutTeamMemberInput[] | TeamMemberAccountCreateWithoutTeamMemberInput
+  connect?: TeamMemberAccountWhereUniqueInput[] | TeamMemberAccountWhereUniqueInput
+}
+
+export interface TeamMemberSubscriptionWhereInput {
+  AND?: TeamMemberSubscriptionWhereInput[] | TeamMemberSubscriptionWhereInput
+  OR?: TeamMemberSubscriptionWhereInput[] | TeamMemberSubscriptionWhereInput
+  NOT?: TeamMemberSubscriptionWhereInput[] | TeamMemberSubscriptionWhereInput
+  mutation_in?: MutationType[] | MutationType
+  updatedFields_contains?: String
+  updatedFields_contains_every?: String[] | String
+  updatedFields_contains_some?: String[] | String
+  node?: TeamMemberWhereInput
+}
+
+export interface TeamMemberAccountCreateWithoutTeamMemberInput {
+  account: AccountCreateOneWithoutMembersInput
+}
+
+export interface CategoryUpdateInput {
+  name?: String
+  color?: String
+}
+
+export interface AccountCreateOneWithoutMembersInput {
+  create?: AccountCreateWithoutMembersInput
+  connect?: AccountWhereUniqueInput
+}
+
+export interface UserUpdateInput {
+  email?: String
+  firstName?: String
+  lastName?: String
+  passwordHash?: String
+  teams?: TeamMemberUpdateManyWithoutUserInput
+}
+
+export interface AccountCreateWithoutMembersInput {
+  name: String
+  balance?: Float
+  revenue?: Float
+  spendings?: Float
+  rawData?: Json
+  payments?: PaymentCreateManyWithoutAccountInput
+  team: TeamCreateOneWithoutAccountsInput
+}
+
+export interface PaymentUpdateWithoutCommentsDataInput {
+  postedDate?: DateTime
+  amount?: Float
+  peerAccountName?: String
+  rawData?: Json
+  category?: CategoryUpdateOneInput
+  account?: AccountUpdateOneWithoutPaymentsInput
+}
+
+export interface TeamCreateOneWithoutAccountsInput {
+  create?: TeamCreateWithoutAccountsInput
+  connect?: TeamWhereUniqueInput
+}
+
+export interface TeamWhereUniqueInput {
+  id?: ID_Input
+}
+
+export interface TeamCreateWithoutAccountsInput {
+  name: String
+  members?: TeamMemberCreateManyWithoutTeamInput
+}
+
+export interface AccountWhereUniqueInput {
+  id?: ID_Input
+}
+
+export interface TeamMemberCreateManyWithoutTeamInput {
+  create?: TeamMemberCreateWithoutTeamInput[] | TeamMemberCreateWithoutTeamInput
+  connect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
+}
+
+export interface PaymentWhereUniqueInput {
+  id?: ID_Input
+}
+
+export interface TeamMemberCreateWithoutTeamInput {
+  role?: TeamMemberRole
+  canInvite?: Boolean
+  user: UserCreateOneWithoutTeamsInput
+  accounts?: TeamMemberAccountCreateManyWithoutTeamMemberInput
+}
+
+export interface UserWhereUniqueInput {
+  id?: ID_Input
+  email?: String
+}
+
+export interface UserCreateOneWithoutTeamsInput {
+  create?: UserCreateWithoutTeamsInput
+  connect?: UserWhereUniqueInput
+}
+
+export interface PaymentUpdateOneWithoutCommentsInput {
+  create?: PaymentCreateWithoutCommentsInput
+  connect?: PaymentWhereUniqueInput
+  delete?: Boolean
+  update?: PaymentUpdateWithoutCommentsDataInput
+  upsert?: PaymentUpsertWithoutCommentsInput
+}
+
+export interface UserCreateWithoutTeamsInput {
+  email: String
+  firstName: String
+  lastName?: String
+  passwordHash: String
+}
+
+export interface AccountUpsertWithoutPaymentsInput {
+  update: AccountUpdateWithoutPaymentsDataInput
+  create: AccountCreateWithoutPaymentsInput
+}
+
+export interface TeamMemberAccountCreateManyWithoutAccountInput {
+  create?: TeamMemberAccountCreateWithoutAccountInput[] | TeamMemberAccountCreateWithoutAccountInput
+  connect?: TeamMemberAccountWhereUniqueInput[] | TeamMemberAccountWhereUniqueInput
+}
+
+export interface AccountUpdateOneWithoutPaymentsInput {
+  create?: AccountCreateWithoutPaymentsInput
+  connect?: AccountWhereUniqueInput
+  delete?: Boolean
+  update?: AccountUpdateWithoutPaymentsDataInput
+  upsert?: AccountUpsertWithoutPaymentsInput
+}
+
+export interface TeamMemberAccountCreateWithoutAccountInput {
+  teamMember: TeamMemberCreateOneWithoutAccountsInput
+}
+
+export interface TeamMemberAccountUpdateInput {
+  teamMember?: TeamMemberUpdateOneWithoutAccountsInput
+  account?: AccountUpdateOneWithoutMembersInput
+}
+
+export interface TeamMemberCreateOneWithoutAccountsInput {
+  create?: TeamMemberCreateWithoutAccountsInput
+  connect?: TeamMemberWhereUniqueInput
+}
+
+export interface TeamMemberUpdateInput {
+  role?: TeamMemberRole
+  canInvite?: Boolean
+  team?: TeamUpdateOneWithoutMembersInput
+  user?: UserUpdateOneWithoutTeamsInput
+  accounts?: TeamMemberAccountUpdateManyWithoutTeamMemberInput
+}
+
+export interface TeamMemberCreateWithoutAccountsInput {
+  role?: TeamMemberRole
+  canInvite?: Boolean
+  team: TeamCreateOneWithoutMembersInput
+  user: UserCreateOneWithoutTeamsInput
+}
+
+export interface TeamMemberAccountUpsertWithWhereUniqueWithoutAccountInput {
+  where: TeamMemberAccountWhereUniqueInput
+  update: TeamMemberAccountUpdateWithoutAccountDataInput
+  create: TeamMemberAccountCreateWithoutAccountInput
+}
+
+export interface TeamMemberCreateInput {
+  role?: TeamMemberRole
+  canInvite?: Boolean
+  team: TeamCreateOneWithoutMembersInput
+  user: UserCreateOneWithoutTeamsInput
+  accounts?: TeamMemberAccountCreateManyWithoutTeamMemberInput
+}
+
+export interface TeamMemberUpdateWithoutAccountsDataInput {
+  role?: TeamMemberRole
+  canInvite?: Boolean
+  team?: TeamUpdateOneWithoutMembersInput
+  user?: UserUpdateOneWithoutTeamsInput
+}
+
+export interface AccountCreateInput {
+  name: String
+  balance?: Float
+  revenue?: Float
+  spendings?: Float
+  rawData?: Json
+  payments?: PaymentCreateManyWithoutAccountInput
+  team: TeamCreateOneWithoutAccountsInput
+  members?: TeamMemberAccountCreateManyWithoutAccountInput
+}
+
+export interface TeamMemberAccountUpdateWithoutAccountDataInput {
+  teamMember?: TeamMemberUpdateOneWithoutAccountsInput
+}
+
+export interface UserUpsertWithoutTeamsInput {
+  update: UserUpdateWithoutTeamsDataInput
+  create: UserCreateWithoutTeamsInput
+}
+
+export interface TeamMemberAccountUpdateManyWithoutAccountInput {
+  create?: TeamMemberAccountCreateWithoutAccountInput[] | TeamMemberAccountCreateWithoutAccountInput
+  connect?: TeamMemberAccountWhereUniqueInput[] | TeamMemberAccountWhereUniqueInput
+  disconnect?: TeamMemberAccountWhereUniqueInput[] | TeamMemberAccountWhereUniqueInput
+  delete?: TeamMemberAccountWhereUniqueInput[] | TeamMemberAccountWhereUniqueInput
+  update?: TeamMemberAccountUpdateWithWhereUniqueWithoutAccountInput[] | TeamMemberAccountUpdateWithWhereUniqueWithoutAccountInput
+  upsert?: TeamMemberAccountUpsertWithWhereUniqueWithoutAccountInput[] | TeamMemberAccountUpsertWithWhereUniqueWithoutAccountInput
+}
+
+export interface PaymentCreateInput {
+  postedDate: DateTime
+  amount: Float
+  peerAccountName: String
+  rawData: Json
+  category?: CategoryCreateOneInput
+  account: AccountCreateOneWithoutPaymentsInput
+  comments?: CommentCreateManyWithoutPaymentInput
+}
+
+export interface CommentUpsertWithWhereUniqueWithoutPaymentInput {
+  where: CommentWhereUniqueInput
+  update: CommentUpdateWithoutPaymentDataInput
+  create: CommentCreateWithoutPaymentInput
+}
+
+export interface AccountCreateOneWithoutPaymentsInput {
+  create?: AccountCreateWithoutPaymentsInput
+  connect?: AccountWhereUniqueInput
+}
+
+export interface TeamMemberUpsertWithWhereUniqueWithoutUserInput {
+  where: TeamMemberWhereUniqueInput
+  update: TeamMemberUpdateWithoutUserDataInput
+  create: TeamMemberCreateWithoutUserInput
+}
+
+export interface AccountCreateWithoutPaymentsInput {
+  name: String
+  balance?: Float
+  revenue?: Float
+  spendings?: Float
+  rawData?: Json
+  team: TeamCreateOneWithoutAccountsInput
+  members?: TeamMemberAccountCreateManyWithoutAccountInput
+}
+
+export interface AccountUpsertWithoutMembersInput {
+  update: AccountUpdateWithoutMembersDataInput
+  create: AccountCreateWithoutMembersInput
+}
+
+export interface CommentCreateInput {
+  body: Json
+  payment: PaymentCreateOneWithoutCommentsInput
+  user?: UserCreateOneInput
+}
+
+export interface TeamMemberUpsertWithWhereUniqueWithoutTeamInput {
+  where: TeamMemberWhereUniqueInput
+  update: TeamMemberUpdateWithoutTeamDataInput
+  create: TeamMemberCreateWithoutTeamInput
+}
+
+export interface PaymentCreateOneWithoutCommentsInput {
+  create?: PaymentCreateWithoutCommentsInput
+  connect?: PaymentWhereUniqueInput
+}
+
+export interface AccountCreateManyWithoutTeamInput {
+  create?: AccountCreateWithoutTeamInput[] | AccountCreateWithoutTeamInput
+  connect?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
+}
+
+export interface TeamMemberAccountWhereInput {
+  AND?: TeamMemberAccountWhereInput[] | TeamMemberAccountWhereInput
+  OR?: TeamMemberAccountWhereInput[] | TeamMemberAccountWhereInput
+  NOT?: TeamMemberAccountWhereInput[] | TeamMemberAccountWhereInput
+  id?: ID_Input
+  id_not?: ID_Input
+  id_in?: ID_Input[] | ID_Input
+  id_not_in?: ID_Input[] | ID_Input
+  id_lt?: ID_Input
+  id_lte?: ID_Input
+  id_gt?: ID_Input
+  id_gte?: ID_Input
+  id_contains?: ID_Input
+  id_not_contains?: ID_Input
+  id_starts_with?: ID_Input
+  id_not_starts_with?: ID_Input
+  id_ends_with?: ID_Input
+  id_not_ends_with?: ID_Input
+  teamMember?: TeamMemberWhereInput
+  account?: AccountWhereInput
+}
+
+export interface PaymentCreateManyWithoutAccountInput {
+  create?: PaymentCreateWithoutAccountInput[] | PaymentCreateWithoutAccountInput
+  connect?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
+}
+
+export interface TeamUpdateInput {
+  name?: String
+  accounts?: AccountUpdateManyWithoutTeamInput
+  members?: TeamMemberUpdateManyWithoutTeamInput
+}
+
+export interface CategoryCreateOneInput {
+  create?: CategoryCreateInput
+  connect?: CategoryWhereUniqueInput
+}
+
+export interface AccountUpdateManyWithoutTeamInput {
+  create?: AccountCreateWithoutTeamInput[] | AccountCreateWithoutTeamInput
+  connect?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
+  disconnect?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
+  delete?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
+  update?: AccountUpdateWithWhereUniqueWithoutTeamInput[] | AccountUpdateWithWhereUniqueWithoutTeamInput
+  upsert?: AccountUpsertWithWhereUniqueWithoutTeamInput[] | AccountUpsertWithWhereUniqueWithoutTeamInput
+}
+
+export interface CommentCreateManyWithoutPaymentInput {
+  create?: CommentCreateWithoutPaymentInput[] | CommentCreateWithoutPaymentInput
+  connect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput
+}
+
+export interface AccountUpdateWithWhereUniqueWithoutTeamInput {
+  where: AccountWhereUniqueInput
+  data: AccountUpdateWithoutTeamDataInput
 }
 
 export interface TeamMemberWhereInput {
@@ -2172,21 +3255,27 @@ export interface TeamMemberWhereInput {
   id_not_starts_with?: ID_Input
   id_ends_with?: ID_Input
   id_not_ends_with?: ID_Input
-  admin?: Boolean
-  admin_not?: Boolean
+  role?: TeamMemberRole
+  role_not?: TeamMemberRole
+  role_in?: TeamMemberRole[] | TeamMemberRole
+  role_not_in?: TeamMemberRole[] | TeamMemberRole
   canInvite?: Boolean
   canInvite_not?: Boolean
   team?: TeamWhereInput
   user?: UserWhereInput
-  accounts_every?: AccountWhereInput
-  accounts_some?: AccountWhereInput
-  accounts_none?: AccountWhereInput
+  accounts_every?: TeamMemberAccountWhereInput
+  accounts_some?: TeamMemberAccountWhereInput
+  accounts_none?: TeamMemberAccountWhereInput
 }
 
-export interface TeamUpdateInput {
+export interface AccountUpdateWithoutTeamDataInput {
   name?: String
-  accounts?: AccountUpdateManyWithoutTeamInput
-  members?: TeamMemberUpdateManyWithoutTeamInput
+  balance?: Float
+  revenue?: Float
+  spendings?: Float
+  rawData?: Json
+  payments?: PaymentUpdateManyWithoutAccountInput
+  members?: TeamMemberAccountUpdateManyWithoutAccountInput
 }
 
 export interface UserWhereInput {
@@ -2268,90 +3357,29 @@ export interface UserWhereInput {
   teams_none?: TeamMemberWhereInput
 }
 
-export interface UserCreateOneInput {
-  create?: UserCreateInput
-  connect?: UserWhereUniqueInput
+export interface PaymentUpdateManyWithoutAccountInput {
+  create?: PaymentCreateWithoutAccountInput[] | PaymentCreateWithoutAccountInput
+  connect?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
+  disconnect?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
+  delete?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
+  update?: PaymentUpdateWithWhereUniqueWithoutAccountInput[] | PaymentUpdateWithWhereUniqueWithoutAccountInput
+  upsert?: PaymentUpsertWithWhereUniqueWithoutAccountInput[] | PaymentUpsertWithWhereUniqueWithoutAccountInput
 }
 
-export interface TeamMemberUpdateManyWithoutTeamInput {
-  create?: TeamMemberCreateWithoutTeamInput[] | TeamMemberCreateWithoutTeamInput
-  connect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
-  disconnect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
-  delete?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
-  update?: TeamMemberUpdateWithWhereUniqueWithoutTeamInput[] | TeamMemberUpdateWithWhereUniqueWithoutTeamInput
-  upsert?: TeamMemberUpsertWithWhereUniqueWithoutTeamInput[] | TeamMemberUpsertWithWhereUniqueWithoutTeamInput
-}
-
-export interface UserCreateInput {
-  email: String
-  firstName: String
-  lastName?: String
-  passwordHash: String
-  teams?: TeamMemberCreateManyWithoutUserInput
-}
-
-export interface AccountUpdateManyWithoutTeamInput {
-  create?: AccountCreateWithoutTeamInput[] | AccountCreateWithoutTeamInput
-  connect?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
-  disconnect?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
-  delete?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
-  update?: AccountUpdateWithWhereUniqueWithoutTeamInput[] | AccountUpdateWithWhereUniqueWithoutTeamInput
-  upsert?: AccountUpsertWithWhereUniqueWithoutTeamInput[] | AccountUpsertWithWhereUniqueWithoutTeamInput
-}
-
-export interface TeamMemberCreateManyWithoutUserInput {
-  create?: TeamMemberCreateWithoutUserInput[] | TeamMemberCreateWithoutUserInput
-  connect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
-}
-
-export interface AccountSubscriptionWhereInput {
-  AND?: AccountSubscriptionWhereInput[] | AccountSubscriptionWhereInput
-  OR?: AccountSubscriptionWhereInput[] | AccountSubscriptionWhereInput
-  NOT?: AccountSubscriptionWhereInput[] | AccountSubscriptionWhereInput
+export interface TeamMemberAccountSubscriptionWhereInput {
+  AND?: TeamMemberAccountSubscriptionWhereInput[] | TeamMemberAccountSubscriptionWhereInput
+  OR?: TeamMemberAccountSubscriptionWhereInput[] | TeamMemberAccountSubscriptionWhereInput
+  NOT?: TeamMemberAccountSubscriptionWhereInput[] | TeamMemberAccountSubscriptionWhereInput
   mutation_in?: MutationType[] | MutationType
   updatedFields_contains?: String
   updatedFields_contains_every?: String[] | String
   updatedFields_contains_some?: String[] | String
-  node?: AccountWhereInput
+  node?: TeamMemberAccountWhereInput
 }
 
-export interface TeamMemberCreateWithoutUserInput {
-  admin: Boolean
-  canInvite: Boolean
-  team: TeamCreateOneWithoutMembersInput
-  accounts?: AccountCreateManyInput
-}
-
-export interface CommentSubscriptionWhereInput {
-  AND?: CommentSubscriptionWhereInput[] | CommentSubscriptionWhereInput
-  OR?: CommentSubscriptionWhereInput[] | CommentSubscriptionWhereInput
-  NOT?: CommentSubscriptionWhereInput[] | CommentSubscriptionWhereInput
-  mutation_in?: MutationType[] | MutationType
-  updatedFields_contains?: String
-  updatedFields_contains_every?: String[] | String
-  updatedFields_contains_some?: String[] | String
-  node?: CommentWhereInput
-}
-
-export interface TeamCreateOneWithoutMembersInput {
-  create?: TeamCreateWithoutMembersInput
-  connect?: TeamWhereUniqueInput
-}
-
-export interface PaymentSubscriptionWhereInput {
-  AND?: PaymentSubscriptionWhereInput[] | PaymentSubscriptionWhereInput
-  OR?: PaymentSubscriptionWhereInput[] | PaymentSubscriptionWhereInput
-  NOT?: PaymentSubscriptionWhereInput[] | PaymentSubscriptionWhereInput
-  mutation_in?: MutationType[] | MutationType
-  updatedFields_contains?: String
-  updatedFields_contains_every?: String[] | String
-  updatedFields_contains_some?: String[] | String
-  node?: PaymentWhereInput
-}
-
-export interface TeamCreateWithoutMembersInput {
-  name: String
-  accounts?: AccountCreateManyWithoutTeamInput
+export interface PaymentUpdateWithWhereUniqueWithoutAccountInput {
+  where: PaymentWhereUniqueInput
+  data: PaymentUpdateWithoutAccountDataInput
 }
 
 export interface TeamSubscriptionWhereInput {
@@ -2365,54 +3393,13 @@ export interface TeamSubscriptionWhereInput {
   node?: TeamWhereInput
 }
 
-export interface AccountCreateManyInput {
-  create?: AccountCreateInput[] | AccountCreateInput
-  connect?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
-}
-
-export interface UserUpdateInput {
-  email?: String
-  firstName?: String
-  lastName?: String
-  passwordHash?: String
-  teams?: TeamMemberUpdateManyWithoutUserInput
-}
-
-export interface AccountCreateInput {
-  name: String
-  balance?: Float
-  revenue?: Float
-  spendings?: Float
-  payments?: PaymentCreateManyWithoutAccountInput
-  team: TeamCreateOneWithoutAccountsInput
-}
-
-export interface TeamWhereUniqueInput {
-  id?: ID_Input
-}
-
-export interface TeamCreateOneWithoutAccountsInput {
-  create?: TeamCreateWithoutAccountsInput
-  connect?: TeamWhereUniqueInput
-}
-
-export interface PaymentWhereUniqueInput {
-  id?: ID_Input
-}
-
-export interface TeamCreateWithoutAccountsInput {
-  name: String
-  members?: TeamMemberCreateManyWithoutTeamInput
-}
-
-export interface UserWhereUniqueInput {
-  id?: ID_Input
-  email?: String
-}
-
-export interface TeamMemberCreateManyWithoutTeamInput {
-  create?: TeamMemberCreateWithoutTeamInput[] | TeamMemberCreateWithoutTeamInput
-  connect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
+export interface PaymentUpdateWithoutAccountDataInput {
+  postedDate?: DateTime
+  amount?: Float
+  peerAccountName?: String
+  rawData?: Json
+  category?: CategoryUpdateOneInput
+  comments?: CommentUpdateManyWithoutPaymentInput
 }
 
 export interface PaymentUpsertWithoutCommentsInput {
@@ -2420,68 +3407,89 @@ export interface PaymentUpsertWithoutCommentsInput {
   create: PaymentCreateWithoutCommentsInput
 }
 
-export interface TeamMemberCreateWithoutTeamInput {
-  admin: Boolean
-  canInvite: Boolean
-  user: UserCreateOneWithoutTeamsInput
-  accounts?: AccountCreateManyInput
-}
-
-export interface PaymentUpdateOneWithoutCommentsInput {
-  create?: PaymentCreateWithoutCommentsInput
-  connect?: PaymentWhereUniqueInput
+export interface CategoryUpdateOneInput {
+  create?: CategoryCreateInput
+  connect?: CategoryWhereUniqueInput
+  disconnect?: Boolean
   delete?: Boolean
-  update?: PaymentUpdateWithoutCommentsDataInput
-  upsert?: PaymentUpsertWithoutCommentsInput
+  update?: CategoryUpdateDataInput
+  upsert?: CategoryUpsertNestedInput
 }
 
-export interface UserCreateOneWithoutTeamsInput {
-  create?: UserCreateWithoutTeamsInput
+export interface TeamMemberWhereUniqueInput {
+  id?: ID_Input
+}
+
+export interface CategoryUpdateDataInput {
+  name?: String
+  color?: String
+}
+
+export interface CommentWhereUniqueInput {
+  id?: ID_Input
+}
+
+export interface CategoryUpsertNestedInput {
+  update: CategoryUpdateDataInput
+  create: CategoryCreateInput
+}
+
+export interface CommentUpdateInput {
+  body?: Json
+  payment?: PaymentUpdateOneWithoutCommentsInput
+  user?: UserUpdateOneInput
+}
+
+export interface CommentUpdateManyWithoutPaymentInput {
+  create?: CommentCreateWithoutPaymentInput[] | CommentCreateWithoutPaymentInput
+  connect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput
+  disconnect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput
+  delete?: CommentWhereUniqueInput[] | CommentWhereUniqueInput
+  update?: CommentUpdateWithWhereUniqueWithoutPaymentInput[] | CommentUpdateWithWhereUniqueWithoutPaymentInput
+  upsert?: CommentUpsertWithWhereUniqueWithoutPaymentInput[] | CommentUpsertWithWhereUniqueWithoutPaymentInput
+}
+
+export interface PaymentUpdateInput {
+  postedDate?: DateTime
+  amount?: Float
+  peerAccountName?: String
+  rawData?: Json
+  category?: CategoryUpdateOneInput
+  account?: AccountUpdateOneWithoutPaymentsInput
+  comments?: CommentUpdateManyWithoutPaymentInput
+}
+
+export interface CommentUpdateWithWhereUniqueWithoutPaymentInput {
+  where: CommentWhereUniqueInput
+  data: CommentUpdateWithoutPaymentDataInput
+}
+
+export interface AccountUpsertWithWhereUniqueWithoutTeamInput {
+  where: AccountWhereUniqueInput
+  update: AccountUpdateWithoutTeamDataInput
+  create: AccountCreateWithoutTeamInput
+}
+
+export interface CommentUpdateWithoutPaymentDataInput {
+  body?: Json
+  user?: UserUpdateOneInput
+}
+
+export interface TeamMemberUpdateOneWithoutAccountsInput {
+  create?: TeamMemberCreateWithoutAccountsInput
+  connect?: TeamMemberWhereUniqueInput
+  delete?: Boolean
+  update?: TeamMemberUpdateWithoutAccountsDataInput
+  upsert?: TeamMemberUpsertWithoutAccountsInput
+}
+
+export interface UserUpdateOneInput {
+  create?: UserCreateInput
   connect?: UserWhereUniqueInput
-}
-
-export interface AccountUpsertWithoutPaymentsInput {
-  update: AccountUpdateWithoutPaymentsDataInput
-  create: AccountCreateWithoutPaymentsInput
-}
-
-export interface UserCreateWithoutTeamsInput {
-  email: String
-  firstName: String
-  lastName?: String
-  passwordHash: String
-}
-
-export interface AccountUpdateOneWithoutPaymentsInput {
-  create?: AccountCreateWithoutPaymentsInput
-  connect?: AccountWhereUniqueInput
+  disconnect?: Boolean
   delete?: Boolean
-  update?: AccountUpdateWithoutPaymentsDataInput
-  upsert?: AccountUpsertWithoutPaymentsInput
-}
-
-export interface TeamMemberCreateInput {
-  admin: Boolean
-  canInvite: Boolean
-  team: TeamCreateOneWithoutMembersInput
-  user: UserCreateOneWithoutTeamsInput
-  accounts?: AccountCreateManyInput
-}
-
-export interface TeamMemberUpdateInput {
-  admin?: Boolean
-  canInvite?: Boolean
-  team?: TeamUpdateOneWithoutMembersInput
-  user?: UserUpdateOneWithoutTeamsInput
-  accounts?: AccountUpdateManyInput
-}
-
-export interface PaymentCreateInput {
-  postedDate: DateTime
-  amount: Float
-  peerAccountName: String
-  account: AccountCreateOneWithoutPaymentsInput
-  comments?: CommentCreateManyWithoutPaymentInput
+  update?: UserUpdateDataInput
+  upsert?: UserUpsertNestedInput
 }
 
 export interface PaymentUpsertWithWhereUniqueWithoutAccountInput {
@@ -2490,82 +3498,67 @@ export interface PaymentUpsertWithWhereUniqueWithoutAccountInput {
   create: PaymentCreateWithoutAccountInput
 }
 
-export interface UserUpdateOneWithoutTeamsInput {
-  create?: UserCreateWithoutTeamsInput
-  connect?: UserWhereUniqueInput
-  delete?: Boolean
-  update?: UserUpdateWithoutTeamsDataInput
-  upsert?: UserUpsertWithoutTeamsInput
-}
-
-export interface UserUpsertNestedInput {
-  update: UserUpdateDataInput
-  create: UserCreateInput
-}
-
-export interface AccountCreateWithoutPaymentsInput {
-  name: String
-  balance?: Float
-  revenue?: Float
-  spendings?: Float
-  team: TeamCreateOneWithoutAccountsInput
-}
-
-export interface AccountUpsertWithWhereUniqueNestedInput {
-  where: AccountWhereUniqueInput
-  update: AccountUpdateDataInput
-  create: AccountCreateInput
-}
-
-export interface CommentCreateInput {
-  body: Json
-  payment: PaymentCreateOneWithoutCommentsInput
-  user?: UserCreateOneInput
-}
-
-export interface TeamMemberUpsertWithWhereUniqueWithoutTeamInput {
-  where: TeamMemberWhereUniqueInput
-  update: TeamMemberUpdateWithoutTeamDataInput
-  create: TeamMemberCreateWithoutTeamInput
-}
-
-export interface PaymentCreateOneWithoutCommentsInput {
-  create?: PaymentCreateWithoutCommentsInput
-  connect?: PaymentWhereUniqueInput
-}
-
-export interface UserUpdateWithoutTeamsDataInput {
+export interface UserUpdateDataInput {
   email?: String
   firstName?: String
   lastName?: String
   passwordHash?: String
+  teams?: TeamMemberUpdateManyWithoutUserInput
 }
 
-export interface TeamMemberUpdateWithoutTeamDataInput {
-  admin?: Boolean
-  canInvite?: Boolean
-  user?: UserUpdateOneWithoutTeamsInput
-  accounts?: AccountUpdateManyInput
+export interface TeamMemberAccountUpsertWithWhereUniqueWithoutTeamMemberInput {
+  where: TeamMemberAccountWhereUniqueInput
+  update: TeamMemberAccountUpdateWithoutTeamMemberDataInput
+  create: TeamMemberAccountCreateWithoutTeamMemberInput
 }
 
-export interface AccountCreateManyWithoutTeamInput {
-  create?: AccountCreateWithoutTeamInput[] | AccountCreateWithoutTeamInput
-  connect?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
+export interface TeamMemberUpdateManyWithoutUserInput {
+  create?: TeamMemberCreateWithoutUserInput[] | TeamMemberCreateWithoutUserInput
+  connect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
+  disconnect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
+  delete?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
+  update?: TeamMemberUpdateWithWhereUniqueWithoutUserInput[] | TeamMemberUpdateWithWhereUniqueWithoutUserInput
+  upsert?: TeamMemberUpsertWithWhereUniqueWithoutUserInput[] | TeamMemberUpsertWithWhereUniqueWithoutUserInput
 }
 
-export interface TeamMemberUpdateWithWhereUniqueWithoutTeamInput {
+export interface TeamCreateInput {
+  name: String
+  accounts?: AccountCreateManyWithoutTeamInput
+  members?: TeamMemberCreateManyWithoutTeamInput
+}
+
+export interface TeamMemberUpdateWithWhereUniqueWithoutUserInput {
   where: TeamMemberWhereUniqueInput
-  data: TeamMemberUpdateWithoutTeamDataInput
+  data: TeamMemberUpdateWithoutUserDataInput
 }
 
-export interface PaymentCreateManyWithoutAccountInput {
-  create?: PaymentCreateWithoutAccountInput[] | PaymentCreateWithoutAccountInput
-  connect?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
+export interface PaymentCreateWithoutAccountInput {
+  postedDate: DateTime
+  amount: Float
+  peerAccountName: String
+  rawData: Json
+  category?: CategoryCreateOneInput
+  comments?: CommentCreateManyWithoutPaymentInput
 }
 
-export interface CommentCreateManyWithoutPaymentInput {
-  create?: CommentCreateWithoutPaymentInput[] | CommentCreateWithoutPaymentInput
-  connect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput
+export interface TeamMemberUpdateWithoutUserDataInput {
+  role?: TeamMemberRole
+  canInvite?: Boolean
+  team?: TeamUpdateOneWithoutMembersInput
+  accounts?: TeamMemberAccountUpdateManyWithoutTeamMemberInput
+}
+
+export interface CommentCreateWithoutPaymentInput {
+  body: Json
+  user?: UserCreateOneInput
+}
+
+export interface TeamUpdateOneWithoutMembersInput {
+  create?: TeamCreateWithoutMembersInput
+  connect?: TeamWhereUniqueInput
+  delete?: Boolean
+  update?: TeamUpdateWithoutMembersDataInput
+  upsert?: TeamUpsertWithoutMembersInput
 }
 
 export interface CommentWhereInput {
@@ -2590,9 +3583,9 @@ export interface CommentWhereInput {
   user?: UserWhereInput
 }
 
-export interface AccountUpdateWithWhereUniqueWithoutTeamInput {
-  where: AccountWhereUniqueInput
-  data: AccountUpdateWithoutTeamDataInput
+export interface TeamUpdateWithoutMembersDataInput {
+  name?: String
+  accounts?: AccountUpdateManyWithoutTeamInput
 }
 
 export interface PaymentWhereInput {
@@ -2643,139 +3636,86 @@ export interface PaymentWhereInput {
   peerAccountName_not_starts_with?: String
   peerAccountName_ends_with?: String
   peerAccountName_not_ends_with?: String
+  category?: CategoryWhereInput
   account?: AccountWhereInput
   comments_every?: CommentWhereInput
   comments_some?: CommentWhereInput
   comments_none?: CommentWhereInput
 }
 
-export interface AccountUpdateWithoutTeamDataInput {
-  name?: String
-  balance?: Float
-  revenue?: Float
-  spendings?: Float
-  payments?: PaymentUpdateManyWithoutAccountInput
+export interface TeamUpsertWithoutMembersInput {
+  update: TeamUpdateWithoutMembersDataInput
+  create: TeamCreateWithoutMembersInput
 }
 
-export interface AccountUpdateInput {
+export interface TeamMemberAccountWhereUniqueInput {
+  id?: ID_Input
+}
+
+export interface TeamMemberAccountUpdateManyWithoutTeamMemberInput {
+  create?: TeamMemberAccountCreateWithoutTeamMemberInput[] | TeamMemberAccountCreateWithoutTeamMemberInput
+  connect?: TeamMemberAccountWhereUniqueInput[] | TeamMemberAccountWhereUniqueInput
+  disconnect?: TeamMemberAccountWhereUniqueInput[] | TeamMemberAccountWhereUniqueInput
+  delete?: TeamMemberAccountWhereUniqueInput[] | TeamMemberAccountWhereUniqueInput
+  update?: TeamMemberAccountUpdateWithWhereUniqueWithoutTeamMemberInput[] | TeamMemberAccountUpdateWithWhereUniqueWithoutTeamMemberInput
+  upsert?: TeamMemberAccountUpsertWithWhereUniqueWithoutTeamMemberInput[] | TeamMemberAccountUpsertWithWhereUniqueWithoutTeamMemberInput
+}
+
+export interface AccountUpdateWithoutPaymentsDataInput {
   name?: String
   balance?: Float
   revenue?: Float
   spendings?: Float
+  rawData?: Json
+  team?: TeamUpdateOneWithoutAccountsInput
+  members?: TeamMemberAccountUpdateManyWithoutAccountInput
+}
+
+export interface TeamMemberAccountUpdateWithWhereUniqueWithoutTeamMemberInput {
+  where: TeamMemberAccountWhereUniqueInput
+  data: TeamMemberAccountUpdateWithoutTeamMemberDataInput
+}
+
+export interface TeamMemberUpsertWithoutAccountsInput {
+  update: TeamMemberUpdateWithoutAccountsDataInput
+  create: TeamMemberCreateWithoutAccountsInput
+}
+
+export interface TeamMemberAccountUpdateWithoutTeamMemberDataInput {
+  account?: AccountUpdateOneWithoutMembersInput
+}
+
+export interface UserUpsertNestedInput {
+  update: UserUpdateDataInput
+  create: UserCreateInput
+}
+
+export interface AccountUpdateOneWithoutMembersInput {
+  create?: AccountCreateWithoutMembersInput
+  connect?: AccountWhereUniqueInput
+  delete?: Boolean
+  update?: AccountUpdateWithoutMembersDataInput
+  upsert?: AccountUpsertWithoutMembersInput
+}
+
+export interface AccountCreateWithoutTeamInput {
+  name: String
+  balance?: Float
+  revenue?: Float
+  spendings?: Float
+  rawData?: Json
+  payments?: PaymentCreateManyWithoutAccountInput
+  members?: TeamMemberAccountCreateManyWithoutAccountInput
+}
+
+export interface AccountUpdateWithoutMembersDataInput {
+  name?: String
+  balance?: Float
+  revenue?: Float
+  spendings?: Float
+  rawData?: Json
   payments?: PaymentUpdateManyWithoutAccountInput
   team?: TeamUpdateOneWithoutAccountsInput
-}
-
-export interface PaymentUpdateManyWithoutAccountInput {
-  create?: PaymentCreateWithoutAccountInput[] | PaymentCreateWithoutAccountInput
-  connect?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
-  disconnect?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
-  delete?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
-  update?: PaymentUpdateWithWhereUniqueWithoutAccountInput[] | PaymentUpdateWithWhereUniqueWithoutAccountInput
-  upsert?: PaymentUpsertWithWhereUniqueWithoutAccountInput[] | PaymentUpsertWithWhereUniqueWithoutAccountInput
-}
-
-export interface TeamMemberWhereUniqueInput {
-  id?: ID_Input
-}
-
-export interface PaymentUpdateWithWhereUniqueWithoutAccountInput {
-  where: PaymentWhereUniqueInput
-  data: PaymentUpdateWithoutAccountDataInput
-}
-
-export interface AccountWhereUniqueInput {
-  id?: ID_Input
-}
-
-export interface PaymentUpdateWithoutAccountDataInput {
-  postedDate?: DateTime
-  amount?: Float
-  peerAccountName?: String
-  comments?: CommentUpdateManyWithoutPaymentInput
-}
-
-export interface CommentUpdateInput {
-  body?: Json
-  payment?: PaymentUpdateOneWithoutCommentsInput
-  user?: UserUpdateOneInput
-}
-
-export interface CommentUpdateManyWithoutPaymentInput {
-  create?: CommentCreateWithoutPaymentInput[] | CommentCreateWithoutPaymentInput
-  connect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput
-  disconnect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput
-  delete?: CommentWhereUniqueInput[] | CommentWhereUniqueInput
-  update?: CommentUpdateWithWhereUniqueWithoutPaymentInput[] | CommentUpdateWithWhereUniqueWithoutPaymentInput
-  upsert?: CommentUpsertWithWhereUniqueWithoutPaymentInput[] | CommentUpsertWithWhereUniqueWithoutPaymentInput
-}
-
-export interface PaymentUpdateInput {
-  postedDate?: DateTime
-  amount?: Float
-  peerAccountName?: String
-  account?: AccountUpdateOneWithoutPaymentsInput
-  comments?: CommentUpdateManyWithoutPaymentInput
-}
-
-export interface CommentUpdateWithWhereUniqueWithoutPaymentInput {
-  where: CommentWhereUniqueInput
-  data: CommentUpdateWithoutPaymentDataInput
-}
-
-export interface CommentUpsertWithWhereUniqueWithoutPaymentInput {
-  where: CommentWhereUniqueInput
-  update: CommentUpdateWithoutPaymentDataInput
-  create: CommentCreateWithoutPaymentInput
-}
-
-export interface CommentUpdateWithoutPaymentDataInput {
-  body?: Json
-  user?: UserUpdateOneInput
-}
-
-export interface TeamUpsertWithoutAccountsInput {
-  update: TeamUpdateWithoutAccountsDataInput
-  create: TeamCreateWithoutAccountsInput
-}
-
-export interface UserUpdateOneInput {
-  create?: UserCreateInput
-  connect?: UserWhereUniqueInput
-  disconnect?: Boolean
-  delete?: Boolean
-  update?: UserUpdateDataInput
-  upsert?: UserUpsertNestedInput
-}
-
-export interface TeamCreateInput {
-  name: String
-  accounts?: AccountCreateManyWithoutTeamInput
-  members?: TeamMemberCreateManyWithoutTeamInput
-}
-
-export interface UserUpdateDataInput {
-  email?: String
-  firstName?: String
-  lastName?: String
-  passwordHash?: String
-  teams?: TeamMemberUpdateManyWithoutUserInput
-}
-
-export interface PaymentCreateWithoutAccountInput {
-  postedDate: DateTime
-  amount: Float
-  peerAccountName: String
-  comments?: CommentCreateManyWithoutPaymentInput
-}
-
-export interface TeamMemberUpdateManyWithoutUserInput {
-  create?: TeamMemberCreateWithoutUserInput[] | TeamMemberCreateWithoutUserInput
-  connect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
-  disconnect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
-  delete?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
-  update?: TeamMemberUpdateWithWhereUniqueWithoutUserInput[] | TeamMemberUpdateWithWhereUniqueWithoutUserInput
-  upsert?: TeamMemberUpsertWithWhereUniqueWithoutUserInput[] | TeamMemberUpsertWithWhereUniqueWithoutUserInput
 }
 
 export interface UserSubscriptionWhereInput {
@@ -2789,9 +3729,12 @@ export interface UserSubscriptionWhereInput {
   node?: UserWhereInput
 }
 
-export interface TeamMemberUpdateWithWhereUniqueWithoutUserInput {
-  where: TeamMemberWhereUniqueInput
-  data: TeamMemberUpdateWithoutUserDataInput
+export interface TeamUpdateOneWithoutAccountsInput {
+  create?: TeamCreateWithoutAccountsInput
+  connect?: TeamWhereUniqueInput
+  delete?: Boolean
+  update?: TeamUpdateWithoutAccountsDataInput
+  upsert?: TeamUpsertWithoutAccountsInput
 }
 
 export interface AccountWhereInput {
@@ -2854,67 +3797,9 @@ export interface AccountWhereInput {
   payments_some?: PaymentWhereInput
   payments_none?: PaymentWhereInput
   team?: TeamWhereInput
-}
-
-export interface TeamMemberUpdateWithoutUserDataInput {
-  admin?: Boolean
-  canInvite?: Boolean
-  team?: TeamUpdateOneWithoutMembersInput
-  accounts?: AccountUpdateManyInput
-}
-
-export interface PaymentUpdateWithoutCommentsDataInput {
-  postedDate?: DateTime
-  amount?: Float
-  peerAccountName?: String
-  account?: AccountUpdateOneWithoutPaymentsInput
-}
-
-export interface TeamUpdateOneWithoutMembersInput {
-  create?: TeamCreateWithoutMembersInput
-  connect?: TeamWhereUniqueInput
-  delete?: Boolean
-  update?: TeamUpdateWithoutMembersDataInput
-  upsert?: TeamUpsertWithoutMembersInput
-}
-
-export interface AccountUpsertWithWhereUniqueWithoutTeamInput {
-  where: AccountWhereUniqueInput
-  update: AccountUpdateWithoutTeamDataInput
-  create: AccountCreateWithoutTeamInput
-}
-
-export interface TeamUpdateWithoutMembersDataInput {
-  name?: String
-  accounts?: AccountUpdateManyWithoutTeamInput
-}
-
-export interface UserUpsertWithoutTeamsInput {
-  update: UserUpdateWithoutTeamsDataInput
-  create: UserCreateWithoutTeamsInput
-}
-
-export interface TeamUpsertWithoutMembersInput {
-  update: TeamUpdateWithoutMembersDataInput
-  create: TeamCreateWithoutMembersInput
-}
-
-export interface CommentCreateWithoutPaymentInput {
-  body: Json
-  user?: UserCreateOneInput
-}
-
-export interface AccountUpdateManyInput {
-  create?: AccountCreateInput[] | AccountCreateInput
-  connect?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
-  disconnect?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
-  delete?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
-  update?: AccountUpdateWithWhereUniqueNestedInput[] | AccountUpdateWithWhereUniqueNestedInput
-  upsert?: AccountUpsertWithWhereUniqueNestedInput[] | AccountUpsertWithWhereUniqueNestedInput
-}
-
-export interface CommentWhereUniqueInput {
-  id?: ID_Input
+  members_every?: TeamMemberAccountWhereInput
+  members_some?: TeamMemberAccountWhereInput
+  members_none?: TeamMemberAccountWhereInput
 }
 
 export interface TeamUpdateWithoutAccountsDataInput {
@@ -2922,59 +3807,74 @@ export interface TeamUpdateWithoutAccountsDataInput {
   members?: TeamMemberUpdateManyWithoutTeamInput
 }
 
-export interface TeamUpdateOneWithoutAccountsInput {
-  create?: TeamCreateWithoutAccountsInput
-  connect?: TeamWhereUniqueInput
-  delete?: Boolean
-  update?: TeamUpdateWithoutAccountsDataInput
-  upsert?: TeamUpsertWithoutAccountsInput
-}
-
-export interface AccountUpdateDataInput {
+export interface AccountUpdateInput {
   name?: String
   balance?: Float
   revenue?: Float
   spendings?: Float
+  rawData?: Json
   payments?: PaymentUpdateManyWithoutAccountInput
   team?: TeamUpdateOneWithoutAccountsInput
+  members?: TeamMemberAccountUpdateManyWithoutAccountInput
 }
 
-export interface AccountUpdateWithWhereUniqueNestedInput {
-  where: AccountWhereUniqueInput
-  data: AccountUpdateDataInput
+export interface UserUpdateOneWithoutTeamsInput {
+  create?: UserCreateWithoutTeamsInput
+  connect?: UserWhereUniqueInput
+  delete?: Boolean
+  update?: UserUpdateWithoutTeamsDataInput
+  upsert?: UserUpsertWithoutTeamsInput
 }
 
-export interface AccountUpdateWithoutPaymentsDataInput {
-  name?: String
-  balance?: Float
-  revenue?: Float
-  spendings?: Float
-  team?: TeamUpdateOneWithoutAccountsInput
+export interface TeamMemberUpdateWithoutTeamDataInput {
+  role?: TeamMemberRole
+  canInvite?: Boolean
+  user?: UserUpdateOneWithoutTeamsInput
+  accounts?: TeamMemberAccountUpdateManyWithoutTeamMemberInput
 }
 
-export interface TeamMemberSubscriptionWhereInput {
-  AND?: TeamMemberSubscriptionWhereInput[] | TeamMemberSubscriptionWhereInput
-  OR?: TeamMemberSubscriptionWhereInput[] | TeamMemberSubscriptionWhereInput
-  NOT?: TeamMemberSubscriptionWhereInput[] | TeamMemberSubscriptionWhereInput
+export interface TeamMemberUpdateWithWhereUniqueWithoutTeamInput {
+  where: TeamMemberWhereUniqueInput
+  data: TeamMemberUpdateWithoutTeamDataInput
+}
+
+export interface TeamMemberUpdateManyWithoutTeamInput {
+  create?: TeamMemberCreateWithoutTeamInput[] | TeamMemberCreateWithoutTeamInput
+  connect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
+  disconnect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
+  delete?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
+  update?: TeamMemberUpdateWithWhereUniqueWithoutTeamInput[] | TeamMemberUpdateWithWhereUniqueWithoutTeamInput
+  upsert?: TeamMemberUpsertWithWhereUniqueWithoutTeamInput[] | TeamMemberUpsertWithWhereUniqueWithoutTeamInput
+}
+
+export interface TeamMemberAccountUpdateWithWhereUniqueWithoutAccountInput {
+  where: TeamMemberAccountWhereUniqueInput
+  data: TeamMemberAccountUpdateWithoutAccountDataInput
+}
+
+export interface CategoryWhereUniqueInput {
+  id?: ID_Input
+}
+
+export interface AccountSubscriptionWhereInput {
+  AND?: AccountSubscriptionWhereInput[] | AccountSubscriptionWhereInput
+  OR?: AccountSubscriptionWhereInput[] | AccountSubscriptionWhereInput
+  NOT?: AccountSubscriptionWhereInput[] | AccountSubscriptionWhereInput
   mutation_in?: MutationType[] | MutationType
   updatedFields_contains?: String
   updatedFields_contains_every?: String[] | String
   updatedFields_contains_some?: String[] | String
-  node?: TeamMemberWhereInput
+  node?: AccountWhereInput
 }
 
-export interface AccountCreateWithoutTeamInput {
+export interface CategoryCreateInput {
   name: String
-  balance?: Float
-  revenue?: Float
-  spendings?: Float
-  payments?: PaymentCreateManyWithoutAccountInput
+  color: String
 }
 
-export interface TeamMemberUpsertWithWhereUniqueWithoutUserInput {
-  where: TeamMemberWhereUniqueInput
-  update: TeamMemberUpdateWithoutUserDataInput
-  create: TeamMemberCreateWithoutUserInput
+export interface TeamUpsertWithoutAccountsInput {
+  update: TeamUpdateWithoutAccountsDataInput
+  create: TeamCreateWithoutAccountsInput
 }
 
 /*
@@ -2985,46 +3885,10 @@ export interface Node {
   id: ID_Output
 }
 
-export interface AccountPreviousValues {
+export interface CategoryPreviousValues {
   id: ID_Output
   name: String
-  balance: Float
-  revenue: Float
-  spendings: Float
-}
-
-/*
- * An edge in a connection.
-
- */
-export interface TeamEdge {
-  node: Team
-  cursor: String
-}
-
-export interface CommentSubscriptionPayload {
-  mutation: MutationType
-  node?: Comment
-  updatedFields?: String[]
-  previousValues?: CommentPreviousValues
-}
-
-/*
- * Information about pagination in a connection.
-
- */
-export interface PageInfo {
-  hasNextPage: Boolean
-  hasPreviousPage: Boolean
-  startCursor?: String
-  endCursor?: String
-}
-
-export interface Team extends Node {
-  id: ID_Output
-  name: String
-  accounts?: Account[]
-  members?: TeamMember[]
+  color: String
 }
 
 /*
@@ -3037,37 +3901,46 @@ export interface TeamConnection {
   aggregate: AggregateTeam
 }
 
-export interface AggregateAccount {
-  count: Int
+export interface CommentSubscriptionPayload {
+  mutation: MutationType
+  node?: Comment
+  updatedFields?: String[]
+  previousValues?: CommentPreviousValues
 }
 
-export interface Account extends Node {
+export interface CategorySubscriptionPayload {
+  mutation: MutationType
+  node?: Category
+  updatedFields?: String[]
+  previousValues?: CategoryPreviousValues
+}
+
+export interface TeamMemberAccount extends Node {
   id: ID_Output
-  name: String
-  balance: Float
-  revenue: Float
-  spendings: Float
-  payments?: Payment[]
-  team: Team
+  teamMember: TeamMember
+  account: Account
+}
+
+export interface UserPreviousValues {
+  id: ID_Output
+  email: String
+  firstName: String
+  lastName?: String
+  passwordHash: String
 }
 
 /*
  * A connection to a list of items.
 
  */
-export interface AccountConnection {
+export interface CategoryConnection {
   pageInfo: PageInfo
-  edges: AccountEdge[]
-  aggregate: AggregateAccount
+  edges: CategoryEdge[]
+  aggregate: AggregateCategory
 }
 
-export interface TeamMember extends Node {
-  id: ID_Output
-  team: Team
-  user: User
-  admin: Boolean
-  canInvite: Boolean
-  accounts?: Account[]
+export interface AggregateCategory {
+  count: Int
 }
 
 /*
@@ -3079,20 +3952,21 @@ export interface UserEdge {
   cursor: String
 }
 
-export interface BatchPayload {
-  count: Long
+export interface TeamMember extends Node {
+  id: ID_Output
+  team: Team
+  user: User
+  role: TeamMemberRole
+  canInvite: Boolean
+  accounts?: TeamMemberAccount[]
 }
 
 export interface AggregateComment {
   count: Int
 }
 
-export interface UserPreviousValues {
-  id: ID_Output
-  email: String
-  firstName: String
-  lastName?: String
-  passwordHash: String
+export interface BatchPayload {
+  count: Long
 }
 
 /*
@@ -3121,13 +3995,30 @@ export interface PaymentEdge {
   cursor: String
 }
 
+export interface Team extends Node {
+  id: ID_Output
+  name: String
+  accounts?: Account[]
+  members?: TeamMember[]
+}
+
+export interface AggregateTeamMemberAccount {
+  count: Int
+}
+
 export interface CommentPreviousValues {
   id: ID_Output
   body: Json
 }
 
-export interface AggregateTeamMember {
-  count: Int
+/*
+ * A connection to a list of items.
+
+ */
+export interface TeamMemberAccountConnection {
+  pageInfo: PageInfo
+  edges: TeamMemberAccountEdge[]
+  aggregate: AggregateTeamMemberAccount
 }
 
 export interface TeamSubscriptionPayload {
@@ -3138,13 +4029,12 @@ export interface TeamSubscriptionPayload {
 }
 
 /*
- * A connection to a list of items.
+ * An edge in a connection.
 
  */
-export interface TeamMemberConnection {
-  pageInfo: PageInfo
-  edges: TeamMemberEdge[]
-  aggregate: AggregateTeamMember
+export interface AccountEdge {
+  node: Account
+  cursor: String
 }
 
 export interface TeamPreviousValues {
@@ -3152,11 +4042,8 @@ export interface TeamPreviousValues {
   name: String
 }
 
-export interface AccountSubscriptionPayload {
-  mutation: MutationType
-  node?: Account
-  updatedFields?: String[]
-  previousValues?: AccountPreviousValues
+export interface AggregateTeamMember {
+  count: Int
 }
 
 export interface User extends Node {
@@ -3168,8 +4055,14 @@ export interface User extends Node {
   teams?: TeamMember[]
 }
 
-export interface AggregateUser {
-  count: Int
+/*
+ * A connection to a list of items.
+
+ */
+export interface TeamMemberConnection {
+  pageInfo: PageInfo
+  edges: TeamMemberEdge[]
+  aggregate: AggregateTeamMember
 }
 
 export interface TeamMemberSubscriptionPayload {
@@ -3183,52 +4076,24 @@ export interface TeamMemberSubscriptionPayload {
  * An edge in a connection.
 
  */
-export interface CommentEdge {
-  node: Comment
+export interface TeamEdge {
+  node: Team
   cursor: String
 }
 
 export interface TeamMemberPreviousValues {
   id: ID_Output
-  admin: Boolean
+  role: TeamMemberRole
   canInvite: Boolean
 }
 
 /*
- * A connection to a list of items.
+ * An edge in a connection.
 
  */
-export interface PaymentConnection {
-  pageInfo: PageInfo
-  edges: PaymentEdge[]
-  aggregate: AggregatePayment
-}
-
-export interface AggregateTeam {
-  count: Int
-}
-
-export interface Payment extends Node {
-  id: ID_Output
-  postedDate: DateTime
-  amount: Float
-  account: Account
-  peerAccountName: String
-  comments?: Comment[]
-}
-
-export interface PaymentPreviousValues {
-  id: ID_Output
-  postedDate: DateTime
-  amount: Float
-  peerAccountName: String
-}
-
-export interface PaymentSubscriptionPayload {
-  mutation: MutationType
-  node?: Payment
-  updatedFields?: String[]
-  previousValues?: PaymentPreviousValues
+export interface CategoryEdge {
+  node: Category
+  cursor: String
 }
 
 export interface Comment extends Node {
@@ -3236,28 +4101,6 @@ export interface Comment extends Node {
   payment: Payment
   user?: User
   body: Json
-}
-
-/*
- * An edge in a connection.
-
- */
-export interface AccountEdge {
-  node: Account
-  cursor: String
-}
-
-/*
- * An edge in a connection.
-
- */
-export interface TeamMemberEdge {
-  node: TeamMember
-  cursor: String
-}
-
-export interface AggregatePayment {
-  count: Int
 }
 
 /*
@@ -3270,15 +4113,155 @@ export interface UserConnection {
   aggregate: AggregateUser
 }
 
-/*
-Raw JSON value
-*/
-export type Json = any
+export interface AccountSubscriptionPayload {
+  mutation: MutationType
+  node?: Account
+  updatedFields?: String[]
+  previousValues?: AccountPreviousValues
+}
+
+export interface AggregatePayment {
+  count: Int
+}
+
+export interface AccountPreviousValues {
+  id: ID_Output
+  name: String
+  balance: Float
+  revenue: Float
+  spendings: Float
+  rawData?: Json
+}
 
 /*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
+ * An edge in a connection.
+
+ */
+export interface TeamMemberAccountEdge {
+  node: TeamMemberAccount
+  cursor: String
+}
+
+export interface Category extends Node {
+  id: ID_Output
+  name: String
+  color: String
+}
+
+/*
+ * A connection to a list of items.
+
+ */
+export interface AccountConnection {
+  pageInfo: PageInfo
+  edges: AccountEdge[]
+  aggregate: AggregateAccount
+}
+
+export interface TeamMemberAccountSubscriptionPayload {
+  mutation: MutationType
+  node?: TeamMemberAccount
+  updatedFields?: String[]
+  previousValues?: TeamMemberAccountPreviousValues
+}
+
+export interface AggregateTeam {
+  count: Int
+}
+
+export interface TeamMemberAccountPreviousValues {
+  id: ID_Output
+}
+
+export interface AggregateUser {
+  count: Int
+}
+
+/*
+ * A connection to a list of items.
+
+ */
+export interface PaymentConnection {
+  pageInfo: PageInfo
+  edges: PaymentEdge[]
+  aggregate: AggregatePayment
+}
+
+export interface Account extends Node {
+  id: ID_Output
+  name: String
+  balance: Float
+  revenue: Float
+  spendings: Float
+  payments?: Payment[]
+  team: Team
+  members?: TeamMemberAccount[]
+  rawData?: Json
+}
+
+export interface PaymentPreviousValues {
+  id: ID_Output
+  postedDate: DateTime
+  amount: Float
+  peerAccountName: String
+  rawData: Json
+}
+
+export interface PaymentSubscriptionPayload {
+  mutation: MutationType
+  node?: Payment
+  updatedFields?: String[]
+  previousValues?: PaymentPreviousValues
+}
+
+export interface Payment extends Node {
+  id: ID_Output
+  postedDate: DateTime
+  amount: Float
+  category?: Category
+  account: Account
+  peerAccountName: String
+  comments?: Comment[]
+  rawData: Json
+}
+
+export interface AggregateAccount {
+  count: Int
+}
+
+/*
+ * An edge in a connection.
+
+ */
+export interface CommentEdge {
+  node: Comment
+  cursor: String
+}
+
+/*
+ * Information about pagination in a connection.
+
+ */
+export interface PageInfo {
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+  startCursor?: String
+  endCursor?: String
+}
+
+/*
+ * An edge in a connection.
+
+ */
+export interface TeamMemberEdge {
+  node: TeamMember
+  cursor: String
+}
+
+/*
+The `Boolean` scalar type represents `true` or `false`.
 */
-export type Int = number
+export type Boolean = boolean
 
 /*
 The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
@@ -3287,20 +4270,25 @@ export type ID_Input = string | number
 export type ID_Output = string
 
 /*
-The `Boolean` scalar type represents `true` or `false`.
+The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). 
 */
-export type Boolean = boolean
+export type Float = number
+
+/*
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
+*/
+export type Int = number
+
+/*
+Raw JSON value
+*/
+export type Json = any
 
 /*
 The `Long` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
 */
 export type Long = string
-
-/*
-The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). 
-*/
-export type Float = number
 
 export type DateTime = Date | string
 

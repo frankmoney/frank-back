@@ -1,4 +1,4 @@
-import { ApolloServer } from 'apollo-server'
+import { ApolloServer, defaultPlaygroundOptions } from 'apollo-server'
 import debug from 'debug'
 import { makeExecutableSchema } from 'graphql-tools'
 import { Prisma } from 'prisma-binding'
@@ -13,14 +13,20 @@ const server = new ApolloServer({
   context() {
     return {
       user: {
-        id: 'cjk8fnm1i00i80716im4ybk4t',
-        email: 'cat56@mail.com',
+        id: 'cjkhv9pqg0hhf0a168cnsreq6',
+        email: 'gabriel@frank.ly',
       },
       prisma: new Prisma({
         typeDefs: 'app/graphql/generated/prisma.graphql',
         endpoint: process.env.PRISMA_ENDPOINT,
       }),
     }
+  },
+  playground: {
+    settings: {
+      ...defaultPlaygroundOptions.settings,
+      ['request.credentials']: 'include',
+    },
   },
 })
 

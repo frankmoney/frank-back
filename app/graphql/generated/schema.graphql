@@ -1,10 +1,13 @@
 type Query {
   payments: [PaymentEx]
   team: TeamResult!
+  teamAccounts: [TeamAccountsResultAccount!]!
+  teammate(id: ID!): TeammateResult!
 }
 
 type Mutation {
   addPayment(id: ID!): Payment
+  editTeamMemberRole(id: ID!, admin: Boolean!, canInvite: Boolean!, accountIds: [ID!]!): TeammateResult!
 }
 
 type PaymentEx implements Node {
@@ -18,13 +21,29 @@ type TeamResult {
   others: [TeamResultProfile!]!
 }
 
+type TeamAccountsResultAccount {
+  id: ID!
+  name: String!
+}
+
+type TeammateResult {
+  id: ID!
+  lastName: String
+  firstName: String
+  admin: Boolean!
+  canInvite: Boolean!
+  accountIds: [ID!]!
+}
+
 type Payment implements Node {
   id: ID!
   postedDate: DateTime!
   amount: Float!
+  category(where: CategoryWhereInput): Category
   account(where: AccountWhereInput): Account!
   peerAccountName: String!
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
+  rawData: Json!
 }
 
 """
@@ -39,6 +58,186 @@ interface Node {
 
 scalar DateTime
 
+type Category implements Node {
+  id: ID!
+  name: String!
+  color: String!
+}
+
+input CategoryWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [CategoryWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [CategoryWhereInput!]
+  """
+  Logical NOT on all given filters combined by AND.
+  """
+  NOT: [CategoryWhereInput!]
+  id: ID
+  """
+  All values that are not equal to given value.
+  """
+  id_not: ID
+  """
+  All values that are contained in given list.
+  """
+  id_in: [ID!]
+  """
+  All values that are not contained in given list.
+  """
+  id_not_in: [ID!]
+  """
+  All values less than the given value.
+  """
+  id_lt: ID
+  """
+  All values less than or equal the given value.
+  """
+  id_lte: ID
+  """
+  All values greater than the given value.
+  """
+  id_gt: ID
+  """
+  All values greater than or equal the given value.
+  """
+  id_gte: ID
+  """
+  All values containing the given string.
+  """
+  id_contains: ID
+  """
+  All values not containing the given string.
+  """
+  id_not_contains: ID
+  """
+  All values starting with the given string.
+  """
+  id_starts_with: ID
+  """
+  All values not starting with the given string.
+  """
+  id_not_starts_with: ID
+  """
+  All values ending with the given string.
+  """
+  id_ends_with: ID
+  """
+  All values not ending with the given string.
+  """
+  id_not_ends_with: ID
+  name: String
+  """
+  All values that are not equal to given value.
+  """
+  name_not: String
+  """
+  All values that are contained in given list.
+  """
+  name_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  name_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  name_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  name_lte: String
+  """
+  All values greater than the given value.
+  """
+  name_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  name_gte: String
+  """
+  All values containing the given string.
+  """
+  name_contains: String
+  """
+  All values not containing the given string.
+  """
+  name_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  name_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  name_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  name_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  name_not_ends_with: String
+  color: String
+  """
+  All values that are not equal to given value.
+  """
+  color_not: String
+  """
+  All values that are contained in given list.
+  """
+  color_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  color_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  color_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  color_lte: String
+  """
+  All values greater than the given value.
+  """
+  color_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  color_gte: String
+  """
+  All values containing the given string.
+  """
+  color_contains: String
+  """
+  All values not containing the given string.
+  """
+  color_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  color_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  color_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  color_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  color_not_ends_with: String
+}
+
 type Account implements Node {
   id: ID!
   name: String!
@@ -47,6 +246,8 @@ type Account implements Node {
   spendings: Float!
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
   team(where: TeamWhereInput): Team!
+  members(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMemberAccount!]
+  rawData: Json
 }
 
 input AccountWhereInput {
@@ -259,6 +460,9 @@ input AccountWhereInput {
   payments_some: PaymentWhereInput
   payments_none: PaymentWhereInput
   team: TeamWhereInput
+  members_every: TeamMemberAccountWhereInput
+  members_some: TeamMemberAccountWhereInput
+  members_none: TeamMemberAccountWhereInput
 }
 
 type Comment implements Node {
@@ -349,6 +553,11 @@ enum CommentOrderByInput {
   createdAt_DESC
 }
 
+"""
+Raw JSON value
+"""
+scalar Json
+
 type TeamResultTeam {
   id: ID!
   name: String!
@@ -378,9 +587,15 @@ type TeamMember implements Node {
   id: ID!
   team(where: TeamWhereInput): Team!
   user(where: UserWhereInput): User!
-  admin: Boolean!
+  role: TeamMemberRole!
   canInvite: Boolean!
-  accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account!]
+  accounts(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMemberAccount!]
+}
+
+type TeamMemberAccount implements Node {
+  id: ID!
+  teamMember(where: TeamMemberWhereInput): TeamMember!
+  account(where: AccountWhereInput): Account!
 }
 
 type User implements Node {
@@ -569,6 +784,7 @@ input PaymentWhereInput {
   All values not ending with the given string.
   """
   peerAccountName_not_ends_with: String
+  category: CategoryWhereInput
   account: AccountWhereInput
   comments_every: CommentWhereInput
   comments_some: CommentWhereInput
@@ -584,6 +800,8 @@ enum PaymentOrderByInput {
   amount_DESC
   peerAccountName_ASC
   peerAccountName_DESC
+  rawData_ASC
+  rawData_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -715,6 +933,85 @@ input TeamWhereInput {
   members_every: TeamMemberWhereInput
   members_some: TeamMemberWhereInput
   members_none: TeamMemberWhereInput
+}
+
+input TeamMemberAccountWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [TeamMemberAccountWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [TeamMemberAccountWhereInput!]
+  """
+  Logical NOT on all given filters combined by AND.
+  """
+  NOT: [TeamMemberAccountWhereInput!]
+  id: ID
+  """
+  All values that are not equal to given value.
+  """
+  id_not: ID
+  """
+  All values that are contained in given list.
+  """
+  id_in: [ID!]
+  """
+  All values that are not contained in given list.
+  """
+  id_not_in: [ID!]
+  """
+  All values less than the given value.
+  """
+  id_lt: ID
+  """
+  All values less than or equal the given value.
+  """
+  id_lte: ID
+  """
+  All values greater than the given value.
+  """
+  id_gt: ID
+  """
+  All values greater than or equal the given value.
+  """
+  id_gte: ID
+  """
+  All values containing the given string.
+  """
+  id_contains: ID
+  """
+  All values not containing the given string.
+  """
+  id_not_contains: ID
+  """
+  All values starting with the given string.
+  """
+  id_starts_with: ID
+  """
+  All values not starting with the given string.
+  """
+  id_not_starts_with: ID
+  """
+  All values ending with the given string.
+  """
+  id_ends_with: ID
+  """
+  All values not ending with the given string.
+  """
+  id_not_ends_with: ID
+  teamMember: TeamMemberWhereInput
+  account: AccountWhereInput
+}
+
+enum TeamMemberAccountOrderByInput {
+  id_ASC
+  id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
 }
 
 input UserWhereInput {
@@ -1000,11 +1297,6 @@ input UserWhereInput {
   teams_none: TeamMemberWhereInput
 }
 
-"""
-Raw JSON value
-"""
-scalar Json
-
 type TeamResultAccount {
   id: ID!
   name: String!
@@ -1031,6 +1323,8 @@ enum AccountOrderByInput {
   revenue_DESC
   spendings_ASC
   spendings_DESC
+  rawData_ASC
+  rawData_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -1103,11 +1397,19 @@ input TeamMemberWhereInput {
   All values not ending with the given string.
   """
   id_not_ends_with: ID
-  admin: Boolean
+  role: TeamMemberRole
   """
   All values that are not equal to given value.
   """
-  admin_not: Boolean
+  role_not: TeamMemberRole
+  """
+  All values that are contained in given list.
+  """
+  role_in: [TeamMemberRole!]
+  """
+  All values that are not contained in given list.
+  """
+  role_not_in: [TeamMemberRole!]
   canInvite: Boolean
   """
   All values that are not equal to given value.
@@ -1115,20 +1417,26 @@ input TeamMemberWhereInput {
   canInvite_not: Boolean
   team: TeamWhereInput
   user: UserWhereInput
-  accounts_every: AccountWhereInput
-  accounts_some: AccountWhereInput
-  accounts_none: AccountWhereInput
+  accounts_every: TeamMemberAccountWhereInput
+  accounts_some: TeamMemberAccountWhereInput
+  accounts_none: TeamMemberAccountWhereInput
 }
 
 enum TeamMemberOrderByInput {
   id_ASC
   id_DESC
-  admin_ASC
-  admin_DESC
+  role_ASC
+  role_DESC
   canInvite_ASC
   canInvite_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
+}
+
+enum TeamMemberRole {
+  ADMIN
+  MANAGER
+  MEMBER
 }
