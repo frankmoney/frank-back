@@ -1,6 +1,7 @@
 type Query {
   inbox(accountId: ID!, first: Int!, after: ID): [Payment!]!
   ledgerPayments(accountId: ID!, first: Int!, after: ID, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean): [Payment!]!
+  ledgerPaymentsCount(accountId: ID!, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean, categoryName: String, categoryColor: String): LedgerPaymentsCount!
   team: TeamResult!
   teamAccounts: [TeamAccountsResultAccount!]!
   teammate(id: ID!): TeammateResult!
@@ -25,6 +26,10 @@ type Payment implements Node {
 }
 
 scalar DateTime
+
+type LedgerPaymentsCount {
+  count: Int!
+}
 
 type TeamResult {
   team: TeamResultTeam!

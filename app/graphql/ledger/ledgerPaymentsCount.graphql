@@ -1,0 +1,17 @@
+extend type Query {
+  ledgerPaymentsCount(
+    accountId: ID!,
+    search: String,
+    dateMin: DateTime,
+    dateMax: DateTime,
+    amountMin: Float,
+    amountMax: Float,
+    verified: Boolean
+    categoryName: String
+    categoryColor: String
+  ): LedgerPaymentsCount!
+}
+
+type LedgerPaymentsCount {
+  count: Int!
+}
