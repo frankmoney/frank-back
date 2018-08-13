@@ -1,14 +1,5 @@
 # import Payment from '../generated/prisma.graphql'
 
 extend type Query {
-  payments: [PaymentEx]
-}
-
-type PaymentEx implements Node {
-  id: ID!
-  payment: Payment!
-}
-
-type Mutation {
-  addPayment(id: ID!): Payment
+  inbox(accountId: ID!, first: Int!, after: ID): [Payment!]!
 }

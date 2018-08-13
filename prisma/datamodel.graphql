@@ -49,13 +49,28 @@ type TeamMemberAccount {
 
 type Payment {
   id: ID! @unique
+  account: Account!
   postedDate: DateTime!
   amount: Float!
-  category: Category
-  account: Account!
-  peerAccountName: String!
+  peerName: String
+  peer: Peer
+  description: String
   comments: [Comment!]!
+  categoryName: String
+  categoryColor: String
   rawData: Json!
+}
+
+type Peer {
+  id: ID! @unique
+  account: Account!
+  name: String!
+  balance: Float! @default(value: "0.0")
+  revenue: Float! @default(value: "0.0")
+  spendings: Float! @default(value: "0.0")
+  payments: [Payment!]!
+  categoryName: String!
+  categoryColor: String!
 }
 
 type Comment {

@@ -23,8 +23,8 @@ module.exports = () => {
   })
 
   const extractQueriesAndMutations = ({ src, ast, ...rest }) => {
-    const queries = []
-    const mutations = []
+    const queries = [] // tslint:disable-line:no-shadowed-variable
+    const mutations = [] // tslint:disable-line:no-shadowed-variable
 
     const visitType = node => {
       if (node.name && node.name.kind === 'Name') {
@@ -87,6 +87,9 @@ module.exports = () => {
   }
 
   const processSchema = R.pipe(
+    R.tap(
+      filename => console.log(`- Reading ${filename}`) // tslint:disable-line:no-console
+    ),
     readSchema,
     parseSchema,
     extractQueriesAndMutations,

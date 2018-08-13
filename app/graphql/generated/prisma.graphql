@@ -1,5 +1,5 @@
 # source: http://prisma.frank-dev1.frank.ly
-# timestamp: Tue Aug 07 2018 16:45:44 GMT+0300 (Russia TZ 2 Standard Time)
+# timestamp: Mon Aug 13 2018 16:48:29 GMT+0300 (Russia TZ 2 Standard Time)
 
 type Account implements Node {
   id: ID!
@@ -37,6 +37,11 @@ input AccountCreateInput {
 input AccountCreateManyWithoutTeamInput {
   create: [AccountCreateWithoutTeamInput!]
   connect: [AccountWhereUniqueInput!]
+}
+
+input AccountCreateOneInput {
+  create: AccountCreateInput
+  connect: AccountWhereUniqueInput
 }
 
 input AccountCreateOneWithoutMembersInput {
@@ -155,6 +160,17 @@ input AccountSubscriptionWhereInput {
   node: AccountWhereInput
 }
 
+input AccountUpdateDataInput {
+  name: String
+  balance: Float
+  revenue: Float
+  spendings: Float
+  rawData: Json
+  payments: PaymentUpdateManyWithoutAccountInput
+  team: TeamUpdateOneWithoutAccountsInput
+  members: TeamMemberAccountUpdateManyWithoutAccountInput
+}
+
 input AccountUpdateInput {
   name: String
   balance: Float
@@ -173,6 +189,14 @@ input AccountUpdateManyWithoutTeamInput {
   delete: [AccountWhereUniqueInput!]
   update: [AccountUpdateWithWhereUniqueWithoutTeamInput!]
   upsert: [AccountUpsertWithWhereUniqueWithoutTeamInput!]
+}
+
+input AccountUpdateOneInput {
+  create: AccountCreateInput
+  connect: AccountWhereUniqueInput
+  delete: Boolean
+  update: AccountUpdateDataInput
+  upsert: AccountUpsertNestedInput
 }
 
 input AccountUpdateOneWithoutMembersInput {
@@ -224,6 +248,11 @@ input AccountUpdateWithoutTeamDataInput {
 input AccountUpdateWithWhereUniqueWithoutTeamInput {
   where: AccountWhereUniqueInput!
   data: AccountUpdateWithoutTeamDataInput!
+}
+
+input AccountUpsertNestedInput {
+  update: AccountUpdateDataInput!
+  create: AccountCreateInput!
 }
 
 input AccountUpsertWithoutMembersInput {
@@ -426,6 +455,10 @@ type AggregatePayment {
   count: Int!
 }
 
+type AggregatePeer {
+  count: Int!
+}
+
 type AggregateTeam {
   count: Int!
 }
@@ -466,11 +499,6 @@ type CategoryConnection {
 input CategoryCreateInput {
   name: String!
   color: String!
-}
-
-input CategoryCreateOneInput {
-  create: CategoryCreateInput
-  connect: CategoryWhereUniqueInput
 }
 
 """An edge in a connection."""
@@ -540,28 +568,9 @@ input CategorySubscriptionWhereInput {
   node: CategoryWhereInput
 }
 
-input CategoryUpdateDataInput {
-  name: String
-  color: String
-}
-
 input CategoryUpdateInput {
   name: String
   color: String
-}
-
-input CategoryUpdateOneInput {
-  create: CategoryCreateInput
-  connect: CategoryWhereUniqueInput
-  disconnect: Boolean
-  delete: Boolean
-  update: CategoryUpdateDataInput
-  upsert: CategoryUpsertNestedInput
-}
-
-input CategoryUpsertNestedInput {
-  update: CategoryUpdateDataInput!
-  create: CategoryCreateInput!
 }
 
 input CategoryWhereInput {
@@ -898,52 +907,58 @@ scalar Long
 type Mutation {
   createTeam(data: TeamCreateInput!): Team!
   createTeamMember(data: TeamMemberCreateInput!): TeamMember!
-  createAccount(data: AccountCreateInput!): Account!
   createTeamMemberAccount(data: TeamMemberAccountCreateInput!): TeamMemberAccount!
   createPayment(data: PaymentCreateInput!): Payment!
+  createPeer(data: PeerCreateInput!): Peer!
   createComment(data: CommentCreateInput!): Comment!
-  createUser(data: UserCreateInput!): User!
   createCategory(data: CategoryCreateInput!): Category!
+  createAccount(data: AccountCreateInput!): Account!
+  createUser(data: UserCreateInput!): User!
   updateTeam(data: TeamUpdateInput!, where: TeamWhereUniqueInput!): Team
   updateTeamMember(data: TeamMemberUpdateInput!, where: TeamMemberWhereUniqueInput!): TeamMember
-  updateAccount(data: AccountUpdateInput!, where: AccountWhereUniqueInput!): Account
   updateTeamMemberAccount(data: TeamMemberAccountUpdateInput!, where: TeamMemberAccountWhereUniqueInput!): TeamMemberAccount
   updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
+  updatePeer(data: PeerUpdateInput!, where: PeerWhereUniqueInput!): Peer
   updateComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
-  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateCategory(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category
+  updateAccount(data: AccountUpdateInput!, where: AccountWhereUniqueInput!): Account
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   deleteTeam(where: TeamWhereUniqueInput!): Team
   deleteTeamMember(where: TeamMemberWhereUniqueInput!): TeamMember
-  deleteAccount(where: AccountWhereUniqueInput!): Account
   deleteTeamMemberAccount(where: TeamMemberAccountWhereUniqueInput!): TeamMemberAccount
   deletePayment(where: PaymentWhereUniqueInput!): Payment
+  deletePeer(where: PeerWhereUniqueInput!): Peer
   deleteComment(where: CommentWhereUniqueInput!): Comment
-  deleteUser(where: UserWhereUniqueInput!): User
   deleteCategory(where: CategoryWhereUniqueInput!): Category
+  deleteAccount(where: AccountWhereUniqueInput!): Account
+  deleteUser(where: UserWhereUniqueInput!): User
   upsertTeam(where: TeamWhereUniqueInput!, create: TeamCreateInput!, update: TeamUpdateInput!): Team!
   upsertTeamMember(where: TeamMemberWhereUniqueInput!, create: TeamMemberCreateInput!, update: TeamMemberUpdateInput!): TeamMember!
-  upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
   upsertTeamMemberAccount(where: TeamMemberAccountWhereUniqueInput!, create: TeamMemberAccountCreateInput!, update: TeamMemberAccountUpdateInput!): TeamMemberAccount!
   upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
+  upsertPeer(where: PeerWhereUniqueInput!, create: PeerCreateInput!, update: PeerUpdateInput!): Peer!
   upsertComment(where: CommentWhereUniqueInput!, create: CommentCreateInput!, update: CommentUpdateInput!): Comment!
-  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertCategory(where: CategoryWhereUniqueInput!, create: CategoryCreateInput!, update: CategoryUpdateInput!): Category!
+  upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   updateManyTeams(data: TeamUpdateInput!, where: TeamWhereInput): BatchPayload!
   updateManyTeamMembers(data: TeamMemberUpdateInput!, where: TeamMemberWhereInput): BatchPayload!
-  updateManyAccounts(data: AccountUpdateInput!, where: AccountWhereInput): BatchPayload!
   updateManyTeamMemberAccounts(data: TeamMemberAccountUpdateInput!, where: TeamMemberAccountWhereInput): BatchPayload!
   updateManyPayments(data: PaymentUpdateInput!, where: PaymentWhereInput): BatchPayload!
+  updateManyPeers(data: PeerUpdateInput!, where: PeerWhereInput): BatchPayload!
   updateManyComments(data: CommentUpdateInput!, where: CommentWhereInput): BatchPayload!
-  updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
   updateManyCategories(data: CategoryUpdateInput!, where: CategoryWhereInput): BatchPayload!
+  updateManyAccounts(data: AccountUpdateInput!, where: AccountWhereInput): BatchPayload!
+  updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
   deleteManyTeams(where: TeamWhereInput): BatchPayload!
   deleteManyTeamMembers(where: TeamMemberWhereInput): BatchPayload!
-  deleteManyAccounts(where: AccountWhereInput): BatchPayload!
   deleteManyTeamMemberAccounts(where: TeamMemberAccountWhereInput): BatchPayload!
   deleteManyPayments(where: PaymentWhereInput): BatchPayload!
+  deleteManyPeers(where: PeerWhereInput): BatchPayload!
   deleteManyComments(where: CommentWhereInput): BatchPayload!
-  deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyCategories(where: CategoryWhereInput): BatchPayload!
+  deleteManyAccounts(where: AccountWhereInput): BatchPayload!
+  deleteManyUsers(where: UserWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -975,12 +990,15 @@ type PageInfo {
 
 type Payment implements Node {
   id: ID!
+  account(where: AccountWhereInput): Account!
   postedDate: DateTime!
   amount: Float!
-  category(where: CategoryWhereInput): Category
-  account(where: AccountWhereInput): Account!
-  peerAccountName: String!
+  peerName: String
+  peer(where: PeerWhereInput): Peer
+  description: String
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
+  categoryName: String
+  categoryColor: String
   rawData: Json!
 }
 
@@ -997,15 +1015,23 @@ type PaymentConnection {
 input PaymentCreateInput {
   postedDate: DateTime!
   amount: Float!
-  peerAccountName: String!
+  peerName: String
+  description: String
+  categoryName: String
+  categoryColor: String
   rawData: Json!
-  category: CategoryCreateOneInput
   account: AccountCreateOneWithoutPaymentsInput!
+  peer: PeerCreateOneWithoutPaymentsInput
   comments: CommentCreateManyWithoutPaymentInput
 }
 
 input PaymentCreateManyWithoutAccountInput {
   create: [PaymentCreateWithoutAccountInput!]
+  connect: [PaymentWhereUniqueInput!]
+}
+
+input PaymentCreateManyWithoutPeerInput {
+  create: [PaymentCreateWithoutPeerInput!]
   connect: [PaymentWhereUniqueInput!]
 }
 
@@ -1017,19 +1043,37 @@ input PaymentCreateOneWithoutCommentsInput {
 input PaymentCreateWithoutAccountInput {
   postedDate: DateTime!
   amount: Float!
-  peerAccountName: String!
+  peerName: String
+  description: String
+  categoryName: String
+  categoryColor: String
   rawData: Json!
-  category: CategoryCreateOneInput
+  peer: PeerCreateOneWithoutPaymentsInput
   comments: CommentCreateManyWithoutPaymentInput
 }
 
 input PaymentCreateWithoutCommentsInput {
   postedDate: DateTime!
   amount: Float!
-  peerAccountName: String!
+  peerName: String
+  description: String
+  categoryName: String
+  categoryColor: String
   rawData: Json!
-  category: CategoryCreateOneInput
   account: AccountCreateOneWithoutPaymentsInput!
+  peer: PeerCreateOneWithoutPaymentsInput
+}
+
+input PaymentCreateWithoutPeerInput {
+  postedDate: DateTime!
+  amount: Float!
+  peerName: String
+  description: String
+  categoryName: String
+  categoryColor: String
+  rawData: Json!
+  account: AccountCreateOneWithoutPaymentsInput!
+  comments: CommentCreateManyWithoutPaymentInput
 }
 
 """An edge in a connection."""
@@ -1048,8 +1092,14 @@ enum PaymentOrderByInput {
   postedDate_DESC
   amount_ASC
   amount_DESC
-  peerAccountName_ASC
-  peerAccountName_DESC
+  peerName_ASC
+  peerName_DESC
+  description_ASC
+  description_DESC
+  categoryName_ASC
+  categoryName_DESC
+  categoryColor_ASC
+  categoryColor_DESC
   rawData_ASC
   rawData_DESC
   updatedAt_ASC
@@ -1062,7 +1112,10 @@ type PaymentPreviousValues {
   id: ID!
   postedDate: DateTime!
   amount: Float!
-  peerAccountName: String!
+  peerName: String
+  description: String
+  categoryName: String
+  categoryColor: String
   rawData: Json!
 }
 
@@ -1108,10 +1161,13 @@ input PaymentSubscriptionWhereInput {
 input PaymentUpdateInput {
   postedDate: DateTime
   amount: Float
-  peerAccountName: String
+  peerName: String
+  description: String
+  categoryName: String
+  categoryColor: String
   rawData: Json
-  category: CategoryUpdateOneInput
   account: AccountUpdateOneWithoutPaymentsInput
+  peer: PeerUpdateOneWithoutPaymentsInput
   comments: CommentUpdateManyWithoutPaymentInput
 }
 
@@ -1122,6 +1178,15 @@ input PaymentUpdateManyWithoutAccountInput {
   delete: [PaymentWhereUniqueInput!]
   update: [PaymentUpdateWithWhereUniqueWithoutAccountInput!]
   upsert: [PaymentUpsertWithWhereUniqueWithoutAccountInput!]
+}
+
+input PaymentUpdateManyWithoutPeerInput {
+  create: [PaymentCreateWithoutPeerInput!]
+  connect: [PaymentWhereUniqueInput!]
+  disconnect: [PaymentWhereUniqueInput!]
+  delete: [PaymentWhereUniqueInput!]
+  update: [PaymentUpdateWithWhereUniqueWithoutPeerInput!]
+  upsert: [PaymentUpsertWithWhereUniqueWithoutPeerInput!]
 }
 
 input PaymentUpdateOneWithoutCommentsInput {
@@ -1135,24 +1200,47 @@ input PaymentUpdateOneWithoutCommentsInput {
 input PaymentUpdateWithoutAccountDataInput {
   postedDate: DateTime
   amount: Float
-  peerAccountName: String
+  peerName: String
+  description: String
+  categoryName: String
+  categoryColor: String
   rawData: Json
-  category: CategoryUpdateOneInput
+  peer: PeerUpdateOneWithoutPaymentsInput
   comments: CommentUpdateManyWithoutPaymentInput
 }
 
 input PaymentUpdateWithoutCommentsDataInput {
   postedDate: DateTime
   amount: Float
-  peerAccountName: String
+  peerName: String
+  description: String
+  categoryName: String
+  categoryColor: String
   rawData: Json
-  category: CategoryUpdateOneInput
   account: AccountUpdateOneWithoutPaymentsInput
+  peer: PeerUpdateOneWithoutPaymentsInput
+}
+
+input PaymentUpdateWithoutPeerDataInput {
+  postedDate: DateTime
+  amount: Float
+  peerName: String
+  description: String
+  categoryName: String
+  categoryColor: String
+  rawData: Json
+  account: AccountUpdateOneWithoutPaymentsInput
+  comments: CommentUpdateManyWithoutPaymentInput
 }
 
 input PaymentUpdateWithWhereUniqueWithoutAccountInput {
   where: PaymentWhereUniqueInput!
   data: PaymentUpdateWithoutAccountDataInput!
+}
+
+input PaymentUpdateWithWhereUniqueWithoutPeerInput {
+  where: PaymentWhereUniqueInput!
+  data: PaymentUpdateWithoutPeerDataInput!
 }
 
 input PaymentUpsertWithoutCommentsInput {
@@ -1164,6 +1252,12 @@ input PaymentUpsertWithWhereUniqueWithoutAccountInput {
   where: PaymentWhereUniqueInput!
   update: PaymentUpdateWithoutAccountDataInput!
   create: PaymentCreateWithoutAccountInput!
+}
+
+input PaymentUpsertWithWhereUniqueWithoutPeerInput {
+  where: PaymentWhereUniqueInput!
+  update: PaymentUpdateWithoutPeerDataInput!
+  create: PaymentCreateWithoutPeerInput!
 }
 
 input PaymentWhereInput {
@@ -1259,48 +1353,168 @@ input PaymentWhereInput {
 
   """All values greater than or equal the given value."""
   amount_gte: Float
-  peerAccountName: String
+  peerName: String
 
   """All values that are not equal to given value."""
-  peerAccountName_not: String
+  peerName_not: String
 
   """All values that are contained in given list."""
-  peerAccountName_in: [String!]
+  peerName_in: [String!]
 
   """All values that are not contained in given list."""
-  peerAccountName_not_in: [String!]
+  peerName_not_in: [String!]
 
   """All values less than the given value."""
-  peerAccountName_lt: String
+  peerName_lt: String
 
   """All values less than or equal the given value."""
-  peerAccountName_lte: String
+  peerName_lte: String
 
   """All values greater than the given value."""
-  peerAccountName_gt: String
+  peerName_gt: String
 
   """All values greater than or equal the given value."""
-  peerAccountName_gte: String
+  peerName_gte: String
 
   """All values containing the given string."""
-  peerAccountName_contains: String
+  peerName_contains: String
 
   """All values not containing the given string."""
-  peerAccountName_not_contains: String
+  peerName_not_contains: String
 
   """All values starting with the given string."""
-  peerAccountName_starts_with: String
+  peerName_starts_with: String
 
   """All values not starting with the given string."""
-  peerAccountName_not_starts_with: String
+  peerName_not_starts_with: String
 
   """All values ending with the given string."""
-  peerAccountName_ends_with: String
+  peerName_ends_with: String
 
   """All values not ending with the given string."""
-  peerAccountName_not_ends_with: String
-  category: CategoryWhereInput
+  peerName_not_ends_with: String
+  description: String
+
+  """All values that are not equal to given value."""
+  description_not: String
+
+  """All values that are contained in given list."""
+  description_in: [String!]
+
+  """All values that are not contained in given list."""
+  description_not_in: [String!]
+
+  """All values less than the given value."""
+  description_lt: String
+
+  """All values less than or equal the given value."""
+  description_lte: String
+
+  """All values greater than the given value."""
+  description_gt: String
+
+  """All values greater than or equal the given value."""
+  description_gte: String
+
+  """All values containing the given string."""
+  description_contains: String
+
+  """All values not containing the given string."""
+  description_not_contains: String
+
+  """All values starting with the given string."""
+  description_starts_with: String
+
+  """All values not starting with the given string."""
+  description_not_starts_with: String
+
+  """All values ending with the given string."""
+  description_ends_with: String
+
+  """All values not ending with the given string."""
+  description_not_ends_with: String
+  categoryName: String
+
+  """All values that are not equal to given value."""
+  categoryName_not: String
+
+  """All values that are contained in given list."""
+  categoryName_in: [String!]
+
+  """All values that are not contained in given list."""
+  categoryName_not_in: [String!]
+
+  """All values less than the given value."""
+  categoryName_lt: String
+
+  """All values less than or equal the given value."""
+  categoryName_lte: String
+
+  """All values greater than the given value."""
+  categoryName_gt: String
+
+  """All values greater than or equal the given value."""
+  categoryName_gte: String
+
+  """All values containing the given string."""
+  categoryName_contains: String
+
+  """All values not containing the given string."""
+  categoryName_not_contains: String
+
+  """All values starting with the given string."""
+  categoryName_starts_with: String
+
+  """All values not starting with the given string."""
+  categoryName_not_starts_with: String
+
+  """All values ending with the given string."""
+  categoryName_ends_with: String
+
+  """All values not ending with the given string."""
+  categoryName_not_ends_with: String
+  categoryColor: String
+
+  """All values that are not equal to given value."""
+  categoryColor_not: String
+
+  """All values that are contained in given list."""
+  categoryColor_in: [String!]
+
+  """All values that are not contained in given list."""
+  categoryColor_not_in: [String!]
+
+  """All values less than the given value."""
+  categoryColor_lt: String
+
+  """All values less than or equal the given value."""
+  categoryColor_lte: String
+
+  """All values greater than the given value."""
+  categoryColor_gt: String
+
+  """All values greater than or equal the given value."""
+  categoryColor_gte: String
+
+  """All values containing the given string."""
+  categoryColor_contains: String
+
+  """All values not containing the given string."""
+  categoryColor_not_contains: String
+
+  """All values starting with the given string."""
+  categoryColor_starts_with: String
+
+  """All values not starting with the given string."""
+  categoryColor_not_starts_with: String
+
+  """All values ending with the given string."""
+  categoryColor_ends_with: String
+
+  """All values not ending with the given string."""
+  categoryColor_not_ends_with: String
   account: AccountWhereInput
+  peer: PeerWhereInput
   comments_every: CommentWhereInput
   comments_some: CommentWhereInput
   comments_none: CommentWhereInput
@@ -1310,31 +1524,441 @@ input PaymentWhereUniqueInput {
   id: ID
 }
 
+type Peer implements Node {
+  id: ID!
+  account(where: AccountWhereInput): Account!
+  name: String!
+  balance: Float!
+  revenue: Float!
+  spendings: Float!
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
+  categoryName: String!
+  categoryColor: String!
+}
+
+"""A connection to a list of items."""
+type PeerConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [PeerEdge]!
+  aggregate: AggregatePeer!
+}
+
+input PeerCreateInput {
+  name: String!
+  balance: Float
+  revenue: Float
+  spendings: Float
+  categoryName: String!
+  categoryColor: String!
+  account: AccountCreateOneInput!
+  payments: PaymentCreateManyWithoutPeerInput
+}
+
+input PeerCreateOneWithoutPaymentsInput {
+  create: PeerCreateWithoutPaymentsInput
+  connect: PeerWhereUniqueInput
+}
+
+input PeerCreateWithoutPaymentsInput {
+  name: String!
+  balance: Float
+  revenue: Float
+  spendings: Float
+  categoryName: String!
+  categoryColor: String!
+  account: AccountCreateOneInput!
+}
+
+"""An edge in a connection."""
+type PeerEdge {
+  """The item at the end of the edge."""
+  node: Peer!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum PeerOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  balance_ASC
+  balance_DESC
+  revenue_ASC
+  revenue_DESC
+  spendings_ASC
+  spendings_DESC
+  categoryName_ASC
+  categoryName_DESC
+  categoryColor_ASC
+  categoryColor_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type PeerPreviousValues {
+  id: ID!
+  name: String!
+  balance: Float!
+  revenue: Float!
+  spendings: Float!
+  categoryName: String!
+  categoryColor: String!
+}
+
+type PeerSubscriptionPayload {
+  mutation: MutationType!
+  node: Peer
+  updatedFields: [String!]
+  previousValues: PeerPreviousValues
+}
+
+input PeerSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [PeerSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [PeerSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [PeerSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: PeerWhereInput
+}
+
+input PeerUpdateInput {
+  name: String
+  balance: Float
+  revenue: Float
+  spendings: Float
+  categoryName: String
+  categoryColor: String
+  account: AccountUpdateOneInput
+  payments: PaymentUpdateManyWithoutPeerInput
+}
+
+input PeerUpdateOneWithoutPaymentsInput {
+  create: PeerCreateWithoutPaymentsInput
+  connect: PeerWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: PeerUpdateWithoutPaymentsDataInput
+  upsert: PeerUpsertWithoutPaymentsInput
+}
+
+input PeerUpdateWithoutPaymentsDataInput {
+  name: String
+  balance: Float
+  revenue: Float
+  spendings: Float
+  categoryName: String
+  categoryColor: String
+  account: AccountUpdateOneInput
+}
+
+input PeerUpsertWithoutPaymentsInput {
+  update: PeerUpdateWithoutPaymentsDataInput!
+  create: PeerCreateWithoutPaymentsInput!
+}
+
+input PeerWhereInput {
+  """Logical AND on all given filters."""
+  AND: [PeerWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [PeerWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [PeerWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  balance: Float
+
+  """All values that are not equal to given value."""
+  balance_not: Float
+
+  """All values that are contained in given list."""
+  balance_in: [Float!]
+
+  """All values that are not contained in given list."""
+  balance_not_in: [Float!]
+
+  """All values less than the given value."""
+  balance_lt: Float
+
+  """All values less than or equal the given value."""
+  balance_lte: Float
+
+  """All values greater than the given value."""
+  balance_gt: Float
+
+  """All values greater than or equal the given value."""
+  balance_gte: Float
+  revenue: Float
+
+  """All values that are not equal to given value."""
+  revenue_not: Float
+
+  """All values that are contained in given list."""
+  revenue_in: [Float!]
+
+  """All values that are not contained in given list."""
+  revenue_not_in: [Float!]
+
+  """All values less than the given value."""
+  revenue_lt: Float
+
+  """All values less than or equal the given value."""
+  revenue_lte: Float
+
+  """All values greater than the given value."""
+  revenue_gt: Float
+
+  """All values greater than or equal the given value."""
+  revenue_gte: Float
+  spendings: Float
+
+  """All values that are not equal to given value."""
+  spendings_not: Float
+
+  """All values that are contained in given list."""
+  spendings_in: [Float!]
+
+  """All values that are not contained in given list."""
+  spendings_not_in: [Float!]
+
+  """All values less than the given value."""
+  spendings_lt: Float
+
+  """All values less than or equal the given value."""
+  spendings_lte: Float
+
+  """All values greater than the given value."""
+  spendings_gt: Float
+
+  """All values greater than or equal the given value."""
+  spendings_gte: Float
+  categoryName: String
+
+  """All values that are not equal to given value."""
+  categoryName_not: String
+
+  """All values that are contained in given list."""
+  categoryName_in: [String!]
+
+  """All values that are not contained in given list."""
+  categoryName_not_in: [String!]
+
+  """All values less than the given value."""
+  categoryName_lt: String
+
+  """All values less than or equal the given value."""
+  categoryName_lte: String
+
+  """All values greater than the given value."""
+  categoryName_gt: String
+
+  """All values greater than or equal the given value."""
+  categoryName_gte: String
+
+  """All values containing the given string."""
+  categoryName_contains: String
+
+  """All values not containing the given string."""
+  categoryName_not_contains: String
+
+  """All values starting with the given string."""
+  categoryName_starts_with: String
+
+  """All values not starting with the given string."""
+  categoryName_not_starts_with: String
+
+  """All values ending with the given string."""
+  categoryName_ends_with: String
+
+  """All values not ending with the given string."""
+  categoryName_not_ends_with: String
+  categoryColor: String
+
+  """All values that are not equal to given value."""
+  categoryColor_not: String
+
+  """All values that are contained in given list."""
+  categoryColor_in: [String!]
+
+  """All values that are not contained in given list."""
+  categoryColor_not_in: [String!]
+
+  """All values less than the given value."""
+  categoryColor_lt: String
+
+  """All values less than or equal the given value."""
+  categoryColor_lte: String
+
+  """All values greater than the given value."""
+  categoryColor_gt: String
+
+  """All values greater than or equal the given value."""
+  categoryColor_gte: String
+
+  """All values containing the given string."""
+  categoryColor_contains: String
+
+  """All values not containing the given string."""
+  categoryColor_not_contains: String
+
+  """All values starting with the given string."""
+  categoryColor_starts_with: String
+
+  """All values not starting with the given string."""
+  categoryColor_not_starts_with: String
+
+  """All values ending with the given string."""
+  categoryColor_ends_with: String
+
+  """All values not ending with the given string."""
+  categoryColor_not_ends_with: String
+  account: AccountWhereInput
+  payments_every: PaymentWhereInput
+  payments_some: PaymentWhereInput
+  payments_none: PaymentWhereInput
+}
+
+input PeerWhereUniqueInput {
+  id: ID
+}
+
 type Query {
   teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team]!
   teamMembers(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMember]!
-  accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account]!
   teamMemberAccounts(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMemberAccount]!
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
+  peers(where: PeerWhereInput, orderBy: PeerOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Peer]!
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment]!
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   categories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category]!
+  accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account]!
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   team(where: TeamWhereUniqueInput!): Team
   teamMember(where: TeamMemberWhereUniqueInput!): TeamMember
-  account(where: AccountWhereUniqueInput!): Account
   teamMemberAccount(where: TeamMemberAccountWhereUniqueInput!): TeamMemberAccount
   payment(where: PaymentWhereUniqueInput!): Payment
+  peer(where: PeerWhereUniqueInput!): Peer
   comment(where: CommentWhereUniqueInput!): Comment
-  user(where: UserWhereUniqueInput!): User
   category(where: CategoryWhereUniqueInput!): Category
+  account(where: AccountWhereUniqueInput!): Account
+  user(where: UserWhereUniqueInput!): User
   teamsConnection(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamConnection!
   teamMembersConnection(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamMemberConnection!
-  accountsConnection(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AccountConnection!
   teamMemberAccountsConnection(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamMemberAccountConnection!
   paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
+  peersConnection(where: PeerWhereInput, orderBy: PeerOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PeerConnection!
   commentsConnection(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection!
-  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   categoriesConnection(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CategoryConnection!
+  accountsConnection(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AccountConnection!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -1346,12 +1970,13 @@ type Query {
 type Subscription {
   team(where: TeamSubscriptionWhereInput): TeamSubscriptionPayload
   teamMember(where: TeamMemberSubscriptionWhereInput): TeamMemberSubscriptionPayload
-  account(where: AccountSubscriptionWhereInput): AccountSubscriptionPayload
   teamMemberAccount(where: TeamMemberAccountSubscriptionWhereInput): TeamMemberAccountSubscriptionPayload
   payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
+  peer(where: PeerSubscriptionWhereInput): PeerSubscriptionPayload
   comment(where: CommentSubscriptionWhereInput): CommentSubscriptionPayload
-  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   category(where: CategorySubscriptionWhereInput): CategorySubscriptionPayload
+  account(where: AccountSubscriptionWhereInput): AccountSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
 type Team implements Node {

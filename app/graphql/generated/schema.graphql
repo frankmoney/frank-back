@@ -1,19 +1,30 @@
 type Query {
-  payments: [PaymentEx]
+  inbox(accountId: ID!, first: Int!, after: ID): [Payment!]!
+  ledgerPayments(accountId: ID!, first: Int!, after: ID, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean): [Payment!]!
   team: TeamResult!
   teamAccounts: [TeamAccountsResultAccount!]!
   teammate(id: ID!): TeammateResult!
 }
 
 type Mutation {
-  addPayment(id: ID!): Payment
   editTeamMemberRole(id: ID!, admin: Boolean!, canInvite: Boolean!, accountIds: [ID!]!): TeammateResult!
 }
 
-type PaymentEx implements Node {
+type Payment implements Node {
   id: ID!
-  payment: Payment!
+  account(where: AccountWhereInput): Account!
+  postedDate: DateTime!
+  amount: Float!
+  peerName: String
+  peer(where: PeerWhereInput): Peer
+  description: String
+  comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
+  categoryName: String
+  categoryColor: String
+  rawData: Json!
 }
+
+scalar DateTime
 
 type TeamResult {
   team: TeamResultTeam!
@@ -35,17 +46,6 @@ type TeammateResult {
   accountIds: [ID!]!
 }
 
-type Payment implements Node {
-  id: ID!
-  postedDate: DateTime!
-  amount: Float!
-  category(where: CategoryWhereInput): Category
-  account(where: AccountWhereInput): Account!
-  peerAccountName: String!
-  comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
-  rawData: Json!
-}
-
 """
 An object with an ID
 """
@@ -54,188 +54,6 @@ interface Node {
   The id of the object.
   """
   id: ID!
-}
-
-scalar DateTime
-
-type Category implements Node {
-  id: ID!
-  name: String!
-  color: String!
-}
-
-input CategoryWhereInput {
-  """
-  Logical AND on all given filters.
-  """
-  AND: [CategoryWhereInput!]
-  """
-  Logical OR on all given filters.
-  """
-  OR: [CategoryWhereInput!]
-  """
-  Logical NOT on all given filters combined by AND.
-  """
-  NOT: [CategoryWhereInput!]
-  id: ID
-  """
-  All values that are not equal to given value.
-  """
-  id_not: ID
-  """
-  All values that are contained in given list.
-  """
-  id_in: [ID!]
-  """
-  All values that are not contained in given list.
-  """
-  id_not_in: [ID!]
-  """
-  All values less than the given value.
-  """
-  id_lt: ID
-  """
-  All values less than or equal the given value.
-  """
-  id_lte: ID
-  """
-  All values greater than the given value.
-  """
-  id_gt: ID
-  """
-  All values greater than or equal the given value.
-  """
-  id_gte: ID
-  """
-  All values containing the given string.
-  """
-  id_contains: ID
-  """
-  All values not containing the given string.
-  """
-  id_not_contains: ID
-  """
-  All values starting with the given string.
-  """
-  id_starts_with: ID
-  """
-  All values not starting with the given string.
-  """
-  id_not_starts_with: ID
-  """
-  All values ending with the given string.
-  """
-  id_ends_with: ID
-  """
-  All values not ending with the given string.
-  """
-  id_not_ends_with: ID
-  name: String
-  """
-  All values that are not equal to given value.
-  """
-  name_not: String
-  """
-  All values that are contained in given list.
-  """
-  name_in: [String!]
-  """
-  All values that are not contained in given list.
-  """
-  name_not_in: [String!]
-  """
-  All values less than the given value.
-  """
-  name_lt: String
-  """
-  All values less than or equal the given value.
-  """
-  name_lte: String
-  """
-  All values greater than the given value.
-  """
-  name_gt: String
-  """
-  All values greater than or equal the given value.
-  """
-  name_gte: String
-  """
-  All values containing the given string.
-  """
-  name_contains: String
-  """
-  All values not containing the given string.
-  """
-  name_not_contains: String
-  """
-  All values starting with the given string.
-  """
-  name_starts_with: String
-  """
-  All values not starting with the given string.
-  """
-  name_not_starts_with: String
-  """
-  All values ending with the given string.
-  """
-  name_ends_with: String
-  """
-  All values not ending with the given string.
-  """
-  name_not_ends_with: String
-  color: String
-  """
-  All values that are not equal to given value.
-  """
-  color_not: String
-  """
-  All values that are contained in given list.
-  """
-  color_in: [String!]
-  """
-  All values that are not contained in given list.
-  """
-  color_not_in: [String!]
-  """
-  All values less than the given value.
-  """
-  color_lt: String
-  """
-  All values less than or equal the given value.
-  """
-  color_lte: String
-  """
-  All values greater than the given value.
-  """
-  color_gt: String
-  """
-  All values greater than or equal the given value.
-  """
-  color_gte: String
-  """
-  All values containing the given string.
-  """
-  color_contains: String
-  """
-  All values not containing the given string.
-  """
-  color_not_contains: String
-  """
-  All values starting with the given string.
-  """
-  color_starts_with: String
-  """
-  All values not starting with the given string.
-  """
-  color_not_starts_with: String
-  """
-  All values ending with the given string.
-  """
-  color_ends_with: String
-  """
-  All values not ending with the given string.
-  """
-  color_not_ends_with: String
 }
 
 type Account implements Node {
@@ -465,6 +283,336 @@ input AccountWhereInput {
   members_none: TeamMemberAccountWhereInput
 }
 
+type Peer implements Node {
+  id: ID!
+  account(where: AccountWhereInput): Account!
+  name: String!
+  balance: Float!
+  revenue: Float!
+  spendings: Float!
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
+  categoryName: String!
+  categoryColor: String!
+}
+
+input PeerWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [PeerWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [PeerWhereInput!]
+  """
+  Logical NOT on all given filters combined by AND.
+  """
+  NOT: [PeerWhereInput!]
+  id: ID
+  """
+  All values that are not equal to given value.
+  """
+  id_not: ID
+  """
+  All values that are contained in given list.
+  """
+  id_in: [ID!]
+  """
+  All values that are not contained in given list.
+  """
+  id_not_in: [ID!]
+  """
+  All values less than the given value.
+  """
+  id_lt: ID
+  """
+  All values less than or equal the given value.
+  """
+  id_lte: ID
+  """
+  All values greater than the given value.
+  """
+  id_gt: ID
+  """
+  All values greater than or equal the given value.
+  """
+  id_gte: ID
+  """
+  All values containing the given string.
+  """
+  id_contains: ID
+  """
+  All values not containing the given string.
+  """
+  id_not_contains: ID
+  """
+  All values starting with the given string.
+  """
+  id_starts_with: ID
+  """
+  All values not starting with the given string.
+  """
+  id_not_starts_with: ID
+  """
+  All values ending with the given string.
+  """
+  id_ends_with: ID
+  """
+  All values not ending with the given string.
+  """
+  id_not_ends_with: ID
+  name: String
+  """
+  All values that are not equal to given value.
+  """
+  name_not: String
+  """
+  All values that are contained in given list.
+  """
+  name_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  name_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  name_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  name_lte: String
+  """
+  All values greater than the given value.
+  """
+  name_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  name_gte: String
+  """
+  All values containing the given string.
+  """
+  name_contains: String
+  """
+  All values not containing the given string.
+  """
+  name_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  name_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  name_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  name_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  name_not_ends_with: String
+  balance: Float
+  """
+  All values that are not equal to given value.
+  """
+  balance_not: Float
+  """
+  All values that are contained in given list.
+  """
+  balance_in: [Float!]
+  """
+  All values that are not contained in given list.
+  """
+  balance_not_in: [Float!]
+  """
+  All values less than the given value.
+  """
+  balance_lt: Float
+  """
+  All values less than or equal the given value.
+  """
+  balance_lte: Float
+  """
+  All values greater than the given value.
+  """
+  balance_gt: Float
+  """
+  All values greater than or equal the given value.
+  """
+  balance_gte: Float
+  revenue: Float
+  """
+  All values that are not equal to given value.
+  """
+  revenue_not: Float
+  """
+  All values that are contained in given list.
+  """
+  revenue_in: [Float!]
+  """
+  All values that are not contained in given list.
+  """
+  revenue_not_in: [Float!]
+  """
+  All values less than the given value.
+  """
+  revenue_lt: Float
+  """
+  All values less than or equal the given value.
+  """
+  revenue_lte: Float
+  """
+  All values greater than the given value.
+  """
+  revenue_gt: Float
+  """
+  All values greater than or equal the given value.
+  """
+  revenue_gte: Float
+  spendings: Float
+  """
+  All values that are not equal to given value.
+  """
+  spendings_not: Float
+  """
+  All values that are contained in given list.
+  """
+  spendings_in: [Float!]
+  """
+  All values that are not contained in given list.
+  """
+  spendings_not_in: [Float!]
+  """
+  All values less than the given value.
+  """
+  spendings_lt: Float
+  """
+  All values less than or equal the given value.
+  """
+  spendings_lte: Float
+  """
+  All values greater than the given value.
+  """
+  spendings_gt: Float
+  """
+  All values greater than or equal the given value.
+  """
+  spendings_gte: Float
+  categoryName: String
+  """
+  All values that are not equal to given value.
+  """
+  categoryName_not: String
+  """
+  All values that are contained in given list.
+  """
+  categoryName_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  categoryName_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  categoryName_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  categoryName_lte: String
+  """
+  All values greater than the given value.
+  """
+  categoryName_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  categoryName_gte: String
+  """
+  All values containing the given string.
+  """
+  categoryName_contains: String
+  """
+  All values not containing the given string.
+  """
+  categoryName_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  categoryName_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  categoryName_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  categoryName_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  categoryName_not_ends_with: String
+  categoryColor: String
+  """
+  All values that are not equal to given value.
+  """
+  categoryColor_not: String
+  """
+  All values that are contained in given list.
+  """
+  categoryColor_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  categoryColor_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  categoryColor_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  categoryColor_lte: String
+  """
+  All values greater than the given value.
+  """
+  categoryColor_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  categoryColor_gte: String
+  """
+  All values containing the given string.
+  """
+  categoryColor_contains: String
+  """
+  All values not containing the given string.
+  """
+  categoryColor_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  categoryColor_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  categoryColor_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  categoryColor_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  categoryColor_not_ends_with: String
+  account: AccountWhereInput
+  payments_every: PaymentWhereInput
+  payments_some: PaymentWhereInput
+  payments_none: PaymentWhereInput
+}
+
 type Comment implements Node {
   id: ID!
   payment(where: PaymentWhereInput): Payment!
@@ -574,6 +722,12 @@ type TeamResultProfile {
   canInvite: Boolean!
   accountIds: [String!]!
   acl: TeamResultAcl!
+}
+
+type Category implements Node {
+  id: ID!
+  name: String!
+  color: String!
 }
 
 type Team implements Node {
@@ -731,61 +885,220 @@ input PaymentWhereInput {
   All values greater than or equal the given value.
   """
   amount_gte: Float
-  peerAccountName: String
+  peerName: String
   """
   All values that are not equal to given value.
   """
-  peerAccountName_not: String
+  peerName_not: String
   """
   All values that are contained in given list.
   """
-  peerAccountName_in: [String!]
+  peerName_in: [String!]
   """
   All values that are not contained in given list.
   """
-  peerAccountName_not_in: [String!]
+  peerName_not_in: [String!]
   """
   All values less than the given value.
   """
-  peerAccountName_lt: String
+  peerName_lt: String
   """
   All values less than or equal the given value.
   """
-  peerAccountName_lte: String
+  peerName_lte: String
   """
   All values greater than the given value.
   """
-  peerAccountName_gt: String
+  peerName_gt: String
   """
   All values greater than or equal the given value.
   """
-  peerAccountName_gte: String
+  peerName_gte: String
   """
   All values containing the given string.
   """
-  peerAccountName_contains: String
+  peerName_contains: String
   """
   All values not containing the given string.
   """
-  peerAccountName_not_contains: String
+  peerName_not_contains: String
   """
   All values starting with the given string.
   """
-  peerAccountName_starts_with: String
+  peerName_starts_with: String
   """
   All values not starting with the given string.
   """
-  peerAccountName_not_starts_with: String
+  peerName_not_starts_with: String
   """
   All values ending with the given string.
   """
-  peerAccountName_ends_with: String
+  peerName_ends_with: String
   """
   All values not ending with the given string.
   """
-  peerAccountName_not_ends_with: String
-  category: CategoryWhereInput
+  peerName_not_ends_with: String
+  description: String
+  """
+  All values that are not equal to given value.
+  """
+  description_not: String
+  """
+  All values that are contained in given list.
+  """
+  description_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  description_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  description_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  description_lte: String
+  """
+  All values greater than the given value.
+  """
+  description_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  description_gte: String
+  """
+  All values containing the given string.
+  """
+  description_contains: String
+  """
+  All values not containing the given string.
+  """
+  description_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  description_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  description_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  description_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  description_not_ends_with: String
+  categoryName: String
+  """
+  All values that are not equal to given value.
+  """
+  categoryName_not: String
+  """
+  All values that are contained in given list.
+  """
+  categoryName_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  categoryName_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  categoryName_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  categoryName_lte: String
+  """
+  All values greater than the given value.
+  """
+  categoryName_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  categoryName_gte: String
+  """
+  All values containing the given string.
+  """
+  categoryName_contains: String
+  """
+  All values not containing the given string.
+  """
+  categoryName_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  categoryName_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  categoryName_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  categoryName_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  categoryName_not_ends_with: String
+  categoryColor: String
+  """
+  All values that are not equal to given value.
+  """
+  categoryColor_not: String
+  """
+  All values that are contained in given list.
+  """
+  categoryColor_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  categoryColor_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  categoryColor_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  categoryColor_lte: String
+  """
+  All values greater than the given value.
+  """
+  categoryColor_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  categoryColor_gte: String
+  """
+  All values containing the given string.
+  """
+  categoryColor_contains: String
+  """
+  All values not containing the given string.
+  """
+  categoryColor_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  categoryColor_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  categoryColor_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  categoryColor_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  categoryColor_not_ends_with: String
   account: AccountWhereInput
+  peer: PeerWhereInput
   comments_every: CommentWhereInput
   comments_some: CommentWhereInput
   comments_none: CommentWhereInput
@@ -798,8 +1111,14 @@ enum PaymentOrderByInput {
   postedDate_DESC
   amount_ASC
   amount_DESC
-  peerAccountName_ASC
-  peerAccountName_DESC
+  peerName_ASC
+  peerName_DESC
+  description_ASC
+  description_DESC
+  categoryName_ASC
+  categoryName_DESC
+  categoryColor_ASC
+  categoryColor_DESC
   rawData_ASC
   rawData_DESC
   updatedAt_ASC

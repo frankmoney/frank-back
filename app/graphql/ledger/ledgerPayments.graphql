@@ -1,0 +1,13 @@
+extend type Query {
+  ledgerPayments(
+    accountId: ID!,
+    first: Int!,
+    after: ID,
+    search: String,
+    dateMin: DateTime,
+    dateMax: DateTime,
+    amountMin: Float,
+    amountMax: Float,
+    verified: Boolean
+  ): [Payment!]!
+}
