@@ -6,9 +6,8 @@ extend type Query {
     dateMax: DateTime,
     amountMin: Float,
     amountMax: Float,
-    verified: Boolean
-    categoryName: String
-    categoryColor: String
+    verified: Boolean,
+    categoryId: ID
   ): LedgerPaymentsCount!
 }
 

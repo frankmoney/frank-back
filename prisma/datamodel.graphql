@@ -56,6 +56,7 @@ type Payment {
   peer: Peer
   description: String
   comments: [Comment!]!
+  category: Category
   categoryName: String
   categoryColor: String
   rawData: Json!
@@ -69,6 +70,7 @@ type Peer {
   revenue: Float! @default(value: "0.0")
   spendings: Float! @default(value: "0.0")
   payments: [Payment!]!
+  category: Category
   categoryName: String!
   categoryColor: String!
 }

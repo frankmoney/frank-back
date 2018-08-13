@@ -17,8 +17,7 @@ export default createPrivateResolver(
       amountMin,
       amountMax,
       verified,
-      categoryName,
-      categoryColor,
+      categoryId,
     },
     user,
     prisma: { query },
@@ -34,14 +33,9 @@ export default createPrivateResolver(
       postedDate_lte: dateMax,
       amount_gte: amountMin,
       amount_lte: amountMax,
-    }
-
-    if (categoryName) {
-      where.categoryName = categoryName
-    }
-
-    if (categoryColor) {
-      where.categoryColor = categoryColor
+      category: {
+        id: categoryId,
+      },
     }
 
     if (search) {
@@ -55,7 +49,9 @@ export default createPrivateResolver(
           },
         },
         {
-          categoryName_contains: search,
+          category: {
+            name_contains: search,
+          },
         },
         {
           description_contains: search,

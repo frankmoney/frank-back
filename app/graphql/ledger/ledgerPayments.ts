@@ -46,7 +46,9 @@ export default createPrivateResolver(
           },
         },
         {
-          categoryName_contains: search,
+          category: {
+            name_contains: search,
+          },
         },
         {
           description_contains: search,

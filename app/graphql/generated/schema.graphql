@@ -1,7 +1,7 @@
 type Query {
   inbox(accountId: ID!, first: Int!, after: ID): [Payment!]!
   ledgerPayments(accountId: ID!, first: Int!, after: ID, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean): [Payment!]!
-  ledgerPaymentsCount(accountId: ID!, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean, categoryName: String, categoryColor: String): LedgerPaymentsCount!
+  ledgerPaymentsCount(accountId: ID!, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean, categoryId: ID): LedgerPaymentsCount!
   team: TeamResult!
   teamAccounts: [TeamAccountsResultAccount!]!
   teammate(id: ID!): TeammateResult!
@@ -20,6 +20,7 @@ type Payment implements Node {
   peer(where: PeerWhereInput): Peer
   description: String
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
+  category(where: CategoryWhereInput): Category
   categoryName: String
   categoryColor: String
   rawData: Json!
@@ -296,6 +297,7 @@ type Peer implements Node {
   revenue: Float!
   spendings: Float!
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
+  category(where: CategoryWhereInput): Category
   categoryName: String!
   categoryColor: String!
 }
@@ -616,6 +618,7 @@ input PeerWhereInput {
   payments_every: PaymentWhereInput
   payments_some: PaymentWhereInput
   payments_none: PaymentWhereInput
+  category: CategoryWhereInput
 }
 
 type Comment implements Node {
@@ -706,6 +709,186 @@ enum CommentOrderByInput {
   createdAt_DESC
 }
 
+type Category implements Node {
+  id: ID!
+  name: String!
+  color: String!
+}
+
+input CategoryWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [CategoryWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [CategoryWhereInput!]
+  """
+  Logical NOT on all given filters combined by AND.
+  """
+  NOT: [CategoryWhereInput!]
+  id: ID
+  """
+  All values that are not equal to given value.
+  """
+  id_not: ID
+  """
+  All values that are contained in given list.
+  """
+  id_in: [ID!]
+  """
+  All values that are not contained in given list.
+  """
+  id_not_in: [ID!]
+  """
+  All values less than the given value.
+  """
+  id_lt: ID
+  """
+  All values less than or equal the given value.
+  """
+  id_lte: ID
+  """
+  All values greater than the given value.
+  """
+  id_gt: ID
+  """
+  All values greater than or equal the given value.
+  """
+  id_gte: ID
+  """
+  All values containing the given string.
+  """
+  id_contains: ID
+  """
+  All values not containing the given string.
+  """
+  id_not_contains: ID
+  """
+  All values starting with the given string.
+  """
+  id_starts_with: ID
+  """
+  All values not starting with the given string.
+  """
+  id_not_starts_with: ID
+  """
+  All values ending with the given string.
+  """
+  id_ends_with: ID
+  """
+  All values not ending with the given string.
+  """
+  id_not_ends_with: ID
+  name: String
+  """
+  All values that are not equal to given value.
+  """
+  name_not: String
+  """
+  All values that are contained in given list.
+  """
+  name_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  name_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  name_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  name_lte: String
+  """
+  All values greater than the given value.
+  """
+  name_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  name_gte: String
+  """
+  All values containing the given string.
+  """
+  name_contains: String
+  """
+  All values not containing the given string.
+  """
+  name_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  name_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  name_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  name_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  name_not_ends_with: String
+  color: String
+  """
+  All values that are not equal to given value.
+  """
+  color_not: String
+  """
+  All values that are contained in given list.
+  """
+  color_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  color_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  color_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  color_lte: String
+  """
+  All values greater than the given value.
+  """
+  color_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  color_gte: String
+  """
+  All values containing the given string.
+  """
+  color_contains: String
+  """
+  All values not containing the given string.
+  """
+  color_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  color_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  color_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  color_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  color_not_ends_with: String
+}
+
 """
 Raw JSON value
 """
@@ -727,12 +910,6 @@ type TeamResultProfile {
   canInvite: Boolean!
   accountIds: [String!]!
   acl: TeamResultAcl!
-}
-
-type Category implements Node {
-  id: ID!
-  name: String!
-  color: String!
 }
 
 type Team implements Node {
@@ -1107,6 +1284,7 @@ input PaymentWhereInput {
   comments_every: CommentWhereInput
   comments_some: CommentWhereInput
   comments_none: CommentWhereInput
+  category: CategoryWhereInput
 }
 
 enum PaymentOrderByInput {
