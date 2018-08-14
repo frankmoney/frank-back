@@ -1,4 +1,3 @@
-import assertAccountAccess from 'app/assertAccountAccess'
 import {
   PaymentOrderByInput,
   PaymentWhereInput,
@@ -8,6 +7,7 @@ import createPrivateResolver from 'utils/createPrivateResolver'
 export default createPrivateResolver(
   'ledgerPayments',
   async ({
+    assert,
     args: {
       accountId,
       first,
@@ -23,7 +23,7 @@ export default createPrivateResolver(
     prisma: { query },
     info,
   }) => {
-    await assertAccountAccess(user.id, accountId, { query })
+    await assert.accountAccess(accountId)
 
     const where: PaymentWhereInput = {
       account: {

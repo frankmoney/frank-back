@@ -1,5 +1,6 @@
 type Query {
   inbox(accountId: ID!, first: Int!, after: ID): [Payment!]!
+  ledgerCategoriesPercentage(accountId: ID!, precision: Int!, dateMin: DateTime, dateMax: DateTime): LedgerCategoriesPercentage!
   ledgerPayments(accountId: ID!, first: Int!, after: ID, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean): [Payment!]!
   ledgerPaymentsCount(accountId: ID!, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean, categoryId: ID): LedgerPaymentsCount!
   team: TeamResult!
@@ -24,6 +25,10 @@ type Payment implements Node {
   categoryName: String
   categoryColor: String
   rawData: Json!
+}
+
+type LedgerCategoriesPercentage {
+  items: [LedgerCategoriesPercentageItem!]!
 }
 
 scalar DateTime
@@ -893,6 +898,12 @@ input CategoryWhereInput {
 Raw JSON value
 """
 scalar Json
+
+type LedgerCategoriesPercentageItem {
+  category: Category
+  incomePercentage: Float!
+  expensesPercentage: Float!
+}
 
 type TeamResultTeam {
   id: ID!

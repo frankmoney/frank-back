@@ -1,15 +1,15 @@
-import assertAccountAccess from 'app/assertAccountAccess'
 import createPrivateResolver from 'utils/createPrivateResolver'
 
 export default createPrivateResolver(
   'inbox',
   async ({
+    assert,
     args: { accountId, first, after },
     user,
     prisma: { query },
     info,
   }) => {
-    await assertAccountAccess(user.id, accountId, { query })
+    await assert.accountAccess(accountId)
 
     const payments = await query.payments(
       {
