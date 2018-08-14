@@ -7,6 +7,7 @@ import { Context } from 'app/Context'
 import inbox from './inbox'
 import ledger from './ledger'
 import team from './team'
+import test from './test'
 
 const merge = (...args: any[]) => {
   let left = {}
@@ -28,6 +29,6 @@ export const typeDefs = readFileSync(
 )
 
 export const resolvers: IResolvers<any, Context> = {
-  ...merge(inbox, ledger, team),
+  ...merge(inbox, ledger, team, test),
   JSON: GraphQLJSON,
 }

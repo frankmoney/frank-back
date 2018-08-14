@@ -5,6 +5,7 @@ type Query {
   team: TeamResult!
   teamAccounts: [TeamAccountsResultAccount!]!
   teammate(id: ID!): TeammateResult!
+  me: User
 }
 
 type Mutation {
@@ -50,6 +51,15 @@ type TeammateResult {
   admin: Boolean!
   canInvite: Boolean!
   accountIds: [ID!]!
+}
+
+type User implements Node {
+  id: ID!
+  email: String!
+  firstName: String!
+  lastName: String
+  passwordHash: String!
+  teams(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMember!]
 }
 
 """
@@ -912,13 +922,6 @@ type TeamResultProfile {
   acl: TeamResultAcl!
 }
 
-type Team implements Node {
-  id: ID!
-  name: String!
-  accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account!]
-  members(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMember!]
-}
-
 type TeamMember implements Node {
   id: ID!
   team(where: TeamWhereInput): Team!
@@ -928,19 +931,121 @@ type TeamMember implements Node {
   accounts(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMemberAccount!]
 }
 
+input TeamMemberWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [TeamMemberWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [TeamMemberWhereInput!]
+  """
+  Logical NOT on all given filters combined by AND.
+  """
+  NOT: [TeamMemberWhereInput!]
+  id: ID
+  """
+  All values that are not equal to given value.
+  """
+  id_not: ID
+  """
+  All values that are contained in given list.
+  """
+  id_in: [ID!]
+  """
+  All values that are not contained in given list.
+  """
+  id_not_in: [ID!]
+  """
+  All values less than the given value.
+  """
+  id_lt: ID
+  """
+  All values less than or equal the given value.
+  """
+  id_lte: ID
+  """
+  All values greater than the given value.
+  """
+  id_gt: ID
+  """
+  All values greater than or equal the given value.
+  """
+  id_gte: ID
+  """
+  All values containing the given string.
+  """
+  id_contains: ID
+  """
+  All values not containing the given string.
+  """
+  id_not_contains: ID
+  """
+  All values starting with the given string.
+  """
+  id_starts_with: ID
+  """
+  All values not starting with the given string.
+  """
+  id_not_starts_with: ID
+  """
+  All values ending with the given string.
+  """
+  id_ends_with: ID
+  """
+  All values not ending with the given string.
+  """
+  id_not_ends_with: ID
+  role: TeamMemberRole
+  """
+  All values that are not equal to given value.
+  """
+  role_not: TeamMemberRole
+  """
+  All values that are contained in given list.
+  """
+  role_in: [TeamMemberRole!]
+  """
+  All values that are not contained in given list.
+  """
+  role_not_in: [TeamMemberRole!]
+  canInvite: Boolean
+  """
+  All values that are not equal to given value.
+  """
+  canInvite_not: Boolean
+  team: TeamWhereInput
+  user: UserWhereInput
+  accounts_every: TeamMemberAccountWhereInput
+  accounts_some: TeamMemberAccountWhereInput
+  accounts_none: TeamMemberAccountWhereInput
+}
+
+enum TeamMemberOrderByInput {
+  id_ASC
+  id_DESC
+  role_ASC
+  role_DESC
+  canInvite_ASC
+  canInvite_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type Team implements Node {
+  id: ID!
+  name: String!
+  accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account!]
+  members(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMember!]
+}
+
 type TeamMemberAccount implements Node {
   id: ID!
   teamMember(where: TeamMemberWhereInput): TeamMember!
   account(where: AccountWhereInput): Account!
-}
-
-type User implements Node {
-  id: ID!
-  email: String!
-  firstName: String!
-  lastName: String
-  passwordHash: String!
-  teams(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMember!]
 }
 
 input PaymentWhereInput {
@@ -1814,6 +1919,12 @@ type TeamResultAcl {
   editPassword: Boolean!
 }
 
+enum TeamMemberRole {
+  ADMIN
+  MANAGER
+  MEMBER
+}
+
 enum AccountOrderByInput {
   id_ASC
   id_DESC
@@ -1831,114 +1942,4 @@ enum AccountOrderByInput {
   updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
-}
-
-input TeamMemberWhereInput {
-  """
-  Logical AND on all given filters.
-  """
-  AND: [TeamMemberWhereInput!]
-  """
-  Logical OR on all given filters.
-  """
-  OR: [TeamMemberWhereInput!]
-  """
-  Logical NOT on all given filters combined by AND.
-  """
-  NOT: [TeamMemberWhereInput!]
-  id: ID
-  """
-  All values that are not equal to given value.
-  """
-  id_not: ID
-  """
-  All values that are contained in given list.
-  """
-  id_in: [ID!]
-  """
-  All values that are not contained in given list.
-  """
-  id_not_in: [ID!]
-  """
-  All values less than the given value.
-  """
-  id_lt: ID
-  """
-  All values less than or equal the given value.
-  """
-  id_lte: ID
-  """
-  All values greater than the given value.
-  """
-  id_gt: ID
-  """
-  All values greater than or equal the given value.
-  """
-  id_gte: ID
-  """
-  All values containing the given string.
-  """
-  id_contains: ID
-  """
-  All values not containing the given string.
-  """
-  id_not_contains: ID
-  """
-  All values starting with the given string.
-  """
-  id_starts_with: ID
-  """
-  All values not starting with the given string.
-  """
-  id_not_starts_with: ID
-  """
-  All values ending with the given string.
-  """
-  id_ends_with: ID
-  """
-  All values not ending with the given string.
-  """
-  id_not_ends_with: ID
-  role: TeamMemberRole
-  """
-  All values that are not equal to given value.
-  """
-  role_not: TeamMemberRole
-  """
-  All values that are contained in given list.
-  """
-  role_in: [TeamMemberRole!]
-  """
-  All values that are not contained in given list.
-  """
-  role_not_in: [TeamMemberRole!]
-  canInvite: Boolean
-  """
-  All values that are not equal to given value.
-  """
-  canInvite_not: Boolean
-  team: TeamWhereInput
-  user: UserWhereInput
-  accounts_every: TeamMemberAccountWhereInput
-  accounts_some: TeamMemberAccountWhereInput
-  accounts_none: TeamMemberAccountWhereInput
-}
-
-enum TeamMemberOrderByInput {
-  id_ASC
-  id_DESC
-  role_ASC
-  role_DESC
-  canInvite_ASC
-  canInvite_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  createdAt_ASC
-  createdAt_DESC
-}
-
-enum TeamMemberRole {
-  ADMIN
-  MANAGER
-  MEMBER
 }

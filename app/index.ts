@@ -10,27 +10,34 @@ const schema = makeExecutableSchema({ typeDefs, resolvers })
 
 const app = express()
 
-const prisma = <PrismaType><any>new Prisma({
-  typeDefs: 'app/graphql/generated/prisma.graphql',
-  endpoint: process.env.PRISMA_ENDPOINT,
-})
-
 app.use(cookieParser())
 
-app.use((req: any, res, next) => {
+app.use(async (req, res, next) => {
+  try {
+    req.headers['x-authenticated-user-id'] = ''
 
-  prisma.query
-    .user({ where: { email: req.query.currentUser || req.cookies.currentUser || '' } }, '{id}')
-    .then((result) => {
+    const email =
+      req.query.currentUser ||
+      req.headers['x-current-user'] ||
+      req.cookies.currentUser
 
-      if (result) {
-        req.headers['x-authenticated-user-id'] = result.id
-        next()
+    if (email) {
+      const prisma = <PrismaType>(<any>new Prisma({
+        typeDefs: 'app/graphql/generated/prisma.graphql',
+        endpoint: process.env.PRISMA_ENDPOINT,
+      }))
+
+      const user = await prisma.query.user({ where: { email } }, `{ id }`)
+
+      if (user && user.id) {
+        req.headers['x-authenticated-user-id'] = user.id
       }
-      else {
-        res.status(401).set('Content-Type', 'text/plain').end('Unauthorized. Set currentUser')
-      }
-    }, next)
+    }
+
+    next()
+  } catch (exc) {
+    next(exc)
+  }
 })
 
 const server = new ApolloServer({
@@ -38,7 +45,10 @@ const server = new ApolloServer({
   context({ req }: any) {
     return {
       user: { id: req.headers['x-authenticated-user-id'] },
-      prisma,
+      prisma: new Prisma({
+        typeDefs: 'app/graphql/generated/prisma.graphql',
+        endpoint: process.env.PRISMA_ENDPOINT,
+      }),
     }
   },
 })
@@ -46,5 +56,10 @@ const server = new ApolloServer({
 server.applyMiddleware({ app }) // app is from an existing express app
 
 app.listen({ port: process.env.PORT }, () =>
-  console.log(`🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`),
+  // tslint:disable-next-line:no-console
+  console.log(
+    `🚀 Server ready at http://localhost:${process.env.PORT}${
+      server.graphqlPath
+    }`
+  )
 )
