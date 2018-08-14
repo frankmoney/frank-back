@@ -7,6 +7,7 @@
   "scripts": {
     "deploy": "node scripts deploy",
     "gen": "node scripts gen",
+    "migrations": "node scripts migrations",
     "lint": "node node_modules/tslint/bin/tslint -p . && echo \"eslint: no lint errors\"",
     "lint-fix": "node node_modules/tslint/bin/tslint -p . --fix && echo \"eslint: no lint errors\"",
     "prettier": "node node_modules/prettier/bin-prettier.js -l **/*.js **/*.ts **/*.json",
@@ -30,6 +31,7 @@
     "@types/cookie-parser": "^1.4.1",
     "@types/debug": "^0.0.30",
     "@types/graphql-type-json": "^0.1.2",
+    "@types/ramda": "^0.25.36",
     "apollo-server": "^2.0.0",
     "apollo-server-express": "^2.0.0",
     "cookie-parser": "^1.4.3",
