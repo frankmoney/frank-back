@@ -5,11 +5,13 @@ extend type Query {
     accountId: ID!,
     first: Int!,
     after: ID,
+    skip: Int,
     search: String,
     dateMin: DateTime,
     dateMax: DateTime,
     amountMin: Float,
     amountMax: Float,
-    verified: Boolean
+    verified: Boolean,
+    categoryId: ID
   ): [Payment!]!
 }

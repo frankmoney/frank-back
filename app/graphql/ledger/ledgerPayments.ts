@@ -12,12 +12,14 @@ export default createPrivateResolver(
       accountId,
       first,
       after,
+      skip,
       search,
       dateMin,
       dateMax,
       amountMin,
       amountMax,
       verified,
+      categoryId,
     },
     user,
     prisma: { query },
@@ -33,6 +35,9 @@ export default createPrivateResolver(
       postedDate_lte: dateMax,
       amount_gte: amountMin,
       amount_lte: amountMax,
+      category: {
+        id: categoryId,
+      },
     }
 
     if (search) {
@@ -64,6 +69,7 @@ export default createPrivateResolver(
         orderBy,
         first,
         after,
+        skip,
       },
       info
     )

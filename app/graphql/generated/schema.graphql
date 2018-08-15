@@ -1,7 +1,7 @@
 type Query {
   inbox(accountId: ID!, first: Int!, after: ID): [Payment!]!
   ledgerCategoriesChart(accountId: ID!, dateMin: DateTime, dateMax: DateTime): LedgerCategoriesChart!
-  ledgerPayments(accountId: ID!, first: Int!, after: ID, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean): [Payment!]!
+  ledgerPayments(accountId: ID!, first: Int!, after: ID, skip: Int, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean, categoryId: ID): [Payment!]!
   ledgerPaymentsCount(accountId: ID!, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean, categoryId: ID): LedgerPaymentsCount!
   team: TeamResult!
   teamAccounts: [TeamAccountsResultAccount!]!
