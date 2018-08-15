@@ -67,7 +67,9 @@ export default createPrivateResolver(
       role
       canInvite
       accounts {
-        id
+        account {
+          id
+        }
       }
     }`
     ))[0]
