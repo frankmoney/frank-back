@@ -1,10 +1,10 @@
-import ledgerCategoriesPercentage from './ledgerCategoriesPercentage'
+import ledgerCategoriesChart from './ledgerCategoriesChart'
 import ledgerPayments from './ledgerPayments'
 import ledgerPaymentsCount from './ledgerPaymentsCount'
 
 export default {
   Query: {
-    ledgerCategoriesPercentage,
+    ledgerCategoriesChart,
     ledgerPayments,
     ledgerPaymentsCount,
   },

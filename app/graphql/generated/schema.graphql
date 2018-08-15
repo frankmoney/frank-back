@@ -1,6 +1,6 @@
 type Query {
   inbox(accountId: ID!, first: Int!, after: ID): [Payment!]!
-  ledgerCategoriesPercentage(accountId: ID!, precision: Int!, dateMin: DateTime, dateMax: DateTime): LedgerCategoriesPercentage!
+  ledgerCategoriesChart(accountId: ID!, dateMin: DateTime, dateMax: DateTime): LedgerCategoriesChart!
   ledgerPayments(accountId: ID!, first: Int!, after: ID, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean): [Payment!]!
   ledgerPaymentsCount(accountId: ID!, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean, categoryId: ID): LedgerPaymentsCount!
   team: TeamResult!
@@ -28,8 +28,10 @@ type Payment implements Node {
   rawData: Json!
 }
 
-type LedgerCategoriesPercentage {
-  items: [LedgerCategoriesPercentageItem!]!
+type LedgerCategoriesChart {
+  totalIncome: Float!
+  totalExpenses: Float!
+  items: [LedgerCategoriesChartItem!]!
 }
 
 scalar DateTime
@@ -909,10 +911,10 @@ Raw JSON value
 """
 scalar Json
 
-type LedgerCategoriesPercentageItem {
+type LedgerCategoriesChartItem {
   category: Category
-  incomePercentage: Float!
-  expensesPercentage: Float!
+  income: Float!
+  expenses: Float!
 }
 
 type TeamResultTeam {

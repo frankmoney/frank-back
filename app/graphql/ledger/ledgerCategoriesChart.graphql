@@ -1,0 +1,21 @@
+# import Category from '../generated/prisma.graphql'
+
+extend type Query {
+  ledgerCategoriesChart(
+    accountId: ID!
+    dateMin: DateTime
+    dateMax: DateTime
+  ): LedgerCategoriesChart!
+}
+
+type LedgerCategoriesChart {
+  totalIncome: Float!
+  totalExpenses: Float!
+  items: [LedgerCategoriesChartItem!]!
+}
+
+type LedgerCategoriesChartItem {
+  category: Category
+  income: Float!
+  expenses: Float!
+}
