@@ -1,0 +1,9 @@
+extend type Query {
+  ledgerAccountStatistics(accountId: ID!): LedgerAccountStatistics
+}
+
+type LedgerAccountStatistics {
+  paymentAmountMin: Float
+  paymentAmountMax: Float
+  paymentDateMin: String
+}

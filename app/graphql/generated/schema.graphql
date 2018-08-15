@@ -1,5 +1,6 @@
 type Query {
   inbox(accountId: ID!, first: Int!, after: ID): [Payment!]!
+  ledgerAccountStatistics(accountId: ID!): LedgerAccountStatistics
   ledgerCategoriesChart(accountId: ID!, dateMin: DateTime, dateMax: DateTime): LedgerCategoriesChart!
   ledgerPayments(accountId: ID!, first: Int!, after: ID, skip: Int, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean, categoryId: ID): [Payment!]!
   ledgerPaymentsCount(accountId: ID!, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean, categoryId: ID): LedgerPaymentsCount!
@@ -26,6 +27,12 @@ type Payment implements Node {
   categoryName: String
   categoryColor: String
   rawData: Json!
+}
+
+type LedgerAccountStatistics {
+  paymentAmountMin: Float
+  paymentAmountMax: Float
+  paymentDateMin: String
 }
 
 type LedgerCategoriesChart {
