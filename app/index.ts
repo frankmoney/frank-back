@@ -53,7 +53,7 @@ const server = new ApolloServer({
   },
 })
 
-server.applyMiddleware({ app }) // app is from an existing express app
+server.applyMiddleware({ app, path: '/' }) // app is from an existing express app
 
 app.listen({ port: process.env.PORT }, () =>
   // tslint:disable-next-line:no-console
