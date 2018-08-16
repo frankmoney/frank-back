@@ -1,4 +1,5 @@
 type Query {
+  directoryPeers(accountId: ID!, sortBy: DirectoryPeersInputSortBy, donors: Boolean, recipients: Boolean, search: String, first: Int, skip: Int): [Peer!]!
   inbox(accountId: ID!, first: Int!, after: ID): [Payment!]!
   ledgerAccountStatistics(accountId: ID!, categoryId: ID): LedgerAccountStatistics
   ledgerBarChart(accountId: ID!, categoryId: ID, dateMin: DateTime, dateMax: DateTime): LedgerBarChart!
@@ -13,6 +14,27 @@ type Query {
 
 type Mutation {
   editTeamMemberRole(id: ID!, admin: Boolean!, canInvite: Boolean!, accountIds: [ID!]!): TeammateResult!
+}
+
+type Peer implements Node {
+  id: ID!
+  account(where: AccountWhereInput): Account!
+  name: String!
+  total: Float!
+  revenue: Float!
+  spendings: Float!
+  lastPaymentDate: DateTime
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
+  category(where: CategoryWhereInput): Category
+  categories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category!]
+}
+
+enum DirectoryPeersInputSortBy {
+  name
+  date
+  total
+  revenue
+  spendings
 }
 
 type Payment implements Node {
@@ -100,6 +122,7 @@ type Account implements Node {
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
   team(where: TeamWhereInput): Team!
   members(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMemberAccount!]
+  peers(where: PeerWhereInput, orderBy: PeerOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Peer!]
   rawData: Json
 }
 
@@ -316,19 +339,9 @@ input AccountWhereInput {
   members_every: TeamMemberAccountWhereInput
   members_some: TeamMemberAccountWhereInput
   members_none: TeamMemberAccountWhereInput
-}
-
-type Peer implements Node {
-  id: ID!
-  account(where: AccountWhereInput): Account!
-  name: String!
-  balance: Float!
-  revenue: Float!
-  spendings: Float!
-  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
-  category(where: CategoryWhereInput): Category
-  categoryName: String!
-  categoryColor: String!
+  peers_every: PeerWhereInput
+  peers_some: PeerWhereInput
+  peers_none: PeerWhereInput
 }
 
 input PeerWhereInput {
@@ -450,35 +463,35 @@ input PeerWhereInput {
   All values not ending with the given string.
   """
   name_not_ends_with: String
-  balance: Float
+  total: Float
   """
   All values that are not equal to given value.
   """
-  balance_not: Float
+  total_not: Float
   """
   All values that are contained in given list.
   """
-  balance_in: [Float!]
+  total_in: [Float!]
   """
   All values that are not contained in given list.
   """
-  balance_not_in: [Float!]
+  total_not_in: [Float!]
   """
   All values less than the given value.
   """
-  balance_lt: Float
+  total_lt: Float
   """
   All values less than or equal the given value.
   """
-  balance_lte: Float
+  total_lte: Float
   """
   All values greater than the given value.
   """
-  balance_gt: Float
+  total_gt: Float
   """
   All values greater than or equal the given value.
   """
-  balance_gte: Float
+  total_gte: Float
   revenue: Float
   """
   All values that are not equal to given value.
@@ -537,117 +550,43 @@ input PeerWhereInput {
   All values greater than or equal the given value.
   """
   spendings_gte: Float
-  categoryName: String
+  lastPaymentDate: DateTime
   """
   All values that are not equal to given value.
   """
-  categoryName_not: String
+  lastPaymentDate_not: DateTime
   """
   All values that are contained in given list.
   """
-  categoryName_in: [String!]
+  lastPaymentDate_in: [DateTime!]
   """
   All values that are not contained in given list.
   """
-  categoryName_not_in: [String!]
+  lastPaymentDate_not_in: [DateTime!]
   """
   All values less than the given value.
   """
-  categoryName_lt: String
+  lastPaymentDate_lt: DateTime
   """
   All values less than or equal the given value.
   """
-  categoryName_lte: String
+  lastPaymentDate_lte: DateTime
   """
   All values greater than the given value.
   """
-  categoryName_gt: String
+  lastPaymentDate_gt: DateTime
   """
   All values greater than or equal the given value.
   """
-  categoryName_gte: String
-  """
-  All values containing the given string.
-  """
-  categoryName_contains: String
-  """
-  All values not containing the given string.
-  """
-  categoryName_not_contains: String
-  """
-  All values starting with the given string.
-  """
-  categoryName_starts_with: String
-  """
-  All values not starting with the given string.
-  """
-  categoryName_not_starts_with: String
-  """
-  All values ending with the given string.
-  """
-  categoryName_ends_with: String
-  """
-  All values not ending with the given string.
-  """
-  categoryName_not_ends_with: String
-  categoryColor: String
-  """
-  All values that are not equal to given value.
-  """
-  categoryColor_not: String
-  """
-  All values that are contained in given list.
-  """
-  categoryColor_in: [String!]
-  """
-  All values that are not contained in given list.
-  """
-  categoryColor_not_in: [String!]
-  """
-  All values less than the given value.
-  """
-  categoryColor_lt: String
-  """
-  All values less than or equal the given value.
-  """
-  categoryColor_lte: String
-  """
-  All values greater than the given value.
-  """
-  categoryColor_gt: String
-  """
-  All values greater than or equal the given value.
-  """
-  categoryColor_gte: String
-  """
-  All values containing the given string.
-  """
-  categoryColor_contains: String
-  """
-  All values not containing the given string.
-  """
-  categoryColor_not_contains: String
-  """
-  All values starting with the given string.
-  """
-  categoryColor_starts_with: String
-  """
-  All values not starting with the given string.
-  """
-  categoryColor_not_starts_with: String
-  """
-  All values ending with the given string.
-  """
-  categoryColor_ends_with: String
-  """
-  All values not ending with the given string.
-  """
-  categoryColor_not_ends_with: String
+  lastPaymentDate_gte: DateTime
   account: AccountWhereInput
   payments_every: PaymentWhereInput
   payments_some: PaymentWhereInput
   payments_none: PaymentWhereInput
   category: CategoryWhereInput
+  categories_every: CategoryWhereInput
+  categories_some: CategoryWhereInput
+  categories_none: CategoryWhereInput
 }
 
 type Comment implements Node {
@@ -951,132 +890,6 @@ type TeamResultProfile {
   canInvite: Boolean!
   accountIds: [String!]!
   acl: TeamResultAcl!
-}
-
-type TeamMember implements Node {
-  id: ID!
-  team(where: TeamWhereInput): Team!
-  user(where: UserWhereInput): User!
-  role: TeamMemberRole!
-  canInvite: Boolean!
-  accounts(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMemberAccount!]
-}
-
-input TeamMemberWhereInput {
-  """
-  Logical AND on all given filters.
-  """
-  AND: [TeamMemberWhereInput!]
-  """
-  Logical OR on all given filters.
-  """
-  OR: [TeamMemberWhereInput!]
-  """
-  Logical NOT on all given filters combined by AND.
-  """
-  NOT: [TeamMemberWhereInput!]
-  id: ID
-  """
-  All values that are not equal to given value.
-  """
-  id_not: ID
-  """
-  All values that are contained in given list.
-  """
-  id_in: [ID!]
-  """
-  All values that are not contained in given list.
-  """
-  id_not_in: [ID!]
-  """
-  All values less than the given value.
-  """
-  id_lt: ID
-  """
-  All values less than or equal the given value.
-  """
-  id_lte: ID
-  """
-  All values greater than the given value.
-  """
-  id_gt: ID
-  """
-  All values greater than or equal the given value.
-  """
-  id_gte: ID
-  """
-  All values containing the given string.
-  """
-  id_contains: ID
-  """
-  All values not containing the given string.
-  """
-  id_not_contains: ID
-  """
-  All values starting with the given string.
-  """
-  id_starts_with: ID
-  """
-  All values not starting with the given string.
-  """
-  id_not_starts_with: ID
-  """
-  All values ending with the given string.
-  """
-  id_ends_with: ID
-  """
-  All values not ending with the given string.
-  """
-  id_not_ends_with: ID
-  role: TeamMemberRole
-  """
-  All values that are not equal to given value.
-  """
-  role_not: TeamMemberRole
-  """
-  All values that are contained in given list.
-  """
-  role_in: [TeamMemberRole!]
-  """
-  All values that are not contained in given list.
-  """
-  role_not_in: [TeamMemberRole!]
-  canInvite: Boolean
-  """
-  All values that are not equal to given value.
-  """
-  canInvite_not: Boolean
-  team: TeamWhereInput
-  user: UserWhereInput
-  accounts_every: TeamMemberAccountWhereInput
-  accounts_some: TeamMemberAccountWhereInput
-  accounts_none: TeamMemberAccountWhereInput
-}
-
-enum TeamMemberOrderByInput {
-  id_ASC
-  id_DESC
-  role_ASC
-  role_DESC
-  canInvite_ASC
-  canInvite_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  createdAt_ASC
-  createdAt_DESC
-}
-
-type Team implements Node {
-  id: ID!
-  name: String!
-  accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account!]
-  members(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMember!]
-}
-
-type TeamMemberAccount implements Node {
-  id: ID!
-  teamMember(where: TeamMemberWhereInput): TeamMember!
-  account(where: AccountWhereInput): Account!
 }
 
 input PaymentWhereInput {
@@ -1446,6 +1259,145 @@ enum PaymentOrderByInput {
   createdAt_DESC
 }
 
+enum CategoryOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  color_ASC
+  color_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type TeamMember implements Node {
+  id: ID!
+  team(where: TeamWhereInput): Team!
+  user(where: UserWhereInput): User!
+  role: TeamMemberRole!
+  canInvite: Boolean!
+  accounts(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMemberAccount!]
+}
+
+input TeamMemberWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [TeamMemberWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [TeamMemberWhereInput!]
+  """
+  Logical NOT on all given filters combined by AND.
+  """
+  NOT: [TeamMemberWhereInput!]
+  id: ID
+  """
+  All values that are not equal to given value.
+  """
+  id_not: ID
+  """
+  All values that are contained in given list.
+  """
+  id_in: [ID!]
+  """
+  All values that are not contained in given list.
+  """
+  id_not_in: [ID!]
+  """
+  All values less than the given value.
+  """
+  id_lt: ID
+  """
+  All values less than or equal the given value.
+  """
+  id_lte: ID
+  """
+  All values greater than the given value.
+  """
+  id_gt: ID
+  """
+  All values greater than or equal the given value.
+  """
+  id_gte: ID
+  """
+  All values containing the given string.
+  """
+  id_contains: ID
+  """
+  All values not containing the given string.
+  """
+  id_not_contains: ID
+  """
+  All values starting with the given string.
+  """
+  id_starts_with: ID
+  """
+  All values not starting with the given string.
+  """
+  id_not_starts_with: ID
+  """
+  All values ending with the given string.
+  """
+  id_ends_with: ID
+  """
+  All values not ending with the given string.
+  """
+  id_not_ends_with: ID
+  role: TeamMemberRole
+  """
+  All values that are not equal to given value.
+  """
+  role_not: TeamMemberRole
+  """
+  All values that are contained in given list.
+  """
+  role_in: [TeamMemberRole!]
+  """
+  All values that are not contained in given list.
+  """
+  role_not_in: [TeamMemberRole!]
+  canInvite: Boolean
+  """
+  All values that are not equal to given value.
+  """
+  canInvite_not: Boolean
+  team: TeamWhereInput
+  user: UserWhereInput
+  accounts_every: TeamMemberAccountWhereInput
+  accounts_some: TeamMemberAccountWhereInput
+  accounts_none: TeamMemberAccountWhereInput
+}
+
+enum TeamMemberOrderByInput {
+  id_ASC
+  id_DESC
+  role_ASC
+  role_DESC
+  canInvite_ASC
+  canInvite_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type Team implements Node {
+  id: ID!
+  name: String!
+  accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account!]
+  members(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMember!]
+}
+
+type TeamMemberAccount implements Node {
+  id: ID!
+  teamMember(where: TeamMemberWhereInput): TeamMember!
+  account(where: AccountWhereInput): Account!
+}
+
 input TeamWhereInput {
   """
   Logical AND on all given filters.
@@ -1646,6 +1598,25 @@ input TeamMemberAccountWhereInput {
 enum TeamMemberAccountOrderByInput {
   id_ASC
   id_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+enum PeerOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  total_ASC
+  total_DESC
+  revenue_ASC
+  revenue_DESC
+  spendings_ASC
+  spendings_DESC
+  lastPaymentDate_ASC
+  lastPaymentDate_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC

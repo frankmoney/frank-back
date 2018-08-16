@@ -4,6 +4,7 @@ import { IResolvers } from 'graphql-tools'
 import GraphQLJSON from 'graphql-type-json'
 import { mergeDeepWith } from 'ramda'
 import { Context } from 'app/Context'
+import directory from './directory'
 import inbox from './inbox'
 import ledger from './ledger'
 import team from './team'
@@ -29,6 +30,6 @@ export const typeDefs = readFileSync(
 )
 
 export const resolvers: IResolvers<any, Context> = {
-  ...merge(inbox, ledger, team, test),
+  ...merge(directory, inbox, ledger, team, test),
   JSON: GraphQLJSON,
 }
