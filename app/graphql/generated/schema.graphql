@@ -1,5 +1,6 @@
 type Query {
   directoryPeers(accountId: ID!, sortBy: DirectoryPeersInputSortBy, donors: Boolean, recipients: Boolean, search: String, first: Int, skip: Int): [Peer!]!
+  updatePeer(peerId: ID!, update: UpdatePeerUpdateInput): Peer!
   inbox(accountId: ID!, first: Int!, after: ID): [Payment!]!
   ledgerAccountStatistics(accountId: ID!, categoryId: ID): LedgerAccountStatistics
   ledgerBarChart(accountId: ID!, categoryId: ID, dateMin: DateTime, dateMax: DateTime): LedgerBarChart!
@@ -35,6 +36,10 @@ enum DirectoryPeersInputSortBy {
   total
   revenue
   spendings
+}
+
+type UpdatePeerUpdateInput {
+  name: String!
 }
 
 type Payment implements Node {

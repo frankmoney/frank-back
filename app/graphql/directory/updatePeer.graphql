@@ -1,0 +1,12 @@
+# import Payment from '../generated/prisma.graphql'
+
+extend type Query {
+  updatePeer(
+    peerId: ID!
+    update: UpdatePeerUpdateInput
+  ): Peer!
+}
+
+type UpdatePeerUpdateInput {
+  name: String!
+}
