@@ -1,4 +1,4 @@
-# import Payment from '../generated/prisma.graphql'
+# import Peer from '../generated/prisma.graphql'
 
 extend type Query {
   directoryPeers(

@@ -72,6 +72,7 @@ type Peer {
   spendings: Float! @default(value: "0.0")
   lastPaymentDate: DateTime
   payments: [Payment!]!
+  paymentCount: Int @default(value: "0")
   category: Category @relation(name: "PeerDefaultCategory")
   categories: [Category!]! @relation(name: "PeerPaymentCategories")
 }

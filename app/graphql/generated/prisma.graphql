@@ -1,5 +1,5 @@
 # source: http://prisma.frank-dev1.frank.ly
-# timestamp: Thu Aug 16 2018 14:58:12 GMT+0300 (Russia TZ 2 Standard Time)
+# timestamp: Thu Aug 16 2018 19:50:15 GMT+0300 (Russia TZ 2 Standard Time)
 
 type Account implements Node {
   id: ID!
@@ -1615,6 +1615,7 @@ type Peer implements Node {
   spendings: Float!
   lastPaymentDate: DateTime
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
+  paymentCount: Int
   category(where: CategoryWhereInput): Category
   categories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category!]
 }
@@ -1635,6 +1636,7 @@ input PeerCreateInput {
   revenue: Float
   spendings: Float
   lastPaymentDate: DateTime
+  paymentCount: Int
   account: AccountCreateOneWithoutPeersInput!
   payments: PaymentCreateManyWithoutPeerInput
   category: CategoryCreateOneInput
@@ -1657,6 +1659,7 @@ input PeerCreateWithoutAccountInput {
   revenue: Float
   spendings: Float
   lastPaymentDate: DateTime
+  paymentCount: Int
   payments: PaymentCreateManyWithoutPeerInput
   category: CategoryCreateOneInput
   categories: CategoryCreateManyInput
@@ -1668,6 +1671,7 @@ input PeerCreateWithoutPaymentsInput {
   revenue: Float
   spendings: Float
   lastPaymentDate: DateTime
+  paymentCount: Int
   account: AccountCreateOneWithoutPeersInput!
   category: CategoryCreateOneInput
   categories: CategoryCreateManyInput
@@ -1695,6 +1699,8 @@ enum PeerOrderByInput {
   spendings_DESC
   lastPaymentDate_ASC
   lastPaymentDate_DESC
+  paymentCount_ASC
+  paymentCount_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -1708,6 +1714,7 @@ type PeerPreviousValues {
   revenue: Float!
   spendings: Float!
   lastPaymentDate: DateTime
+  paymentCount: Int
 }
 
 type PeerSubscriptionPayload {
@@ -1755,6 +1762,7 @@ input PeerUpdateInput {
   revenue: Float
   spendings: Float
   lastPaymentDate: DateTime
+  paymentCount: Int
   account: AccountUpdateOneWithoutPeersInput
   payments: PaymentUpdateManyWithoutPeerInput
   category: CategoryUpdateOneInput
@@ -1785,6 +1793,7 @@ input PeerUpdateWithoutAccountDataInput {
   revenue: Float
   spendings: Float
   lastPaymentDate: DateTime
+  paymentCount: Int
   payments: PaymentUpdateManyWithoutPeerInput
   category: CategoryUpdateOneInput
   categories: CategoryUpdateManyInput
@@ -1796,6 +1805,7 @@ input PeerUpdateWithoutPaymentsDataInput {
   revenue: Float
   spendings: Float
   lastPaymentDate: DateTime
+  paymentCount: Int
   account: AccountUpdateOneWithoutPeersInput
   category: CategoryUpdateOneInput
   categories: CategoryUpdateManyInput
@@ -1994,6 +2004,28 @@ input PeerWhereInput {
 
   """All values greater than or equal the given value."""
   lastPaymentDate_gte: DateTime
+  paymentCount: Int
+
+  """All values that are not equal to given value."""
+  paymentCount_not: Int
+
+  """All values that are contained in given list."""
+  paymentCount_in: [Int!]
+
+  """All values that are not contained in given list."""
+  paymentCount_not_in: [Int!]
+
+  """All values less than the given value."""
+  paymentCount_lt: Int
+
+  """All values less than or equal the given value."""
+  paymentCount_lte: Int
+
+  """All values greater than the given value."""
+  paymentCount_gt: Int
+
+  """All values greater than or equal the given value."""
+  paymentCount_gte: Int
   account: AccountWhereInput
   payments_every: PaymentWhereInput
   payments_some: PaymentWhereInput

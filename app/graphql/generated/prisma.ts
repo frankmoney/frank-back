@@ -1751,6 +1751,7 @@ type Peer implements Node {
   spendings: Float!
   lastPaymentDate: DateTime
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
+  paymentCount: Int
   category(where: CategoryWhereInput): Category
   categories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category!]
 }
@@ -1771,6 +1772,7 @@ input PeerCreateInput {
   revenue: Float
   spendings: Float
   lastPaymentDate: DateTime
+  paymentCount: Int
   account: AccountCreateOneWithoutPeersInput!
   payments: PaymentCreateManyWithoutPeerInput
   category: CategoryCreateOneInput
@@ -1793,6 +1795,7 @@ input PeerCreateWithoutAccountInput {
   revenue: Float
   spendings: Float
   lastPaymentDate: DateTime
+  paymentCount: Int
   payments: PaymentCreateManyWithoutPeerInput
   category: CategoryCreateOneInput
   categories: CategoryCreateManyInput
@@ -1804,6 +1807,7 @@ input PeerCreateWithoutPaymentsInput {
   revenue: Float
   spendings: Float
   lastPaymentDate: DateTime
+  paymentCount: Int
   account: AccountCreateOneWithoutPeersInput!
   category: CategoryCreateOneInput
   categories: CategoryCreateManyInput
@@ -1831,6 +1835,8 @@ enum PeerOrderByInput {
   spendings_DESC
   lastPaymentDate_ASC
   lastPaymentDate_DESC
+  paymentCount_ASC
+  paymentCount_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -1844,6 +1850,7 @@ type PeerPreviousValues {
   revenue: Float!
   spendings: Float!
   lastPaymentDate: DateTime
+  paymentCount: Int
 }
 
 type PeerSubscriptionPayload {
@@ -1891,6 +1898,7 @@ input PeerUpdateInput {
   revenue: Float
   spendings: Float
   lastPaymentDate: DateTime
+  paymentCount: Int
   account: AccountUpdateOneWithoutPeersInput
   payments: PaymentUpdateManyWithoutPeerInput
   category: CategoryUpdateOneInput
@@ -1921,6 +1929,7 @@ input PeerUpdateWithoutAccountDataInput {
   revenue: Float
   spendings: Float
   lastPaymentDate: DateTime
+  paymentCount: Int
   payments: PaymentUpdateManyWithoutPeerInput
   category: CategoryUpdateOneInput
   categories: CategoryUpdateManyInput
@@ -1932,6 +1941,7 @@ input PeerUpdateWithoutPaymentsDataInput {
   revenue: Float
   spendings: Float
   lastPaymentDate: DateTime
+  paymentCount: Int
   account: AccountUpdateOneWithoutPeersInput
   category: CategoryUpdateOneInput
   categories: CategoryUpdateManyInput
@@ -2130,6 +2140,28 @@ input PeerWhereInput {
 
   """All values greater than or equal the given value."""
   lastPaymentDate_gte: DateTime
+  paymentCount: Int
+
+  """All values that are not equal to given value."""
+  paymentCount_not: Int
+
+  """All values that are contained in given list."""
+  paymentCount_in: [Int!]
+
+  """All values that are not contained in given list."""
+  paymentCount_not_in: [Int!]
+
+  """All values less than the given value."""
+  paymentCount_lt: Int
+
+  """All values less than or equal the given value."""
+  paymentCount_lte: Int
+
+  """All values greater than the given value."""
+  paymentCount_gt: Int
+
+  """All values greater than or equal the given value."""
+  paymentCount_gte: Int
   account: AccountWhereInput
   payments_every: PaymentWhereInput
   payments_some: PaymentWhereInput
@@ -3442,6 +3474,8 @@ export type PeerOrderByInput =   'id_ASC' |
   'spendings_DESC' |
   'lastPaymentDate_ASC' |
   'lastPaymentDate_DESC' |
+  'paymentCount_ASC' |
+  'paymentCount_DESC' |
   'updatedAt_ASC' |
   'updatedAt_DESC' |
   'createdAt_ASC' |
@@ -3516,15 +3550,83 @@ export interface TeamWhereInput {
   members_none?: TeamMemberWhereInput
 }
 
-export interface AccountCreateWithoutMembersInput {
+export interface AccountUpdateManyWithoutTeamInput {
+  create?: AccountCreateWithoutTeamInput[] | AccountCreateWithoutTeamInput
+  connect?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
+  disconnect?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
+  delete?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
+  update?: AccountUpdateWithWhereUniqueWithoutTeamInput[] | AccountUpdateWithWhereUniqueWithoutTeamInput
+  upsert?: AccountUpsertWithWhereUniqueWithoutTeamInput[] | AccountUpsertWithWhereUniqueWithoutTeamInput
+}
+
+export interface TeamMemberWhereInput {
+  AND?: TeamMemberWhereInput[] | TeamMemberWhereInput
+  OR?: TeamMemberWhereInput[] | TeamMemberWhereInput
+  NOT?: TeamMemberWhereInput[] | TeamMemberWhereInput
+  id?: ID_Input
+  id_not?: ID_Input
+  id_in?: ID_Input[] | ID_Input
+  id_not_in?: ID_Input[] | ID_Input
+  id_lt?: ID_Input
+  id_lte?: ID_Input
+  id_gt?: ID_Input
+  id_gte?: ID_Input
+  id_contains?: ID_Input
+  id_not_contains?: ID_Input
+  id_starts_with?: ID_Input
+  id_not_starts_with?: ID_Input
+  id_ends_with?: ID_Input
+  id_not_ends_with?: ID_Input
+  role?: TeamMemberRole
+  role_not?: TeamMemberRole
+  role_in?: TeamMemberRole[] | TeamMemberRole
+  role_not_in?: TeamMemberRole[] | TeamMemberRole
+  canInvite?: Boolean
+  canInvite_not?: Boolean
+  team?: TeamWhereInput
+  user?: UserWhereInput
+  accounts_every?: TeamMemberAccountWhereInput
+  accounts_some?: TeamMemberAccountWhereInput
+  accounts_none?: TeamMemberAccountWhereInput
+}
+
+export interface AccountUpdateWithWhereUniqueWithoutTeamInput {
+  where: AccountWhereUniqueInput
+  data: AccountUpdateWithoutTeamDataInput
+}
+
+export interface TeamMemberAccountWhereInput {
+  AND?: TeamMemberAccountWhereInput[] | TeamMemberAccountWhereInput
+  OR?: TeamMemberAccountWhereInput[] | TeamMemberAccountWhereInput
+  NOT?: TeamMemberAccountWhereInput[] | TeamMemberAccountWhereInput
+  id?: ID_Input
+  id_not?: ID_Input
+  id_in?: ID_Input[] | ID_Input
+  id_not_in?: ID_Input[] | ID_Input
+  id_lt?: ID_Input
+  id_lte?: ID_Input
+  id_gt?: ID_Input
+  id_gte?: ID_Input
+  id_contains?: ID_Input
+  id_not_contains?: ID_Input
+  id_starts_with?: ID_Input
+  id_not_starts_with?: ID_Input
+  id_ends_with?: ID_Input
+  id_not_ends_with?: ID_Input
+  teamMember?: TeamMemberWhereInput
+  account?: AccountWhereInput
+}
+
+export interface PeerCreateWithoutAccountInput {
   name: String
-  balance?: Float
+  total?: Float
   revenue?: Float
   spendings?: Float
-  rawData?: Json
-  payments?: PaymentCreateManyWithoutAccountInput
-  team: TeamCreateOneWithoutAccountsInput
-  peers?: PeerCreateManyWithoutAccountInput
+  lastPaymentDate?: DateTime
+  paymentCount?: Int
+  payments?: PaymentCreateManyWithoutPeerInput
+  category?: CategoryCreateOneInput
+  categories?: CategoryCreateManyInput
 }
 
 export interface UserUpdateDataInput {
@@ -3535,56 +3637,20 @@ export interface UserUpdateDataInput {
   teams?: TeamMemberUpdateManyWithoutUserInput
 }
 
-export interface PeerCreateManyWithoutAccountInput {
-  create?: PeerCreateWithoutAccountInput[] | PeerCreateWithoutAccountInput
-  connect?: PeerWhereUniqueInput[] | PeerWhereUniqueInput
-}
-
-export interface AccountUpdateManyWithoutTeamInput {
-  create?: AccountCreateWithoutTeamInput[] | AccountCreateWithoutTeamInput
-  connect?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
-  disconnect?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
-  delete?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
-  update?: AccountUpdateWithWhereUniqueWithoutTeamInput[] | AccountUpdateWithWhereUniqueWithoutTeamInput
-  upsert?: AccountUpsertWithWhereUniqueWithoutTeamInput[] | AccountUpsertWithWhereUniqueWithoutTeamInput
-}
-
-export interface PeerCreateWithoutAccountInput {
-  name: String
-  total?: Float
-  revenue?: Float
-  spendings?: Float
-  lastPaymentDate?: DateTime
-  payments?: PaymentCreateManyWithoutPeerInput
-  category?: CategoryCreateOneInput
-  categories?: CategoryCreateManyInput
-}
-
-export interface CategorySubscriptionWhereInput {
-  AND?: CategorySubscriptionWhereInput[] | CategorySubscriptionWhereInput
-  OR?: CategorySubscriptionWhereInput[] | CategorySubscriptionWhereInput
-  NOT?: CategorySubscriptionWhereInput[] | CategorySubscriptionWhereInput
-  mutation_in?: MutationType[] | MutationType
-  updatedFields_contains?: String
-  updatedFields_contains_every?: String[] | String
-  updatedFields_contains_some?: String[] | String
-  node?: CategoryWhereInput
-}
-
 export interface PaymentCreateManyWithoutPeerInput {
   create?: PaymentCreateWithoutPeerInput[] | PaymentCreateWithoutPeerInput
   connect?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
 }
 
-export interface CommentSubscriptionWhereInput {
-  AND?: CommentSubscriptionWhereInput[] | CommentSubscriptionWhereInput
-  OR?: CommentSubscriptionWhereInput[] | CommentSubscriptionWhereInput
-  NOT?: CommentSubscriptionWhereInput[] | CommentSubscriptionWhereInput
-  mutation_in?: MutationType[] | MutationType
-  updatedFields_contains?: String
-  updatedFields_contains_every?: String[] | String
-  updatedFields_contains_some?: String[] | String
-  node?: CommentWhereInput
+export interface AccountUpdateWithoutTeamDataInput {
+  name?: String
+  balance?: Float
+  revenue?: Float
+  spendings?: Float
+  rawData?: Json
+  payments?: PaymentUpdateManyWithoutAccountInput
+  members?: TeamMemberAccountUpdateManyWithoutAccountInput
+  peers?: PeerUpdateManyWithoutAccountInput
 }
 
 export interface PaymentCreateWithoutPeerInput {
@@ -3600,15 +3666,15 @@ export interface PaymentCreateWithoutPeerInput {
   category?: CategoryCreateOneInput
 }
 
-export interface PeerSubscriptionWhereInput {
-  AND?: PeerSubscriptionWhereInput[] | PeerSubscriptionWhereInput
-  OR?: PeerSubscriptionWhereInput[] | PeerSubscriptionWhereInput
-  NOT?: PeerSubscriptionWhereInput[] | PeerSubscriptionWhereInput
+export interface CategorySubscriptionWhereInput {
+  AND?: CategorySubscriptionWhereInput[] | CategorySubscriptionWhereInput
+  OR?: CategorySubscriptionWhereInput[] | CategorySubscriptionWhereInput
+  NOT?: CategorySubscriptionWhereInput[] | CategorySubscriptionWhereInput
   mutation_in?: MutationType[] | MutationType
   updatedFields_contains?: String
   updatedFields_contains_every?: String[] | String
   updatedFields_contains_some?: String[] | String
-  node?: PeerWhereInput
+  node?: CategoryWhereInput
 }
 
 export interface AccountCreateOneWithoutPaymentsInput {
@@ -3616,15 +3682,15 @@ export interface AccountCreateOneWithoutPaymentsInput {
   connect?: AccountWhereUniqueInput
 }
 
-export interface TeamMemberAccountSubscriptionWhereInput {
-  AND?: TeamMemberAccountSubscriptionWhereInput[] | TeamMemberAccountSubscriptionWhereInput
-  OR?: TeamMemberAccountSubscriptionWhereInput[] | TeamMemberAccountSubscriptionWhereInput
-  NOT?: TeamMemberAccountSubscriptionWhereInput[] | TeamMemberAccountSubscriptionWhereInput
+export interface UserSubscriptionWhereInput {
+  AND?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput
+  OR?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput
+  NOT?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput
   mutation_in?: MutationType[] | MutationType
   updatedFields_contains?: String
   updatedFields_contains_every?: String[] | String
   updatedFields_contains_some?: String[] | String
-  node?: TeamMemberAccountWhereInput
+  node?: UserWhereInput
 }
 
 export interface AccountCreateWithoutPaymentsInput {
@@ -3636,6 +3702,22 @@ export interface AccountCreateWithoutPaymentsInput {
   team: TeamCreateOneWithoutAccountsInput
   members?: TeamMemberAccountCreateManyWithoutAccountInput
   peers?: PeerCreateManyWithoutAccountInput
+}
+
+export interface PeerSubscriptionWhereInput {
+  AND?: PeerSubscriptionWhereInput[] | PeerSubscriptionWhereInput
+  OR?: PeerSubscriptionWhereInput[] | PeerSubscriptionWhereInput
+  NOT?: PeerSubscriptionWhereInput[] | PeerSubscriptionWhereInput
+  mutation_in?: MutationType[] | MutationType
+  updatedFields_contains?: String
+  updatedFields_contains_every?: String[] | String
+  updatedFields_contains_some?: String[] | String
+  node?: PeerWhereInput
+}
+
+export interface TeamMemberAccountCreateManyWithoutAccountInput {
+  create?: TeamMemberAccountCreateWithoutAccountInput[] | TeamMemberAccountCreateWithoutAccountInput
+  connect?: TeamMemberAccountWhereUniqueInput[] | TeamMemberAccountWhereUniqueInput
 }
 
 export interface PeerWhereInput {
@@ -3702,6 +3784,14 @@ export interface PeerWhereInput {
   lastPaymentDate_lte?: DateTime
   lastPaymentDate_gt?: DateTime
   lastPaymentDate_gte?: DateTime
+  paymentCount?: Int
+  paymentCount_not?: Int
+  paymentCount_in?: Int[] | Int
+  paymentCount_not_in?: Int[] | Int
+  paymentCount_lt?: Int
+  paymentCount_lte?: Int
+  paymentCount_gt?: Int
+  paymentCount_gte?: Int
   account?: AccountWhereInput
   payments_every?: PaymentWhereInput
   payments_some?: PaymentWhereInput
@@ -3712,29 +3802,19 @@ export interface PeerWhereInput {
   categories_none?: CategoryWhereInput
 }
 
-export interface TeamMemberAccountCreateManyWithoutAccountInput {
-  create?: TeamMemberAccountCreateWithoutAccountInput[] | TeamMemberAccountCreateWithoutAccountInput
-  connect?: TeamMemberAccountWhereUniqueInput[] | TeamMemberAccountWhereUniqueInput
-}
-
-export interface TeamMemberSubscriptionWhereInput {
-  AND?: TeamMemberSubscriptionWhereInput[] | TeamMemberSubscriptionWhereInput
-  OR?: TeamMemberSubscriptionWhereInput[] | TeamMemberSubscriptionWhereInput
-  NOT?: TeamMemberSubscriptionWhereInput[] | TeamMemberSubscriptionWhereInput
-  mutation_in?: MutationType[] | MutationType
-  updatedFields_contains?: String
-  updatedFields_contains_every?: String[] | String
-  updatedFields_contains_some?: String[] | String
-  node?: TeamMemberWhereInput
-}
-
 export interface TeamMemberAccountCreateWithoutAccountInput {
   teamMember: TeamMemberCreateOneWithoutAccountsInput
 }
 
-export interface CategoryUpdateInput {
-  name?: String
-  color?: String
+export interface AccountSubscriptionWhereInput {
+  AND?: AccountSubscriptionWhereInput[] | AccountSubscriptionWhereInput
+  OR?: AccountSubscriptionWhereInput[] | AccountSubscriptionWhereInput
+  NOT?: AccountSubscriptionWhereInput[] | AccountSubscriptionWhereInput
+  mutation_in?: MutationType[] | MutationType
+  updatedFields_contains?: String
+  updatedFields_contains_every?: String[] | String
+  updatedFields_contains_some?: String[] | String
+  node?: AccountWhereInput
 }
 
 export interface TeamMemberCreateOneWithoutAccountsInput {
@@ -3742,12 +3822,15 @@ export interface TeamMemberCreateOneWithoutAccountsInput {
   connect?: TeamMemberWhereUniqueInput
 }
 
-export interface UserUpdateInput {
-  email?: String
-  firstName?: String
-  lastName?: String
-  passwordHash?: String
-  teams?: TeamMemberUpdateManyWithoutUserInput
+export interface TeamSubscriptionWhereInput {
+  AND?: TeamSubscriptionWhereInput[] | TeamSubscriptionWhereInput
+  OR?: TeamSubscriptionWhereInput[] | TeamSubscriptionWhereInput
+  NOT?: TeamSubscriptionWhereInput[] | TeamSubscriptionWhereInput
+  mutation_in?: MutationType[] | MutationType
+  updatedFields_contains?: String
+  updatedFields_contains_every?: String[] | String
+  updatedFields_contains_some?: String[] | String
+  node?: TeamWhereInput
 }
 
 export interface TeamMemberCreateWithoutAccountsInput {
@@ -3757,17 +3840,9 @@ export interface TeamMemberCreateWithoutAccountsInput {
   user: UserCreateOneWithoutTeamsInput
 }
 
-export interface PaymentUpdateWithoutCommentsDataInput {
-  postedDate?: DateTime
-  amount?: Float
-  peerName?: String
-  description?: String
-  categoryName?: String
-  categoryColor?: String
-  rawData?: Json
-  account?: AccountUpdateOneWithoutPaymentsInput
-  peer?: PeerUpdateOneWithoutPaymentsInput
-  category?: CategoryUpdateOneInput
+export interface CategoryUpdateInput {
+  name?: String
+  color?: String
 }
 
 export interface TeamCreateOneWithoutMembersInput {
@@ -3775,8 +3850,9 @@ export interface TeamCreateOneWithoutMembersInput {
   connect?: TeamWhereUniqueInput
 }
 
-export interface TeamWhereUniqueInput {
-  id?: ID_Input
+export interface PaymentUpsertWithoutCommentsInput {
+  update: PaymentUpdateWithoutCommentsDataInput
+  create: PaymentCreateWithoutCommentsInput
 }
 
 export interface TeamCreateWithoutMembersInput {
@@ -3784,7 +3860,7 @@ export interface TeamCreateWithoutMembersInput {
   accounts?: AccountCreateManyWithoutTeamInput
 }
 
-export interface AccountWhereUniqueInput {
+export interface TeamWhereUniqueInput {
   id?: ID_Input
 }
 
@@ -3793,7 +3869,7 @@ export interface CommentCreateManyWithoutPaymentInput {
   connect?: CommentWhereUniqueInput[] | CommentWhereUniqueInput
 }
 
-export interface PaymentWhereUniqueInput {
+export interface AccountWhereUniqueInput {
   id?: ID_Input
 }
 
@@ -3802,7 +3878,7 @@ export interface CommentCreateWithoutPaymentInput {
   user?: UserCreateOneInput
 }
 
-export interface CommentWhereUniqueInput {
+export interface PaymentWhereUniqueInput {
   id?: ID_Input
 }
 
@@ -3811,7 +3887,7 @@ export interface UserCreateOneInput {
   connect?: UserWhereUniqueInput
 }
 
-export interface CategoryWhereUniqueInput {
+export interface CommentWhereUniqueInput {
   id?: ID_Input
 }
 
@@ -3823,10 +3899,8 @@ export interface UserCreateInput {
   teams?: TeamMemberCreateManyWithoutUserInput
 }
 
-export interface CommentUpdateInput {
-  body?: Json
-  payment?: PaymentUpdateOneWithoutCommentsInput
-  user?: UserUpdateOneInput
+export interface CategoryWhereUniqueInput {
+  id?: ID_Input
 }
 
 export interface TeamMemberCreateManyWithoutUserInput {
@@ -3834,18 +3908,12 @@ export interface TeamMemberCreateManyWithoutUserInput {
   connect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
 }
 
-export interface PaymentUpdateInput {
-  postedDate?: DateTime
-  amount?: Float
-  peerName?: String
-  description?: String
-  categoryName?: String
-  categoryColor?: String
-  rawData?: Json
-  account?: AccountUpdateOneWithoutPaymentsInput
-  peer?: PeerUpdateOneWithoutPaymentsInput
-  comments?: CommentUpdateManyWithoutPaymentInput
-  category?: CategoryUpdateOneInput
+export interface PaymentUpdateOneWithoutCommentsInput {
+  create?: PaymentCreateWithoutCommentsInput
+  connect?: PaymentWhereUniqueInput
+  delete?: Boolean
+  update?: PaymentUpdateWithoutCommentsDataInput
+  upsert?: PaymentUpsertWithoutCommentsInput
 }
 
 export interface TeamMemberCreateWithoutUserInput {
@@ -3855,16 +3923,17 @@ export interface TeamMemberCreateWithoutUserInput {
   accounts?: TeamMemberAccountCreateManyWithoutTeamMemberInput
 }
 
-export interface AccountUpdateInput {
+export interface PeerUpdateInput {
   name?: String
-  balance?: Float
+  total?: Float
   revenue?: Float
   spendings?: Float
-  rawData?: Json
-  payments?: PaymentUpdateManyWithoutAccountInput
-  team?: TeamUpdateOneWithoutAccountsInput
-  members?: TeamMemberAccountUpdateManyWithoutAccountInput
-  peers?: PeerUpdateManyWithoutAccountInput
+  lastPaymentDate?: DateTime
+  paymentCount?: Int
+  account?: AccountUpdateOneWithoutPeersInput
+  payments?: PaymentUpdateManyWithoutPeerInput
+  category?: CategoryUpdateOneInput
+  categories?: CategoryUpdateManyInput
 }
 
 export interface CategoryCreateOneInput {
@@ -3872,10 +3941,9 @@ export interface CategoryCreateOneInput {
   connect?: CategoryWhereUniqueInput
 }
 
-export interface AccountUpsertWithWhereUniqueWithoutTeamInput {
-  where: AccountWhereUniqueInput
-  update: AccountUpdateWithoutTeamDataInput
-  create: AccountCreateWithoutTeamInput
+export interface TeamMemberAccountUpdateInput {
+  teamMember?: TeamMemberUpdateOneWithoutAccountsInput
+  account?: AccountUpdateOneWithoutMembersInput
 }
 
 export interface CategoryCreateInput {
@@ -3883,9 +3951,12 @@ export interface CategoryCreateInput {
   color: String
 }
 
-export interface PeerUpsertWithoutPaymentsInput {
-  update: PeerUpdateWithoutPaymentsDataInput
-  create: PeerCreateWithoutPaymentsInput
+export interface TeamMemberUpdateInput {
+  role?: TeamMemberRole
+  canInvite?: Boolean
+  team?: TeamUpdateOneWithoutMembersInput
+  user?: UserUpdateOneWithoutTeamsInput
+  accounts?: TeamMemberAccountUpdateManyWithoutTeamMemberInput
 }
 
 export interface CategoryCreateManyInput {
@@ -3893,9 +3964,10 @@ export interface CategoryCreateManyInput {
   connect?: CategoryWhereUniqueInput[] | CategoryWhereUniqueInput
 }
 
-export interface TeamUpsertWithoutAccountsInput {
-  update: TeamUpdateWithoutAccountsDataInput
-  create: TeamCreateWithoutAccountsInput
+export interface PaymentUpsertWithWhereUniqueWithoutAccountInput {
+  where: PaymentWhereUniqueInput
+  update: PaymentUpdateWithoutAccountDataInput
+  create: PaymentCreateWithoutAccountInput
 }
 
 export interface TeamMemberCreateInput {
@@ -3906,10 +3978,9 @@ export interface TeamMemberCreateInput {
   accounts?: TeamMemberAccountCreateManyWithoutTeamMemberInput
 }
 
-export interface TeamMemberAccountUpsertWithWhereUniqueWithoutTeamMemberInput {
-  where: TeamMemberAccountWhereUniqueInput
-  update: TeamMemberAccountUpdateWithoutTeamMemberDataInput
-  create: TeamMemberAccountCreateWithoutTeamMemberInput
+export interface AccountUpsertWithoutPeersInput {
+  update: AccountUpdateWithoutPeersDataInput
+  create: AccountCreateWithoutPeersInput
 }
 
 export interface AccountCreateInput {
@@ -3924,10 +3995,10 @@ export interface AccountCreateInput {
   peers?: PeerCreateManyWithoutAccountInput
 }
 
-export interface PeerUpsertWithWhereUniqueWithoutAccountInput {
-  where: PeerWhereUniqueInput
-  update: PeerUpdateWithoutAccountDataInput
-  create: PeerCreateWithoutAccountInput
+export interface TeamMemberUpsertWithWhereUniqueWithoutTeamInput {
+  where: TeamMemberWhereUniqueInput
+  update: TeamMemberUpdateWithoutTeamDataInput
+  create: TeamMemberCreateWithoutTeamInput
 }
 
 export interface TeamMemberAccountCreateInput {
@@ -3935,24 +4006,20 @@ export interface TeamMemberAccountCreateInput {
   account: AccountCreateOneWithoutMembersInput
 }
 
-export interface CategoryUpdateWithWhereUniqueNestedInput {
+export interface AccountUpsertWithoutMembersInput {
+  update: AccountUpdateWithoutMembersDataInput
+  create: AccountCreateWithoutMembersInput
+}
+
+export interface TeamMemberUpdateWithWhereUniqueWithoutUserInput {
+  where: TeamMemberWhereUniqueInput
+  data: TeamMemberUpdateWithoutUserDataInput
+}
+
+export interface CategoryUpsertWithWhereUniqueNestedInput {
   where: CategoryWhereUniqueInput
-  data: CategoryUpdateDataInput
-}
-
-export interface TeamMemberUpdateManyWithoutUserInput {
-  create?: TeamMemberCreateWithoutUserInput[] | TeamMemberCreateWithoutUserInput
-  connect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
-  disconnect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
-  delete?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
-  update?: TeamMemberUpdateWithWhereUniqueWithoutUserInput[] | TeamMemberUpdateWithWhereUniqueWithoutUserInput
-  upsert?: TeamMemberUpsertWithWhereUniqueWithoutUserInput[] | TeamMemberUpsertWithWhereUniqueWithoutUserInput
-}
-
-export interface PaymentUpsertWithWhereUniqueWithoutPeerInput {
-  where: PaymentWhereUniqueInput
-  update: PaymentUpdateWithoutPeerDataInput
-  create: PaymentCreateWithoutPeerInput
+  update: CategoryUpdateDataInput
+  create: CategoryCreateInput
 }
 
 export interface PeerCreateInput {
@@ -3961,15 +4028,20 @@ export interface PeerCreateInput {
   revenue?: Float
   spendings?: Float
   lastPaymentDate?: DateTime
+  paymentCount?: Int
   account: AccountCreateOneWithoutPeersInput
   payments?: PaymentCreateManyWithoutPeerInput
   category?: CategoryCreateOneInput
   categories?: CategoryCreateManyInput
 }
 
-export interface CategoryUpdateDataInput {
-  name?: String
-  color?: String
+export interface CategoryUpdateManyInput {
+  create?: CategoryCreateInput[] | CategoryCreateInput
+  connect?: CategoryWhereUniqueInput[] | CategoryWhereUniqueInput
+  disconnect?: CategoryWhereUniqueInput[] | CategoryWhereUniqueInput
+  delete?: CategoryWhereUniqueInput[] | CategoryWhereUniqueInput
+  update?: CategoryUpdateWithWhereUniqueNestedInput[] | CategoryUpdateWithWhereUniqueNestedInput
+  upsert?: CategoryUpsertWithWhereUniqueNestedInput[] | CategoryUpsertWithWhereUniqueNestedInput
 }
 
 export interface CommentCreateInput {
@@ -3978,10 +4050,9 @@ export interface CommentCreateInput {
   user?: UserCreateOneInput
 }
 
-export interface CommentUpsertWithWhereUniqueWithoutPaymentInput {
-  where: CommentWhereUniqueInput
-  update: CommentUpdateWithoutPaymentDataInput
-  create: CommentCreateWithoutPaymentInput
+export interface CategoryUpsertNestedInput {
+  update: CategoryUpdateDataInput
+  create: CategoryCreateInput
 }
 
 export interface PaymentCreateOneWithoutCommentsInput {
@@ -3989,10 +4060,13 @@ export interface PaymentCreateOneWithoutCommentsInput {
   connect?: PaymentWhereUniqueInput
 }
 
-export interface TeamMemberUpsertWithWhereUniqueWithoutUserInput {
-  where: TeamMemberWhereUniqueInput
-  update: TeamMemberUpdateWithoutUserDataInput
-  create: TeamMemberCreateWithoutUserInput
+export interface CategoryUpdateOneInput {
+  create?: CategoryCreateInput
+  connect?: CategoryWhereUniqueInput
+  disconnect?: Boolean
+  delete?: Boolean
+  update?: CategoryUpdateDataInput
+  upsert?: CategoryUpsertNestedInput
 }
 
 export interface PaymentCreateWithoutCommentsInput {
@@ -4008,9 +4082,9 @@ export interface PaymentCreateWithoutCommentsInput {
   category?: CategoryCreateOneInput
 }
 
-export interface TeamMemberUpdateWithWhereUniqueWithoutUserInput {
-  where: TeamMemberWhereUniqueInput
-  data: TeamMemberUpdateWithoutUserDataInput
+export interface UserUpsertNestedInput {
+  update: UserUpdateDataInput
+  create: UserCreateInput
 }
 
 export interface TeamUpdateInput {
@@ -4019,470 +4093,25 @@ export interface TeamUpdateInput {
   members?: TeamMemberUpdateManyWithoutTeamInput
 }
 
-export interface AccountCreateManyWithoutTeamInput {
-  create?: AccountCreateWithoutTeamInput[] | AccountCreateWithoutTeamInput
-  connect?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
-}
-
-export interface TeamMemberAccountWhereInput {
-  AND?: TeamMemberAccountWhereInput[] | TeamMemberAccountWhereInput
-  OR?: TeamMemberAccountWhereInput[] | TeamMemberAccountWhereInput
-  NOT?: TeamMemberAccountWhereInput[] | TeamMemberAccountWhereInput
-  id?: ID_Input
-  id_not?: ID_Input
-  id_in?: ID_Input[] | ID_Input
-  id_not_in?: ID_Input[] | ID_Input
-  id_lt?: ID_Input
-  id_lte?: ID_Input
-  id_gt?: ID_Input
-  id_gte?: ID_Input
-  id_contains?: ID_Input
-  id_not_contains?: ID_Input
-  id_starts_with?: ID_Input
-  id_not_starts_with?: ID_Input
-  id_ends_with?: ID_Input
-  id_not_ends_with?: ID_Input
-  teamMember?: TeamMemberWhereInput
-  account?: AccountWhereInput
-}
-
-export interface PaymentCreateManyWithoutAccountInput {
-  create?: PaymentCreateWithoutAccountInput[] | PaymentCreateWithoutAccountInput
-  connect?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
-}
-
-export interface AccountUpdateWithWhereUniqueWithoutTeamInput {
-  where: AccountWhereUniqueInput
-  data: AccountUpdateWithoutTeamDataInput
-}
-
-export interface PeerCreateOneWithoutPaymentsInput {
-  create?: PeerCreateWithoutPaymentsInput
-  connect?: PeerWhereUniqueInput
-}
-
-export interface AccountUpdateWithoutTeamDataInput {
-  name?: String
-  balance?: Float
-  revenue?: Float
-  spendings?: Float
-  rawData?: Json
-  payments?: PaymentUpdateManyWithoutAccountInput
-  members?: TeamMemberAccountUpdateManyWithoutAccountInput
-  peers?: PeerUpdateManyWithoutAccountInput
-}
-
-export interface AccountCreateOneWithoutPeersInput {
-  create?: AccountCreateWithoutPeersInput
-  connect?: AccountWhereUniqueInput
-}
-
-export interface PaymentUpdateManyWithoutAccountInput {
-  create?: PaymentCreateWithoutAccountInput[] | PaymentCreateWithoutAccountInput
-  connect?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
-  disconnect?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
-  delete?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
-  update?: PaymentUpdateWithWhereUniqueWithoutAccountInput[] | PaymentUpdateWithWhereUniqueWithoutAccountInput
-  upsert?: PaymentUpsertWithWhereUniqueWithoutAccountInput[] | PaymentUpsertWithWhereUniqueWithoutAccountInput
-}
-
-export interface TeamCreateOneWithoutAccountsInput {
-  create?: TeamCreateWithoutAccountsInput
-  connect?: TeamWhereUniqueInput
-}
-
-export interface PaymentUpdateWithWhereUniqueWithoutAccountInput {
-  where: PaymentWhereUniqueInput
-  data: PaymentUpdateWithoutAccountDataInput
-}
-
-export interface TeamMemberCreateManyWithoutTeamInput {
-  create?: TeamMemberCreateWithoutTeamInput[] | TeamMemberCreateWithoutTeamInput
-  connect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
-}
-
-export interface PaymentUpdateWithoutAccountDataInput {
-  postedDate?: DateTime
-  amount?: Float
-  peerName?: String
-  description?: String
-  categoryName?: String
-  categoryColor?: String
-  rawData?: Json
-  peer?: PeerUpdateOneWithoutPaymentsInput
-  comments?: CommentUpdateManyWithoutPaymentInput
-  category?: CategoryUpdateOneInput
-}
-
-export interface UserCreateOneWithoutTeamsInput {
-  create?: UserCreateWithoutTeamsInput
-  connect?: UserWhereUniqueInput
-}
-
-export interface PeerUpdateOneWithoutPaymentsInput {
-  create?: PeerCreateWithoutPaymentsInput
-  connect?: PeerWhereUniqueInput
-  disconnect?: Boolean
-  delete?: Boolean
-  update?: PeerUpdateWithoutPaymentsDataInput
-  upsert?: PeerUpsertWithoutPaymentsInput
-}
-
-export interface TeamMemberAccountCreateManyWithoutTeamMemberInput {
-  create?: TeamMemberAccountCreateWithoutTeamMemberInput[] | TeamMemberAccountCreateWithoutTeamMemberInput
-  connect?: TeamMemberAccountWhereUniqueInput[] | TeamMemberAccountWhereUniqueInput
-}
-
-export interface PeerUpdateWithoutPaymentsDataInput {
-  name?: String
-  total?: Float
-  revenue?: Float
-  spendings?: Float
-  lastPaymentDate?: DateTime
-  account?: AccountUpdateOneWithoutPeersInput
-  category?: CategoryUpdateOneInput
-  categories?: CategoryUpdateManyInput
-}
-
-export interface AccountCreateOneWithoutMembersInput {
-  create?: AccountCreateWithoutMembersInput
-  connect?: AccountWhereUniqueInput
-}
-
-export interface AccountUpdateOneWithoutPeersInput {
-  create?: AccountCreateWithoutPeersInput
-  connect?: AccountWhereUniqueInput
-  delete?: Boolean
-  update?: AccountUpdateWithoutPeersDataInput
-  upsert?: AccountUpsertWithoutPeersInput
-}
-
-export interface UserSubscriptionWhereInput {
-  AND?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput
-  OR?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput
-  NOT?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput
-  mutation_in?: MutationType[] | MutationType
-  updatedFields_contains?: String
-  updatedFields_contains_every?: String[] | String
-  updatedFields_contains_some?: String[] | String
-  node?: UserWhereInput
-}
-
-export interface AccountUpdateWithoutPeersDataInput {
-  name?: String
-  balance?: Float
-  revenue?: Float
-  spendings?: Float
-  rawData?: Json
-  payments?: PaymentUpdateManyWithoutAccountInput
-  team?: TeamUpdateOneWithoutAccountsInput
-  members?: TeamMemberAccountUpdateManyWithoutAccountInput
-}
-
-export interface CommentWhereInput {
-  AND?: CommentWhereInput[] | CommentWhereInput
-  OR?: CommentWhereInput[] | CommentWhereInput
-  NOT?: CommentWhereInput[] | CommentWhereInput
-  id?: ID_Input
-  id_not?: ID_Input
-  id_in?: ID_Input[] | ID_Input
-  id_not_in?: ID_Input[] | ID_Input
-  id_lt?: ID_Input
-  id_lte?: ID_Input
-  id_gt?: ID_Input
-  id_gte?: ID_Input
-  id_contains?: ID_Input
-  id_not_contains?: ID_Input
-  id_starts_with?: ID_Input
-  id_not_starts_with?: ID_Input
-  id_ends_with?: ID_Input
-  id_not_ends_with?: ID_Input
-  payment?: PaymentWhereInput
-  user?: UserWhereInput
-}
-
-export interface TeamUpdateOneWithoutAccountsInput {
-  create?: TeamCreateWithoutAccountsInput
-  connect?: TeamWhereUniqueInput
-  delete?: Boolean
-  update?: TeamUpdateWithoutAccountsDataInput
-  upsert?: TeamUpsertWithoutAccountsInput
-}
-
-export interface CategoryWhereInput {
-  AND?: CategoryWhereInput[] | CategoryWhereInput
-  OR?: CategoryWhereInput[] | CategoryWhereInput
-  NOT?: CategoryWhereInput[] | CategoryWhereInput
-  id?: ID_Input
-  id_not?: ID_Input
-  id_in?: ID_Input[] | ID_Input
-  id_not_in?: ID_Input[] | ID_Input
-  id_lt?: ID_Input
-  id_lte?: ID_Input
-  id_gt?: ID_Input
-  id_gte?: ID_Input
-  id_contains?: ID_Input
-  id_not_contains?: ID_Input
-  id_starts_with?: ID_Input
-  id_not_starts_with?: ID_Input
-  id_ends_with?: ID_Input
-  id_not_ends_with?: ID_Input
-  name?: String
-  name_not?: String
-  name_in?: String[] | String
-  name_not_in?: String[] | String
-  name_lt?: String
-  name_lte?: String
-  name_gt?: String
-  name_gte?: String
-  name_contains?: String
-  name_not_contains?: String
-  name_starts_with?: String
-  name_not_starts_with?: String
-  name_ends_with?: String
-  name_not_ends_with?: String
-  color?: String
-  color_not?: String
-  color_in?: String[] | String
-  color_not_in?: String[] | String
-  color_lt?: String
-  color_lte?: String
-  color_gt?: String
-  color_gte?: String
-  color_contains?: String
-  color_not_contains?: String
-  color_starts_with?: String
-  color_not_starts_with?: String
-  color_ends_with?: String
-  color_not_ends_with?: String
-}
-
-export interface TeamUpdateWithoutAccountsDataInput {
-  name?: String
-  members?: TeamMemberUpdateManyWithoutTeamInput
-}
-
-export interface TeamSubscriptionWhereInput {
-  AND?: TeamSubscriptionWhereInput[] | TeamSubscriptionWhereInput
-  OR?: TeamSubscriptionWhereInput[] | TeamSubscriptionWhereInput
-  NOT?: TeamSubscriptionWhereInput[] | TeamSubscriptionWhereInput
-  mutation_in?: MutationType[] | MutationType
-  updatedFields_contains?: String
-  updatedFields_contains_every?: String[] | String
-  updatedFields_contains_some?: String[] | String
-  node?: TeamWhereInput
-}
-
-export interface TeamMemberUpdateManyWithoutTeamInput {
-  create?: TeamMemberCreateWithoutTeamInput[] | TeamMemberCreateWithoutTeamInput
-  connect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
-  disconnect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
-  delete?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
-  update?: TeamMemberUpdateWithWhereUniqueWithoutTeamInput[] | TeamMemberUpdateWithWhereUniqueWithoutTeamInput
-  upsert?: TeamMemberUpsertWithWhereUniqueWithoutTeamInput[] | TeamMemberUpsertWithWhereUniqueWithoutTeamInput
-}
-
-export interface PaymentUpsertWithoutCommentsInput {
-  update: PaymentUpdateWithoutCommentsDataInput
-  create: PaymentCreateWithoutCommentsInput
-}
-
-export interface TeamMemberUpdateWithWhereUniqueWithoutTeamInput {
-  where: TeamMemberWhereUniqueInput
-  data: TeamMemberUpdateWithoutTeamDataInput
-}
-
-export interface TeamMemberWhereUniqueInput {
-  id?: ID_Input
-}
-
-export interface TeamMemberUpdateWithoutTeamDataInput {
+export interface TeamMemberUpdateWithoutUserDataInput {
   role?: TeamMemberRole
   canInvite?: Boolean
-  user?: UserUpdateOneWithoutTeamsInput
+  team?: TeamUpdateOneWithoutMembersInput
   accounts?: TeamMemberAccountUpdateManyWithoutTeamMemberInput
 }
 
-export interface PeerWhereUniqueInput {
-  id?: ID_Input
+export interface TeamMemberUpdateManyWithoutUserInput {
+  create?: TeamMemberCreateWithoutUserInput[] | TeamMemberCreateWithoutUserInput
+  connect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
+  disconnect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
+  delete?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
+  update?: TeamMemberUpdateWithWhereUniqueWithoutUserInput[] | TeamMemberUpdateWithWhereUniqueWithoutUserInput
+  upsert?: TeamMemberUpsertWithWhereUniqueWithoutUserInput[] | TeamMemberUpsertWithWhereUniqueWithoutUserInput
 }
 
-export interface UserUpdateOneWithoutTeamsInput {
-  create?: UserCreateWithoutTeamsInput
-  connect?: UserWhereUniqueInput
-  delete?: Boolean
-  update?: UserUpdateWithoutTeamsDataInput
-  upsert?: UserUpsertWithoutTeamsInput
-}
-
-export interface PaymentUpdateOneWithoutCommentsInput {
-  create?: PaymentCreateWithoutCommentsInput
-  connect?: PaymentWhereUniqueInput
-  delete?: Boolean
-  update?: PaymentUpdateWithoutCommentsDataInput
-  upsert?: PaymentUpsertWithoutCommentsInput
-}
-
-export interface UserUpdateWithoutTeamsDataInput {
-  email?: String
-  firstName?: String
-  lastName?: String
-  passwordHash?: String
-}
-
-export interface TeamMemberAccountUpdateInput {
-  teamMember?: TeamMemberUpdateOneWithoutAccountsInput
-  account?: AccountUpdateOneWithoutMembersInput
-}
-
-export interface UserUpsertWithoutTeamsInput {
-  update: UserUpdateWithoutTeamsDataInput
-  create: UserCreateWithoutTeamsInput
-}
-
-export interface PaymentUpsertWithWhereUniqueWithoutAccountInput {
-  where: PaymentWhereUniqueInput
-  update: PaymentUpdateWithoutAccountDataInput
-  create: PaymentCreateWithoutAccountInput
-}
-
-export interface TeamMemberAccountUpdateManyWithoutTeamMemberInput {
-  create?: TeamMemberAccountCreateWithoutTeamMemberInput[] | TeamMemberAccountCreateWithoutTeamMemberInput
-  connect?: TeamMemberAccountWhereUniqueInput[] | TeamMemberAccountWhereUniqueInput
-  disconnect?: TeamMemberAccountWhereUniqueInput[] | TeamMemberAccountWhereUniqueInput
-  delete?: TeamMemberAccountWhereUniqueInput[] | TeamMemberAccountWhereUniqueInput
-  update?: TeamMemberAccountUpdateWithWhereUniqueWithoutTeamMemberInput[] | TeamMemberAccountUpdateWithWhereUniqueWithoutTeamMemberInput
-  upsert?: TeamMemberAccountUpsertWithWhereUniqueWithoutTeamMemberInput[] | TeamMemberAccountUpsertWithWhereUniqueWithoutTeamMemberInput
-}
-
-export interface TeamMemberUpsertWithWhereUniqueWithoutTeamInput {
-  where: TeamMemberWhereUniqueInput
-  update: TeamMemberUpdateWithoutTeamDataInput
-  create: TeamMemberCreateWithoutTeamInput
-}
-
-export interface TeamMemberAccountUpdateWithWhereUniqueWithoutTeamMemberInput {
-  where: TeamMemberAccountWhereUniqueInput
-  data: TeamMemberAccountUpdateWithoutTeamMemberDataInput
-}
-
-export interface CategoryUpsertWithWhereUniqueNestedInput {
-  where: CategoryWhereUniqueInput
-  update: CategoryUpdateDataInput
-  create: CategoryCreateInput
-}
-
-export interface TeamMemberAccountUpdateWithoutTeamMemberDataInput {
-  account?: AccountUpdateOneWithoutMembersInput
-}
-
-export interface CategoryUpsertNestedInput {
-  update: CategoryUpdateDataInput
-  create: CategoryCreateInput
-}
-
-export interface AccountUpdateOneWithoutMembersInput {
-  create?: AccountCreateWithoutMembersInput
-  connect?: AccountWhereUniqueInput
-  delete?: Boolean
-  update?: AccountUpdateWithoutMembersDataInput
-  upsert?: AccountUpsertWithoutMembersInput
-}
-
-export interface UserUpsertNestedInput {
-  update: UserUpdateDataInput
-  create: UserCreateInput
-}
-
-export interface AccountUpdateWithoutMembersDataInput {
-  name?: String
-  balance?: Float
-  revenue?: Float
-  spendings?: Float
-  rawData?: Json
-  payments?: PaymentUpdateManyWithoutAccountInput
-  team?: TeamUpdateOneWithoutAccountsInput
-  peers?: PeerUpdateManyWithoutAccountInput
-}
-
-export interface TeamCreateInput {
-  name: String
-  accounts?: AccountCreateManyWithoutTeamInput
-  members?: TeamMemberCreateManyWithoutTeamInput
-}
-
-export interface PeerUpdateManyWithoutAccountInput {
-  create?: PeerCreateWithoutAccountInput[] | PeerCreateWithoutAccountInput
-  connect?: PeerWhereUniqueInput[] | PeerWhereUniqueInput
-  disconnect?: PeerWhereUniqueInput[] | PeerWhereUniqueInput
-  delete?: PeerWhereUniqueInput[] | PeerWhereUniqueInput
-  update?: PeerUpdateWithWhereUniqueWithoutAccountInput[] | PeerUpdateWithWhereUniqueWithoutAccountInput
-  upsert?: PeerUpsertWithWhereUniqueWithoutAccountInput[] | PeerUpsertWithWhereUniqueWithoutAccountInput
-}
-
-export interface PaymentCreateWithoutAccountInput {
-  postedDate: DateTime
-  amount: Float
-  peerName?: String
-  description?: String
-  categoryName?: String
-  categoryColor?: String
-  rawData: Json
-  peer?: PeerCreateOneWithoutPaymentsInput
-  comments?: CommentCreateManyWithoutPaymentInput
-  category?: CategoryCreateOneInput
-}
-
-export interface PeerUpdateWithWhereUniqueWithoutAccountInput {
-  where: PeerWhereUniqueInput
-  data: PeerUpdateWithoutAccountDataInput
-}
-
-export interface AccountCreateWithoutPeersInput {
-  name: String
-  balance?: Float
-  revenue?: Float
-  spendings?: Float
-  rawData?: Json
-  payments?: PaymentCreateManyWithoutAccountInput
-  team: TeamCreateOneWithoutAccountsInput
-  members?: TeamMemberAccountCreateManyWithoutAccountInput
-}
-
-export interface PeerUpdateWithoutAccountDataInput {
-  name?: String
-  total?: Float
-  revenue?: Float
-  spendings?: Float
-  lastPaymentDate?: DateTime
-  payments?: PaymentUpdateManyWithoutPeerInput
-  category?: CategoryUpdateOneInput
-  categories?: CategoryUpdateManyInput
-}
-
-export interface TeamMemberCreateWithoutTeamInput {
-  role?: TeamMemberRole
-  canInvite?: Boolean
-  user: UserCreateOneWithoutTeamsInput
-  accounts?: TeamMemberAccountCreateManyWithoutTeamMemberInput
-}
-
-export interface PaymentUpdateManyWithoutPeerInput {
-  create?: PaymentCreateWithoutPeerInput[] | PaymentCreateWithoutPeerInput
-  connect?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
-  disconnect?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
-  delete?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
-  update?: PaymentUpdateWithWhereUniqueWithoutPeerInput[] | PaymentUpdateWithWhereUniqueWithoutPeerInput
-  upsert?: PaymentUpsertWithWhereUniqueWithoutPeerInput[] | PaymentUpsertWithWhereUniqueWithoutPeerInput
-}
-
-export interface TeamMemberAccountCreateWithoutTeamMemberInput {
-  account: AccountCreateOneWithoutMembersInput
-}
-
-export interface PaymentUpdateWithWhereUniqueWithoutPeerInput {
-  where: PaymentWhereUniqueInput
-  data: PaymentUpdateWithoutPeerDataInput
+export interface AccountCreateManyWithoutTeamInput {
+  create?: AccountCreateWithoutTeamInput[] | AccountCreateWithoutTeamInput
+  connect?: AccountWhereUniqueInput[] | AccountWhereUniqueInput
 }
 
 export interface UserWhereInput {
@@ -4564,6 +4193,454 @@ export interface UserWhereInput {
   teams_none?: TeamMemberWhereInput
 }
 
+export interface PaymentCreateManyWithoutAccountInput {
+  create?: PaymentCreateWithoutAccountInput[] | PaymentCreateWithoutAccountInput
+  connect?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
+}
+
+export interface PeerCreateOneWithoutPaymentsInput {
+  create?: PeerCreateWithoutPaymentsInput
+  connect?: PeerWhereUniqueInput
+}
+
+export interface AccountCreateOneWithoutPeersInput {
+  create?: AccountCreateWithoutPeersInput
+  connect?: AccountWhereUniqueInput
+}
+
+export interface PaymentUpdateManyWithoutAccountInput {
+  create?: PaymentCreateWithoutAccountInput[] | PaymentCreateWithoutAccountInput
+  connect?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
+  disconnect?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
+  delete?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
+  update?: PaymentUpdateWithWhereUniqueWithoutAccountInput[] | PaymentUpdateWithWhereUniqueWithoutAccountInput
+  upsert?: PaymentUpsertWithWhereUniqueWithoutAccountInput[] | PaymentUpsertWithWhereUniqueWithoutAccountInput
+}
+
+export interface TeamCreateOneWithoutAccountsInput {
+  create?: TeamCreateWithoutAccountsInput
+  connect?: TeamWhereUniqueInput
+}
+
+export interface PaymentUpdateWithWhereUniqueWithoutAccountInput {
+  where: PaymentWhereUniqueInput
+  data: PaymentUpdateWithoutAccountDataInput
+}
+
+export interface TeamMemberCreateManyWithoutTeamInput {
+  create?: TeamMemberCreateWithoutTeamInput[] | TeamMemberCreateWithoutTeamInput
+  connect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
+}
+
+export interface PaymentUpdateWithoutAccountDataInput {
+  postedDate?: DateTime
+  amount?: Float
+  peerName?: String
+  description?: String
+  categoryName?: String
+  categoryColor?: String
+  rawData?: Json
+  peer?: PeerUpdateOneWithoutPaymentsInput
+  comments?: CommentUpdateManyWithoutPaymentInput
+  category?: CategoryUpdateOneInput
+}
+
+export interface UserCreateOneWithoutTeamsInput {
+  create?: UserCreateWithoutTeamsInput
+  connect?: UserWhereUniqueInput
+}
+
+export interface PeerUpdateOneWithoutPaymentsInput {
+  create?: PeerCreateWithoutPaymentsInput
+  connect?: PeerWhereUniqueInput
+  disconnect?: Boolean
+  delete?: Boolean
+  update?: PeerUpdateWithoutPaymentsDataInput
+  upsert?: PeerUpsertWithoutPaymentsInput
+}
+
+export interface TeamMemberAccountCreateManyWithoutTeamMemberInput {
+  create?: TeamMemberAccountCreateWithoutTeamMemberInput[] | TeamMemberAccountCreateWithoutTeamMemberInput
+  connect?: TeamMemberAccountWhereUniqueInput[] | TeamMemberAccountWhereUniqueInput
+}
+
+export interface PeerUpdateWithoutPaymentsDataInput {
+  name?: String
+  total?: Float
+  revenue?: Float
+  spendings?: Float
+  lastPaymentDate?: DateTime
+  paymentCount?: Int
+  account?: AccountUpdateOneWithoutPeersInput
+  category?: CategoryUpdateOneInput
+  categories?: CategoryUpdateManyInput
+}
+
+export interface AccountCreateOneWithoutMembersInput {
+  create?: AccountCreateWithoutMembersInput
+  connect?: AccountWhereUniqueInput
+}
+
+export interface AccountUpdateOneWithoutPeersInput {
+  create?: AccountCreateWithoutPeersInput
+  connect?: AccountWhereUniqueInput
+  delete?: Boolean
+  update?: AccountUpdateWithoutPeersDataInput
+  upsert?: AccountUpsertWithoutPeersInput
+}
+
+export interface PeerCreateManyWithoutAccountInput {
+  create?: PeerCreateWithoutAccountInput[] | PeerCreateWithoutAccountInput
+  connect?: PeerWhereUniqueInput[] | PeerWhereUniqueInput
+}
+
+export interface AccountUpdateWithoutPeersDataInput {
+  name?: String
+  balance?: Float
+  revenue?: Float
+  spendings?: Float
+  rawData?: Json
+  payments?: PaymentUpdateManyWithoutAccountInput
+  team?: TeamUpdateOneWithoutAccountsInput
+  members?: TeamMemberAccountUpdateManyWithoutAccountInput
+}
+
+export interface CategoryWhereInput {
+  AND?: CategoryWhereInput[] | CategoryWhereInput
+  OR?: CategoryWhereInput[] | CategoryWhereInput
+  NOT?: CategoryWhereInput[] | CategoryWhereInput
+  id?: ID_Input
+  id_not?: ID_Input
+  id_in?: ID_Input[] | ID_Input
+  id_not_in?: ID_Input[] | ID_Input
+  id_lt?: ID_Input
+  id_lte?: ID_Input
+  id_gt?: ID_Input
+  id_gte?: ID_Input
+  id_contains?: ID_Input
+  id_not_contains?: ID_Input
+  id_starts_with?: ID_Input
+  id_not_starts_with?: ID_Input
+  id_ends_with?: ID_Input
+  id_not_ends_with?: ID_Input
+  name?: String
+  name_not?: String
+  name_in?: String[] | String
+  name_not_in?: String[] | String
+  name_lt?: String
+  name_lte?: String
+  name_gt?: String
+  name_gte?: String
+  name_contains?: String
+  name_not_contains?: String
+  name_starts_with?: String
+  name_not_starts_with?: String
+  name_ends_with?: String
+  name_not_ends_with?: String
+  color?: String
+  color_not?: String
+  color_in?: String[] | String
+  color_not_in?: String[] | String
+  color_lt?: String
+  color_lte?: String
+  color_gt?: String
+  color_gte?: String
+  color_contains?: String
+  color_not_contains?: String
+  color_starts_with?: String
+  color_not_starts_with?: String
+  color_ends_with?: String
+  color_not_ends_with?: String
+}
+
+export interface TeamUpdateOneWithoutAccountsInput {
+  create?: TeamCreateWithoutAccountsInput
+  connect?: TeamWhereUniqueInput
+  delete?: Boolean
+  update?: TeamUpdateWithoutAccountsDataInput
+  upsert?: TeamUpsertWithoutAccountsInput
+}
+
+export interface PaymentSubscriptionWhereInput {
+  AND?: PaymentSubscriptionWhereInput[] | PaymentSubscriptionWhereInput
+  OR?: PaymentSubscriptionWhereInput[] | PaymentSubscriptionWhereInput
+  NOT?: PaymentSubscriptionWhereInput[] | PaymentSubscriptionWhereInput
+  mutation_in?: MutationType[] | MutationType
+  updatedFields_contains?: String
+  updatedFields_contains_every?: String[] | String
+  updatedFields_contains_some?: String[] | String
+  node?: PaymentWhereInput
+}
+
+export interface TeamUpdateWithoutAccountsDataInput {
+  name?: String
+  members?: TeamMemberUpdateManyWithoutTeamInput
+}
+
+export interface TeamMemberSubscriptionWhereInput {
+  AND?: TeamMemberSubscriptionWhereInput[] | TeamMemberSubscriptionWhereInput
+  OR?: TeamMemberSubscriptionWhereInput[] | TeamMemberSubscriptionWhereInput
+  NOT?: TeamMemberSubscriptionWhereInput[] | TeamMemberSubscriptionWhereInput
+  mutation_in?: MutationType[] | MutationType
+  updatedFields_contains?: String
+  updatedFields_contains_every?: String[] | String
+  updatedFields_contains_some?: String[] | String
+  node?: TeamMemberWhereInput
+}
+
+export interface TeamMemberUpdateManyWithoutTeamInput {
+  create?: TeamMemberCreateWithoutTeamInput[] | TeamMemberCreateWithoutTeamInput
+  connect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
+  disconnect?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
+  delete?: TeamMemberWhereUniqueInput[] | TeamMemberWhereUniqueInput
+  update?: TeamMemberUpdateWithWhereUniqueWithoutTeamInput[] | TeamMemberUpdateWithWhereUniqueWithoutTeamInput
+  upsert?: TeamMemberUpsertWithWhereUniqueWithoutTeamInput[] | TeamMemberUpsertWithWhereUniqueWithoutTeamInput
+}
+
+export interface UserUpdateInput {
+  email?: String
+  firstName?: String
+  lastName?: String
+  passwordHash?: String
+  teams?: TeamMemberUpdateManyWithoutUserInput
+}
+
+export interface TeamMemberUpdateWithWhereUniqueWithoutTeamInput {
+  where: TeamMemberWhereUniqueInput
+  data: TeamMemberUpdateWithoutTeamDataInput
+}
+
+export interface TeamMemberWhereUniqueInput {
+  id?: ID_Input
+}
+
+export interface TeamMemberUpdateWithoutTeamDataInput {
+  role?: TeamMemberRole
+  canInvite?: Boolean
+  user?: UserUpdateOneWithoutTeamsInput
+  accounts?: TeamMemberAccountUpdateManyWithoutTeamMemberInput
+}
+
+export interface PeerWhereUniqueInput {
+  id?: ID_Input
+}
+
+export interface UserUpdateOneWithoutTeamsInput {
+  create?: UserCreateWithoutTeamsInput
+  connect?: UserWhereUniqueInput
+  delete?: Boolean
+  update?: UserUpdateWithoutTeamsDataInput
+  upsert?: UserUpsertWithoutTeamsInput
+}
+
+export interface PaymentUpdateWithoutCommentsDataInput {
+  postedDate?: DateTime
+  amount?: Float
+  peerName?: String
+  description?: String
+  categoryName?: String
+  categoryColor?: String
+  rawData?: Json
+  account?: AccountUpdateOneWithoutPaymentsInput
+  peer?: PeerUpdateOneWithoutPaymentsInput
+  category?: CategoryUpdateOneInput
+}
+
+export interface UserUpdateWithoutTeamsDataInput {
+  email?: String
+  firstName?: String
+  lastName?: String
+  passwordHash?: String
+}
+
+export interface PaymentUpdateInput {
+  postedDate?: DateTime
+  amount?: Float
+  peerName?: String
+  description?: String
+  categoryName?: String
+  categoryColor?: String
+  rawData?: Json
+  account?: AccountUpdateOneWithoutPaymentsInput
+  peer?: PeerUpdateOneWithoutPaymentsInput
+  comments?: CommentUpdateManyWithoutPaymentInput
+  category?: CategoryUpdateOneInput
+}
+
+export interface UserUpsertWithoutTeamsInput {
+  update: UserUpdateWithoutTeamsDataInput
+  create: UserCreateWithoutTeamsInput
+}
+
+export interface AccountUpsertWithWhereUniqueWithoutTeamInput {
+  where: AccountWhereUniqueInput
+  update: AccountUpdateWithoutTeamDataInput
+  create: AccountCreateWithoutTeamInput
+}
+
+export interface TeamMemberAccountUpdateManyWithoutTeamMemberInput {
+  create?: TeamMemberAccountCreateWithoutTeamMemberInput[] | TeamMemberAccountCreateWithoutTeamMemberInput
+  connect?: TeamMemberAccountWhereUniqueInput[] | TeamMemberAccountWhereUniqueInput
+  disconnect?: TeamMemberAccountWhereUniqueInput[] | TeamMemberAccountWhereUniqueInput
+  delete?: TeamMemberAccountWhereUniqueInput[] | TeamMemberAccountWhereUniqueInput
+  update?: TeamMemberAccountUpdateWithWhereUniqueWithoutTeamMemberInput[] | TeamMemberAccountUpdateWithWhereUniqueWithoutTeamMemberInput
+  upsert?: TeamMemberAccountUpsertWithWhereUniqueWithoutTeamMemberInput[] | TeamMemberAccountUpsertWithWhereUniqueWithoutTeamMemberInput
+}
+
+export interface TeamUpsertWithoutAccountsInput {
+  update: TeamUpdateWithoutAccountsDataInput
+  create: TeamCreateWithoutAccountsInput
+}
+
+export interface TeamMemberAccountUpdateWithWhereUniqueWithoutTeamMemberInput {
+  where: TeamMemberAccountWhereUniqueInput
+  data: TeamMemberAccountUpdateWithoutTeamMemberDataInput
+}
+
+export interface PeerUpsertWithWhereUniqueWithoutAccountInput {
+  where: PeerWhereUniqueInput
+  update: PeerUpdateWithoutAccountDataInput
+  create: PeerCreateWithoutAccountInput
+}
+
+export interface TeamMemberAccountUpdateWithoutTeamMemberDataInput {
+  account?: AccountUpdateOneWithoutMembersInput
+}
+
+export interface PaymentUpsertWithWhereUniqueWithoutPeerInput {
+  where: PaymentWhereUniqueInput
+  update: PaymentUpdateWithoutPeerDataInput
+  create: PaymentCreateWithoutPeerInput
+}
+
+export interface AccountUpdateOneWithoutMembersInput {
+  create?: AccountCreateWithoutMembersInput
+  connect?: AccountWhereUniqueInput
+  delete?: Boolean
+  update?: AccountUpdateWithoutMembersDataInput
+  upsert?: AccountUpsertWithoutMembersInput
+}
+
+export interface CommentUpsertWithWhereUniqueWithoutPaymentInput {
+  where: CommentWhereUniqueInput
+  update: CommentUpdateWithoutPaymentDataInput
+  create: CommentCreateWithoutPaymentInput
+}
+
+export interface AccountUpdateWithoutMembersDataInput {
+  name?: String
+  balance?: Float
+  revenue?: Float
+  spendings?: Float
+  rawData?: Json
+  payments?: PaymentUpdateManyWithoutAccountInput
+  team?: TeamUpdateOneWithoutAccountsInput
+  peers?: PeerUpdateManyWithoutAccountInput
+}
+
+export interface TeamCreateInput {
+  name: String
+  accounts?: AccountCreateManyWithoutTeamInput
+  members?: TeamMemberCreateManyWithoutTeamInput
+}
+
+export interface PeerUpdateManyWithoutAccountInput {
+  create?: PeerCreateWithoutAccountInput[] | PeerCreateWithoutAccountInput
+  connect?: PeerWhereUniqueInput[] | PeerWhereUniqueInput
+  disconnect?: PeerWhereUniqueInput[] | PeerWhereUniqueInput
+  delete?: PeerWhereUniqueInput[] | PeerWhereUniqueInput
+  update?: PeerUpdateWithWhereUniqueWithoutAccountInput[] | PeerUpdateWithWhereUniqueWithoutAccountInput
+  upsert?: PeerUpsertWithWhereUniqueWithoutAccountInput[] | PeerUpsertWithWhereUniqueWithoutAccountInput
+}
+
+export interface PaymentCreateWithoutAccountInput {
+  postedDate: DateTime
+  amount: Float
+  peerName?: String
+  description?: String
+  categoryName?: String
+  categoryColor?: String
+  rawData: Json
+  peer?: PeerCreateOneWithoutPaymentsInput
+  comments?: CommentCreateManyWithoutPaymentInput
+  category?: CategoryCreateOneInput
+}
+
+export interface PeerUpdateWithWhereUniqueWithoutAccountInput {
+  where: PeerWhereUniqueInput
+  data: PeerUpdateWithoutAccountDataInput
+}
+
+export interface AccountCreateWithoutPeersInput {
+  name: String
+  balance?: Float
+  revenue?: Float
+  spendings?: Float
+  rawData?: Json
+  payments?: PaymentCreateManyWithoutAccountInput
+  team: TeamCreateOneWithoutAccountsInput
+  members?: TeamMemberAccountCreateManyWithoutAccountInput
+}
+
+export interface PeerUpdateWithoutAccountDataInput {
+  name?: String
+  total?: Float
+  revenue?: Float
+  spendings?: Float
+  lastPaymentDate?: DateTime
+  paymentCount?: Int
+  payments?: PaymentUpdateManyWithoutPeerInput
+  category?: CategoryUpdateOneInput
+  categories?: CategoryUpdateManyInput
+}
+
+export interface TeamMemberCreateWithoutTeamInput {
+  role?: TeamMemberRole
+  canInvite?: Boolean
+  user: UserCreateOneWithoutTeamsInput
+  accounts?: TeamMemberAccountCreateManyWithoutTeamMemberInput
+}
+
+export interface PaymentUpdateManyWithoutPeerInput {
+  create?: PaymentCreateWithoutPeerInput[] | PaymentCreateWithoutPeerInput
+  connect?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
+  disconnect?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
+  delete?: PaymentWhereUniqueInput[] | PaymentWhereUniqueInput
+  update?: PaymentUpdateWithWhereUniqueWithoutPeerInput[] | PaymentUpdateWithWhereUniqueWithoutPeerInput
+  upsert?: PaymentUpsertWithWhereUniqueWithoutPeerInput[] | PaymentUpsertWithWhereUniqueWithoutPeerInput
+}
+
+export interface TeamMemberAccountCreateWithoutTeamMemberInput {
+  account: AccountCreateOneWithoutMembersInput
+}
+
+export interface PaymentUpdateWithWhereUniqueWithoutPeerInput {
+  where: PaymentWhereUniqueInput
+  data: PaymentUpdateWithoutPeerDataInput
+}
+
+export interface CommentWhereInput {
+  AND?: CommentWhereInput[] | CommentWhereInput
+  OR?: CommentWhereInput[] | CommentWhereInput
+  NOT?: CommentWhereInput[] | CommentWhereInput
+  id?: ID_Input
+  id_not?: ID_Input
+  id_in?: ID_Input[] | ID_Input
+  id_not_in?: ID_Input[] | ID_Input
+  id_lt?: ID_Input
+  id_lte?: ID_Input
+  id_gt?: ID_Input
+  id_gte?: ID_Input
+  id_contains?: ID_Input
+  id_not_contains?: ID_Input
+  id_starts_with?: ID_Input
+  id_not_starts_with?: ID_Input
+  id_ends_with?: ID_Input
+  id_not_ends_with?: ID_Input
+  payment?: PaymentWhereInput
+  user?: UserWhereInput
+}
+
 export interface PaymentUpdateWithoutPeerDataInput {
   postedDate?: DateTime
   amount?: Float
@@ -4577,15 +4654,15 @@ export interface PaymentUpdateWithoutPeerDataInput {
   category?: CategoryUpdateOneInput
 }
 
-export interface AccountSubscriptionWhereInput {
-  AND?: AccountSubscriptionWhereInput[] | AccountSubscriptionWhereInput
-  OR?: AccountSubscriptionWhereInput[] | AccountSubscriptionWhereInput
-  NOT?: AccountSubscriptionWhereInput[] | AccountSubscriptionWhereInput
+export interface TeamMemberAccountSubscriptionWhereInput {
+  AND?: TeamMemberAccountSubscriptionWhereInput[] | TeamMemberAccountSubscriptionWhereInput
+  OR?: TeamMemberAccountSubscriptionWhereInput[] | TeamMemberAccountSubscriptionWhereInput
+  NOT?: TeamMemberAccountSubscriptionWhereInput[] | TeamMemberAccountSubscriptionWhereInput
   mutation_in?: MutationType[] | MutationType
   updatedFields_contains?: String
   updatedFields_contains_every?: String[] | String
   updatedFields_contains_some?: String[] | String
-  node?: AccountWhereInput
+  node?: TeamMemberAccountWhereInput
 }
 
 export interface AccountUpdateOneWithoutPaymentsInput {
@@ -4689,12 +4766,16 @@ export interface TeamMemberAccountUpdateManyWithoutAccountInput {
   upsert?: TeamMemberAccountUpsertWithWhereUniqueWithoutAccountInput[] | TeamMemberAccountUpsertWithWhereUniqueWithoutAccountInput
 }
 
-export interface TeamMemberUpdateInput {
-  role?: TeamMemberRole
-  canInvite?: Boolean
-  team?: TeamUpdateOneWithoutMembersInput
-  user?: UserUpdateOneWithoutTeamsInput
-  accounts?: TeamMemberAccountUpdateManyWithoutTeamMemberInput
+export interface AccountUpdateInput {
+  name?: String
+  balance?: Float
+  revenue?: Float
+  spendings?: Float
+  rawData?: Json
+  payments?: PaymentUpdateManyWithoutAccountInput
+  team?: TeamUpdateOneWithoutAccountsInput
+  members?: TeamMemberAccountUpdateManyWithoutAccountInput
+  peers?: PeerUpdateManyWithoutAccountInput
 }
 
 export interface TeamMemberAccountUpdateWithWhereUniqueWithoutAccountInput {
@@ -4702,22 +4783,19 @@ export interface TeamMemberAccountUpdateWithWhereUniqueWithoutAccountInput {
   data: TeamMemberAccountUpdateWithoutAccountDataInput
 }
 
-export interface AccountUpsertWithoutMembersInput {
-  update: AccountUpdateWithoutMembersDataInput
-  create: AccountCreateWithoutMembersInput
+export interface TeamMemberAccountUpsertWithWhereUniqueWithoutTeamMemberInput {
+  where: TeamMemberAccountWhereUniqueInput
+  update: TeamMemberAccountUpdateWithoutTeamMemberDataInput
+  create: TeamMemberAccountCreateWithoutTeamMemberInput
 }
 
 export interface TeamMemberAccountUpdateWithoutAccountDataInput {
   teamMember?: TeamMemberUpdateOneWithoutAccountsInput
 }
 
-export interface CategoryUpdateOneInput {
-  create?: CategoryCreateInput
-  connect?: CategoryWhereUniqueInput
-  disconnect?: Boolean
-  delete?: Boolean
-  update?: CategoryUpdateDataInput
-  upsert?: CategoryUpsertNestedInput
+export interface CategoryUpdateDataInput {
+  name?: String
+  color?: String
 }
 
 export interface TeamMemberUpdateOneWithoutAccountsInput {
@@ -4759,35 +4837,15 @@ export interface TeamUpdateOneWithoutMembersInput {
   upsert?: TeamUpsertWithoutMembersInput
 }
 
-export interface TeamMemberWhereInput {
-  AND?: TeamMemberWhereInput[] | TeamMemberWhereInput
-  OR?: TeamMemberWhereInput[] | TeamMemberWhereInput
-  NOT?: TeamMemberWhereInput[] | TeamMemberWhereInput
-  id?: ID_Input
-  id_not?: ID_Input
-  id_in?: ID_Input[] | ID_Input
-  id_not_in?: ID_Input[] | ID_Input
-  id_lt?: ID_Input
-  id_lte?: ID_Input
-  id_gt?: ID_Input
-  id_gte?: ID_Input
-  id_contains?: ID_Input
-  id_not_contains?: ID_Input
-  id_starts_with?: ID_Input
-  id_not_starts_with?: ID_Input
-  id_ends_with?: ID_Input
-  id_not_ends_with?: ID_Input
-  role?: TeamMemberRole
-  role_not?: TeamMemberRole
-  role_in?: TeamMemberRole[] | TeamMemberRole
-  role_not_in?: TeamMemberRole[] | TeamMemberRole
-  canInvite?: Boolean
-  canInvite_not?: Boolean
-  team?: TeamWhereInput
-  user?: UserWhereInput
-  accounts_every?: TeamMemberAccountWhereInput
-  accounts_some?: TeamMemberAccountWhereInput
-  accounts_none?: TeamMemberAccountWhereInput
+export interface AccountCreateWithoutMembersInput {
+  name: String
+  balance?: Float
+  revenue?: Float
+  spendings?: Float
+  rawData?: Json
+  payments?: PaymentCreateManyWithoutAccountInput
+  team: TeamCreateOneWithoutAccountsInput
+  peers?: PeerCreateManyWithoutAccountInput
 }
 
 export interface TeamUpdateWithoutMembersDataInput {
@@ -4898,16 +4956,10 @@ export interface TeamUpsertWithoutMembersInput {
   create: TeamCreateWithoutMembersInput
 }
 
-export interface PeerUpdateInput {
-  name?: String
-  total?: Float
-  revenue?: Float
-  spendings?: Float
-  lastPaymentDate?: DateTime
-  account?: AccountUpdateOneWithoutPeersInput
-  payments?: PaymentUpdateManyWithoutPeerInput
-  category?: CategoryUpdateOneInput
-  categories?: CategoryUpdateManyInput
+export interface CommentUpdateInput {
+  body?: Json
+  payment?: PaymentUpdateOneWithoutCommentsInput
+  user?: UserUpdateOneInput
 }
 
 export interface TeamMemberUpsertWithoutAccountsInput {
@@ -4915,13 +4967,9 @@ export interface TeamMemberUpsertWithoutAccountsInput {
   create: TeamMemberCreateWithoutAccountsInput
 }
 
-export interface CategoryUpdateManyInput {
-  create?: CategoryCreateInput[] | CategoryCreateInput
-  connect?: CategoryWhereUniqueInput[] | CategoryWhereUniqueInput
-  disconnect?: CategoryWhereUniqueInput[] | CategoryWhereUniqueInput
-  delete?: CategoryWhereUniqueInput[] | CategoryWhereUniqueInput
-  update?: CategoryUpdateWithWhereUniqueNestedInput[] | CategoryUpdateWithWhereUniqueNestedInput
-  upsert?: CategoryUpsertWithWhereUniqueNestedInput[] | CategoryUpsertWithWhereUniqueNestedInput
+export interface CategoryUpdateWithWhereUniqueNestedInput {
+  where: CategoryWhereUniqueInput
+  data: CategoryUpdateDataInput
 }
 
 export interface TeamMemberAccountUpsertWithWhereUniqueWithoutAccountInput {
@@ -4936,6 +4984,7 @@ export interface PeerCreateWithoutPaymentsInput {
   revenue?: Float
   spendings?: Float
   lastPaymentDate?: DateTime
+  paymentCount?: Int
   account: AccountCreateOneWithoutPeersInput
   category?: CategoryCreateOneInput
   categories?: CategoryCreateManyInput
@@ -4946,15 +4995,15 @@ export interface AccountUpsertWithoutPaymentsInput {
   create: AccountCreateWithoutPaymentsInput
 }
 
-export interface PaymentSubscriptionWhereInput {
-  AND?: PaymentSubscriptionWhereInput[] | PaymentSubscriptionWhereInput
-  OR?: PaymentSubscriptionWhereInput[] | PaymentSubscriptionWhereInput
-  NOT?: PaymentSubscriptionWhereInput[] | PaymentSubscriptionWhereInput
+export interface CommentSubscriptionWhereInput {
+  AND?: CommentSubscriptionWhereInput[] | CommentSubscriptionWhereInput
+  OR?: CommentSubscriptionWhereInput[] | CommentSubscriptionWhereInput
+  NOT?: CommentSubscriptionWhereInput[] | CommentSubscriptionWhereInput
   mutation_in?: MutationType[] | MutationType
   updatedFields_contains?: String
   updatedFields_contains_every?: String[] | String
   updatedFields_contains_some?: String[] | String
-  node?: PaymentWhereInput
+  node?: CommentWhereInput
 }
 
 export interface UserUpdateOneInput {
@@ -4996,16 +5045,15 @@ export interface UserCreateWithoutTeamsInput {
   passwordHash: String
 }
 
-export interface TeamMemberUpdateWithoutUserDataInput {
-  role?: TeamMemberRole
-  canInvite?: Boolean
-  team?: TeamUpdateOneWithoutMembersInput
-  accounts?: TeamMemberAccountUpdateManyWithoutTeamMemberInput
+export interface TeamMemberUpsertWithWhereUniqueWithoutUserInput {
+  where: TeamMemberWhereUniqueInput
+  update: TeamMemberUpdateWithoutUserDataInput
+  create: TeamMemberCreateWithoutUserInput
 }
 
-export interface AccountUpsertWithoutPeersInput {
-  update: AccountUpdateWithoutPeersDataInput
-  create: AccountCreateWithoutPeersInput
+export interface PeerUpsertWithoutPaymentsInput {
+  update: PeerUpdateWithoutPaymentsDataInput
+  create: PeerCreateWithoutPaymentsInput
 }
 
 /*
@@ -5023,213 +5071,6 @@ export interface CategoryPreviousValues {
 }
 
 /*
- * A connection to a list of items.
-
- */
-export interface TeamConnection {
-  pageInfo: PageInfo
-  edges: TeamEdge[]
-  aggregate: AggregateTeam
-}
-
-export interface CommentSubscriptionPayload {
-  mutation: MutationType
-  node?: Comment
-  updatedFields?: String[]
-  previousValues?: CommentPreviousValues
-}
-
-export interface CategorySubscriptionPayload {
-  mutation: MutationType
-  node?: Category
-  updatedFields?: String[]
-  previousValues?: CategoryPreviousValues
-}
-
-export interface TeamMemberAccount extends Node {
-  id: ID_Output
-  teamMember: TeamMember
-  account: Account
-}
-
-export interface UserPreviousValues {
-  id: ID_Output
-  email: String
-  firstName: String
-  lastName?: String
-  passwordHash: String
-}
-
-/*
- * A connection to a list of items.
-
- */
-export interface CategoryConnection {
-  pageInfo: PageInfo
-  edges: CategoryEdge[]
-  aggregate: AggregateCategory
-}
-
-export interface AggregateCategory {
-  count: Int
-}
-
-/*
- * An edge in a connection.
-
- */
-export interface UserEdge {
-  node: User
-  cursor: String
-}
-
-export interface TeamMember extends Node {
-  id: ID_Output
-  team: Team
-  user: User
-  role: TeamMemberRole
-  canInvite: Boolean
-  accounts?: TeamMemberAccount[]
-}
-
-export interface AggregateComment {
-  count: Int
-}
-
-export interface BatchPayload {
-  count: Long
-}
-
-/*
- * A connection to a list of items.
-
- */
-export interface CommentConnection {
-  pageInfo: PageInfo
-  edges: CommentEdge[]
-  aggregate: AggregateComment
-}
-
-export interface UserSubscriptionPayload {
-  mutation: MutationType
-  node?: User
-  updatedFields?: String[]
-  previousValues?: UserPreviousValues
-}
-
-/*
- * An edge in a connection.
-
- */
-export interface PeerEdge {
-  node: Peer
-  cursor: String
-}
-
-export interface Team extends Node {
-  id: ID_Output
-  name: String
-  accounts?: Account[]
-  members?: TeamMember[]
-}
-
-export interface AggregatePayment {
-  count: Int
-}
-
-export interface CommentPreviousValues {
-  id: ID_Output
-  body: Json
-}
-
-/*
- * A connection to a list of items.
-
- */
-export interface PaymentConnection {
-  pageInfo: PageInfo
-  edges: PaymentEdge[]
-  aggregate: AggregatePayment
-}
-
-export interface TeamSubscriptionPayload {
-  mutation: MutationType
-  node?: Team
-  updatedFields?: String[]
-  previousValues?: TeamPreviousValues
-}
-
-/*
- * An edge in a connection.
-
- */
-export interface TeamMemberAccountEdge {
-  node: TeamMemberAccount
-  cursor: String
-}
-
-export interface TeamPreviousValues {
-  id: ID_Output
-  name: String
-}
-
-export interface AggregateAccount {
-  count: Int
-}
-
-export interface User extends Node {
-  id: ID_Output
-  email: String
-  firstName: String
-  lastName?: String
-  passwordHash: String
-  teams?: TeamMember[]
-}
-
-/*
- * A connection to a list of items.
-
- */
-export interface AccountConnection {
-  pageInfo: PageInfo
-  edges: AccountEdge[]
-  aggregate: AggregateAccount
-}
-
-export interface TeamMemberSubscriptionPayload {
-  mutation: MutationType
-  node?: TeamMember
-  updatedFields?: String[]
-  previousValues?: TeamMemberPreviousValues
-}
-
-/*
- * An edge in a connection.
-
- */
-export interface TeamMemberEdge {
-  node: TeamMember
-  cursor: String
-}
-
-export interface TeamMemberPreviousValues {
-  id: ID_Output
-  role: TeamMemberRole
-  canInvite: Boolean
-}
-
-export interface AggregateTeam {
-  count: Int
-}
-
-export interface Comment extends Node {
-  id: ID_Output
-  payment: Payment
-  user?: User
-  body: Json
-}
-
-/*
  * Information about pagination in a connection.
 
  */
@@ -5240,103 +5081,35 @@ export interface PageInfo {
   endCursor?: String
 }
 
-export interface AccountSubscriptionPayload {
+export interface CommentSubscriptionPayload {
   mutation: MutationType
-  node?: Account
+  node?: Comment
   updatedFields?: String[]
-  previousValues?: AccountPreviousValues
-}
-
-export interface AggregateUser {
-  count: Int
-}
-
-export interface AccountPreviousValues {
-  id: ID_Output
-  name: String
-  balance: Float
-  revenue: Float
-  spendings: Float
-  rawData?: Json
-}
-
-/*
- * An edge in a connection.
-
- */
-export interface CommentEdge {
-  node: Comment
-  cursor: String
-}
-
-export interface Category extends Node {
-  id: ID_Output
-  name: String
-  color: String
+  previousValues?: CommentPreviousValues
 }
 
 /*
  * A connection to a list of items.
 
  */
-export interface PeerConnection {
+export interface TeamConnection {
   pageInfo: PageInfo
-  edges: PeerEdge[]
-  aggregate: AggregatePeer
+  edges: TeamEdge[]
+  aggregate: AggregateTeam
 }
 
-export interface TeamMemberAccountSubscriptionPayload {
-  mutation: MutationType
-  node?: TeamMemberAccount
-  updatedFields?: String[]
-  previousValues?: TeamMemberAccountPreviousValues
-}
-
-export interface AggregateTeamMemberAccount {
-  count: Int
-}
-
-export interface TeamMemberAccountPreviousValues {
+export interface Team extends Node {
   id: ID_Output
-}
-
-/*
- * An edge in a connection.
-
- */
-export interface AccountEdge {
-  node: Account
-  cursor: String
-}
-
-export interface Peer extends Node {
-  id: ID_Output
-  account: Account
   name: String
-  total: Float
-  revenue: Float
-  spendings: Float
-  lastPaymentDate?: DateTime
-  payments?: Payment[]
-  category?: Category
-  categories?: Category[]
+  accounts?: Account[]
+  members?: TeamMember[]
 }
 
-/*
- * A connection to a list of items.
-
- */
-export interface TeamMemberConnection {
-  pageInfo: PageInfo
-  edges: TeamMemberEdge[]
-  aggregate: AggregateTeamMember
-}
-
-export interface PaymentSubscriptionPayload {
+export interface CategorySubscriptionPayload {
   mutation: MutationType
-  node?: Payment
+  node?: Category
   updatedFields?: String[]
-  previousValues?: PaymentPreviousValues
+  previousValues?: CategoryPreviousValues
 }
 
 /*
@@ -5346,31 +5119,6 @@ export interface PaymentSubscriptionPayload {
 export interface CategoryEdge {
   node: Category
   cursor: String
-}
-
-export interface PaymentPreviousValues {
-  id: ID_Output
-  postedDate: DateTime
-  amount: Float
-  peerName?: String
-  description?: String
-  categoryName?: String
-  categoryColor?: String
-  rawData: Json
-}
-
-export interface AggregatePeer {
-  count: Int
-}
-
-/*
- * A connection to a list of items.
-
- */
-export interface TeamMemberAccountConnection {
-  pageInfo: PageInfo
-  edges: TeamMemberAccountEdge[]
-  aggregate: AggregateTeamMemberAccount
 }
 
 export interface Account extends Node {
@@ -5386,20 +5134,110 @@ export interface Account extends Node {
   rawData?: Json
 }
 
-export interface PeerPreviousValues {
-  id: ID_Output
-  name: String
-  total: Float
-  revenue: Float
-  spendings: Float
-  lastPaymentDate?: DateTime
+export interface AggregateUser {
+  count: Int
 }
 
-export interface PeerSubscriptionPayload {
+export interface TeamMemberAccount extends Node {
+  id: ID_Output
+  teamMember: TeamMember
+  account: Account
+}
+
+/*
+ * A connection to a list of items.
+
+ */
+export interface UserConnection {
+  pageInfo: PageInfo
+  edges: UserEdge[]
+  aggregate: AggregateUser
+}
+
+export interface BatchPayload {
+  count: Long
+}
+
+/*
+ * An edge in a connection.
+
+ */
+export interface CommentEdge {
+  node: Comment
+  cursor: String
+}
+
+export interface UserPreviousValues {
+  id: ID_Output
+  email: String
+  firstName: String
+  lastName?: String
+  passwordHash: String
+}
+
+export interface AggregatePeer {
+  count: Int
+}
+
+export interface TeamMember extends Node {
+  id: ID_Output
+  team: Team
+  user: User
+  role: TeamMemberRole
+  canInvite: Boolean
+  accounts?: TeamMemberAccount[]
+}
+
+/*
+ * A connection to a list of items.
+
+ */
+export interface PeerConnection {
+  pageInfo: PageInfo
+  edges: PeerEdge[]
+  aggregate: AggregatePeer
+}
+
+export interface UserSubscriptionPayload {
   mutation: MutationType
-  node?: Peer
+  node?: User
   updatedFields?: String[]
-  previousValues?: PeerPreviousValues
+  previousValues?: UserPreviousValues
+}
+
+/*
+ * An edge in a connection.
+
+ */
+export interface PaymentEdge {
+  node: Payment
+  cursor: String
+}
+
+export interface TeamSubscriptionPayload {
+  mutation: MutationType
+  node?: Team
+  updatedFields?: String[]
+  previousValues?: TeamPreviousValues
+}
+
+export interface AggregateTeamMemberAccount {
+  count: Int
+}
+
+export interface TeamPreviousValues {
+  id: ID_Output
+  name: String
+}
+
+/*
+ * A connection to a list of items.
+
+ */
+export interface TeamMemberAccountConnection {
+  pageInfo: PageInfo
+  edges: TeamMemberAccountEdge[]
+  aggregate: AggregateTeamMemberAccount
 }
 
 export interface Payment extends Node {
@@ -5417,27 +5255,49 @@ export interface Payment extends Node {
   rawData: Json
 }
 
-export interface AggregateTeamMember {
-  count: Int
-}
-
 /*
  * An edge in a connection.
 
  */
-export interface PaymentEdge {
-  node: Payment
+export interface AccountEdge {
+  node: Account
   cursor: String
+}
+
+export interface TeamMemberSubscriptionPayload {
+  mutation: MutationType
+  node?: TeamMember
+  updatedFields?: String[]
+  previousValues?: TeamMemberPreviousValues
+}
+
+export interface AggregateTeamMember {
+  count: Int
+}
+
+export interface TeamMemberPreviousValues {
+  id: ID_Output
+  role: TeamMemberRole
+  canInvite: Boolean
 }
 
 /*
  * A connection to a list of items.
 
  */
-export interface UserConnection {
+export interface TeamMemberConnection {
   pageInfo: PageInfo
-  edges: UserEdge[]
-  aggregate: AggregateUser
+  edges: TeamMemberEdge[]
+  aggregate: AggregateTeamMember
+}
+
+export interface User extends Node {
+  id: ID_Output
+  email: String
+  firstName: String
+  lastName?: String
+  passwordHash: String
+  teams?: TeamMember[]
 }
 
 /*
@@ -5449,10 +5309,210 @@ export interface TeamEdge {
   cursor: String
 }
 
+export interface AccountSubscriptionPayload {
+  mutation: MutationType
+  node?: Account
+  updatedFields?: String[]
+  previousValues?: AccountPreviousValues
+}
+
+/*
+ * A connection to a list of items.
+
+ */
+export interface CategoryConnection {
+  pageInfo: PageInfo
+  edges: CategoryEdge[]
+  aggregate: AggregateCategory
+}
+
+export interface AccountPreviousValues {
+  id: ID_Output
+  name: String
+  balance: Float
+  revenue: Float
+  spendings: Float
+  rawData?: Json
+}
+
+export interface AggregateComment {
+  count: Int
+}
+
+export interface Comment extends Node {
+  id: ID_Output
+  payment: Payment
+  user?: User
+  body: Json
+}
+
+/*
+ * An edge in a connection.
+
+ */
+export interface PeerEdge {
+  node: Peer
+  cursor: String
+}
+
+export interface TeamMemberAccountSubscriptionPayload {
+  mutation: MutationType
+  node?: TeamMemberAccount
+  updatedFields?: String[]
+  previousValues?: TeamMemberAccountPreviousValues
+}
+
+/*
+ * A connection to a list of items.
+
+ */
+export interface PaymentConnection {
+  pageInfo: PageInfo
+  edges: PaymentEdge[]
+  aggregate: AggregatePayment
+}
+
+export interface TeamMemberAccountPreviousValues {
+  id: ID_Output
+}
+
+export interface AggregateAccount {
+  count: Int
+}
+
+export interface CommentPreviousValues {
+  id: ID_Output
+  body: Json
+}
+
+/*
+ * An edge in a connection.
+
+ */
+export interface TeamMemberEdge {
+  node: TeamMember
+  cursor: String
+}
+
+export interface PaymentSubscriptionPayload {
+  mutation: MutationType
+  node?: Payment
+  updatedFields?: String[]
+  previousValues?: PaymentPreviousValues
+}
+
+export interface AggregateCategory {
+  count: Int
+}
+
+export interface PaymentPreviousValues {
+  id: ID_Output
+  postedDate: DateTime
+  amount: Float
+  peerName?: String
+  description?: String
+  categoryName?: String
+  categoryColor?: String
+  rawData: Json
+}
+
+/*
+ * A connection to a list of items.
+
+ */
+export interface CommentConnection {
+  pageInfo: PageInfo
+  edges: CommentEdge[]
+  aggregate: AggregateComment
+}
+
+/*
+ * An edge in a connection.
+
+ */
+export interface TeamMemberAccountEdge {
+  node: TeamMemberAccount
+  cursor: String
+}
+
+export interface Peer extends Node {
+  id: ID_Output
+  account: Account
+  name: String
+  total: Float
+  revenue: Float
+  spendings: Float
+  lastPaymentDate?: DateTime
+  payments?: Payment[]
+  paymentCount?: Int
+  category?: Category
+  categories?: Category[]
+}
+
+export interface PeerPreviousValues {
+  id: ID_Output
+  name: String
+  total: Float
+  revenue: Float
+  spendings: Float
+  lastPaymentDate?: DateTime
+  paymentCount?: Int
+}
+
+export interface PeerSubscriptionPayload {
+  mutation: MutationType
+  node?: Peer
+  updatedFields?: String[]
+  previousValues?: PeerPreviousValues
+}
+
+export interface Category extends Node {
+  id: ID_Output
+  name: String
+  color: String
+}
+
+/*
+ * A connection to a list of items.
+
+ */
+export interface AccountConnection {
+  pageInfo: PageInfo
+  edges: AccountEdge[]
+  aggregate: AggregateAccount
+}
+
+export interface AggregatePayment {
+  count: Int
+}
+
+/*
+ * An edge in a connection.
+
+ */
+export interface UserEdge {
+  node: User
+  cursor: String
+}
+
+export interface AggregateTeam {
+  count: Int
+}
+
+/*
+Raw JSON value
+*/
+export type Json = any
+
 /*
 The `Boolean` scalar type represents `true` or `false`.
 */
 export type Boolean = boolean
+
+/*
+The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). 
+*/
+export type Float = number
 
 /*
 The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
@@ -5461,29 +5521,19 @@ export type ID_Input = string | number
 export type ID_Output = string
 
 /*
-The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). 
-*/
-export type Float = number
-
-/*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
-*/
-export type Int = number
-
-/*
-Raw JSON value
-*/
-export type Json = any
-
-/*
 The `Long` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
 */
 export type Long = string
 
-export type DateTime = Date | string
-
 /*
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
 */
 export type String = string
+
+export type DateTime = Date | string
+
+/*
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
+*/
+export type Int = number
