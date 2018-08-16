@@ -1,5 +1,8 @@
 extend type Query {
-  ledgerAccountStatistics(accountId: ID!): LedgerAccountStatistics
+  ledgerAccountStatistics(
+    accountId: ID!,
+    categoryId: ID
+  ): LedgerAccountStatistics
 }
 
 type LedgerAccountStatistics {

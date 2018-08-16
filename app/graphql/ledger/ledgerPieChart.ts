@@ -1,18 +1,13 @@
-import * as R from 'ramda'
-import {
-  Category,
-  Payment,
-  PaymentWhereInput,
-} from 'app/graphql/generated/prisma'
+import { Category, PaymentWhereInput } from 'app/graphql/generated/prisma'
 import createPrivateResolver from 'utils/createPrivateResolver'
 
-type LedgerCategoriesChart = {
+type LedgerPieChart = {
   totalIncome: number
   totalExpenses: number
-  items: LedgerCategoriesChartItem[]
+  items: LedgerPieChartItem[]
 }
 
-type LedgerCategoriesChartItem = {
+type LedgerPieChartItem = {
   category: {
     id: string
     name: string
@@ -23,13 +18,13 @@ type LedgerCategoriesChartItem = {
 }
 
 export default createPrivateResolver(
-  'ledgerCategoriesChart',
+  'ledgerPieChart',
   async ({
     assert,
     args: { accountId, precision, dateMin, dateMax },
     user,
     prisma: { query },
-  }): Promise<LedgerCategoriesChart> => {
+  }): Promise<LedgerPieChart> => {
     await assert.accountAccess(accountId)
 
     const where: PaymentWhereInput = {
