@@ -1,7 +1,6 @@
 type Query {
   directoryPeer(peerId: ID!): Peer!
   directoryPeers(accountId: ID!, sortBy: DirectoryPeersInputSortBy, donors: Boolean, recipients: Boolean, search: String, first: Int, skip: Int): [Peer!]!
-  updatePeer(peerId: ID!, update: UpdatePeerUpdateInput): Peer!
   inbox(accountId: ID!, first: Int!, after: ID): [Payment!]!
   ledgerAccountStatistics(accountId: ID!, categoryId: ID): LedgerAccountStatistics
   ledgerBarChart(accountId: ID!, categoryId: ID, dateMin: DateTime, dateMax: DateTime): LedgerBarChart!
@@ -15,6 +14,7 @@ type Query {
 }
 
 type Mutation {
+  updatePeer(peerId: ID!, update: UpdatePeerUpdateInput): Peer!
   editTeamMemberRole(id: ID!, admin: Boolean!, canInvite: Boolean!, accountIds: [ID!]!): TeammateResult!
 }
 
@@ -38,10 +38,6 @@ enum DirectoryPeersInputSortBy {
   total
   revenue
   spendings
-}
-
-type UpdatePeerUpdateInput {
-  name: String!
 }
 
 type Payment implements Node {
@@ -108,6 +104,10 @@ type User implements Node {
   lastName: String
   passwordHash: String!
   teams(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMember!]
+}
+
+type UpdatePeerUpdateInput {
+  name: String!
 }
 
 """

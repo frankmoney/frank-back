@@ -1,6 +1,6 @@
 # import Payment from '../generated/prisma.graphql'
 
-extend type Query {
+extend type Mutation {
   updatePeer(
     peerId: ID!
     update: UpdatePeerUpdateInput
