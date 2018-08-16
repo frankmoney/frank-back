@@ -3,16 +3,27 @@ import createPrivateResolver from 'utils/createPrivateResolver'
 
 export default createPrivateResolver(
   'ledgerAccountStatistics',
-  async ({ assert, args: { accountId }, prisma }) => {
+  async ({ assert, args: { accountId, categoryId }, prisma }) => {
     await assert.accountAccess(accountId)
+
+    const params = categoryId
+      ? '$accountId: ID!, $categoryId: ID'
+      : '$accountId: ID!'
+
+    const where = categoryId
+      ? `where: {
+        account: { id: $accountId }
+        category: { id: $categoryId }
+      }`
+      : `where: {
+        account: { id: $accountId }
+      }`
 
     const result = await prisma.request(
       `
-      query($accountId: ID!) {
+      query(${params}) {
         paymentAmountMin: payments(
-          where: {
-            account: { id: $accountId }
-          }
+          ${where}
           orderBy: amount_ASC
           first: 1
         ) {
@@ -20,9 +31,7 @@ export default createPrivateResolver(
         }
         
         paymentAmountMax: payments(
-          where: {
-            account: { id: $accountId }
-          }
+          ${where}
           orderBy: amount_DESC
           first: 1
         ) {
@@ -30,9 +39,7 @@ export default createPrivateResolver(
         }
         
         paymentDateMin: payments(
-          where: {
-            account: { id: $accountId }
-          }
+          ${where}
           orderBy: postedDate_ASC
           first: 1
         ) {

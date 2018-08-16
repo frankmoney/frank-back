@@ -32,6 +32,7 @@
     "@types/graphql-type-json": "^0.1.2",
     "@types/ramda": "^0.25.36",
     "apollo-server": "^2.0.0",
+    "date-fns": "^1.29.0",
     "debug": "^3.1.0",
     "graphql": "^0.13.2",
     "graphql-import": "^0.6.0",

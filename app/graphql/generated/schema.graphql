@@ -1,9 +1,10 @@
 type Query {
   inbox(accountId: ID!, first: Int!, after: ID): [Payment!]!
-  ledgerAccountStatistics(accountId: ID!): LedgerAccountStatistics
-  ledgerCategoriesChart(accountId: ID!, dateMin: DateTime, dateMax: DateTime): LedgerCategoriesChart!
+  ledgerAccountStatistics(accountId: ID!, categoryId: ID): LedgerAccountStatistics
+  ledgerBarChart(accountId: ID!, categoryId: ID, dateMin: DateTime, dateMax: DateTime): LedgerBarChart!
   ledgerPayments(accountId: ID!, first: Int!, after: ID, skip: Int, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean, categoryId: ID): [Payment!]!
   ledgerPaymentsCount(accountId: ID!, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean, categoryId: ID): LedgerPaymentsCount!
+  ledgerPieChart(accountId: ID!, dateMin: DateTime, dateMax: DateTime): LedgerPieChart!
   team: TeamResult!
   teamAccounts: [TeamAccountsResultAccount!]!
   teammate(id: ID!): TeammateResult!
@@ -35,16 +36,20 @@ type LedgerAccountStatistics {
   paymentDateMin: String
 }
 
-type LedgerCategoriesChart {
-  totalIncome: Float!
-  totalExpenses: Float!
-  items: [LedgerCategoriesChartItem!]!
+type LedgerBarChart {
+  items: [LedgerBarChartItem!]!
 }
 
 scalar DateTime
 
 type LedgerPaymentsCount {
   count: Int!
+}
+
+type LedgerPieChart {
+  totalIncome: Float!
+  totalExpenses: Float!
+  items: [LedgerPieChartItem!]!
 }
 
 type TeamResult {
@@ -918,7 +923,13 @@ Raw JSON value
 """
 scalar Json
 
-type LedgerCategoriesChartItem {
+type LedgerBarChartItem {
+  date: DateTime!
+  income: Float!
+  expenses: Float!
+}
+
+type LedgerPieChartItem {
   category: Category
   income: Float!
   expenses: Float!

@@ -1,14 +1,16 @@
 import ledgerAccountStatistics from './ledgerAccountStatistics'
-import ledgerCategoriesChart from './ledgerCategoriesChart'
+import ledgerBarChart from './ledgerBarChart'
 import ledgerPayments from './ledgerPayments'
 import ledgerPaymentsCount from './ledgerPaymentsCount'
+import ledgerPieChart from './ledgerPieChart'
 
 export default {
   Query: {
     ledgerAccountStatistics,
-    ledgerCategoriesChart,
+    ledgerBarChart,
     ledgerPayments,
     ledgerPaymentsCount,
+    ledgerPieChart,
   },
   Mutation: {},
 }
