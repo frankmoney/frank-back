@@ -2,7 +2,10 @@ import fs from 'fs'
 import Storage from '@google-cloud/storage'
 import express from 'express'
 import fileUpload from 'express-fileupload'
+import debug from 'debug'
 
+const log = debug('app:images_uploader')
+const err = debug('app:images_uploader:error')
 
 const PORT = process.env.PORT || 33202
 const GOOGLE_KEYS_BASE64 = '=='
@@ -51,13 +54,13 @@ app.post('/', async (req, res, next) => {
     })
 
   } catch (exc) {
-    console.debug(exc)
+    err(exc)
     res.status(500).end('Something wrong.')
   } finally {
     try {
       fs.unlink(tempPath, () => undefined)
     } catch (exc) {
-      console.debug(exc)
+      err(exc)
     }
   }
 })
