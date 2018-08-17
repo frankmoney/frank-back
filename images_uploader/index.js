@@ -30,30 +30,35 @@ app.post('/', async (req, res, next) => {
     return req.status(400).end('Please send "image".')
   }
 
+  let tempPath = ''
+
   try {
 
     const image = req.files.image
-    const fileName = 'temp-file-name.jpg'
-    const tempPath = `./tmp/${image.md5}.jpg`
+    const fileExt = image.name.split('.').pop()
+    const fileName = `${image.md5}.${fileExt}`
+    tempPath = `./tmp/${fileName}`
 
     const mvErr = await image.mv(tempPath)
 
-    if (meErr)
+    if (mvErr)
       throw mvErr
 
-    const [bucketErr, file] = await GCBUCKET.upload(tempPath, { public: true })
-
-    if (bucketErr)
-      throw bucketErr
+    const [file, apiResponce] = await GCBUCKET.upload(tempPath, { public: true })
 
     res.json({
-      default: `${GOOGLE_STORAGE_DOMAIN}/${file.bucket}/${file.name}`,
+      default: `${GOOGLE_STORAGE_DOMAIN}/${file.bucket.name}/${file.name}`,
     })
 
-    fs.unlink(tempPath)
-
   } catch (exc) {
+    console.debug(exc)
     res.status(500).end('Something wrong.')
+  } finally {
+    try {
+      fs.unlink(tempPath, () => undefined)
+    } catch (exc) {
+      console.debug(exc)
+    }
   }
 })
 
