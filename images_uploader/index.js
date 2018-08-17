@@ -42,10 +42,7 @@ app.post('/', async (req, res, next) => {
     const fileName = `${image.md5}.${fileExt}`
     tempPath = `./tmp/${fileName}`
 
-    const mvErr = await image.mv(tempPath)
-
-    if (mvErr)
-      throw mvErr
+    await image.mv(tempPath)
 
     const [file, apiResponce] = await GCBUCKET.upload(tempPath, { public: true })
 
@@ -57,11 +54,7 @@ app.post('/', async (req, res, next) => {
     err(exc)
     res.status(500).end('Something wrong.')
   } finally {
-    try {
-      fs.unlink(tempPath, () => undefined)
-    } catch (exc) {
-      err(exc)
-    }
+    fs.unlink(tempPath, exc => exc && err(exc))
   }
 })
 
