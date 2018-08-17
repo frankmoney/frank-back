@@ -3,8 +3,8 @@ import express from 'express'
 import cookieParser from 'cookie-parser'
 import proxy from 'http-proxy-middleware'
 
-const PORT = process.env.PORT || 3000
-const APOLLO_PORT = process.env.APOLLO_PORT || 3001
+const PORT = process.env.PORT || 33200
+const APOLLO_PORT = process.env.APOLLO_PORT || 33201
 const PRISMA_ENDPOINT = process.env.PRISMA_ENDPOINT || 'http://prisma.frank-dev1.frank.ly'
 
 const app = express()
