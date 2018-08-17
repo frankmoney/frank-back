@@ -1,4 +1,5 @@
 type Query {
+  accountCategories(accountId: ID!): [Category!]!
   directoryPeer(peerId: ID!): Peer!
   directoryPeers(accountId: ID!, sortBy: DirectoryPeersInputSortBy, donors: Boolean, recipients: Boolean, search: String, first: Int, skip: Int): [Peer!]!
   inbox(accountId: ID!, first: Int!, after: ID): [Payment!]!
@@ -14,8 +15,15 @@ type Query {
 }
 
 type Mutation {
-  updatePeer(peerId: ID!, update: UpdatePeerUpdateInput): Peer!
+  updatePeer(peerId: ID!, update: UpdatePeerUpdateInput!): Peer!
   editTeamMemberRole(id: ID!, admin: Boolean!, canInvite: Boolean!, accountIds: [ID!]!): TeammateResult!
+}
+
+type Category implements Node {
+  id: ID!
+  account(where: AccountWhereInput): Account!
+  name: String!
+  color: String!
 }
 
 type Peer implements Node {
@@ -50,8 +58,6 @@ type Payment implements Node {
   description: String
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
   category(where: CategoryWhereInput): Category
-  categoryName: String
-  categoryColor: String
   rawData: Json!
 }
 
@@ -106,7 +112,7 @@ type User implements Node {
   teams(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMember!]
 }
 
-type UpdatePeerUpdateInput {
+input UpdatePeerUpdateInput {
   name: String!
 }
 
@@ -126,6 +132,7 @@ type Account implements Node {
   balance: Float!
   revenue: Float!
   spendings: Float!
+  categories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category!]
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
   team(where: TeamWhereInput): Team!
   members(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMemberAccount!]
@@ -339,6 +346,9 @@ input AccountWhereInput {
   All values greater than or equal the given value.
   """
   spendings_gte: Float
+  categories_every: CategoryWhereInput
+  categories_some: CategoryWhereInput
+  categories_none: CategoryWhereInput
   payments_every: PaymentWhereInput
   payments_some: PaymentWhereInput
   payments_none: PaymentWhereInput
@@ -349,6 +359,36 @@ input AccountWhereInput {
   peers_every: PeerWhereInput
   peers_some: PeerWhereInput
   peers_none: PeerWhereInput
+}
+
+type LedgerBarChartItem {
+  date: DateTime!
+  income: Float!
+  expenses: Float!
+}
+
+type LedgerPieChartItem {
+  category: Category
+  income: Float!
+  expenses: Float!
+}
+
+type TeamResultTeam {
+  id: ID!
+  name: String!
+  accounts: [TeamResultAccount!]!
+}
+
+type TeamResultProfile {
+  id: ID!
+  email: String!
+  lastName: String
+  firstName: String
+  avatar: JSON
+  admin: Boolean!
+  canInvite: Boolean!
+  accountIds: [String!]!
+  acl: TeamResultAcl!
 }
 
 input PaymentWhereInput {
@@ -581,112 +621,6 @@ input PaymentWhereInput {
   All values not ending with the given string.
   """
   description_not_ends_with: String
-  categoryName: String
-  """
-  All values that are not equal to given value.
-  """
-  categoryName_not: String
-  """
-  All values that are contained in given list.
-  """
-  categoryName_in: [String!]
-  """
-  All values that are not contained in given list.
-  """
-  categoryName_not_in: [String!]
-  """
-  All values less than the given value.
-  """
-  categoryName_lt: String
-  """
-  All values less than or equal the given value.
-  """
-  categoryName_lte: String
-  """
-  All values greater than the given value.
-  """
-  categoryName_gt: String
-  """
-  All values greater than or equal the given value.
-  """
-  categoryName_gte: String
-  """
-  All values containing the given string.
-  """
-  categoryName_contains: String
-  """
-  All values not containing the given string.
-  """
-  categoryName_not_contains: String
-  """
-  All values starting with the given string.
-  """
-  categoryName_starts_with: String
-  """
-  All values not starting with the given string.
-  """
-  categoryName_not_starts_with: String
-  """
-  All values ending with the given string.
-  """
-  categoryName_ends_with: String
-  """
-  All values not ending with the given string.
-  """
-  categoryName_not_ends_with: String
-  categoryColor: String
-  """
-  All values that are not equal to given value.
-  """
-  categoryColor_not: String
-  """
-  All values that are contained in given list.
-  """
-  categoryColor_in: [String!]
-  """
-  All values that are not contained in given list.
-  """
-  categoryColor_not_in: [String!]
-  """
-  All values less than the given value.
-  """
-  categoryColor_lt: String
-  """
-  All values less than or equal the given value.
-  """
-  categoryColor_lte: String
-  """
-  All values greater than the given value.
-  """
-  categoryColor_gt: String
-  """
-  All values greater than or equal the given value.
-  """
-  categoryColor_gte: String
-  """
-  All values containing the given string.
-  """
-  categoryColor_contains: String
-  """
-  All values not containing the given string.
-  """
-  categoryColor_not_contains: String
-  """
-  All values starting with the given string.
-  """
-  categoryColor_starts_with: String
-  """
-  All values not starting with the given string.
-  """
-  categoryColor_not_starts_with: String
-  """
-  All values ending with the given string.
-  """
-  categoryColor_ends_with: String
-  """
-  All values not ending with the given string.
-  """
-  categoryColor_not_ends_with: String
   account: AccountWhereInput
   peer: PeerWhereInput
   comments_every: CommentWhereInput
@@ -706,22 +640,12 @@ enum PaymentOrderByInput {
   peerName_DESC
   description_ASC
   description_DESC
-  categoryName_ASC
-  categoryName_DESC
-  categoryColor_ASC
-  categoryColor_DESC
   rawData_ASC
   rawData_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
-}
-
-type Category implements Node {
-  id: ID!
-  name: String!
-  color: String!
 }
 
 input CategoryWhereInput {
@@ -896,6 +820,7 @@ input CategoryWhereInput {
   All values not ending with the given string.
   """
   color_not_ends_with: String
+  account: AccountWhereInput
 }
 
 enum CategoryOrderByInput {
@@ -909,36 +834,6 @@ enum CategoryOrderByInput {
   updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
-}
-
-type LedgerBarChartItem {
-  date: DateTime!
-  income: Float!
-  expenses: Float!
-}
-
-type LedgerPieChartItem {
-  category: Category
-  income: Float!
-  expenses: Float!
-}
-
-type TeamResultTeam {
-  id: ID!
-  name: String!
-  accounts: [TeamResultAccount!]!
-}
-
-type TeamResultProfile {
-  id: ID!
-  email: String!
-  lastName: String
-  firstName: String
-  avatar: JSON
-  admin: Boolean!
-  canInvite: Boolean!
-  accountIds: [String!]!
-  acl: TeamResultAcl!
 }
 
 input PeerWhereInput {

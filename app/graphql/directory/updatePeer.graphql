@@ -3,10 +3,10 @@
 extend type Mutation {
   updatePeer(
     peerId: ID!
-    update: UpdatePeerUpdateInput
+    update: UpdatePeerUpdateInput!
   ): Peer!
 }
 
-type UpdatePeerUpdateInput {
+input UpdatePeerUpdateInput {
   name: String!
 }

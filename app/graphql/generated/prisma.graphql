@@ -1,5 +1,5 @@
 # source: http://prisma.frank-dev1.frank.ly
-# timestamp: Thu Aug 16 2018 19:50:15 GMT+0300 (Russia TZ 2 Standard Time)
+# timestamp: Fri Aug 17 2018 11:55:27 GMT+0300 (Russia TZ 2 Standard Time)
 
 type Account implements Node {
   id: ID!
@@ -7,6 +7,7 @@ type Account implements Node {
   balance: Float!
   revenue: Float!
   spendings: Float!
+  categories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category!]
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
   team(where: TeamWhereInput): Team!
   members(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMemberAccount!]
@@ -30,6 +31,7 @@ input AccountCreateInput {
   revenue: Float
   spendings: Float
   rawData: Json
+  categories: CategoryCreateManyWithoutAccountInput
   payments: PaymentCreateManyWithoutAccountInput
   team: TeamCreateOneWithoutAccountsInput!
   members: TeamMemberAccountCreateManyWithoutAccountInput
@@ -39,6 +41,11 @@ input AccountCreateInput {
 input AccountCreateManyWithoutTeamInput {
   create: [AccountCreateWithoutTeamInput!]
   connect: [AccountWhereUniqueInput!]
+}
+
+input AccountCreateOneWithoutCategoriesInput {
+  create: AccountCreateWithoutCategoriesInput
+  connect: AccountWhereUniqueInput
 }
 
 input AccountCreateOneWithoutMembersInput {
@@ -56,12 +63,25 @@ input AccountCreateOneWithoutPeersInput {
   connect: AccountWhereUniqueInput
 }
 
+input AccountCreateWithoutCategoriesInput {
+  name: String!
+  balance: Float
+  revenue: Float
+  spendings: Float
+  rawData: Json
+  payments: PaymentCreateManyWithoutAccountInput
+  team: TeamCreateOneWithoutAccountsInput!
+  members: TeamMemberAccountCreateManyWithoutAccountInput
+  peers: PeerCreateManyWithoutAccountInput
+}
+
 input AccountCreateWithoutMembersInput {
   name: String!
   balance: Float
   revenue: Float
   spendings: Float
   rawData: Json
+  categories: CategoryCreateManyWithoutAccountInput
   payments: PaymentCreateManyWithoutAccountInput
   team: TeamCreateOneWithoutAccountsInput!
   peers: PeerCreateManyWithoutAccountInput
@@ -73,6 +93,7 @@ input AccountCreateWithoutPaymentsInput {
   revenue: Float
   spendings: Float
   rawData: Json
+  categories: CategoryCreateManyWithoutAccountInput
   team: TeamCreateOneWithoutAccountsInput!
   members: TeamMemberAccountCreateManyWithoutAccountInput
   peers: PeerCreateManyWithoutAccountInput
@@ -84,6 +105,7 @@ input AccountCreateWithoutPeersInput {
   revenue: Float
   spendings: Float
   rawData: Json
+  categories: CategoryCreateManyWithoutAccountInput
   payments: PaymentCreateManyWithoutAccountInput
   team: TeamCreateOneWithoutAccountsInput!
   members: TeamMemberAccountCreateManyWithoutAccountInput
@@ -95,6 +117,7 @@ input AccountCreateWithoutTeamInput {
   revenue: Float
   spendings: Float
   rawData: Json
+  categories: CategoryCreateManyWithoutAccountInput
   payments: PaymentCreateManyWithoutAccountInput
   members: TeamMemberAccountCreateManyWithoutAccountInput
   peers: PeerCreateManyWithoutAccountInput
@@ -182,6 +205,7 @@ input AccountUpdateInput {
   revenue: Float
   spendings: Float
   rawData: Json
+  categories: CategoryUpdateManyWithoutAccountInput
   payments: PaymentUpdateManyWithoutAccountInput
   team: TeamUpdateOneWithoutAccountsInput
   members: TeamMemberAccountUpdateManyWithoutAccountInput
@@ -195,6 +219,14 @@ input AccountUpdateManyWithoutTeamInput {
   delete: [AccountWhereUniqueInput!]
   update: [AccountUpdateWithWhereUniqueWithoutTeamInput!]
   upsert: [AccountUpsertWithWhereUniqueWithoutTeamInput!]
+}
+
+input AccountUpdateOneWithoutCategoriesInput {
+  create: AccountCreateWithoutCategoriesInput
+  connect: AccountWhereUniqueInput
+  delete: Boolean
+  update: AccountUpdateWithoutCategoriesDataInput
+  upsert: AccountUpsertWithoutCategoriesInput
 }
 
 input AccountUpdateOneWithoutMembersInput {
@@ -221,12 +253,25 @@ input AccountUpdateOneWithoutPeersInput {
   upsert: AccountUpsertWithoutPeersInput
 }
 
+input AccountUpdateWithoutCategoriesDataInput {
+  name: String
+  balance: Float
+  revenue: Float
+  spendings: Float
+  rawData: Json
+  payments: PaymentUpdateManyWithoutAccountInput
+  team: TeamUpdateOneWithoutAccountsInput
+  members: TeamMemberAccountUpdateManyWithoutAccountInput
+  peers: PeerUpdateManyWithoutAccountInput
+}
+
 input AccountUpdateWithoutMembersDataInput {
   name: String
   balance: Float
   revenue: Float
   spendings: Float
   rawData: Json
+  categories: CategoryUpdateManyWithoutAccountInput
   payments: PaymentUpdateManyWithoutAccountInput
   team: TeamUpdateOneWithoutAccountsInput
   peers: PeerUpdateManyWithoutAccountInput
@@ -238,6 +283,7 @@ input AccountUpdateWithoutPaymentsDataInput {
   revenue: Float
   spendings: Float
   rawData: Json
+  categories: CategoryUpdateManyWithoutAccountInput
   team: TeamUpdateOneWithoutAccountsInput
   members: TeamMemberAccountUpdateManyWithoutAccountInput
   peers: PeerUpdateManyWithoutAccountInput
@@ -249,6 +295,7 @@ input AccountUpdateWithoutPeersDataInput {
   revenue: Float
   spendings: Float
   rawData: Json
+  categories: CategoryUpdateManyWithoutAccountInput
   payments: PaymentUpdateManyWithoutAccountInput
   team: TeamUpdateOneWithoutAccountsInput
   members: TeamMemberAccountUpdateManyWithoutAccountInput
@@ -260,6 +307,7 @@ input AccountUpdateWithoutTeamDataInput {
   revenue: Float
   spendings: Float
   rawData: Json
+  categories: CategoryUpdateManyWithoutAccountInput
   payments: PaymentUpdateManyWithoutAccountInput
   members: TeamMemberAccountUpdateManyWithoutAccountInput
   peers: PeerUpdateManyWithoutAccountInput
@@ -268,6 +316,11 @@ input AccountUpdateWithoutTeamDataInput {
 input AccountUpdateWithWhereUniqueWithoutTeamInput {
   where: AccountWhereUniqueInput!
   data: AccountUpdateWithoutTeamDataInput!
+}
+
+input AccountUpsertWithoutCategoriesInput {
+  update: AccountUpdateWithoutCategoriesDataInput!
+  create: AccountCreateWithoutCategoriesInput!
 }
 
 input AccountUpsertWithoutMembersInput {
@@ -446,6 +499,9 @@ input AccountWhereInput {
 
   """All values greater than or equal the given value."""
   spendings_gte: Float
+  categories_every: CategoryWhereInput
+  categories_some: CategoryWhereInput
+  categories_none: CategoryWhereInput
   payments_every: PaymentWhereInput
   payments_some: PaymentWhereInput
   payments_none: PaymentWhereInput
@@ -505,6 +561,7 @@ type BatchPayload {
 
 type Category implements Node {
   id: ID!
+  account(where: AccountWhereInput): Account!
   name: String!
   color: String!
 }
@@ -522,6 +579,7 @@ type CategoryConnection {
 input CategoryCreateInput {
   name: String!
   color: String!
+  account: AccountCreateOneWithoutCategoriesInput!
 }
 
 input CategoryCreateManyInput {
@@ -529,9 +587,19 @@ input CategoryCreateManyInput {
   connect: [CategoryWhereUniqueInput!]
 }
 
+input CategoryCreateManyWithoutAccountInput {
+  create: [CategoryCreateWithoutAccountInput!]
+  connect: [CategoryWhereUniqueInput!]
+}
+
 input CategoryCreateOneInput {
   create: CategoryCreateInput
   connect: CategoryWhereUniqueInput
+}
+
+input CategoryCreateWithoutAccountInput {
+  name: String!
+  color: String!
 }
 
 """An edge in a connection."""
@@ -604,11 +672,13 @@ input CategorySubscriptionWhereInput {
 input CategoryUpdateDataInput {
   name: String
   color: String
+  account: AccountUpdateOneWithoutCategoriesInput
 }
 
 input CategoryUpdateInput {
   name: String
   color: String
+  account: AccountUpdateOneWithoutCategoriesInput
 }
 
 input CategoryUpdateManyInput {
@@ -620,6 +690,15 @@ input CategoryUpdateManyInput {
   upsert: [CategoryUpsertWithWhereUniqueNestedInput!]
 }
 
+input CategoryUpdateManyWithoutAccountInput {
+  create: [CategoryCreateWithoutAccountInput!]
+  connect: [CategoryWhereUniqueInput!]
+  disconnect: [CategoryWhereUniqueInput!]
+  delete: [CategoryWhereUniqueInput!]
+  update: [CategoryUpdateWithWhereUniqueWithoutAccountInput!]
+  upsert: [CategoryUpsertWithWhereUniqueWithoutAccountInput!]
+}
+
 input CategoryUpdateOneInput {
   create: CategoryCreateInput
   connect: CategoryWhereUniqueInput
@@ -629,9 +708,19 @@ input CategoryUpdateOneInput {
   upsert: CategoryUpsertNestedInput
 }
 
+input CategoryUpdateWithoutAccountDataInput {
+  name: String
+  color: String
+}
+
 input CategoryUpdateWithWhereUniqueNestedInput {
   where: CategoryWhereUniqueInput!
   data: CategoryUpdateDataInput!
+}
+
+input CategoryUpdateWithWhereUniqueWithoutAccountInput {
+  where: CategoryWhereUniqueInput!
+  data: CategoryUpdateWithoutAccountDataInput!
 }
 
 input CategoryUpsertNestedInput {
@@ -643,6 +732,12 @@ input CategoryUpsertWithWhereUniqueNestedInput {
   where: CategoryWhereUniqueInput!
   update: CategoryUpdateDataInput!
   create: CategoryCreateInput!
+}
+
+input CategoryUpsertWithWhereUniqueWithoutAccountInput {
+  where: CategoryWhereUniqueInput!
+  update: CategoryUpdateWithoutAccountDataInput!
+  create: CategoryCreateWithoutAccountInput!
 }
 
 input CategoryWhereInput {
@@ -774,6 +869,7 @@ input CategoryWhereInput {
 
   """All values not ending with the given string."""
   color_not_ends_with: String
+  account: AccountWhereInput
 }
 
 input CategoryWhereUniqueInput {
@@ -1070,8 +1166,6 @@ type Payment implements Node {
   description: String
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
   category(where: CategoryWhereInput): Category
-  categoryName: String
-  categoryColor: String
   rawData: Json!
 }
 
@@ -1090,8 +1184,6 @@ input PaymentCreateInput {
   amount: Float!
   peerName: String
   description: String
-  categoryName: String
-  categoryColor: String
   rawData: Json!
   account: AccountCreateOneWithoutPaymentsInput!
   peer: PeerCreateOneWithoutPaymentsInput
@@ -1119,8 +1211,6 @@ input PaymentCreateWithoutAccountInput {
   amount: Float!
   peerName: String
   description: String
-  categoryName: String
-  categoryColor: String
   rawData: Json!
   peer: PeerCreateOneWithoutPaymentsInput
   comments: CommentCreateManyWithoutPaymentInput
@@ -1132,8 +1222,6 @@ input PaymentCreateWithoutCommentsInput {
   amount: Float!
   peerName: String
   description: String
-  categoryName: String
-  categoryColor: String
   rawData: Json!
   account: AccountCreateOneWithoutPaymentsInput!
   peer: PeerCreateOneWithoutPaymentsInput
@@ -1145,8 +1233,6 @@ input PaymentCreateWithoutPeerInput {
   amount: Float!
   peerName: String
   description: String
-  categoryName: String
-  categoryColor: String
   rawData: Json!
   account: AccountCreateOneWithoutPaymentsInput!
   comments: CommentCreateManyWithoutPaymentInput
@@ -1173,10 +1259,6 @@ enum PaymentOrderByInput {
   peerName_DESC
   description_ASC
   description_DESC
-  categoryName_ASC
-  categoryName_DESC
-  categoryColor_ASC
-  categoryColor_DESC
   rawData_ASC
   rawData_DESC
   updatedAt_ASC
@@ -1191,8 +1273,6 @@ type PaymentPreviousValues {
   amount: Float!
   peerName: String
   description: String
-  categoryName: String
-  categoryColor: String
   rawData: Json!
 }
 
@@ -1240,8 +1320,6 @@ input PaymentUpdateInput {
   amount: Float
   peerName: String
   description: String
-  categoryName: String
-  categoryColor: String
   rawData: Json
   account: AccountUpdateOneWithoutPaymentsInput
   peer: PeerUpdateOneWithoutPaymentsInput
@@ -1280,8 +1358,6 @@ input PaymentUpdateWithoutAccountDataInput {
   amount: Float
   peerName: String
   description: String
-  categoryName: String
-  categoryColor: String
   rawData: Json
   peer: PeerUpdateOneWithoutPaymentsInput
   comments: CommentUpdateManyWithoutPaymentInput
@@ -1293,8 +1369,6 @@ input PaymentUpdateWithoutCommentsDataInput {
   amount: Float
   peerName: String
   description: String
-  categoryName: String
-  categoryColor: String
   rawData: Json
   account: AccountUpdateOneWithoutPaymentsInput
   peer: PeerUpdateOneWithoutPaymentsInput
@@ -1306,8 +1380,6 @@ input PaymentUpdateWithoutPeerDataInput {
   amount: Float
   peerName: String
   description: String
-  categoryName: String
-  categoryColor: String
   rawData: Json
   account: AccountUpdateOneWithoutPaymentsInput
   comments: CommentUpdateManyWithoutPaymentInput
@@ -1514,86 +1586,6 @@ input PaymentWhereInput {
 
   """All values not ending with the given string."""
   description_not_ends_with: String
-  categoryName: String
-
-  """All values that are not equal to given value."""
-  categoryName_not: String
-
-  """All values that are contained in given list."""
-  categoryName_in: [String!]
-
-  """All values that are not contained in given list."""
-  categoryName_not_in: [String!]
-
-  """All values less than the given value."""
-  categoryName_lt: String
-
-  """All values less than or equal the given value."""
-  categoryName_lte: String
-
-  """All values greater than the given value."""
-  categoryName_gt: String
-
-  """All values greater than or equal the given value."""
-  categoryName_gte: String
-
-  """All values containing the given string."""
-  categoryName_contains: String
-
-  """All values not containing the given string."""
-  categoryName_not_contains: String
-
-  """All values starting with the given string."""
-  categoryName_starts_with: String
-
-  """All values not starting with the given string."""
-  categoryName_not_starts_with: String
-
-  """All values ending with the given string."""
-  categoryName_ends_with: String
-
-  """All values not ending with the given string."""
-  categoryName_not_ends_with: String
-  categoryColor: String
-
-  """All values that are not equal to given value."""
-  categoryColor_not: String
-
-  """All values that are contained in given list."""
-  categoryColor_in: [String!]
-
-  """All values that are not contained in given list."""
-  categoryColor_not_in: [String!]
-
-  """All values less than the given value."""
-  categoryColor_lt: String
-
-  """All values less than or equal the given value."""
-  categoryColor_lte: String
-
-  """All values greater than the given value."""
-  categoryColor_gt: String
-
-  """All values greater than or equal the given value."""
-  categoryColor_gte: String
-
-  """All values containing the given string."""
-  categoryColor_contains: String
-
-  """All values not containing the given string."""
-  categoryColor_not_contains: String
-
-  """All values starting with the given string."""
-  categoryColor_starts_with: String
-
-  """All values not starting with the given string."""
-  categoryColor_not_starts_with: String
-
-  """All values ending with the given string."""
-  categoryColor_ends_with: String
-
-  """All values not ending with the given string."""
-  categoryColor_not_ends_with: String
   account: AccountWhereInput
   peer: PeerWhereInput
   comments_every: CommentWhereInput
