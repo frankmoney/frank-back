@@ -14,7 +14,18 @@ const onProxyReq = (proxyReq, req, res) => {
 
 const app = express()
 
+app.get('/', (req, res, next) => {
+
+  if (!!req.headers['user-agent'].match('/GoogleHC/ig')) {
+    req.end('Yes! I\'m alive!')
+  } else {
+    next()
+  }
+})
+
+
 app.use(cookieParser())
+
 
 app.use(async (req, res, next) => {
   try {
