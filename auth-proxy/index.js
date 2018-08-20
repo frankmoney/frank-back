@@ -28,7 +28,7 @@ app.use(async (req, res, next) => {
     if (email) {
       const prisma = (
         new Prisma({
-          typeDefs: '../app/graphql/generated/prisma.graphql',
+          typeDefs: './prisma.graphql',
           endpoint: PRISMA_ENDPOINT,
         }))
 
