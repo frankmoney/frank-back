@@ -28,16 +28,12 @@ export default createPrivateResolver(
     await assert.accountAccess(accountId)
 
     const where: PaymentWhereInput = {
-      account: {
-        id: accountId,
-      },
-      postedDate_gte: dateMin,
-      postedDate_lte: dateMax,
+      account: { id: accountId },
+      category: { id: categoryId },
       amount_gte: amountMin,
       amount_lte: amountMax,
-      category: {
-        id: categoryId,
-      },
+      postedDate_gte: dateMin,
+      postedDate_lte: dateMax,
     }
 
     if (search) {

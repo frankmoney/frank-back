@@ -1,0 +1,22 @@
+# import Peer from '../generated/prisma.graphql'
+
+extend type Query {
+  directoryPeers(
+    accountId: ID!
+    sortBy: DirectoryPeersInputSortBy
+    donors: Boolean
+    recipients: Boolean
+    search: String
+    first: Int
+    skip: Int
+  ): [Peer!]!
+}
+
+
+enum DirectoryPeersInputSortBy {
+  name
+  date
+  total
+  revenue
+  spendings
+}

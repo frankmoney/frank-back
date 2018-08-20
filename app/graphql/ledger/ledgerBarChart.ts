@@ -21,7 +21,15 @@ export default createPrivateResolver(
   'ledgerBarChart',
   async ({
     assert,
-    args: { accountId, categoryId, dateMin, dateMax },
+    args: {
+      accountId,
+      categoryId,
+      amountMin,
+      amountMax,
+      dateMin,
+      dateMax,
+      verified,
+    },
     prisma: { query },
   }): Promise<LedgerBarChart> => {
     await assert.accountAccess(accountId)
@@ -29,6 +37,8 @@ export default createPrivateResolver(
     const where: PaymentWhereInput = {
       account: { id: accountId },
       category: { id: categoryId },
+      amount_gte: amountMin,
+      amount_lte: amountMax,
       postedDate_gte: dateMin,
       postedDate_lte: dateMax,
     }

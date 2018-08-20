@@ -1,0 +1,5 @@
+# import Category from './generated/prisma.graphql'
+
+extend type Query {
+  accountCategories(accountId: ID!): [Category!]!
+}

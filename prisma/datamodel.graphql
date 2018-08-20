@@ -35,9 +35,11 @@ type Account {
   balance: Float! @default(value: "0.0")
   revenue: Float! @default(value: "0.0")
   spendings: Float! @default(value: "0.0")
+  categories: [Category!]!
   payments: [Payment!]!
   team: Team!
   members: [TeamMemberAccount!]!
+  peers: [Peer!]!
   rawData: Json
 }
 
@@ -57,8 +59,6 @@ type Payment {
   description: String
   comments: [Comment!]!
   category: Category
-  categoryName: String
-  categoryColor: String
   rawData: Json!
 }
 
@@ -66,13 +66,14 @@ type Peer {
   id: ID! @unique
   account: Account!
   name: String!
-  balance: Float! @default(value: "0.0")
+  total: Float! @default(value: "0.0")
   revenue: Float! @default(value: "0.0")
   spendings: Float! @default(value: "0.0")
+  lastPaymentDate: DateTime
   payments: [Payment!]!
-  category: Category
-  categoryName: String!
-  categoryColor: String!
+  paymentCount: Int @default(value: "0")
+  category: Category @relation(name: "PeerDefaultCategory")
+  categories: [Category!]! @relation(name: "PeerPaymentCategories")
 }
 
 type Comment {
@@ -84,6 +85,7 @@ type Comment {
 
 type Category {
   id: ID! @unique
+  account: Account!
   name: String!
   color: String!
 }

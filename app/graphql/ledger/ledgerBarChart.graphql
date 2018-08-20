@@ -2,8 +2,11 @@ extend type Query {
   ledgerBarChart(
     accountId: ID!
     categoryId: ID
+    amountMin: Float
+    amountMax: Float
     dateMin: DateTime
     dateMax: DateTime
+    verified: Boolean
   ): LedgerBarChart!
 }
 

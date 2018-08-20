@@ -1,9 +1,9 @@
 import { throwForbidden } from 'app/errors/ForbiddenError'
 import { Query } from 'app/graphql/generated/prisma'
 
-const assertAccountAccess = async (
+const assertPeerAccess = async (
   userId: string,
-  accountId: string,
+  peerId: string,
   { query }: { query: Query }
 ) => {
   const teamMembers = await query.teamMembers(
@@ -14,7 +14,9 @@ const assertAccountAccess = async (
         },
         accounts_some: {
           account: {
-            id: accountId,
+            peers_some: {
+              id: peerId,
+            },
           },
         },
       },
@@ -27,4 +29,4 @@ const assertAccountAccess = async (
   }
 }
 
-export default assertAccountAccess
+export default assertPeerAccess
