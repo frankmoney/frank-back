@@ -1,4 +1,5 @@
 import fs from 'fs'
+import gm from 'gm'
 import Storage from '@google-cloud/storage'
 import express from 'express'
 import fileUpload from 'express-fileupload'
@@ -13,6 +14,8 @@ const GOOGLE_KEYS_FILE_NAME = 'google_keys.json'
 const GOOGLE_PROJECT_NAME = 'frank-money'
 const GOOGLE_BUCKET_NAME = 'frank-dev-assets'
 const GOOGLE_STORAGE_DOMAIN = 'https://storage.googleapis.com'
+
+const IMAGE_WITDH = 850*2
 
 fs.writeFileSync(GOOGLE_KEYS_FILE_NAME, Buffer.from(GOOGLE_KEYS_BASE64, 'base64').toString('utf8'))
 
@@ -43,6 +46,8 @@ app.post('/', async (req, res, next) => {
     tempPath = `./tmp/${fileName}`
 
     await image.mv(tempPath)
+
+    await new Promise((res, rej) => gm(tempPath).resizeExact(IMAGE_WITDH).write(tempPath, (err) => err ? rej(err) : res()))
 
     const [file, apiResponce] = await GCBUCKET.upload(tempPath, { public: true })
 
