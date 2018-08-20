@@ -5,17 +5,17 @@ import express from 'express'
 import fileUpload from 'express-fileupload'
 import debug from 'debug'
 
-const log = debug('app:images_uploader')
-const err = debug('app:images_uploader:error')
+const log = debug('app:image-uploader')
+const err = debug('app:image-uploader:error')
 
 const PORT = process.env.PORT || 33202
-const GOOGLE_KEYS_BASE64 = '=='
+const GOOGLE_KEYS_BASE64 = process.env.GOOGLE_KEYS_BASE64 || '=='
 const GOOGLE_KEYS_FILE_NAME = 'google_keys.json'
 const GOOGLE_PROJECT_NAME = 'frank-money'
 const GOOGLE_BUCKET_NAME = 'frank-dev-assets'
 const GOOGLE_STORAGE_DOMAIN = 'https://storage.googleapis.com'
 
-const IMAGE_WITDH = 850*2
+const IMAGE_WITDH = 850 * 2
 
 fs.writeFileSync(GOOGLE_KEYS_FILE_NAME, Buffer.from(GOOGLE_KEYS_BASE64, 'base64').toString('utf8'))
 

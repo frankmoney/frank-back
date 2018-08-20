@@ -45,7 +45,7 @@ app.use(async (req, res, next) => {
   }
 })
 
-app.use(proxy('/upload_image', {
+app.use(proxy('/upload-image', {
   target: `http://localhost:${UPLOADER_PORT}`,
   pathRewrite: { '^/.+': '/' },
   onProxyReq: onProxyReq,
