@@ -5,7 +5,12 @@ import proxy from 'http-proxy-middleware'
 
 const PORT = process.env.PORT || 33200
 const APOLLO_PORT = process.env.APOLLO_PORT || 33201
+const UPLOADER_PORT = process.env.UPLOADER_PORT || 33202
 const PRISMA_ENDPOINT = process.env.PRISMA_ENDPOINT || 'http://prisma.frank-dev1.frank.ly'
+
+const onProxyReq = (proxyReq, req, res) => {
+  proxyReq.setHeader('X-Authenticated-User-Id', req.currentUserId)
+}
 
 const app = express()
 
@@ -40,13 +45,16 @@ app.use(async (req, res, next) => {
   }
 })
 
+app.use(proxy('/upload_image', {
+  target: `http://localhost:${UPLOADER_PORT}`,
+  pathRewrite: { '^/.+': '/' },
+  onProxyReq: onProxyReq,
+}))
 
 app.use(proxy('/', {
   target: `http://localhost:${APOLLO_PORT}`,
   changeOrigin: true,
-  onProxyReq: (proxyReq, req, res) => {
-    proxyReq.setHeader('X-Authenticated-User-Id', req.currentUserId)
-  },
+  onProxyReq: onProxyReq,
 }))
 
 

@@ -33,7 +33,7 @@ app.use(fileUpload())
 app.post('/', async (req, res, next) => {
 
   if (!req.files || !req.files.image) {
-    return req.status(400).end('Please send "image".')
+    return res.status(400).end('Please send "image".')
   }
 
   let tempPath = ''
