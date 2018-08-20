@@ -16,8 +16,8 @@ const app = express()
 
 app.get('/', (req, res, next) => {
 
-  if (!!req.headers['user-agent'].match('/GoogleHC/ig')) {
-    req.end('Yes! I\'m alive!')
+  if (req.headers['user-agent'].toLowerCase().includes('googlehc')) {
+    res.end('Yes! I\'m alive!')
   } else {
     next()
   }
