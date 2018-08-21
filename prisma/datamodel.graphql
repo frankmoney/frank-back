@@ -102,5 +102,5 @@ type Story {
   account: Account!
   title: String!
   body: Json!
-  coverImage: Json!
+  coverImage: Json
 }
