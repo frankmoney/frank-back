@@ -1598,7 +1598,7 @@ type Story implements Node {
   account(where: AccountWhereInput): Account!
   title: String!
   body: Json!
-  coverImage: Json!
+  coverImage: Json
 }
 
 type Team implements Node {

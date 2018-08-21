@@ -2377,7 +2377,7 @@ type Story implements Node {
   account(where: AccountWhereInput): Account!
   title: String!
   body: Json!
-  coverImage: Json!
+  coverImage: Json
 }
 
 """A connection to a list of items."""
