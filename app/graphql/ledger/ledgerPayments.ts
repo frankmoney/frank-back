@@ -4,6 +4,7 @@ import {
   PaymentWhereInput,
 } from 'app/graphql/generated/prisma'
 import createPrivateResolver from 'utils/createPrivateResolver'
+import normalizeString from 'utils/normalizeString'
 
 export default createPrivateResolver(
   'ledgerPayments',
@@ -53,22 +54,23 @@ export default createPrivateResolver(
     }
 
     if (search) {
+      const searchNormalized = normalizeString(search)
       where.OR = [
         {
-          peerNameNormalized_contains: search,
+          peerNameNormalized_contains: searchNormalized,
         },
         {
           peer: {
-            nameNormalized_contains: search,
+            nameNormalized_contains: searchNormalized,
           },
         },
         {
           category: {
-            nameNormalized_contains: search,
+            nameNormalized_contains: searchNormalized,
           },
         },
         {
-          description_contains: search,
+          descriptionNormalized_contains: searchNormalized,
         },
       ]
     }
