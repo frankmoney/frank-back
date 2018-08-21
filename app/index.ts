@@ -19,5 +19,10 @@ const server = new ApolloServer({
 })
 
 server.listen(process.env.PORT).then(({ url }) => {
-  console.log(`🚀 Apollo server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`)
+  // tslint:disable-next-line:no-console
+  console.log(
+    `🚀 Apollo server ready at http://localhost:${process.env.PORT}${
+      server.graphqlPath
+    }`
+  )
 })

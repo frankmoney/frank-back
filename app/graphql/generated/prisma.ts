@@ -140,6 +140,7 @@ export interface BindingConstructor<T> {
 const typeDefs = `type Account implements Node {
   id: ID!
   name: String!
+  nameNormalized: String
   balance: Float!
   revenue: Float!
   spendings: Float!
@@ -163,6 +164,7 @@ type AccountConnection {
 
 input AccountCreateInput {
   name: String!
+  nameNormalized: String
   balance: Float
   revenue: Float
   spendings: Float
@@ -201,6 +203,7 @@ input AccountCreateOneWithoutPeersInput {
 
 input AccountCreateWithoutCategoriesInput {
   name: String!
+  nameNormalized: String
   balance: Float
   revenue: Float
   spendings: Float
@@ -213,6 +216,7 @@ input AccountCreateWithoutCategoriesInput {
 
 input AccountCreateWithoutMembersInput {
   name: String!
+  nameNormalized: String
   balance: Float
   revenue: Float
   spendings: Float
@@ -225,6 +229,7 @@ input AccountCreateWithoutMembersInput {
 
 input AccountCreateWithoutPaymentsInput {
   name: String!
+  nameNormalized: String
   balance: Float
   revenue: Float
   spendings: Float
@@ -237,6 +242,7 @@ input AccountCreateWithoutPaymentsInput {
 
 input AccountCreateWithoutPeersInput {
   name: String!
+  nameNormalized: String
   balance: Float
   revenue: Float
   spendings: Float
@@ -249,6 +255,7 @@ input AccountCreateWithoutPeersInput {
 
 input AccountCreateWithoutTeamInput {
   name: String!
+  nameNormalized: String
   balance: Float
   revenue: Float
   spendings: Float
@@ -273,6 +280,8 @@ enum AccountOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  nameNormalized_ASC
+  nameNormalized_DESC
   balance_ASC
   balance_DESC
   revenue_ASC
@@ -290,6 +299,7 @@ enum AccountOrderByInput {
 type AccountPreviousValues {
   id: ID!
   name: String!
+  nameNormalized: String
   balance: Float!
   revenue: Float!
   spendings: Float!
@@ -337,6 +347,7 @@ input AccountSubscriptionWhereInput {
 
 input AccountUpdateInput {
   name: String
+  nameNormalized: String
   balance: Float
   revenue: Float
   spendings: Float
@@ -391,6 +402,7 @@ input AccountUpdateOneWithoutPeersInput {
 
 input AccountUpdateWithoutCategoriesDataInput {
   name: String
+  nameNormalized: String
   balance: Float
   revenue: Float
   spendings: Float
@@ -403,6 +415,7 @@ input AccountUpdateWithoutCategoriesDataInput {
 
 input AccountUpdateWithoutMembersDataInput {
   name: String
+  nameNormalized: String
   balance: Float
   revenue: Float
   spendings: Float
@@ -415,6 +428,7 @@ input AccountUpdateWithoutMembersDataInput {
 
 input AccountUpdateWithoutPaymentsDataInput {
   name: String
+  nameNormalized: String
   balance: Float
   revenue: Float
   spendings: Float
@@ -427,6 +441,7 @@ input AccountUpdateWithoutPaymentsDataInput {
 
 input AccountUpdateWithoutPeersDataInput {
   name: String
+  nameNormalized: String
   balance: Float
   revenue: Float
   spendings: Float
@@ -439,6 +454,7 @@ input AccountUpdateWithoutPeersDataInput {
 
 input AccountUpdateWithoutTeamDataInput {
   name: String
+  nameNormalized: String
   balance: Float
   revenue: Float
   spendings: Float
@@ -569,6 +585,46 @@ input AccountWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
+  nameNormalized: String
+
+  """All values that are not equal to given value."""
+  nameNormalized_not: String
+
+  """All values that are contained in given list."""
+  nameNormalized_in: [String!]
+
+  """All values that are not contained in given list."""
+  nameNormalized_not_in: [String!]
+
+  """All values less than the given value."""
+  nameNormalized_lt: String
+
+  """All values less than or equal the given value."""
+  nameNormalized_lte: String
+
+  """All values greater than the given value."""
+  nameNormalized_gt: String
+
+  """All values greater than or equal the given value."""
+  nameNormalized_gte: String
+
+  """All values containing the given string."""
+  nameNormalized_contains: String
+
+  """All values not containing the given string."""
+  nameNormalized_not_contains: String
+
+  """All values starting with the given string."""
+  nameNormalized_starts_with: String
+
+  """All values not starting with the given string."""
+  nameNormalized_not_starts_with: String
+
+  """All values ending with the given string."""
+  nameNormalized_ends_with: String
+
+  """All values not ending with the given string."""
+  nameNormalized_not_ends_with: String
   balance: Float
 
   """All values that are not equal to given value."""
@@ -699,6 +755,7 @@ type Category implements Node {
   id: ID!
   account(where: AccountWhereInput): Account!
   name: String!
+  nameNormalized: String
   color: String!
 }
 
@@ -714,6 +771,7 @@ type CategoryConnection {
 
 input CategoryCreateInput {
   name: String!
+  nameNormalized: String
   color: String!
   account: AccountCreateOneWithoutCategoriesInput!
 }
@@ -735,6 +793,7 @@ input CategoryCreateOneInput {
 
 input CategoryCreateWithoutAccountInput {
   name: String!
+  nameNormalized: String
   color: String!
 }
 
@@ -752,6 +811,8 @@ enum CategoryOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  nameNormalized_ASC
+  nameNormalized_DESC
   color_ASC
   color_DESC
   updatedAt_ASC
@@ -763,6 +824,7 @@ enum CategoryOrderByInput {
 type CategoryPreviousValues {
   id: ID!
   name: String!
+  nameNormalized: String
   color: String!
 }
 
@@ -807,12 +869,14 @@ input CategorySubscriptionWhereInput {
 
 input CategoryUpdateDataInput {
   name: String
+  nameNormalized: String
   color: String
   account: AccountUpdateOneWithoutCategoriesInput
 }
 
 input CategoryUpdateInput {
   name: String
+  nameNormalized: String
   color: String
   account: AccountUpdateOneWithoutCategoriesInput
 }
@@ -846,6 +910,7 @@ input CategoryUpdateOneInput {
 
 input CategoryUpdateWithoutAccountDataInput {
   name: String
+  nameNormalized: String
   color: String
 }
 
@@ -965,6 +1030,46 @@ input CategoryWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
+  nameNormalized: String
+
+  """All values that are not equal to given value."""
+  nameNormalized_not: String
+
+  """All values that are contained in given list."""
+  nameNormalized_in: [String!]
+
+  """All values that are not contained in given list."""
+  nameNormalized_not_in: [String!]
+
+  """All values less than the given value."""
+  nameNormalized_lt: String
+
+  """All values less than or equal the given value."""
+  nameNormalized_lte: String
+
+  """All values greater than the given value."""
+  nameNormalized_gt: String
+
+  """All values greater than or equal the given value."""
+  nameNormalized_gte: String
+
+  """All values containing the given string."""
+  nameNormalized_contains: String
+
+  """All values not containing the given string."""
+  nameNormalized_not_contains: String
+
+  """All values starting with the given string."""
+  nameNormalized_starts_with: String
+
+  """All values not starting with the given string."""
+  nameNormalized_not_starts_with: String
+
+  """All values ending with the given string."""
+  nameNormalized_ends_with: String
+
+  """All values not ending with the given string."""
+  nameNormalized_not_ends_with: String
   color: String
 
   """All values that are not equal to given value."""
@@ -1298,6 +1403,7 @@ type Payment implements Node {
   postedDate: DateTime!
   amount: Float!
   peerName: String
+  peerNameNormalized: String
   peer(where: PeerWhereInput): Peer
   description: String
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
@@ -1319,6 +1425,7 @@ input PaymentCreateInput {
   postedDate: DateTime!
   amount: Float!
   peerName: String
+  peerNameNormalized: String
   description: String
   rawData: Json!
   account: AccountCreateOneWithoutPaymentsInput!
@@ -1346,6 +1453,7 @@ input PaymentCreateWithoutAccountInput {
   postedDate: DateTime!
   amount: Float!
   peerName: String
+  peerNameNormalized: String
   description: String
   rawData: Json!
   peer: PeerCreateOneWithoutPaymentsInput
@@ -1357,6 +1465,7 @@ input PaymentCreateWithoutCommentsInput {
   postedDate: DateTime!
   amount: Float!
   peerName: String
+  peerNameNormalized: String
   description: String
   rawData: Json!
   account: AccountCreateOneWithoutPaymentsInput!
@@ -1368,6 +1477,7 @@ input PaymentCreateWithoutPeerInput {
   postedDate: DateTime!
   amount: Float!
   peerName: String
+  peerNameNormalized: String
   description: String
   rawData: Json!
   account: AccountCreateOneWithoutPaymentsInput!
@@ -1393,6 +1503,8 @@ enum PaymentOrderByInput {
   amount_DESC
   peerName_ASC
   peerName_DESC
+  peerNameNormalized_ASC
+  peerNameNormalized_DESC
   description_ASC
   description_DESC
   rawData_ASC
@@ -1408,6 +1520,7 @@ type PaymentPreviousValues {
   postedDate: DateTime!
   amount: Float!
   peerName: String
+  peerNameNormalized: String
   description: String
   rawData: Json!
 }
@@ -1455,6 +1568,7 @@ input PaymentUpdateInput {
   postedDate: DateTime
   amount: Float
   peerName: String
+  peerNameNormalized: String
   description: String
   rawData: Json
   account: AccountUpdateOneWithoutPaymentsInput
@@ -1493,6 +1607,7 @@ input PaymentUpdateWithoutAccountDataInput {
   postedDate: DateTime
   amount: Float
   peerName: String
+  peerNameNormalized: String
   description: String
   rawData: Json
   peer: PeerUpdateOneWithoutPaymentsInput
@@ -1504,6 +1619,7 @@ input PaymentUpdateWithoutCommentsDataInput {
   postedDate: DateTime
   amount: Float
   peerName: String
+  peerNameNormalized: String
   description: String
   rawData: Json
   account: AccountUpdateOneWithoutPaymentsInput
@@ -1515,6 +1631,7 @@ input PaymentUpdateWithoutPeerDataInput {
   postedDate: DateTime
   amount: Float
   peerName: String
+  peerNameNormalized: String
   description: String
   rawData: Json
   account: AccountUpdateOneWithoutPaymentsInput
@@ -1682,6 +1799,46 @@ input PaymentWhereInput {
 
   """All values not ending with the given string."""
   peerName_not_ends_with: String
+  peerNameNormalized: String
+
+  """All values that are not equal to given value."""
+  peerNameNormalized_not: String
+
+  """All values that are contained in given list."""
+  peerNameNormalized_in: [String!]
+
+  """All values that are not contained in given list."""
+  peerNameNormalized_not_in: [String!]
+
+  """All values less than the given value."""
+  peerNameNormalized_lt: String
+
+  """All values less than or equal the given value."""
+  peerNameNormalized_lte: String
+
+  """All values greater than the given value."""
+  peerNameNormalized_gt: String
+
+  """All values greater than or equal the given value."""
+  peerNameNormalized_gte: String
+
+  """All values containing the given string."""
+  peerNameNormalized_contains: String
+
+  """All values not containing the given string."""
+  peerNameNormalized_not_contains: String
+
+  """All values starting with the given string."""
+  peerNameNormalized_starts_with: String
+
+  """All values not starting with the given string."""
+  peerNameNormalized_not_starts_with: String
+
+  """All values ending with the given string."""
+  peerNameNormalized_ends_with: String
+
+  """All values not ending with the given string."""
+  peerNameNormalized_not_ends_with: String
   description: String
 
   """All values that are not equal to given value."""
@@ -1738,6 +1895,7 @@ type Peer implements Node {
   id: ID!
   account(where: AccountWhereInput): Account!
   name: String!
+  nameNormalized: String
   total: Float!
   revenue: Float!
   spendings: Float!
@@ -1760,6 +1918,7 @@ type PeerConnection {
 
 input PeerCreateInput {
   name: String!
+  nameNormalized: String
   total: Float
   revenue: Float
   spendings: Float
@@ -1783,6 +1942,7 @@ input PeerCreateOneWithoutPaymentsInput {
 
 input PeerCreateWithoutAccountInput {
   name: String!
+  nameNormalized: String
   total: Float
   revenue: Float
   spendings: Float
@@ -1795,6 +1955,7 @@ input PeerCreateWithoutAccountInput {
 
 input PeerCreateWithoutPaymentsInput {
   name: String!
+  nameNormalized: String
   total: Float
   revenue: Float
   spendings: Float
@@ -1819,6 +1980,8 @@ enum PeerOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  nameNormalized_ASC
+  nameNormalized_DESC
   total_ASC
   total_DESC
   revenue_ASC
@@ -1838,6 +2001,7 @@ enum PeerOrderByInput {
 type PeerPreviousValues {
   id: ID!
   name: String!
+  nameNormalized: String
   total: Float!
   revenue: Float!
   spendings: Float!
@@ -1886,6 +2050,7 @@ input PeerSubscriptionWhereInput {
 
 input PeerUpdateInput {
   name: String
+  nameNormalized: String
   total: Float
   revenue: Float
   spendings: Float
@@ -1917,6 +2082,7 @@ input PeerUpdateOneWithoutPaymentsInput {
 
 input PeerUpdateWithoutAccountDataInput {
   name: String
+  nameNormalized: String
   total: Float
   revenue: Float
   spendings: Float
@@ -1929,6 +2095,7 @@ input PeerUpdateWithoutAccountDataInput {
 
 input PeerUpdateWithoutPaymentsDataInput {
   name: String
+  nameNormalized: String
   total: Float
   revenue: Float
   spendings: Float
@@ -2044,6 +2211,46 @@ input PeerWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
+  nameNormalized: String
+
+  """All values that are not equal to given value."""
+  nameNormalized_not: String
+
+  """All values that are contained in given list."""
+  nameNormalized_in: [String!]
+
+  """All values that are not contained in given list."""
+  nameNormalized_not_in: [String!]
+
+  """All values less than the given value."""
+  nameNormalized_lt: String
+
+  """All values less than or equal the given value."""
+  nameNormalized_lte: String
+
+  """All values greater than the given value."""
+  nameNormalized_gt: String
+
+  """All values greater than or equal the given value."""
+  nameNormalized_gte: String
+
+  """All values containing the given string."""
+  nameNormalized_contains: String
+
+  """All values not containing the given string."""
+  nameNormalized_not_contains: String
+
+  """All values starting with the given string."""
+  nameNormalized_starts_with: String
+
+  """All values not starting with the given string."""
+  nameNormalized_not_starts_with: String
+
+  """All values ending with the given string."""
+  nameNormalized_ends_with: String
+
+  """All values not ending with the given string."""
+  nameNormalized_not_ends_with: String
   total: Float
 
   """All values that are not equal to given value."""
@@ -2219,6 +2426,7 @@ type Subscription {
 type Team implements Node {
   id: ID!
   name: String!
+  nameNormalized: String
   accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account!]
   members(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMember!]
 }
@@ -2235,6 +2443,7 @@ type TeamConnection {
 
 input TeamCreateInput {
   name: String!
+  nameNormalized: String
   accounts: AccountCreateManyWithoutTeamInput
   members: TeamMemberCreateManyWithoutTeamInput
 }
@@ -2251,11 +2460,13 @@ input TeamCreateOneWithoutMembersInput {
 
 input TeamCreateWithoutAccountsInput {
   name: String!
+  nameNormalized: String
   members: TeamMemberCreateManyWithoutTeamInput
 }
 
 input TeamCreateWithoutMembersInput {
   name: String!
+  nameNormalized: String
   accounts: AccountCreateManyWithoutTeamInput
 }
 
@@ -2775,6 +2986,8 @@ enum TeamOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  nameNormalized_ASC
+  nameNormalized_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -2784,6 +2997,7 @@ enum TeamOrderByInput {
 type TeamPreviousValues {
   id: ID!
   name: String!
+  nameNormalized: String
 }
 
 type TeamSubscriptionPayload {
@@ -2827,6 +3041,7 @@ input TeamSubscriptionWhereInput {
 
 input TeamUpdateInput {
   name: String
+  nameNormalized: String
   accounts: AccountUpdateManyWithoutTeamInput
   members: TeamMemberUpdateManyWithoutTeamInput
 }
@@ -2849,11 +3064,13 @@ input TeamUpdateOneWithoutMembersInput {
 
 input TeamUpdateWithoutAccountsDataInput {
   name: String
+  nameNormalized: String
   members: TeamMemberUpdateManyWithoutTeamInput
 }
 
 input TeamUpdateWithoutMembersDataInput {
   name: String
+  nameNormalized: String
   accounts: AccountUpdateManyWithoutTeamInput
 }
 
@@ -2956,6 +3173,46 @@ input TeamWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
+  nameNormalized: String
+
+  """All values that are not equal to given value."""
+  nameNormalized_not: String
+
+  """All values that are contained in given list."""
+  nameNormalized_in: [String!]
+
+  """All values that are not contained in given list."""
+  nameNormalized_not_in: [String!]
+
+  """All values less than the given value."""
+  nameNormalized_lt: String
+
+  """All values less than or equal the given value."""
+  nameNormalized_lte: String
+
+  """All values greater than the given value."""
+  nameNormalized_gt: String
+
+  """All values greater than or equal the given value."""
+  nameNormalized_gte: String
+
+  """All values containing the given string."""
+  nameNormalized_contains: String
+
+  """All values not containing the given string."""
+  nameNormalized_not_contains: String
+
+  """All values starting with the given string."""
+  nameNormalized_starts_with: String
+
+  """All values not starting with the given string."""
+  nameNormalized_not_starts_with: String
+
+  """All values ending with the given string."""
+  nameNormalized_ends_with: String
+
+  """All values not ending with the given string."""
+  nameNormalized_not_ends_with: String
   accounts_every: AccountWhereInput
   accounts_some: AccountWhereInput
   accounts_none: AccountWhereInput
@@ -2971,6 +3228,7 @@ input TeamWhereUniqueInput {
 type User implements Node {
   id: ID!
   email: String!
+  emailNormalized: String
   firstName: String!
   lastName: String
   passwordHash: String!
@@ -2989,6 +3247,7 @@ type UserConnection {
 
 input UserCreateInput {
   email: String!
+  emailNormalized: String
   firstName: String!
   lastName: String
   passwordHash: String!
@@ -3007,6 +3266,7 @@ input UserCreateOneWithoutTeamsInput {
 
 input UserCreateWithoutTeamsInput {
   email: String!
+  emailNormalized: String
   firstName: String!
   lastName: String
   passwordHash: String!
@@ -3026,6 +3286,8 @@ enum UserOrderByInput {
   id_DESC
   email_ASC
   email_DESC
+  emailNormalized_ASC
+  emailNormalized_DESC
   firstName_ASC
   firstName_DESC
   lastName_ASC
@@ -3041,6 +3303,7 @@ enum UserOrderByInput {
 type UserPreviousValues {
   id: ID!
   email: String!
+  emailNormalized: String
   firstName: String!
   lastName: String
   passwordHash: String!
@@ -3087,6 +3350,7 @@ input UserSubscriptionWhereInput {
 
 input UserUpdateDataInput {
   email: String
+  emailNormalized: String
   firstName: String
   lastName: String
   passwordHash: String
@@ -3095,6 +3359,7 @@ input UserUpdateDataInput {
 
 input UserUpdateInput {
   email: String
+  emailNormalized: String
   firstName: String
   lastName: String
   passwordHash: String
@@ -3120,6 +3385,7 @@ input UserUpdateOneWithoutTeamsInput {
 
 input UserUpdateWithoutTeamsDataInput {
   email: String
+  emailNormalized: String
   firstName: String
   lastName: String
   passwordHash: String
@@ -3224,6 +3490,46 @@ input UserWhereInput {
 
   """All values not ending with the given string."""
   email_not_ends_with: String
+  emailNormalized: String
+
+  """All values that are not equal to given value."""
+  emailNormalized_not: String
+
+  """All values that are contained in given list."""
+  emailNormalized_in: [String!]
+
+  """All values that are not contained in given list."""
+  emailNormalized_not_in: [String!]
+
+  """All values less than the given value."""
+  emailNormalized_lt: String
+
+  """All values less than or equal the given value."""
+  emailNormalized_lte: String
+
+  """All values greater than the given value."""
+  emailNormalized_gt: String
+
+  """All values greater than or equal the given value."""
+  emailNormalized_gte: String
+
+  """All values containing the given string."""
+  emailNormalized_contains: String
+
+  """All values not containing the given string."""
+  emailNormalized_not_contains: String
+
+  """All values starting with the given string."""
+  emailNormalized_starts_with: String
+
+  """All values not starting with the given string."""
+  emailNormalized_not_starts_with: String
+
+  """All values ending with the given string."""
+  emailNormalized_ends_with: String
+
+  """All values not ending with the given string."""
+  emailNormalized_not_ends_with: String
   firstName: String
 
   """All values that are not equal to given value."""
@@ -3378,6 +3684,8 @@ export type TeamOrderByInput =   'id_ASC' |
   'id_DESC' |
   'name_ASC' |
   'name_DESC' |
+  'nameNormalized_ASC' |
+  'nameNormalized_DESC' |
   'updatedAt_ASC' |
   'updatedAt_DESC' |
   'createdAt_ASC' |
@@ -3387,6 +3695,8 @@ export type AccountOrderByInput =   'id_ASC' |
   'id_DESC' |
   'name_ASC' |
   'name_DESC' |
+  'nameNormalized_ASC' |
+  'nameNormalized_DESC' |
   'balance_ASC' |
   'balance_DESC' |
   'revenue_ASC' |
@@ -3404,6 +3714,8 @@ export type CategoryOrderByInput =   'id_ASC' |
   'id_DESC' |
   'name_ASC' |
   'name_DESC' |
+  'nameNormalized_ASC' |
+  'nameNormalized_DESC' |
   'color_ASC' |
   'color_DESC' |
   'updatedAt_ASC' |
@@ -3419,6 +3731,8 @@ export type PaymentOrderByInput =   'id_ASC' |
   'amount_DESC' |
   'peerName_ASC' |
   'peerName_DESC' |
+  'peerNameNormalized_ASC' |
+  'peerNameNormalized_DESC' |
   'description_ASC' |
   'description_DESC' |
   'rawData_ASC' |
@@ -3454,6 +3768,8 @@ export type PeerOrderByInput =   'id_ASC' |
   'id_DESC' |
   'name_ASC' |
   'name_DESC' |
+  'nameNormalized_ASC' |
+  'nameNormalized_DESC' |
   'total_ASC' |
   'total_DESC' |
   'revenue_ASC' |
@@ -3473,6 +3789,8 @@ export type UserOrderByInput =   'id_ASC' |
   'id_DESC' |
   'email_ASC' |
   'email_DESC' |
+  'emailNormalized_ASC' |
+  'emailNormalized_DESC' |
   'firstName_ASC' |
   'firstName_DESC' |
   'lastName_ASC' |
@@ -3486,6 +3804,7 @@ export type UserOrderByInput =   'id_ASC' |
 
 export interface PeerCreateInput {
   name: String
+  nameNormalized?: String
   total?: Float
   revenue?: Float
   spendings?: Float
@@ -3529,6 +3848,20 @@ export interface TeamWhereInput {
   name_not_starts_with?: String
   name_ends_with?: String
   name_not_ends_with?: String
+  nameNormalized?: String
+  nameNormalized_not?: String
+  nameNormalized_in?: String[] | String
+  nameNormalized_not_in?: String[] | String
+  nameNormalized_lt?: String
+  nameNormalized_lte?: String
+  nameNormalized_gt?: String
+  nameNormalized_gte?: String
+  nameNormalized_contains?: String
+  nameNormalized_not_contains?: String
+  nameNormalized_starts_with?: String
+  nameNormalized_not_starts_with?: String
+  nameNormalized_ends_with?: String
+  nameNormalized_not_ends_with?: String
   accounts_every?: AccountWhereInput
   accounts_some?: AccountWhereInput
   accounts_none?: AccountWhereInput
@@ -3539,6 +3872,7 @@ export interface TeamWhereInput {
 
 export interface AccountUpdateWithoutTeamDataInput {
   name?: String
+  nameNormalized?: String
   balance?: Float
   revenue?: Float
   spendings?: Float
@@ -3613,6 +3947,7 @@ export interface TeamMemberAccountWhereInput {
 
 export interface AccountCreateWithoutPaymentsInput {
   name: String
+  nameNormalized?: String
   balance?: Float
   revenue?: Float
   spendings?: Float
@@ -3707,6 +4042,7 @@ export interface TeamMemberAccountSubscriptionWhereInput {
 
 export interface TeamCreateWithoutMembersInput {
   name: String
+  nameNormalized?: String
   accounts?: AccountCreateManyWithoutTeamInput
 }
 
@@ -3744,6 +4080,7 @@ export interface CommentCreateWithoutPaymentInput {
 
 export interface CategoryUpdateInput {
   name?: String
+  nameNormalized?: String
   color?: String
   account?: AccountUpdateOneWithoutCategoriesInput
 }
@@ -3760,6 +4097,7 @@ export interface PaymentUpsertWithoutCommentsInput {
 
 export interface UserCreateInput {
   email: String
+  emailNormalized?: String
   firstName: String
   lastName?: String
   passwordHash: String
@@ -3801,6 +4139,7 @@ export interface CommentWhereUniqueInput {
 
 export interface CategoryCreateInput {
   name: String
+  nameNormalized?: String
   color: String
   account: AccountCreateOneWithoutCategoriesInput
 }
@@ -3824,6 +4163,7 @@ export interface PaymentUpdateOneWithoutCommentsInput {
 
 export interface AccountCreateWithoutCategoriesInput {
   name: String
+  nameNormalized?: String
   balance?: Float
   revenue?: Float
   spendings?: Float
@@ -3836,6 +4176,7 @@ export interface AccountCreateWithoutCategoriesInput {
 
 export interface PeerUpdateInput {
   name?: String
+  nameNormalized?: String
   total?: Float
   revenue?: Float
   spendings?: Float
@@ -3875,6 +4216,7 @@ export interface TeamMemberUpdateInput {
 
 export interface AccountCreateInput {
   name: String
+  nameNormalized?: String
   balance?: Float
   revenue?: Float
   spendings?: Float
@@ -3906,6 +4248,7 @@ export interface PaymentCreateInput {
   postedDate: DateTime
   amount: Float
   peerName?: String
+  peerNameNormalized?: String
   description?: String
   rawData: Json
   account: AccountCreateOneWithoutPaymentsInput
@@ -3960,6 +4303,7 @@ export interface PaymentCreateWithoutCommentsInput {
   postedDate: DateTime
   amount: Float
   peerName?: String
+  peerNameNormalized?: String
   description?: String
   rawData: Json
   account: AccountCreateOneWithoutPaymentsInput
@@ -3974,12 +4318,14 @@ export interface CategoryUpsertNestedInput {
 
 export interface TeamUpdateInput {
   name?: String
+  nameNormalized?: String
   accounts?: AccountUpdateManyWithoutTeamInput
   members?: TeamMemberUpdateManyWithoutTeamInput
 }
 
 export interface AccountUpdateWithoutCategoriesDataInput {
   name?: String
+  nameNormalized?: String
   balance?: Float
   revenue?: Float
   spendings?: Float
@@ -4001,6 +4347,7 @@ export interface AccountUpdateManyWithoutTeamInput {
 
 export interface CategoryUpdateDataInput {
   name?: String
+  nameNormalized?: String
   color?: String
   account?: AccountUpdateOneWithoutCategoriesInput
 }
@@ -4059,6 +4406,20 @@ export interface UserWhereInput {
   email_not_starts_with?: String
   email_ends_with?: String
   email_not_ends_with?: String
+  emailNormalized?: String
+  emailNormalized_not?: String
+  emailNormalized_in?: String[] | String
+  emailNormalized_not_in?: String[] | String
+  emailNormalized_lt?: String
+  emailNormalized_lte?: String
+  emailNormalized_gt?: String
+  emailNormalized_gte?: String
+  emailNormalized_contains?: String
+  emailNormalized_not_contains?: String
+  emailNormalized_starts_with?: String
+  emailNormalized_not_starts_with?: String
+  emailNormalized_ends_with?: String
+  emailNormalized_not_ends_with?: String
   firstName?: String
   firstName_not?: String
   firstName_in?: String[] | String
@@ -4123,6 +4484,7 @@ export interface PeerCreateOneWithoutPaymentsInput {
 
 export interface CategoryUpdateWithoutAccountDataInput {
   name?: String
+  nameNormalized?: String
   color?: String
 }
 
@@ -4170,6 +4532,7 @@ export interface PaymentUpdateWithoutAccountDataInput {
   postedDate?: DateTime
   amount?: Float
   peerName?: String
+  peerNameNormalized?: String
   description?: String
   rawData?: Json
   peer?: PeerUpdateOneWithoutPaymentsInput
@@ -4198,6 +4561,7 @@ export interface AccountCreateOneWithoutMembersInput {
 
 export interface PeerUpdateWithoutPaymentsDataInput {
   name?: String
+  nameNormalized?: String
   total?: Float
   revenue?: Float
   spendings?: Float
@@ -4228,6 +4592,7 @@ export interface PaymentCreateManyWithoutPeerInput {
 
 export interface AccountUpdateWithoutPeersDataInput {
   name?: String
+  nameNormalized?: String
   balance?: Float
   revenue?: Float
   spendings?: Float
@@ -4264,6 +4629,7 @@ export interface UserSubscriptionWhereInput {
 
 export interface TeamUpdateWithoutAccountsDataInput {
   name?: String
+  nameNormalized?: String
   members?: TeamMemberUpdateManyWithoutTeamInput
 }
 
@@ -4335,6 +4701,20 @@ export interface PaymentWhereInput {
   peerName_not_starts_with?: String
   peerName_ends_with?: String
   peerName_not_ends_with?: String
+  peerNameNormalized?: String
+  peerNameNormalized_not?: String
+  peerNameNormalized_in?: String[] | String
+  peerNameNormalized_not_in?: String[] | String
+  peerNameNormalized_lt?: String
+  peerNameNormalized_lte?: String
+  peerNameNormalized_gt?: String
+  peerNameNormalized_gte?: String
+  peerNameNormalized_contains?: String
+  peerNameNormalized_not_contains?: String
+  peerNameNormalized_starts_with?: String
+  peerNameNormalized_not_starts_with?: String
+  peerNameNormalized_ends_with?: String
+  peerNameNormalized_not_ends_with?: String
   description?: String
   description_not?: String
   description_in?: String[] | String
@@ -4364,6 +4744,7 @@ export interface TeamMemberUpdateWithWhereUniqueWithoutTeamInput {
 
 export interface UserUpdateInput {
   email?: String
+  emailNormalized?: String
   firstName?: String
   lastName?: String
   passwordHash?: String
@@ -4395,6 +4776,7 @@ export interface PeerWhereUniqueInput {
 
 export interface UserUpdateWithoutTeamsDataInput {
   email?: String
+  emailNormalized?: String
   firstName?: String
   lastName?: String
   passwordHash?: String
@@ -4404,6 +4786,7 @@ export interface PaymentUpdateWithoutCommentsDataInput {
   postedDate?: DateTime
   amount?: Float
   peerName?: String
+  peerNameNormalized?: String
   description?: String
   rawData?: Json
   account?: AccountUpdateOneWithoutPaymentsInput
@@ -4420,6 +4803,7 @@ export interface PaymentUpdateInput {
   postedDate?: DateTime
   amount?: Float
   peerName?: String
+  peerNameNormalized?: String
   description?: String
   rawData?: Json
   account?: AccountUpdateOneWithoutPaymentsInput
@@ -4479,6 +4863,7 @@ export interface PaymentUpsertWithWhereUniqueWithoutPeerInput {
 
 export interface AccountUpdateWithoutMembersDataInput {
   name?: String
+  nameNormalized?: String
   balance?: Float
   revenue?: Float
   spendings?: Float
@@ -4508,6 +4893,7 @@ export interface PeerUpdateManyWithoutAccountInput {
 
 export interface TeamCreateInput {
   name: String
+  nameNormalized?: String
   accounts?: AccountCreateManyWithoutTeamInput
   members?: TeamMemberCreateManyWithoutTeamInput
 }
@@ -4519,11 +4905,13 @@ export interface PeerUpdateWithWhereUniqueWithoutAccountInput {
 
 export interface CategoryCreateWithoutAccountInput {
   name: String
+  nameNormalized?: String
   color: String
 }
 
 export interface PeerUpdateWithoutAccountDataInput {
   name?: String
+  nameNormalized?: String
   total?: Float
   revenue?: Float
   spendings?: Float
@@ -4536,6 +4924,7 @@ export interface PeerUpdateWithoutAccountDataInput {
 
 export interface PeerCreateWithoutPaymentsInput {
   name: String
+  nameNormalized?: String
   total?: Float
   revenue?: Float
   spendings?: Float
@@ -4557,6 +4946,7 @@ export interface PaymentUpdateManyWithoutPeerInput {
 
 export interface TeamCreateWithoutAccountsInput {
   name: String
+  nameNormalized?: String
   members?: TeamMemberCreateManyWithoutTeamInput
 }
 
@@ -4567,6 +4957,7 @@ export interface PaymentUpdateWithWhereUniqueWithoutPeerInput {
 
 export interface UserCreateWithoutTeamsInput {
   email: String
+  emailNormalized?: String
   firstName: String
   lastName?: String
   passwordHash: String
@@ -4576,6 +4967,7 @@ export interface PaymentUpdateWithoutPeerDataInput {
   postedDate?: DateTime
   amount?: Float
   peerName?: String
+  peerNameNormalized?: String
   description?: String
   rawData?: Json
   account?: AccountUpdateOneWithoutPaymentsInput
@@ -4585,6 +4977,7 @@ export interface PaymentUpdateWithoutPeerDataInput {
 
 export interface AccountCreateWithoutMembersInput {
   name: String
+  nameNormalized?: String
   balance?: Float
   revenue?: Float
   spendings?: Float
@@ -4607,6 +5000,7 @@ export interface PaymentCreateWithoutPeerInput {
   postedDate: DateTime
   amount: Float
   peerName?: String
+  peerNameNormalized?: String
   description?: String
   rawData: Json
   account: AccountCreateOneWithoutPaymentsInput
@@ -4616,6 +5010,7 @@ export interface PaymentCreateWithoutPeerInput {
 
 export interface AccountUpdateWithoutPaymentsDataInput {
   name?: String
+  nameNormalized?: String
   balance?: Float
   revenue?: Float
   spendings?: Float
@@ -4658,6 +5053,20 @@ export interface PeerWhereInput {
   name_not_starts_with?: String
   name_ends_with?: String
   name_not_ends_with?: String
+  nameNormalized?: String
+  nameNormalized_not?: String
+  nameNormalized_in?: String[] | String
+  nameNormalized_not_in?: String[] | String
+  nameNormalized_lt?: String
+  nameNormalized_lte?: String
+  nameNormalized_gt?: String
+  nameNormalized_gte?: String
+  nameNormalized_contains?: String
+  nameNormalized_not_contains?: String
+  nameNormalized_starts_with?: String
+  nameNormalized_not_starts_with?: String
+  nameNormalized_ends_with?: String
+  nameNormalized_not_ends_with?: String
   total?: Float
   total_not?: Float
   total_in?: Float[] | Float
@@ -4749,6 +5158,20 @@ export interface CategoryWhereInput {
   name_not_starts_with?: String
   name_ends_with?: String
   name_not_ends_with?: String
+  nameNormalized?: String
+  nameNormalized_not?: String
+  nameNormalized_in?: String[] | String
+  nameNormalized_not_in?: String[] | String
+  nameNormalized_lt?: String
+  nameNormalized_lte?: String
+  nameNormalized_gt?: String
+  nameNormalized_gte?: String
+  nameNormalized_contains?: String
+  nameNormalized_not_contains?: String
+  nameNormalized_starts_with?: String
+  nameNormalized_not_starts_with?: String
+  nameNormalized_ends_with?: String
+  nameNormalized_not_ends_with?: String
   color?: String
   color_not?: String
   color_in?: String[] | String
@@ -4829,6 +5252,7 @@ export interface CategoryUpdateOneInput {
 
 export interface TeamUpdateWithoutMembersDataInput {
   name?: String
+  nameNormalized?: String
   accounts?: AccountUpdateManyWithoutTeamInput
 }
 
@@ -4836,6 +5260,7 @@ export interface PaymentCreateWithoutAccountInput {
   postedDate: DateTime
   amount: Float
   peerName?: String
+  peerNameNormalized?: String
   description?: String
   rawData: Json
   peer?: PeerCreateOneWithoutPaymentsInput
@@ -4862,6 +5287,7 @@ export interface TeamMemberUpsertWithoutAccountsInput {
 
 export interface PeerCreateWithoutAccountInput {
   name: String
+  nameNormalized?: String
   total?: Float
   revenue?: Float
   spendings?: Float
@@ -4921,6 +5347,7 @@ export interface CommentUpdateWithWhereUniqueWithoutPaymentInput {
 
 export interface AccountCreateWithoutTeamInput {
   name: String
+  nameNormalized?: String
   balance?: Float
   revenue?: Float
   spendings?: Float
@@ -4956,6 +5383,7 @@ export interface TeamMemberUpdateManyWithoutUserInput {
 
 export interface UserUpdateDataInput {
   email?: String
+  emailNormalized?: String
   firstName?: String
   lastName?: String
   passwordHash?: String
@@ -4995,6 +5423,7 @@ export interface CommentWhereInput {
 
 export interface AccountCreateWithoutPeersInput {
   name: String
+  nameNormalized?: String
   balance?: Float
   revenue?: Float
   spendings?: Float
@@ -5012,6 +5441,7 @@ export interface AccountUpsertWithoutCategoriesInput {
 
 export interface AccountUpdateInput {
   name?: String
+  nameNormalized?: String
   balance?: Float
   revenue?: Float
   spendings?: Float
@@ -5055,6 +5485,20 @@ export interface AccountWhereInput {
   name_not_starts_with?: String
   name_ends_with?: String
   name_not_ends_with?: String
+  nameNormalized?: String
+  nameNormalized_not?: String
+  nameNormalized_in?: String[] | String
+  nameNormalized_not_in?: String[] | String
+  nameNormalized_lt?: String
+  nameNormalized_lte?: String
+  nameNormalized_gt?: String
+  nameNormalized_gte?: String
+  nameNormalized_contains?: String
+  nameNormalized_not_contains?: String
+  nameNormalized_starts_with?: String
+  nameNormalized_not_starts_with?: String
+  nameNormalized_ends_with?: String
+  nameNormalized_not_ends_with?: String
   balance?: Float
   balance_not?: Float
   balance_in?: Float[] | Float
@@ -5105,6 +5549,7 @@ export interface Node {
 export interface CategoryPreviousValues {
   id: ID_Output
   name: String
+  nameNormalized?: String
   color: String
 }
 
@@ -5139,6 +5584,7 @@ export interface TeamConnection {
 export interface Team extends Node {
   id: ID_Output
   name: String
+  nameNormalized?: String
   accounts?: Account[]
   members?: TeamMember[]
 }
@@ -5162,6 +5608,7 @@ export interface CategoryEdge {
 export interface Account extends Node {
   id: ID_Output
   name: String
+  nameNormalized?: String
   balance: Float
   revenue: Float
   spendings: Float
@@ -5209,6 +5656,7 @@ export interface CommentEdge {
 export interface UserPreviousValues {
   id: ID_Output
   email: String
+  emailNormalized?: String
   firstName: String
   lastName?: String
   passwordHash: String
@@ -5267,6 +5715,7 @@ export interface AggregateTeamMemberAccount {
 export interface TeamPreviousValues {
   id: ID_Output
   name: String
+  nameNormalized?: String
 }
 
 /*
@@ -5282,6 +5731,7 @@ export interface TeamMemberAccountConnection {
 export interface User extends Node {
   id: ID_Output
   email: String
+  emailNormalized?: String
   firstName: String
   lastName?: String
   passwordHash: String
@@ -5360,6 +5810,7 @@ export interface CategoryConnection {
 export interface AccountPreviousValues {
   id: ID_Output
   name: String
+  nameNormalized?: String
   balance: Float
   revenue: Float
   spendings: Float
@@ -5413,6 +5864,7 @@ export interface Peer extends Node {
   id: ID_Output
   account: Account
   name: String
+  nameNormalized?: String
   total: Float
   revenue: Float
   spendings: Float
@@ -5448,6 +5900,7 @@ export interface PaymentPreviousValues {
   postedDate: DateTime
   amount: Float
   peerName?: String
+  peerNameNormalized?: String
   description?: String
   rawData: Json
 }
@@ -5475,12 +5928,14 @@ export interface Category extends Node {
   id: ID_Output
   account: Account
   name: String
+  nameNormalized?: String
   color: String
 }
 
 export interface PeerPreviousValues {
   id: ID_Output
   name: String
+  nameNormalized?: String
   total: Float
   revenue: Float
   spendings: Float
@@ -5501,6 +5956,7 @@ export interface Payment extends Node {
   postedDate: DateTime
   amount: Float
   peerName?: String
+  peerNameNormalized?: String
   peer?: Peer
   description?: String
   comments?: Comment[]

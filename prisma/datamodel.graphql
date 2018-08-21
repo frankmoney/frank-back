@@ -1,6 +1,7 @@
 type Team {
   id: ID! @unique
   name: String!
+  nameNormalized: String
   accounts: [Account!]!
   members: [TeamMember!]!
 }
@@ -8,6 +9,7 @@ type Team {
 type User {
   id: ID! @unique
   email: String! @unique
+  emailNormalized: String
   firstName: String!
   lastName: String
   passwordHash: String!
@@ -32,6 +34,7 @@ type TeamMember {
 type Account {
   id: ID! @unique
   name: String!
+  nameNormalized: String
   balance: Float! @default(value: "0.0")
   revenue: Float! @default(value: "0.0")
   spendings: Float! @default(value: "0.0")
@@ -55,6 +58,7 @@ type Payment {
   postedDate: DateTime!
   amount: Float!
   peerName: String
+  peerNameNormalized: String
   peer: Peer
   description: String
   comments: [Comment!]!
@@ -66,6 +70,7 @@ type Peer {
   id: ID! @unique
   account: Account!
   name: String!
+  nameNormalized: String
   total: Float! @default(value: "0.0")
   revenue: Float! @default(value: "0.0")
   spendings: Float! @default(value: "0.0")
@@ -87,5 +92,6 @@ type Category {
   id: ID! @unique
   account: Account!
   name: String!
+  nameNormalized: String
   color: String!
 }
