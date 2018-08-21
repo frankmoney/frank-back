@@ -1,0 +1,11 @@
+# import Account from '../generated/prisma.graphql'
+
+scalar JSON
+
+type Story {
+  id: ID!
+  title: String!
+  body: String!
+  coverImage: JSON
+  account: Account!
+}

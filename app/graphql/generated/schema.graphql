@@ -8,6 +8,7 @@ type Query {
   ledgerPayments(accountId: ID!, first: Int!, after: ID, skip: Int, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean, categoryId: ID): [Payment!]!
   ledgerPaymentsCount(accountId: ID!, search: String, dateMin: DateTime, dateMax: DateTime, amountMin: Float, amountMax: Float, verified: Boolean, categoryId: ID): LedgerPaymentsCount!
   ledgerPieChart(accountId: ID!, dateMin: DateTime, dateMax: DateTime): LedgerPieChart!
+  stories(accountId: ID!): [Story!]!
   team: TeamResult!
   teamAccounts: [TeamAccountsResultAccount!]!
   teammate(id: ID!): TeammateResult!
@@ -16,6 +17,7 @@ type Query {
 
 type Mutation {
   updatePeer(peerId: ID!, update: UpdatePeerUpdateInput!): Peer!
+  createStory(accountId: ID!, title: String!, body: String!, coverImage: JSON): Story!
   editTeamMemberRole(id: ID!, admin: Boolean!, canInvite: Boolean!, accountIds: [ID!]!): TeammateResult!
 }
 
@@ -83,6 +85,14 @@ type LedgerPieChart {
   items: [LedgerPieChartItem!]!
 }
 
+type Story {
+  id: ID!
+  title: String!
+  body: String!
+  coverImage: JSON
+  account: Account!
+}
+
 type TeamResult {
   team: TeamResultTeam!
   self: TeamResultProfile!
@@ -115,6 +125,8 @@ type User implements Node {
 input UpdatePeerUpdateInput {
   name: String!
 }
+
+scalar JSON
 
 """
 An object with an ID
@@ -1560,8 +1572,6 @@ type TeamResultAccount {
   id: ID!
   name: String!
 }
-
-scalar JSON
 
 type TeamResultAcl {
   remove: Boolean!

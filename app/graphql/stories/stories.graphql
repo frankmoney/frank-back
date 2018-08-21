@@ -1,0 +1,7 @@
+# import Story from './story.graphql'
+
+extend type Query {
+  stories(
+    accountId: ID!
+  ): [Story!]!
+}

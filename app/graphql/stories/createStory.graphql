@@ -1,0 +1,12 @@
+# import Story from './story.graphql'
+
+scalar JSON
+
+extend type Mutation {
+  createStory(
+    accountId: ID!,
+    title: String!,
+    body: String!,
+    coverImage: JSON,
+  ): Story!
+}
