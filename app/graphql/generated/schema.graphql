@@ -90,6 +90,14 @@ type LedgerPieChart {
   items: [LedgerPieChartItem!]!
 }
 
+type Story implements Node {
+  id: ID!
+  account(where: AccountWhereInput): Account!
+  title: String!
+  body: Json!
+  coverImage: Json
+}
+
 type TeamResult {
   team: TeamResultTeam!
   self: TeamResultProfile!
@@ -1596,14 +1604,6 @@ enum TeamMemberOrderByInput {
   updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
-}
-
-type Story implements Node {
-  id: ID!
-  account(where: AccountWhereInput): Account!
-  title: String!
-  body: Json!
-  coverImage: Json
 }
 
 type Team implements Node {
