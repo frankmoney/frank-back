@@ -96,3 +96,11 @@ type Category {
   nameNormalized: String
   color: String!
 }
+
+type Story {
+  id: ID! @unique
+  account: Account!
+  title: String!
+  body: Json!
+  coverImage: Json!
+}
