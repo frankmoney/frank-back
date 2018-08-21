@@ -1,5 +1,6 @@
 import addMonths from 'date-fns/add_months'
 import format from 'date-fns/format'
+import { isNil } from 'ramda'
 import {
   Payment,
   PaymentOrderByInput,
@@ -36,11 +37,26 @@ export default createPrivateResolver(
 
     const where: PaymentWhereInput = {
       account: { id: accountId },
-      category: { id: categoryId },
-      amount_gte: amountMin,
-      amount_lte: amountMax,
-      postedDate_gte: dateMin,
-      postedDate_lte: dateMax,
+    }
+
+    if (!isNil(categoryId)) {
+      where.category = { id: categoryId }
+    }
+
+    if (!isNil(amountMin)) {
+      where.amount_gte = amountMin
+    }
+
+    if (!isNil(amountMax)) {
+      where.amount_lte = amountMax
+    }
+
+    if (!isNil(dateMin)) {
+      where.postedDate_gte = dateMin
+    }
+
+    if (!isNil(dateMax)) {
+      where.postedDate_lte = dateMax
     }
 
     const orderBy: PaymentOrderByInput = 'postedDate_ASC'

@@ -1,3 +1,4 @@
+import { isNil } from 'ramda'
 import {
   PaymentOrderByInput,
   PaymentWhereInput,
@@ -29,26 +30,41 @@ export default createPrivateResolver(
 
     const where: PaymentWhereInput = {
       account: { id: accountId },
-      category: { id: categoryId },
-      amount_gte: amountMin,
-      amount_lte: amountMax,
-      postedDate_gte: dateMin,
-      postedDate_lte: dateMax,
+    }
+
+    if (!isNil(categoryId)) {
+      where.category = { id: categoryId }
+    }
+
+    if (!isNil(amountMin)) {
+      where.amount_gte = amountMin
+    }
+
+    if (!isNil(amountMax)) {
+      where.amount_lte = amountMax
+    }
+
+    if (!isNil(dateMin)) {
+      where.postedDate_gte = dateMin
+    }
+
+    if (!isNil(dateMax)) {
+      where.postedDate_lte = dateMax
     }
 
     if (search) {
       where.OR = [
         {
-          peerName_contains: search,
+          peerNameNormalized_contains: search,
         },
         {
           peer: {
-            name_contains: search,
+            nameNormalized_contains: search,
           },
         },
         {
           category: {
-            name_contains: search,
+            nameNormalized_contains: search,
           },
         },
         {
