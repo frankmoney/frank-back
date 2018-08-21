@@ -1593,6 +1593,14 @@ enum TeamMemberOrderByInput {
   createdAt_DESC
 }
 
+type Story implements Node {
+  id: ID!
+  account(where: AccountWhereInput): Account!
+  title: String!
+  body: Json!
+  coverImage: Json!
+}
+
 type Team implements Node {
   id: ID!
   name: String!
