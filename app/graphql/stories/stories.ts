@@ -6,9 +6,9 @@ export default createPrivateResolver(
 
     const accountId = args.accountId
 
-    await assert.accountAccess(accountId)
+    // await assert.accountAccess(accountId)  ..later
 
-    query.teamMembers({
+    return query.stories({
       where: {
         account: {
           id: accountId,

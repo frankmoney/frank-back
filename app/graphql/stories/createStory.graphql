@@ -1,5 +1,3 @@
-# import Story from  '../generated/prisma.graphql'
-
 scalar JSON
 
 extend type Mutation {

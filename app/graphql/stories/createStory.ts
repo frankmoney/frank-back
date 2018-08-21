@@ -2,19 +2,17 @@ import createPrivateResolver from 'utils/createPrivateResolver'
 
 export default createPrivateResolver(
   'createStory',
-  ({ assert, args, prisma: { query }, info }) => {
+  ({ assert, args, prisma: { mutation }, info }) => {
 
-    console.log('Create story with args:')
-    console.log(args)
+    // await assert.accountAccess(accountId)  ..later
 
-    return {
-      id: 'asdczx',
-      title: args.title,
-      body: args.body,
-      coverImage: JSON.parse(args.coverImage),
-      account: {
-        id: args.accountId,
+    return mutation.createStory({
+      data: {
+        title: args.title,
+        body: JSON.parse(args.body),
+        coverImage: JSON.parse(args.coverImage),
+        account: { connect: { id: args.accountId } },
       },
-    }
+    }, info)
   },
 )

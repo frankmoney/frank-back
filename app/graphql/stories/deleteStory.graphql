@@ -1,0 +1,7 @@
+scalar JSON
+
+extend type Mutation {
+  deleteStory(
+    id: ID!
+  ): Story!
+}

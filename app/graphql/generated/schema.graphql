@@ -17,7 +17,8 @@ type Query {
 
 type Mutation {
   updatePeer(peerId: ID!, update: UpdatePeerUpdateInput!): Peer!
-  createStory(accountId: ID!, title: String!, body: String!, coverImage: JSON): Story!
+  createStory(accountId: ID!, title: String!, body: JSON!, coverImage: JSON): Story!
+  deleteStory(id: ID!): Story!
   editTeamMemberRole(id: ID!, admin: Boolean!, canInvite: Boolean!, accountIds: [ID!]!): TeammateResult!
 }
 
@@ -89,12 +90,12 @@ type LedgerPieChart {
   items: [LedgerPieChartItem!]!
 }
 
-type Story {
+type Story implements Node {
   id: ID!
+  account(where: AccountWhereInput): Account!
   title: String!
-  body: String!
-  coverImage: JSON
-  account: Account!
+  body: Json!
+  coverImage: Json!
 }
 
 type TeamResult {
@@ -1603,14 +1604,6 @@ enum TeamMemberOrderByInput {
   updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
-}
-
-type Story implements Node {
-  id: ID!
-  account(where: AccountWhereInput): Account!
-  title: String!
-  body: Json!
-  coverImage: Json!
 }
 
 type Team implements Node {
