@@ -1,4 +1,4 @@
-# import Story from './story.graphql'
+# import Story from  '../generated/prisma.graphql'
 
 extend type Query {
   stories(
