@@ -61,6 +61,7 @@ type Payment {
   peerNameNormalized: String
   peer: Peer
   description: String
+  descriptionNormalized: String
   comments: [Comment!]!
   category: Category
   rawData: Json!

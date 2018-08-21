@@ -1406,6 +1406,7 @@ type Payment implements Node {
   peerNameNormalized: String
   peer(where: PeerWhereInput): Peer
   description: String
+  descriptionNormalized: String
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
   category(where: CategoryWhereInput): Category
   rawData: Json!
@@ -1427,6 +1428,7 @@ input PaymentCreateInput {
   peerName: String
   peerNameNormalized: String
   description: String
+  descriptionNormalized: String
   rawData: Json!
   account: AccountCreateOneWithoutPaymentsInput!
   peer: PeerCreateOneWithoutPaymentsInput
@@ -1455,6 +1457,7 @@ input PaymentCreateWithoutAccountInput {
   peerName: String
   peerNameNormalized: String
   description: String
+  descriptionNormalized: String
   rawData: Json!
   peer: PeerCreateOneWithoutPaymentsInput
   comments: CommentCreateManyWithoutPaymentInput
@@ -1467,6 +1470,7 @@ input PaymentCreateWithoutCommentsInput {
   peerName: String
   peerNameNormalized: String
   description: String
+  descriptionNormalized: String
   rawData: Json!
   account: AccountCreateOneWithoutPaymentsInput!
   peer: PeerCreateOneWithoutPaymentsInput
@@ -1479,6 +1483,7 @@ input PaymentCreateWithoutPeerInput {
   peerName: String
   peerNameNormalized: String
   description: String
+  descriptionNormalized: String
   rawData: Json!
   account: AccountCreateOneWithoutPaymentsInput!
   comments: CommentCreateManyWithoutPaymentInput
@@ -1507,6 +1512,8 @@ enum PaymentOrderByInput {
   peerNameNormalized_DESC
   description_ASC
   description_DESC
+  descriptionNormalized_ASC
+  descriptionNormalized_DESC
   rawData_ASC
   rawData_DESC
   updatedAt_ASC
@@ -1522,6 +1529,7 @@ type PaymentPreviousValues {
   peerName: String
   peerNameNormalized: String
   description: String
+  descriptionNormalized: String
   rawData: Json!
 }
 
@@ -1570,6 +1578,7 @@ input PaymentUpdateInput {
   peerName: String
   peerNameNormalized: String
   description: String
+  descriptionNormalized: String
   rawData: Json
   account: AccountUpdateOneWithoutPaymentsInput
   peer: PeerUpdateOneWithoutPaymentsInput
@@ -1609,6 +1618,7 @@ input PaymentUpdateWithoutAccountDataInput {
   peerName: String
   peerNameNormalized: String
   description: String
+  descriptionNormalized: String
   rawData: Json
   peer: PeerUpdateOneWithoutPaymentsInput
   comments: CommentUpdateManyWithoutPaymentInput
@@ -1621,6 +1631,7 @@ input PaymentUpdateWithoutCommentsDataInput {
   peerName: String
   peerNameNormalized: String
   description: String
+  descriptionNormalized: String
   rawData: Json
   account: AccountUpdateOneWithoutPaymentsInput
   peer: PeerUpdateOneWithoutPaymentsInput
@@ -1633,6 +1644,7 @@ input PaymentUpdateWithoutPeerDataInput {
   peerName: String
   peerNameNormalized: String
   description: String
+  descriptionNormalized: String
   rawData: Json
   account: AccountUpdateOneWithoutPaymentsInput
   comments: CommentUpdateManyWithoutPaymentInput
@@ -1879,6 +1891,46 @@ input PaymentWhereInput {
 
   """All values not ending with the given string."""
   description_not_ends_with: String
+  descriptionNormalized: String
+
+  """All values that are not equal to given value."""
+  descriptionNormalized_not: String
+
+  """All values that are contained in given list."""
+  descriptionNormalized_in: [String!]
+
+  """All values that are not contained in given list."""
+  descriptionNormalized_not_in: [String!]
+
+  """All values less than the given value."""
+  descriptionNormalized_lt: String
+
+  """All values less than or equal the given value."""
+  descriptionNormalized_lte: String
+
+  """All values greater than the given value."""
+  descriptionNormalized_gt: String
+
+  """All values greater than or equal the given value."""
+  descriptionNormalized_gte: String
+
+  """All values containing the given string."""
+  descriptionNormalized_contains: String
+
+  """All values not containing the given string."""
+  descriptionNormalized_not_contains: String
+
+  """All values starting with the given string."""
+  descriptionNormalized_starts_with: String
+
+  """All values not starting with the given string."""
+  descriptionNormalized_not_starts_with: String
+
+  """All values ending with the given string."""
+  descriptionNormalized_ends_with: String
+
+  """All values not ending with the given string."""
+  descriptionNormalized_not_ends_with: String
   account: AccountWhereInput
   peer: PeerWhereInput
   comments_every: CommentWhereInput
@@ -3735,6 +3787,8 @@ export type PaymentOrderByInput =   'id_ASC' |
   'peerNameNormalized_DESC' |
   'description_ASC' |
   'description_DESC' |
+  'descriptionNormalized_ASC' |
+  'descriptionNormalized_DESC' |
   'rawData_ASC' |
   'rawData_DESC' |
   'updatedAt_ASC' |
@@ -4250,6 +4304,7 @@ export interface PaymentCreateInput {
   peerName?: String
   peerNameNormalized?: String
   description?: String
+  descriptionNormalized?: String
   rawData: Json
   account: AccountCreateOneWithoutPaymentsInput
   peer?: PeerCreateOneWithoutPaymentsInput
@@ -4305,6 +4360,7 @@ export interface PaymentCreateWithoutCommentsInput {
   peerName?: String
   peerNameNormalized?: String
   description?: String
+  descriptionNormalized?: String
   rawData: Json
   account: AccountCreateOneWithoutPaymentsInput
   peer?: PeerCreateOneWithoutPaymentsInput
@@ -4534,6 +4590,7 @@ export interface PaymentUpdateWithoutAccountDataInput {
   peerName?: String
   peerNameNormalized?: String
   description?: String
+  descriptionNormalized?: String
   rawData?: Json
   peer?: PeerUpdateOneWithoutPaymentsInput
   comments?: CommentUpdateManyWithoutPaymentInput
@@ -4729,6 +4786,20 @@ export interface PaymentWhereInput {
   description_not_starts_with?: String
   description_ends_with?: String
   description_not_ends_with?: String
+  descriptionNormalized?: String
+  descriptionNormalized_not?: String
+  descriptionNormalized_in?: String[] | String
+  descriptionNormalized_not_in?: String[] | String
+  descriptionNormalized_lt?: String
+  descriptionNormalized_lte?: String
+  descriptionNormalized_gt?: String
+  descriptionNormalized_gte?: String
+  descriptionNormalized_contains?: String
+  descriptionNormalized_not_contains?: String
+  descriptionNormalized_starts_with?: String
+  descriptionNormalized_not_starts_with?: String
+  descriptionNormalized_ends_with?: String
+  descriptionNormalized_not_ends_with?: String
   account?: AccountWhereInput
   peer?: PeerWhereInput
   comments_every?: CommentWhereInput
@@ -4788,6 +4859,7 @@ export interface PaymentUpdateWithoutCommentsDataInput {
   peerName?: String
   peerNameNormalized?: String
   description?: String
+  descriptionNormalized?: String
   rawData?: Json
   account?: AccountUpdateOneWithoutPaymentsInput
   peer?: PeerUpdateOneWithoutPaymentsInput
@@ -4805,6 +4877,7 @@ export interface PaymentUpdateInput {
   peerName?: String
   peerNameNormalized?: String
   description?: String
+  descriptionNormalized?: String
   rawData?: Json
   account?: AccountUpdateOneWithoutPaymentsInput
   peer?: PeerUpdateOneWithoutPaymentsInput
@@ -4969,6 +5042,7 @@ export interface PaymentUpdateWithoutPeerDataInput {
   peerName?: String
   peerNameNormalized?: String
   description?: String
+  descriptionNormalized?: String
   rawData?: Json
   account?: AccountUpdateOneWithoutPaymentsInput
   comments?: CommentUpdateManyWithoutPaymentInput
@@ -5002,6 +5076,7 @@ export interface PaymentCreateWithoutPeerInput {
   peerName?: String
   peerNameNormalized?: String
   description?: String
+  descriptionNormalized?: String
   rawData: Json
   account: AccountCreateOneWithoutPaymentsInput
   comments?: CommentCreateManyWithoutPaymentInput
@@ -5262,6 +5337,7 @@ export interface PaymentCreateWithoutAccountInput {
   peerName?: String
   peerNameNormalized?: String
   description?: String
+  descriptionNormalized?: String
   rawData: Json
   peer?: PeerCreateOneWithoutPaymentsInput
   comments?: CommentCreateManyWithoutPaymentInput
@@ -5902,6 +5978,7 @@ export interface PaymentPreviousValues {
   peerName?: String
   peerNameNormalized?: String
   description?: String
+  descriptionNormalized?: String
   rawData: Json
 }
 
@@ -5959,6 +6036,7 @@ export interface Payment extends Node {
   peerNameNormalized?: String
   peer?: Peer
   description?: String
+  descriptionNormalized?: String
   comments?: Comment[]
   category?: Category
   rawData: Json

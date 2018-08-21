@@ -59,6 +59,7 @@ type Payment implements Node {
   peerNameNormalized: String
   peer(where: PeerWhereInput): Peer
   description: String
+  descriptionNormalized: String
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
   category(where: CategoryWhereInput): Category
   rawData: Json!
@@ -732,6 +733,59 @@ input PaymentWhereInput {
   All values not ending with the given string.
   """
   description_not_ends_with: String
+  descriptionNormalized: String
+  """
+  All values that are not equal to given value.
+  """
+  descriptionNormalized_not: String
+  """
+  All values that are contained in given list.
+  """
+  descriptionNormalized_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  descriptionNormalized_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  descriptionNormalized_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  descriptionNormalized_lte: String
+  """
+  All values greater than the given value.
+  """
+  descriptionNormalized_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  descriptionNormalized_gte: String
+  """
+  All values containing the given string.
+  """
+  descriptionNormalized_contains: String
+  """
+  All values not containing the given string.
+  """
+  descriptionNormalized_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  descriptionNormalized_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  descriptionNormalized_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  descriptionNormalized_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  descriptionNormalized_not_ends_with: String
   account: AccountWhereInput
   peer: PeerWhereInput
   comments_every: CommentWhereInput
@@ -753,6 +807,8 @@ enum PaymentOrderByInput {
   peerNameNormalized_DESC
   description_ASC
   description_DESC
+  descriptionNormalized_ASC
+  descriptionNormalized_DESC
   rawData_ASC
   rawData_DESC
   updatedAt_ASC
