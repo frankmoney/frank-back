@@ -1,8 +1,10 @@
+import { isNil } from 'ramda'
 import {
   PaymentOrderByInput,
   PaymentWhereInput,
 } from 'app/graphql/generated/prisma'
 import createPrivateResolver from 'utils/createPrivateResolver'
+import normalizeString from 'utils/normalizeString'
 
 export default createPrivateResolver(
   'ledgerPayments',
@@ -29,30 +31,46 @@ export default createPrivateResolver(
 
     const where: PaymentWhereInput = {
       account: { id: accountId },
-      category: { id: categoryId },
-      amount_gte: amountMin,
-      amount_lte: amountMax,
-      postedDate_gte: dateMin,
-      postedDate_lte: dateMax,
+    }
+
+    if (!isNil(categoryId)) {
+      where.category = { id: categoryId }
+    }
+
+    if (!isNil(amountMin)) {
+      where.amount_gte = amountMin
+    }
+
+    if (!isNil(amountMax)) {
+      where.amount_lte = amountMax
+    }
+
+    if (!isNil(dateMin)) {
+      where.postedDate_gte = dateMin
+    }
+
+    if (!isNil(dateMax)) {
+      where.postedDate_lte = dateMax
     }
 
     if (search) {
+      const searchNormalized = normalizeString(search)
       where.OR = [
         {
-          peerName_contains: search,
+          peerNameNormalized_contains: searchNormalized,
         },
         {
           peer: {
-            name_contains: search,
+            nameNormalized_contains: searchNormalized,
           },
         },
         {
           category: {
-            name_contains: search,
+            nameNormalized_contains: searchNormalized,
           },
         },
         {
-          description_contains: search,
+          descriptionNormalized_contains: searchNormalized,
         },
       ]
     }

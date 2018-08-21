@@ -1,3 +1,4 @@
+import { isNil } from 'ramda'
 import { Category, PaymentWhereInput } from 'app/graphql/generated/prisma'
 import createPrivateResolver from 'utils/createPrivateResolver'
 
@@ -28,12 +29,16 @@ export default createPrivateResolver(
     await assert.accountAccess(accountId)
 
     const where: PaymentWhereInput = {
-      account: {
-        id: accountId,
-      },
+      account: { id: accountId },
       amount_not: 0,
-      postedDate_gte: dateMin,
-      postedDate_lte: dateMax,
+    }
+
+    if (!isNil(dateMin)) {
+      where.postedDate_gte = dateMin
+    }
+
+    if (!isNil(dateMax)) {
+      where.postedDate_lte = dateMax
     }
 
     const payments = await query.payments(
