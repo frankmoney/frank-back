@@ -25,6 +25,7 @@ type Category implements Node {
   id: ID!
   account(where: AccountWhereInput): Account!
   name: String!
+  nameNormalized: String
   color: String!
 }
 
@@ -32,6 +33,7 @@ type Peer implements Node {
   id: ID!
   account(where: AccountWhereInput): Account!
   name: String!
+  nameNormalized: String
   total: Float!
   revenue: Float!
   spendings: Float!
@@ -56,6 +58,7 @@ type Payment implements Node {
   postedDate: DateTime!
   amount: Float!
   peerName: String
+  peerNameNormalized: String
   peer(where: PeerWhereInput): Peer
   description: String
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
@@ -116,6 +119,7 @@ type TeammateResult {
 type User implements Node {
   id: ID!
   email: String!
+  emailNormalized: String
   firstName: String!
   lastName: String
   passwordHash: String!
@@ -141,6 +145,7 @@ interface Node {
 type Account implements Node {
   id: ID!
   name: String!
+  nameNormalized: String
   balance: Float!
   revenue: Float!
   spendings: Float!
@@ -271,6 +276,59 @@ input AccountWhereInput {
   All values not ending with the given string.
   """
   name_not_ends_with: String
+  nameNormalized: String
+  """
+  All values that are not equal to given value.
+  """
+  nameNormalized_not: String
+  """
+  All values that are contained in given list.
+  """
+  nameNormalized_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  nameNormalized_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  nameNormalized_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  nameNormalized_lte: String
+  """
+  All values greater than the given value.
+  """
+  nameNormalized_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  nameNormalized_gte: String
+  """
+  All values containing the given string.
+  """
+  nameNormalized_contains: String
+  """
+  All values not containing the given string.
+  """
+  nameNormalized_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  nameNormalized_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  nameNormalized_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  nameNormalized_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  nameNormalized_not_ends_with: String
   balance: Float
   """
   All values that are not equal to given value.
@@ -580,6 +638,59 @@ input PaymentWhereInput {
   All values not ending with the given string.
   """
   peerName_not_ends_with: String
+  peerNameNormalized: String
+  """
+  All values that are not equal to given value.
+  """
+  peerNameNormalized_not: String
+  """
+  All values that are contained in given list.
+  """
+  peerNameNormalized_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  peerNameNormalized_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  peerNameNormalized_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  peerNameNormalized_lte: String
+  """
+  All values greater than the given value.
+  """
+  peerNameNormalized_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  peerNameNormalized_gte: String
+  """
+  All values containing the given string.
+  """
+  peerNameNormalized_contains: String
+  """
+  All values not containing the given string.
+  """
+  peerNameNormalized_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  peerNameNormalized_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  peerNameNormalized_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  peerNameNormalized_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  peerNameNormalized_not_ends_with: String
   description: String
   """
   All values that are not equal to given value.
@@ -650,6 +761,8 @@ enum PaymentOrderByInput {
   amount_DESC
   peerName_ASC
   peerName_DESC
+  peerNameNormalized_ASC
+  peerNameNormalized_DESC
   description_ASC
   description_DESC
   rawData_ASC
@@ -779,6 +892,59 @@ input CategoryWhereInput {
   All values not ending with the given string.
   """
   name_not_ends_with: String
+  nameNormalized: String
+  """
+  All values that are not equal to given value.
+  """
+  nameNormalized_not: String
+  """
+  All values that are contained in given list.
+  """
+  nameNormalized_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  nameNormalized_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  nameNormalized_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  nameNormalized_lte: String
+  """
+  All values greater than the given value.
+  """
+  nameNormalized_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  nameNormalized_gte: String
+  """
+  All values containing the given string.
+  """
+  nameNormalized_contains: String
+  """
+  All values not containing the given string.
+  """
+  nameNormalized_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  nameNormalized_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  nameNormalized_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  nameNormalized_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  nameNormalized_not_ends_with: String
   color: String
   """
   All values that are not equal to given value.
@@ -840,6 +1006,8 @@ enum CategoryOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  nameNormalized_ASC
+  nameNormalized_DESC
   color_ASC
   color_DESC
   updatedAt_ASC
@@ -967,6 +1135,59 @@ input PeerWhereInput {
   All values not ending with the given string.
   """
   name_not_ends_with: String
+  nameNormalized: String
+  """
+  All values that are not equal to given value.
+  """
+  nameNormalized_not: String
+  """
+  All values that are contained in given list.
+  """
+  nameNormalized_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  nameNormalized_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  nameNormalized_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  nameNormalized_lte: String
+  """
+  All values greater than the given value.
+  """
+  nameNormalized_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  nameNormalized_gte: String
+  """
+  All values containing the given string.
+  """
+  nameNormalized_contains: String
+  """
+  All values not containing the given string.
+  """
+  nameNormalized_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  nameNormalized_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  nameNormalized_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  nameNormalized_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  nameNormalized_not_ends_with: String
   total: Float
   """
   All values that are not equal to given value.
@@ -1331,6 +1552,7 @@ enum TeamMemberOrderByInput {
 type Team implements Node {
   id: ID!
   name: String!
+  nameNormalized: String
   accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account!]
   members(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMember!]
 }
@@ -1460,6 +1682,59 @@ input TeamWhereInput {
   All values not ending with the given string.
   """
   name_not_ends_with: String
+  nameNormalized: String
+  """
+  All values that are not equal to given value.
+  """
+  nameNormalized_not: String
+  """
+  All values that are contained in given list.
+  """
+  nameNormalized_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  nameNormalized_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  nameNormalized_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  nameNormalized_lte: String
+  """
+  All values greater than the given value.
+  """
+  nameNormalized_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  nameNormalized_gte: String
+  """
+  All values containing the given string.
+  """
+  nameNormalized_contains: String
+  """
+  All values not containing the given string.
+  """
+  nameNormalized_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  nameNormalized_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  nameNormalized_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  nameNormalized_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  nameNormalized_not_ends_with: String
   accounts_every: AccountWhereInput
   accounts_some: AccountWhereInput
   accounts_none: AccountWhereInput
@@ -1552,6 +1827,8 @@ enum PeerOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  nameNormalized_ASC
+  nameNormalized_DESC
   total_ASC
   total_DESC
   revenue_ASC
@@ -1700,6 +1977,59 @@ input UserWhereInput {
   All values not ending with the given string.
   """
   email_not_ends_with: String
+  emailNormalized: String
+  """
+  All values that are not equal to given value.
+  """
+  emailNormalized_not: String
+  """
+  All values that are contained in given list.
+  """
+  emailNormalized_in: [String!]
+  """
+  All values that are not contained in given list.
+  """
+  emailNormalized_not_in: [String!]
+  """
+  All values less than the given value.
+  """
+  emailNormalized_lt: String
+  """
+  All values less than or equal the given value.
+  """
+  emailNormalized_lte: String
+  """
+  All values greater than the given value.
+  """
+  emailNormalized_gt: String
+  """
+  All values greater than or equal the given value.
+  """
+  emailNormalized_gte: String
+  """
+  All values containing the given string.
+  """
+  emailNormalized_contains: String
+  """
+  All values not containing the given string.
+  """
+  emailNormalized_not_contains: String
+  """
+  All values starting with the given string.
+  """
+  emailNormalized_starts_with: String
+  """
+  All values not starting with the given string.
+  """
+  emailNormalized_not_starts_with: String
+  """
+  All values ending with the given string.
+  """
+  emailNormalized_ends_with: String
+  """
+  All values not ending with the given string.
+  """
+  emailNormalized_not_ends_with: String
   firstName: String
   """
   All values that are not equal to given value.
@@ -1875,6 +2205,8 @@ enum AccountOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  nameNormalized_ASC
+  nameNormalized_DESC
   balance_ASC
   balance_DESC
   revenue_ASC
