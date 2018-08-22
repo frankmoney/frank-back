@@ -29,6 +29,7 @@ type Category implements Node {
   name: String!
   nameNormalized: String
   color: String!
+  peers(where: PeerCategoryWhereInput, orderBy: PeerCategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PeerCategory!]
 }
 
 type Peer implements Node {
@@ -43,7 +44,8 @@ type Peer implements Node {
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
   paymentCount: Int
   category(where: CategoryWhereInput): Category
-  categories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category!]
+  oldCategories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category!]
+  categories(where: PeerCategoryWhereInput, orderBy: PeerCategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PeerCategory!]
 }
 
 enum DirectoryPeersInputSortBy {
@@ -432,6 +434,219 @@ input AccountWhereInput {
   peers_every: PeerWhereInput
   peers_some: PeerWhereInput
   peers_none: PeerWhereInput
+}
+
+type PeerCategory implements Node {
+  id: ID!
+  peer(where: PeerWhereInput): Peer!
+  category(where: CategoryWhereInput): Category!
+  paymentCount: Int!
+  paymentAmount: Float!
+  paymentRevenue: Float!
+  paymentSpendings: Float!
+}
+
+input PeerCategoryWhereInput {
+  """
+  Logical AND on all given filters.
+  """
+  AND: [PeerCategoryWhereInput!]
+  """
+  Logical OR on all given filters.
+  """
+  OR: [PeerCategoryWhereInput!]
+  """
+  Logical NOT on all given filters combined by AND.
+  """
+  NOT: [PeerCategoryWhereInput!]
+  id: ID
+  """
+  All values that are not equal to given value.
+  """
+  id_not: ID
+  """
+  All values that are contained in given list.
+  """
+  id_in: [ID!]
+  """
+  All values that are not contained in given list.
+  """
+  id_not_in: [ID!]
+  """
+  All values less than the given value.
+  """
+  id_lt: ID
+  """
+  All values less than or equal the given value.
+  """
+  id_lte: ID
+  """
+  All values greater than the given value.
+  """
+  id_gt: ID
+  """
+  All values greater than or equal the given value.
+  """
+  id_gte: ID
+  """
+  All values containing the given string.
+  """
+  id_contains: ID
+  """
+  All values not containing the given string.
+  """
+  id_not_contains: ID
+  """
+  All values starting with the given string.
+  """
+  id_starts_with: ID
+  """
+  All values not starting with the given string.
+  """
+  id_not_starts_with: ID
+  """
+  All values ending with the given string.
+  """
+  id_ends_with: ID
+  """
+  All values not ending with the given string.
+  """
+  id_not_ends_with: ID
+  paymentCount: Int
+  """
+  All values that are not equal to given value.
+  """
+  paymentCount_not: Int
+  """
+  All values that are contained in given list.
+  """
+  paymentCount_in: [Int!]
+  """
+  All values that are not contained in given list.
+  """
+  paymentCount_not_in: [Int!]
+  """
+  All values less than the given value.
+  """
+  paymentCount_lt: Int
+  """
+  All values less than or equal the given value.
+  """
+  paymentCount_lte: Int
+  """
+  All values greater than the given value.
+  """
+  paymentCount_gt: Int
+  """
+  All values greater than or equal the given value.
+  """
+  paymentCount_gte: Int
+  paymentAmount: Float
+  """
+  All values that are not equal to given value.
+  """
+  paymentAmount_not: Float
+  """
+  All values that are contained in given list.
+  """
+  paymentAmount_in: [Float!]
+  """
+  All values that are not contained in given list.
+  """
+  paymentAmount_not_in: [Float!]
+  """
+  All values less than the given value.
+  """
+  paymentAmount_lt: Float
+  """
+  All values less than or equal the given value.
+  """
+  paymentAmount_lte: Float
+  """
+  All values greater than the given value.
+  """
+  paymentAmount_gt: Float
+  """
+  All values greater than or equal the given value.
+  """
+  paymentAmount_gte: Float
+  paymentRevenue: Float
+  """
+  All values that are not equal to given value.
+  """
+  paymentRevenue_not: Float
+  """
+  All values that are contained in given list.
+  """
+  paymentRevenue_in: [Float!]
+  """
+  All values that are not contained in given list.
+  """
+  paymentRevenue_not_in: [Float!]
+  """
+  All values less than the given value.
+  """
+  paymentRevenue_lt: Float
+  """
+  All values less than or equal the given value.
+  """
+  paymentRevenue_lte: Float
+  """
+  All values greater than the given value.
+  """
+  paymentRevenue_gt: Float
+  """
+  All values greater than or equal the given value.
+  """
+  paymentRevenue_gte: Float
+  paymentSpendings: Float
+  """
+  All values that are not equal to given value.
+  """
+  paymentSpendings_not: Float
+  """
+  All values that are contained in given list.
+  """
+  paymentSpendings_in: [Float!]
+  """
+  All values that are not contained in given list.
+  """
+  paymentSpendings_not_in: [Float!]
+  """
+  All values less than the given value.
+  """
+  paymentSpendings_lt: Float
+  """
+  All values less than or equal the given value.
+  """
+  paymentSpendings_lte: Float
+  """
+  All values greater than the given value.
+  """
+  paymentSpendings_gt: Float
+  """
+  All values greater than or equal the given value.
+  """
+  paymentSpendings_gte: Float
+  peer: PeerWhereInput
+  category: CategoryWhereInput
+}
+
+enum PeerCategoryOrderByInput {
+  id_ASC
+  id_DESC
+  paymentCount_ASC
+  paymentCount_DESC
+  paymentAmount_ASC
+  paymentAmount_DESC
+  paymentRevenue_ASC
+  paymentRevenue_DESC
+  paymentSpendings_ASC
+  paymentSpendings_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
 }
 
 type LedgerBarChartItem {
@@ -1057,6 +1272,9 @@ input CategoryWhereInput {
   """
   color_not_ends_with: String
   account: AccountWhereInput
+  peers_every: PeerCategoryWhereInput
+  peers_some: PeerCategoryWhereInput
+  peers_none: PeerCategoryWhereInput
 }
 
 enum CategoryOrderByInput {
@@ -1396,9 +1614,12 @@ input PeerWhereInput {
   payments_some: PaymentWhereInput
   payments_none: PaymentWhereInput
   category: CategoryWhereInput
-  categories_every: CategoryWhereInput
-  categories_some: CategoryWhereInput
-  categories_none: CategoryWhereInput
+  oldCategories_every: CategoryWhereInput
+  oldCategories_some: CategoryWhereInput
+  oldCategories_none: CategoryWhereInput
+  categories_every: PeerCategoryWhereInput
+  categories_some: PeerCategoryWhereInput
+  categories_none: PeerCategoryWhereInput
 }
 
 type Comment implements Node {

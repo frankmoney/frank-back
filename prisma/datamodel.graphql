@@ -79,7 +79,8 @@ type Peer {
   payments: [Payment!]!
   paymentCount: Int @default(value: "0")
   category: Category @relation(name: "PeerDefaultCategory")
-  categories: [Category!]! @relation(name: "PeerPaymentCategories")
+  oldCategories: [Category!]! @relation(name: "PeerPaymentCategories")
+  categories: [PeerCategory!]! @relation(name: "PeerCategory_Peer")
 }
 
 type Comment {
@@ -95,6 +96,17 @@ type Category {
   name: String!
   nameNormalized: String
   color: String!
+  peers: [PeerCategory!]! @relation(name: "PeerCategory_Category")
+}
+
+type PeerCategory {
+  id: ID! @unique
+  peer: Peer! @relation(name: "PeerCategory_Peer")
+  category: Category! @relation(name: "PeerCategory_Category")
+  paymentCount: Int!
+  paymentAmount: Float!
+  paymentRevenue: Float!
+  paymentSpendings: Float!
 }
 
 type Story {
