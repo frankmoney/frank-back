@@ -34,11 +34,13 @@ export default createPrivateResolver(
     if (search) {
       where.OR = [
         {
-          name_contains: search,
+          nameNormalized_contains: search,
         },
         {
           categories_some: {
-            name_contains: search,
+            category: {
+              nameNormalized_contains: search,
+            },
           },
         },
       ]
