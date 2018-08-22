@@ -18,7 +18,7 @@ export default createPrivateResolver(
             id: accountId,
           },
         },
-        orderBy: 'postedDate_DESC',
+        orderBy: 'postedOn_DESC',
         first,
         after,
       },

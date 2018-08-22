@@ -46,11 +46,11 @@ export default createPrivateResolver(
     }
 
     if (!isNil(dateMin)) {
-      where.postedDate_gte = dateMin
+      where.postedOn_gte = dateMin
     }
 
     if (!isNil(dateMax)) {
-      where.postedDate_lte = dateMax
+      where.postedOn_lte = dateMax
     }
 
     if (search) {
@@ -75,7 +75,7 @@ export default createPrivateResolver(
       ]
     }
 
-    const orderBy: PaymentOrderByInput = 'postedDate_DESC'
+    const orderBy: PaymentOrderByInput = 'postedOn_DESC'
 
     const payments = await query.payments(
       {

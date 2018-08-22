@@ -1,5 +1,5 @@
 # source: http://prisma.frank-dev1.frank.ly
-# timestamp: Wed Aug 22 2018 13:04:44 GMT+0300 (Russia TZ 2 Standard Time)
+# timestamp: Wed Aug 22 2018 14:07:25 GMT+0300 (Russia TZ 2 Standard Time)
 
 type Account implements Node {
   id: ID!
@@ -682,11 +682,6 @@ input CategoryCreateInput {
   peers: PeerCategoryCreateManyWithoutCategoryInput
 }
 
-input CategoryCreateManyInput {
-  create: [CategoryCreateInput!]
-  connect: [CategoryWhereUniqueInput!]
-}
-
 input CategoryCreateManyWithoutAccountInput {
   create: [CategoryCreateWithoutAccountInput!]
   connect: [CategoryWhereUniqueInput!]
@@ -802,15 +797,6 @@ input CategoryUpdateInput {
   peers: PeerCategoryUpdateManyWithoutCategoryInput
 }
 
-input CategoryUpdateManyInput {
-  create: [CategoryCreateInput!]
-  connect: [CategoryWhereUniqueInput!]
-  disconnect: [CategoryWhereUniqueInput!]
-  delete: [CategoryWhereUniqueInput!]
-  update: [CategoryUpdateWithWhereUniqueNestedInput!]
-  upsert: [CategoryUpsertWithWhereUniqueNestedInput!]
-}
-
 input CategoryUpdateManyWithoutAccountInput {
   create: [CategoryCreateWithoutAccountInput!]
   connect: [CategoryWhereUniqueInput!]
@@ -851,11 +837,6 @@ input CategoryUpdateWithoutPeersDataInput {
   account: AccountUpdateOneWithoutCategoriesInput
 }
 
-input CategoryUpdateWithWhereUniqueNestedInput {
-  where: CategoryWhereUniqueInput!
-  data: CategoryUpdateDataInput!
-}
-
 input CategoryUpdateWithWhereUniqueWithoutAccountInput {
   where: CategoryWhereUniqueInput!
   data: CategoryUpdateWithoutAccountDataInput!
@@ -869,12 +850,6 @@ input CategoryUpsertNestedInput {
 input CategoryUpsertWithoutPeersInput {
   update: CategoryUpdateWithoutPeersDataInput!
   create: CategoryCreateWithoutPeersInput!
-}
-
-input CategoryUpsertWithWhereUniqueNestedInput {
-  where: CategoryWhereUniqueInput!
-  update: CategoryUpdateDataInput!
-  create: CategoryCreateInput!
 }
 
 input CategoryUpsertWithWhereUniqueWithoutAccountInput {
@@ -1268,8 +1243,8 @@ type Mutation {
   createPeerCategory(data: PeerCategoryCreateInput!): PeerCategory!
   createStory(data: StoryCreateInput!): Story!
   createUser(data: UserCreateInput!): User!
-  createAccount(data: AccountCreateInput!): Account!
   createCategory(data: CategoryCreateInput!): Category!
+  createAccount(data: AccountCreateInput!): Account!
   updateTeam(data: TeamUpdateInput!, where: TeamWhereUniqueInput!): Team
   updateTeamMember(data: TeamMemberUpdateInput!, where: TeamMemberWhereUniqueInput!): TeamMember
   updateTeamMemberAccount(data: TeamMemberAccountUpdateInput!, where: TeamMemberAccountWhereUniqueInput!): TeamMemberAccount
@@ -1279,8 +1254,8 @@ type Mutation {
   updatePeerCategory(data: PeerCategoryUpdateInput!, where: PeerCategoryWhereUniqueInput!): PeerCategory
   updateStory(data: StoryUpdateInput!, where: StoryWhereUniqueInput!): Story
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
-  updateAccount(data: AccountUpdateInput!, where: AccountWhereUniqueInput!): Account
   updateCategory(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category
+  updateAccount(data: AccountUpdateInput!, where: AccountWhereUniqueInput!): Account
   deleteTeam(where: TeamWhereUniqueInput!): Team
   deleteTeamMember(where: TeamMemberWhereUniqueInput!): TeamMember
   deleteTeamMemberAccount(where: TeamMemberAccountWhereUniqueInput!): TeamMemberAccount
@@ -1290,8 +1265,8 @@ type Mutation {
   deletePeerCategory(where: PeerCategoryWhereUniqueInput!): PeerCategory
   deleteStory(where: StoryWhereUniqueInput!): Story
   deleteUser(where: UserWhereUniqueInput!): User
-  deleteAccount(where: AccountWhereUniqueInput!): Account
   deleteCategory(where: CategoryWhereUniqueInput!): Category
+  deleteAccount(where: AccountWhereUniqueInput!): Account
   upsertTeam(where: TeamWhereUniqueInput!, create: TeamCreateInput!, update: TeamUpdateInput!): Team!
   upsertTeamMember(where: TeamMemberWhereUniqueInput!, create: TeamMemberCreateInput!, update: TeamMemberUpdateInput!): TeamMember!
   upsertTeamMemberAccount(where: TeamMemberAccountWhereUniqueInput!, create: TeamMemberAccountCreateInput!, update: TeamMemberAccountUpdateInput!): TeamMemberAccount!
@@ -1301,8 +1276,8 @@ type Mutation {
   upsertPeerCategory(where: PeerCategoryWhereUniqueInput!, create: PeerCategoryCreateInput!, update: PeerCategoryUpdateInput!): PeerCategory!
   upsertStory(where: StoryWhereUniqueInput!, create: StoryCreateInput!, update: StoryUpdateInput!): Story!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
-  upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
   upsertCategory(where: CategoryWhereUniqueInput!, create: CategoryCreateInput!, update: CategoryUpdateInput!): Category!
+  upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
   updateManyTeams(data: TeamUpdateInput!, where: TeamWhereInput): BatchPayload!
   updateManyTeamMembers(data: TeamMemberUpdateInput!, where: TeamMemberWhereInput): BatchPayload!
   updateManyTeamMemberAccounts(data: TeamMemberAccountUpdateInput!, where: TeamMemberAccountWhereInput): BatchPayload!
@@ -1312,8 +1287,8 @@ type Mutation {
   updateManyPeerCategories(data: PeerCategoryUpdateInput!, where: PeerCategoryWhereInput): BatchPayload!
   updateManyStories(data: StoryUpdateInput!, where: StoryWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
-  updateManyAccounts(data: AccountUpdateInput!, where: AccountWhereInput): BatchPayload!
   updateManyCategories(data: CategoryUpdateInput!, where: CategoryWhereInput): BatchPayload!
+  updateManyAccounts(data: AccountUpdateInput!, where: AccountWhereInput): BatchPayload!
   deleteManyTeams(where: TeamWhereInput): BatchPayload!
   deleteManyTeamMembers(where: TeamMemberWhereInput): BatchPayload!
   deleteManyTeamMemberAccounts(where: TeamMemberAccountWhereInput): BatchPayload!
@@ -1323,8 +1298,8 @@ type Mutation {
   deleteManyPeerCategories(where: PeerCategoryWhereInput): BatchPayload!
   deleteManyStories(where: StoryWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
-  deleteManyAccounts(where: AccountWhereInput): BatchPayload!
   deleteManyCategories(where: CategoryWhereInput): BatchPayload!
+  deleteManyAccounts(where: AccountWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -1357,7 +1332,7 @@ type PageInfo {
 type Payment implements Node {
   id: ID!
   account(where: AccountWhereInput): Account!
-  postedDate: DateTime!
+  postedOn: DateTime!
   amount: Float!
   peerName: String
   peerNameNormalized: String
@@ -1380,7 +1355,7 @@ type PaymentConnection {
 }
 
 input PaymentCreateInput {
-  postedDate: DateTime!
+  postedOn: DateTime!
   amount: Float!
   peerName: String
   peerNameNormalized: String
@@ -1409,7 +1384,7 @@ input PaymentCreateOneWithoutCommentsInput {
 }
 
 input PaymentCreateWithoutAccountInput {
-  postedDate: DateTime!
+  postedOn: DateTime!
   amount: Float!
   peerName: String
   peerNameNormalized: String
@@ -1422,7 +1397,7 @@ input PaymentCreateWithoutAccountInput {
 }
 
 input PaymentCreateWithoutCommentsInput {
-  postedDate: DateTime!
+  postedOn: DateTime!
   amount: Float!
   peerName: String
   peerNameNormalized: String
@@ -1435,7 +1410,7 @@ input PaymentCreateWithoutCommentsInput {
 }
 
 input PaymentCreateWithoutPeerInput {
-  postedDate: DateTime!
+  postedOn: DateTime!
   amount: Float!
   peerName: String
   peerNameNormalized: String
@@ -1459,8 +1434,8 @@ type PaymentEdge {
 enum PaymentOrderByInput {
   id_ASC
   id_DESC
-  postedDate_ASC
-  postedDate_DESC
+  postedOn_ASC
+  postedOn_DESC
   amount_ASC
   amount_DESC
   peerName_ASC
@@ -1481,7 +1456,7 @@ enum PaymentOrderByInput {
 
 type PaymentPreviousValues {
   id: ID!
-  postedDate: DateTime!
+  postedOn: DateTime!
   amount: Float!
   peerName: String
   peerNameNormalized: String
@@ -1530,7 +1505,7 @@ input PaymentSubscriptionWhereInput {
 }
 
 input PaymentUpdateInput {
-  postedDate: DateTime
+  postedOn: DateTime
   amount: Float
   peerName: String
   peerNameNormalized: String
@@ -1570,7 +1545,7 @@ input PaymentUpdateOneWithoutCommentsInput {
 }
 
 input PaymentUpdateWithoutAccountDataInput {
-  postedDate: DateTime
+  postedOn: DateTime
   amount: Float
   peerName: String
   peerNameNormalized: String
@@ -1583,7 +1558,7 @@ input PaymentUpdateWithoutAccountDataInput {
 }
 
 input PaymentUpdateWithoutCommentsDataInput {
-  postedDate: DateTime
+  postedOn: DateTime
   amount: Float
   peerName: String
   peerNameNormalized: String
@@ -1596,7 +1571,7 @@ input PaymentUpdateWithoutCommentsDataInput {
 }
 
 input PaymentUpdateWithoutPeerDataInput {
-  postedDate: DateTime
+  postedOn: DateTime
   amount: Float
   peerName: String
   peerNameNormalized: String
@@ -1684,28 +1659,28 @@ input PaymentWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  postedDate: DateTime
+  postedOn: DateTime
 
   """All values that are not equal to given value."""
-  postedDate_not: DateTime
+  postedOn_not: DateTime
 
   """All values that are contained in given list."""
-  postedDate_in: [DateTime!]
+  postedOn_in: [DateTime!]
 
   """All values that are not contained in given list."""
-  postedDate_not_in: [DateTime!]
+  postedOn_not_in: [DateTime!]
 
   """All values less than the given value."""
-  postedDate_lt: DateTime
+  postedOn_lt: DateTime
 
   """All values less than or equal the given value."""
-  postedDate_lte: DateTime
+  postedOn_lte: DateTime
 
   """All values greater than the given value."""
-  postedDate_gt: DateTime
+  postedOn_gt: DateTime
 
   """All values greater than or equal the given value."""
-  postedDate_gte: DateTime
+  postedOn_gte: DateTime
   amount: Float
 
   """All values that are not equal to given value."""
@@ -1912,7 +1887,6 @@ type Peer implements Node {
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
   paymentCount: Int
   category(where: CategoryWhereInput): Category
-  oldCategories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category!]
   categories(where: PeerCategoryWhereInput, orderBy: PeerCategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PeerCategory!]
 }
 
@@ -1920,10 +1894,10 @@ type PeerCategory implements Node {
   id: ID!
   peer(where: PeerWhereInput): Peer!
   category(where: CategoryWhereInput): Category!
-  paymentCount: Int!
-  paymentAmount: Float!
-  paymentRevenue: Float!
-  paymentSpendings: Float!
+  count: Int!
+  total: Float!
+  revenue: Float!
+  spendings: Float!
 }
 
 """A connection to a list of items."""
@@ -1937,10 +1911,10 @@ type PeerCategoryConnection {
 }
 
 input PeerCategoryCreateInput {
-  paymentCount: Int!
-  paymentAmount: Float!
-  paymentRevenue: Float!
-  paymentSpendings: Float!
+  count: Int!
+  total: Float!
+  revenue: Float!
+  spendings: Float!
   peer: PeerCreateOneWithoutCategoriesInput!
   category: CategoryCreateOneWithoutPeersInput!
 }
@@ -1956,18 +1930,18 @@ input PeerCategoryCreateManyWithoutPeerInput {
 }
 
 input PeerCategoryCreateWithoutCategoryInput {
-  paymentCount: Int!
-  paymentAmount: Float!
-  paymentRevenue: Float!
-  paymentSpendings: Float!
+  count: Int!
+  total: Float!
+  revenue: Float!
+  spendings: Float!
   peer: PeerCreateOneWithoutCategoriesInput!
 }
 
 input PeerCategoryCreateWithoutPeerInput {
-  paymentCount: Int!
-  paymentAmount: Float!
-  paymentRevenue: Float!
-  paymentSpendings: Float!
+  count: Int!
+  total: Float!
+  revenue: Float!
+  spendings: Float!
   category: CategoryCreateOneWithoutPeersInput!
 }
 
@@ -1983,14 +1957,14 @@ type PeerCategoryEdge {
 enum PeerCategoryOrderByInput {
   id_ASC
   id_DESC
-  paymentCount_ASC
-  paymentCount_DESC
-  paymentAmount_ASC
-  paymentAmount_DESC
-  paymentRevenue_ASC
-  paymentRevenue_DESC
-  paymentSpendings_ASC
-  paymentSpendings_DESC
+  count_ASC
+  count_DESC
+  total_ASC
+  total_DESC
+  revenue_ASC
+  revenue_DESC
+  spendings_ASC
+  spendings_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -1999,10 +1973,10 @@ enum PeerCategoryOrderByInput {
 
 type PeerCategoryPreviousValues {
   id: ID!
-  paymentCount: Int!
-  paymentAmount: Float!
-  paymentRevenue: Float!
-  paymentSpendings: Float!
+  count: Int!
+  total: Float!
+  revenue: Float!
+  spendings: Float!
 }
 
 type PeerCategorySubscriptionPayload {
@@ -2045,10 +2019,10 @@ input PeerCategorySubscriptionWhereInput {
 }
 
 input PeerCategoryUpdateInput {
-  paymentCount: Int
-  paymentAmount: Float
-  paymentRevenue: Float
-  paymentSpendings: Float
+  count: Int
+  total: Float
+  revenue: Float
+  spendings: Float
   peer: PeerUpdateOneWithoutCategoriesInput
   category: CategoryUpdateOneWithoutPeersInput
 }
@@ -2072,18 +2046,18 @@ input PeerCategoryUpdateManyWithoutPeerInput {
 }
 
 input PeerCategoryUpdateWithoutCategoryDataInput {
-  paymentCount: Int
-  paymentAmount: Float
-  paymentRevenue: Float
-  paymentSpendings: Float
+  count: Int
+  total: Float
+  revenue: Float
+  spendings: Float
   peer: PeerUpdateOneWithoutCategoriesInput
 }
 
 input PeerCategoryUpdateWithoutPeerDataInput {
-  paymentCount: Int
-  paymentAmount: Float
-  paymentRevenue: Float
-  paymentSpendings: Float
+  count: Int
+  total: Float
+  revenue: Float
+  spendings: Float
   category: CategoryUpdateOneWithoutPeersInput
 }
 
@@ -2158,94 +2132,94 @@ input PeerCategoryWhereInput {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  paymentCount: Int
+  count: Int
 
   """All values that are not equal to given value."""
-  paymentCount_not: Int
+  count_not: Int
 
   """All values that are contained in given list."""
-  paymentCount_in: [Int!]
+  count_in: [Int!]
 
   """All values that are not contained in given list."""
-  paymentCount_not_in: [Int!]
+  count_not_in: [Int!]
 
   """All values less than the given value."""
-  paymentCount_lt: Int
+  count_lt: Int
 
   """All values less than or equal the given value."""
-  paymentCount_lte: Int
+  count_lte: Int
 
   """All values greater than the given value."""
-  paymentCount_gt: Int
+  count_gt: Int
 
   """All values greater than or equal the given value."""
-  paymentCount_gte: Int
-  paymentAmount: Float
+  count_gte: Int
+  total: Float
 
   """All values that are not equal to given value."""
-  paymentAmount_not: Float
+  total_not: Float
 
   """All values that are contained in given list."""
-  paymentAmount_in: [Float!]
+  total_in: [Float!]
 
   """All values that are not contained in given list."""
-  paymentAmount_not_in: [Float!]
+  total_not_in: [Float!]
 
   """All values less than the given value."""
-  paymentAmount_lt: Float
+  total_lt: Float
 
   """All values less than or equal the given value."""
-  paymentAmount_lte: Float
+  total_lte: Float
 
   """All values greater than the given value."""
-  paymentAmount_gt: Float
+  total_gt: Float
 
   """All values greater than or equal the given value."""
-  paymentAmount_gte: Float
-  paymentRevenue: Float
+  total_gte: Float
+  revenue: Float
 
   """All values that are not equal to given value."""
-  paymentRevenue_not: Float
+  revenue_not: Float
 
   """All values that are contained in given list."""
-  paymentRevenue_in: [Float!]
+  revenue_in: [Float!]
 
   """All values that are not contained in given list."""
-  paymentRevenue_not_in: [Float!]
+  revenue_not_in: [Float!]
 
   """All values less than the given value."""
-  paymentRevenue_lt: Float
+  revenue_lt: Float
 
   """All values less than or equal the given value."""
-  paymentRevenue_lte: Float
+  revenue_lte: Float
 
   """All values greater than the given value."""
-  paymentRevenue_gt: Float
+  revenue_gt: Float
 
   """All values greater than or equal the given value."""
-  paymentRevenue_gte: Float
-  paymentSpendings: Float
+  revenue_gte: Float
+  spendings: Float
 
   """All values that are not equal to given value."""
-  paymentSpendings_not: Float
+  spendings_not: Float
 
   """All values that are contained in given list."""
-  paymentSpendings_in: [Float!]
+  spendings_in: [Float!]
 
   """All values that are not contained in given list."""
-  paymentSpendings_not_in: [Float!]
+  spendings_not_in: [Float!]
 
   """All values less than the given value."""
-  paymentSpendings_lt: Float
+  spendings_lt: Float
 
   """All values less than or equal the given value."""
-  paymentSpendings_lte: Float
+  spendings_lte: Float
 
   """All values greater than the given value."""
-  paymentSpendings_gt: Float
+  spendings_gt: Float
 
   """All values greater than or equal the given value."""
-  paymentSpendings_gte: Float
+  spendings_gte: Float
   peer: PeerWhereInput
   category: CategoryWhereInput
 }
@@ -2275,7 +2249,6 @@ input PeerCreateInput {
   account: AccountCreateOneWithoutPeersInput!
   payments: PaymentCreateManyWithoutPeerInput
   category: CategoryCreateOneInput
-  oldCategories: CategoryCreateManyInput
   categories: PeerCategoryCreateManyWithoutPeerInput
 }
 
@@ -2304,7 +2277,6 @@ input PeerCreateWithoutAccountInput {
   paymentCount: Int
   payments: PaymentCreateManyWithoutPeerInput
   category: CategoryCreateOneInput
-  oldCategories: CategoryCreateManyInput
   categories: PeerCategoryCreateManyWithoutPeerInput
 }
 
@@ -2319,7 +2291,6 @@ input PeerCreateWithoutCategoriesInput {
   account: AccountCreateOneWithoutPeersInput!
   payments: PaymentCreateManyWithoutPeerInput
   category: CategoryCreateOneInput
-  oldCategories: CategoryCreateManyInput
 }
 
 input PeerCreateWithoutPaymentsInput {
@@ -2332,7 +2303,6 @@ input PeerCreateWithoutPaymentsInput {
   paymentCount: Int
   account: AccountCreateOneWithoutPeersInput!
   category: CategoryCreateOneInput
-  oldCategories: CategoryCreateManyInput
   categories: PeerCategoryCreateManyWithoutPeerInput
 }
 
@@ -2429,7 +2399,6 @@ input PeerUpdateInput {
   account: AccountUpdateOneWithoutPeersInput
   payments: PaymentUpdateManyWithoutPeerInput
   category: CategoryUpdateOneInput
-  oldCategories: CategoryUpdateManyInput
   categories: PeerCategoryUpdateManyWithoutPeerInput
 }
 
@@ -2469,7 +2438,6 @@ input PeerUpdateWithoutAccountDataInput {
   paymentCount: Int
   payments: PaymentUpdateManyWithoutPeerInput
   category: CategoryUpdateOneInput
-  oldCategories: CategoryUpdateManyInput
   categories: PeerCategoryUpdateManyWithoutPeerInput
 }
 
@@ -2484,7 +2452,6 @@ input PeerUpdateWithoutCategoriesDataInput {
   account: AccountUpdateOneWithoutPeersInput
   payments: PaymentUpdateManyWithoutPeerInput
   category: CategoryUpdateOneInput
-  oldCategories: CategoryUpdateManyInput
 }
 
 input PeerUpdateWithoutPaymentsDataInput {
@@ -2497,7 +2464,6 @@ input PeerUpdateWithoutPaymentsDataInput {
   paymentCount: Int
   account: AccountUpdateOneWithoutPeersInput
   category: CategoryUpdateOneInput
-  oldCategories: CategoryUpdateManyInput
   categories: PeerCategoryUpdateManyWithoutPeerInput
 }
 
@@ -2766,9 +2732,6 @@ input PeerWhereInput {
   payments_some: PaymentWhereInput
   payments_none: PaymentWhereInput
   category: CategoryWhereInput
-  oldCategories_every: CategoryWhereInput
-  oldCategories_some: CategoryWhereInput
-  oldCategories_none: CategoryWhereInput
   categories_every: PeerCategoryWhereInput
   categories_some: PeerCategoryWhereInput
   categories_none: PeerCategoryWhereInput
@@ -2788,8 +2751,8 @@ type Query {
   peerCategories(where: PeerCategoryWhereInput, orderBy: PeerCategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PeerCategory]!
   stories(where: StoryWhereInput, orderBy: StoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Story]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
-  accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account]!
   categories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category]!
+  accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account]!
   team(where: TeamWhereUniqueInput!): Team
   teamMember(where: TeamMemberWhereUniqueInput!): TeamMember
   teamMemberAccount(where: TeamMemberAccountWhereUniqueInput!): TeamMemberAccount
@@ -2799,8 +2762,8 @@ type Query {
   peerCategory(where: PeerCategoryWhereUniqueInput!): PeerCategory
   story(where: StoryWhereUniqueInput!): Story
   user(where: UserWhereUniqueInput!): User
-  account(where: AccountWhereUniqueInput!): Account
   category(where: CategoryWhereUniqueInput!): Category
+  account(where: AccountWhereUniqueInput!): Account
   teamsConnection(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamConnection!
   teamMembersConnection(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamMemberConnection!
   teamMemberAccountsConnection(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamMemberAccountConnection!
@@ -2810,8 +2773,8 @@ type Query {
   peerCategoriesConnection(where: PeerCategoryWhereInput, orderBy: PeerCategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PeerCategoryConnection!
   storiesConnection(where: StoryWhereInput, orderBy: StoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StoryConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
-  accountsConnection(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AccountConnection!
   categoriesConnection(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CategoryConnection!
+  accountsConnection(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AccountConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -3028,8 +2991,8 @@ type Subscription {
   peerCategory(where: PeerCategorySubscriptionWhereInput): PeerCategorySubscriptionPayload
   story(where: StorySubscriptionWhereInput): StorySubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
-  account(where: AccountSubscriptionWhereInput): AccountSubscriptionPayload
   category(where: CategorySubscriptionWhereInput): CategorySubscriptionPayload
+  account(where: AccountSubscriptionWhereInput): AccountSubscriptionPayload
 }
 
 type Team implements Node {

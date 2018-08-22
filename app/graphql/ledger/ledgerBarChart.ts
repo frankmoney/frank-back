@@ -52,19 +52,19 @@ export default createPrivateResolver(
     }
 
     if (!isNil(dateMin)) {
-      where.postedDate_gte = dateMin
+      where.postedOn_gte = dateMin
     }
 
     if (!isNil(dateMax)) {
-      where.postedDate_lte = dateMax
+      where.postedOn_lte = dateMax
     }
 
-    const orderBy: PaymentOrderByInput = 'postedDate_ASC'
+    const orderBy: PaymentOrderByInput = 'postedOn_ASC'
 
     const payments = await query.payments<Payment[]>(
       { where, orderBy },
       `{
-      postedDate
+      postedOn
       amount
     }`
     )
@@ -76,8 +76,8 @@ export default createPrivateResolver(
     const map: { [date: string]: LedgerBarChartItem } = {}
     const items: LedgerBarChartItem[] = []
 
-    const start = format(payments[0].postedDate, 'YYYY-MM-01')
-    const end = format(payments[payments.length - 1].postedDate, 'YYYY-MM-01')
+    const start = format(payments[0].postedOn, 'YYYY-MM-01')
+    const end = format(payments[payments.length - 1].postedOn, 'YYYY-MM-01')
 
     for (
       let date = start;
@@ -89,8 +89,8 @@ export default createPrivateResolver(
       items.push(item)
     }
 
-    for (const { postedDate, amount } of payments) {
-      const date = format(postedDate, 'YYYY-MM-01')
+    for (const { postedOn, amount } of payments) {
+      const date = format(postedOn, 'YYYY-MM-01')
       const item = map[date]
 
       if (amount < 0) {

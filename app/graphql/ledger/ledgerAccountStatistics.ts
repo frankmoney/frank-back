@@ -40,7 +40,7 @@ export default createPrivateResolver(
         
         paymentDateMin: payments(
           ${where}
-          orderBy: postedDate_ASC
+          orderBy: postedOn_ASC
           first: 1
         ) {
           postedDate
@@ -53,7 +53,7 @@ export default createPrivateResolver(
     return {
       paymentAmountMin: R.path(['paymentAmountMin', 0, 'amount'], result),
       paymentAmountMax: R.path(['paymentAmountMax', 0, 'amount'], result),
-      paymentDateMin: R.path(['paymentDateMin', 0, 'postedDate'], result),
+      paymentDateMin: R.path(['paymentDateMin', 0, 'postedOn'], result),
     }
   }
 )

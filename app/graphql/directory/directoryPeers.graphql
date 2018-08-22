@@ -9,7 +9,7 @@ extend type Query {
     search: String
     first: Int
     skip: Int
-  ): [Peer!]!
+  ): [DirectoryPeersPeer!]!
 }
 
 
@@ -19,4 +19,37 @@ enum DirectoryPeersInputSortBy {
   total
   revenue
   spendings
+}
+
+type DirectoryPeersPeer {
+  id: ID!
+  name: String!
+  total: Float!
+  revenue: Float!
+  spendings: Float!
+  categories: [DirectoryPeersCategory!]!
+  payments: [DirectoryPeersPayment!]!
+  paymentCount: Int
+  lastPaymentDate: DateTime
+}
+
+type DirectoryPeersCategory {
+  id: ID!
+  name: String!
+  color: String!
+  count: Int!
+  total: Float!
+  revenue: Float!
+  spendings: Float!
+  payments: [DirectoryPeersPayment!]!
+}
+
+type DirectoryPeersPayment {
+  id: ID!
+  postedOn: DateTime!
+  amount: Float!
+  description: String
+  rawData: Json!
+  peer: Peer!
+  category: DirectoryPeersCategory
 }

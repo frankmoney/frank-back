@@ -55,7 +55,7 @@ type TeamMemberAccount {
 type Payment {
   id: ID! @unique
   account: Account!
-  postedDate: DateTime!
+  postedOn: DateTime!
   amount: Float!
   peerName: String
   peerNameNormalized: String
@@ -79,7 +79,6 @@ type Peer {
   payments: [Payment!]!
   paymentCount: Int @default(value: "0")
   category: Category @relation(name: "PeerDefaultCategory")
-  oldCategories: [Category!]! @relation(name: "PeerPaymentCategories")
   categories: [PeerCategory!]! @relation(name: "PeerCategory_Peer")
 }
 
@@ -103,10 +102,10 @@ type PeerCategory {
   id: ID! @unique
   peer: Peer! @relation(name: "PeerCategory_Peer")
   category: Category! @relation(name: "PeerCategory_Category")
-  paymentCount: Int!
-  paymentAmount: Float!
-  paymentRevenue: Float!
-  paymentSpendings: Float!
+  count: Int!
+  total: Float!
+  revenue: Float!
+  spendings: Float!
 }
 
 type Story {

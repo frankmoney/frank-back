@@ -1,7 +1,7 @@
 type Query {
   accountCategories(accountId: ID!): [Category!]!
   directoryPeer(peerId: ID!): Peer!
-  directoryPeers(accountId: ID!, sortBy: DirectoryPeersInputSortBy, donors: Boolean, recipients: Boolean, search: String, first: Int, skip: Int): [Peer!]!
+  directoryPeers(accountId: ID!, sortBy: DirectoryPeersInputSortBy, donors: Boolean, recipients: Boolean, search: String, first: Int, skip: Int): [DirectoryPeersPeer!]!
   inbox(accountId: ID!, first: Int!, after: ID): [Payment!]!
   ledgerAccountStatistics(accountId: ID!, categoryId: ID): LedgerAccountStatistics
   ledgerBarChart(accountId: ID!, categoryId: ID, amountMin: Float, amountMax: Float, dateMin: DateTime, dateMax: DateTime, verified: Boolean): LedgerBarChart!
@@ -44,8 +44,19 @@ type Peer implements Node {
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
   paymentCount: Int
   category(where: CategoryWhereInput): Category
-  oldCategories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category!]
   categories(where: PeerCategoryWhereInput, orderBy: PeerCategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PeerCategory!]
+}
+
+type DirectoryPeersPeer {
+  id: ID!
+  name: String!
+  total: Float!
+  revenue: Float!
+  spendings: Float!
+  categories: [DirectoryPeersCategory!]!
+  payments: [DirectoryPeersPayment!]!
+  paymentCount: Int
+  lastPaymentDate: DateTime
 }
 
 enum DirectoryPeersInputSortBy {
@@ -59,7 +70,7 @@ enum DirectoryPeersInputSortBy {
 type Payment implements Node {
   id: ID!
   account(where: AccountWhereInput): Account!
-  postedDate: DateTime!
+  postedOn: DateTime!
   amount: Float!
   peerName: String
   peerNameNormalized: String
@@ -440,10 +451,10 @@ type PeerCategory implements Node {
   id: ID!
   peer(where: PeerWhereInput): Peer!
   category(where: CategoryWhereInput): Category!
-  paymentCount: Int!
-  paymentAmount: Float!
-  paymentRevenue: Float!
-  paymentSpendings: Float!
+  count: Int!
+  total: Float!
+  revenue: Float!
+  spendings: Float!
 }
 
 input PeerCategoryWhereInput {
@@ -512,122 +523,122 @@ input PeerCategoryWhereInput {
   All values not ending with the given string.
   """
   id_not_ends_with: ID
-  paymentCount: Int
+  count: Int
   """
   All values that are not equal to given value.
   """
-  paymentCount_not: Int
+  count_not: Int
   """
   All values that are contained in given list.
   """
-  paymentCount_in: [Int!]
+  count_in: [Int!]
   """
   All values that are not contained in given list.
   """
-  paymentCount_not_in: [Int!]
+  count_not_in: [Int!]
   """
   All values less than the given value.
   """
-  paymentCount_lt: Int
+  count_lt: Int
   """
   All values less than or equal the given value.
   """
-  paymentCount_lte: Int
+  count_lte: Int
   """
   All values greater than the given value.
   """
-  paymentCount_gt: Int
+  count_gt: Int
   """
   All values greater than or equal the given value.
   """
-  paymentCount_gte: Int
-  paymentAmount: Float
+  count_gte: Int
+  total: Float
   """
   All values that are not equal to given value.
   """
-  paymentAmount_not: Float
+  total_not: Float
   """
   All values that are contained in given list.
   """
-  paymentAmount_in: [Float!]
+  total_in: [Float!]
   """
   All values that are not contained in given list.
   """
-  paymentAmount_not_in: [Float!]
+  total_not_in: [Float!]
   """
   All values less than the given value.
   """
-  paymentAmount_lt: Float
+  total_lt: Float
   """
   All values less than or equal the given value.
   """
-  paymentAmount_lte: Float
+  total_lte: Float
   """
   All values greater than the given value.
   """
-  paymentAmount_gt: Float
+  total_gt: Float
   """
   All values greater than or equal the given value.
   """
-  paymentAmount_gte: Float
-  paymentRevenue: Float
+  total_gte: Float
+  revenue: Float
   """
   All values that are not equal to given value.
   """
-  paymentRevenue_not: Float
+  revenue_not: Float
   """
   All values that are contained in given list.
   """
-  paymentRevenue_in: [Float!]
+  revenue_in: [Float!]
   """
   All values that are not contained in given list.
   """
-  paymentRevenue_not_in: [Float!]
+  revenue_not_in: [Float!]
   """
   All values less than the given value.
   """
-  paymentRevenue_lt: Float
+  revenue_lt: Float
   """
   All values less than or equal the given value.
   """
-  paymentRevenue_lte: Float
+  revenue_lte: Float
   """
   All values greater than the given value.
   """
-  paymentRevenue_gt: Float
+  revenue_gt: Float
   """
   All values greater than or equal the given value.
   """
-  paymentRevenue_gte: Float
-  paymentSpendings: Float
+  revenue_gte: Float
+  spendings: Float
   """
   All values that are not equal to given value.
   """
-  paymentSpendings_not: Float
+  spendings_not: Float
   """
   All values that are contained in given list.
   """
-  paymentSpendings_in: [Float!]
+  spendings_in: [Float!]
   """
   All values that are not contained in given list.
   """
-  paymentSpendings_not_in: [Float!]
+  spendings_not_in: [Float!]
   """
   All values less than the given value.
   """
-  paymentSpendings_lt: Float
+  spendings_lt: Float
   """
   All values less than or equal the given value.
   """
-  paymentSpendings_lte: Float
+  spendings_lte: Float
   """
   All values greater than the given value.
   """
-  paymentSpendings_gt: Float
+  spendings_gt: Float
   """
   All values greater than or equal the given value.
   """
-  paymentSpendings_gte: Float
+  spendings_gte: Float
   peer: PeerWhereInput
   category: CategoryWhereInput
 }
@@ -635,18 +646,39 @@ input PeerCategoryWhereInput {
 enum PeerCategoryOrderByInput {
   id_ASC
   id_DESC
-  paymentCount_ASC
-  paymentCount_DESC
-  paymentAmount_ASC
-  paymentAmount_DESC
-  paymentRevenue_ASC
-  paymentRevenue_DESC
-  paymentSpendings_ASC
-  paymentSpendings_DESC
+  count_ASC
+  count_DESC
+  total_ASC
+  total_DESC
+  revenue_ASC
+  revenue_DESC
+  spendings_ASC
+  spendings_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
+}
+
+type DirectoryPeersCategory {
+  id: ID!
+  name: String!
+  color: String!
+  count: Int!
+  total: Float!
+  revenue: Float!
+  spendings: Float!
+  payments: [DirectoryPeersPayment!]!
+}
+
+type DirectoryPeersPayment {
+  id: ID!
+  postedOn: DateTime!
+  amount: Float!
+  description: String
+  rawData: Json!
+  peer: Peer!
+  category: DirectoryPeersCategory
 }
 
 type LedgerBarChartItem {
@@ -745,35 +777,35 @@ input PaymentWhereInput {
   All values not ending with the given string.
   """
   id_not_ends_with: ID
-  postedDate: DateTime
+  postedOn: DateTime
   """
   All values that are not equal to given value.
   """
-  postedDate_not: DateTime
+  postedOn_not: DateTime
   """
   All values that are contained in given list.
   """
-  postedDate_in: [DateTime!]
+  postedOn_in: [DateTime!]
   """
   All values that are not contained in given list.
   """
-  postedDate_not_in: [DateTime!]
+  postedOn_not_in: [DateTime!]
   """
   All values less than the given value.
   """
-  postedDate_lt: DateTime
+  postedOn_lt: DateTime
   """
   All values less than or equal the given value.
   """
-  postedDate_lte: DateTime
+  postedOn_lte: DateTime
   """
   All values greater than the given value.
   """
-  postedDate_gt: DateTime
+  postedOn_gt: DateTime
   """
   All values greater than or equal the given value.
   """
-  postedDate_gte: DateTime
+  postedOn_gte: DateTime
   amount: Float
   """
   All values that are not equal to given value.
@@ -1026,8 +1058,8 @@ input PaymentWhereInput {
 enum PaymentOrderByInput {
   id_ASC
   id_DESC
-  postedDate_ASC
-  postedDate_DESC
+  postedOn_ASC
+  postedOn_DESC
   amount_ASC
   amount_DESC
   peerName_ASC
@@ -1275,21 +1307,6 @@ input CategoryWhereInput {
   peers_every: PeerCategoryWhereInput
   peers_some: PeerCategoryWhereInput
   peers_none: PeerCategoryWhereInput
-}
-
-enum CategoryOrderByInput {
-  id_ASC
-  id_DESC
-  name_ASC
-  name_DESC
-  nameNormalized_ASC
-  nameNormalized_DESC
-  color_ASC
-  color_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  createdAt_ASC
-  createdAt_DESC
 }
 
 input PeerWhereInput {
@@ -1614,9 +1631,6 @@ input PeerWhereInput {
   payments_some: PaymentWhereInput
   payments_none: PaymentWhereInput
   category: CategoryWhereInput
-  oldCategories_every: CategoryWhereInput
-  oldCategories_some: CategoryWhereInput
-  oldCategories_none: CategoryWhereInput
   categories_every: PeerCategoryWhereInput
   categories_some: PeerCategoryWhereInput
   categories_none: PeerCategoryWhereInput
@@ -1840,6 +1854,21 @@ type TeamMemberAccount implements Node {
   id: ID!
   teamMember(where: TeamMemberWhereInput): TeamMember!
   account(where: AccountWhereInput): Account!
+}
+
+enum CategoryOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  nameNormalized_ASC
+  nameNormalized_DESC
+  color_ASC
+  color_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
 }
 
 input TeamWhereInput {
