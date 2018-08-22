@@ -1,0 +1,10 @@
+scalar JSON
+
+extend type Mutation {
+  createStory(
+    accountId: ID!,
+    title: String!,
+    body: JSON!,
+    coverImage: JSON,
+  ): Story!
+}

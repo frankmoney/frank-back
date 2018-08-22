@@ -9,6 +9,7 @@ import directory from './directory'
 import inbox from './inbox'
 import ledger from './ledger'
 import team from './team'
+import stories from './stories'
 import test from './test'
 
 const merge = (...args: any[]) => {
@@ -38,6 +39,6 @@ const root = {
 }
 
 export const resolvers: IResolvers<any, Context> = {
-  ...merge(root, directory, inbox, ledger, team, test),
+  ...merge(root, directory, inbox, ledger, team, stories, test),
   JSON: GraphQLJSON,
 }

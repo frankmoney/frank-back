@@ -1,0 +1,5 @@
+extend type Query {
+  stories(
+    accountId: ID!
+  ): [Story!]!
+}
