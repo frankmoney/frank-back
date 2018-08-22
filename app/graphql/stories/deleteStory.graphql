@@ -2,6 +2,7 @@ scalar JSON
 
 extend type Mutation {
   deleteStory(
-    id: ID!
+    accountId: ID!
+    storyId: ID!
   ): Story!
 }

@@ -18,7 +18,7 @@ type Query {
 type Mutation {
   updatePeer(peerId: ID!, update: UpdatePeerUpdateInput!): Peer!
   createStory(accountId: ID!, title: String!, body: JSON!, coverImage: JSON): Story!
-  deleteStory(id: ID!): Story!
+  deleteStory(accountId: ID!, storyId: ID!): Story!
   editTeamMemberRole(id: ID!, admin: Boolean!, canInvite: Boolean!, accountIds: [ID!]!): TeammateResult!
 }
 

@@ -5,14 +5,27 @@ export default createPrivateResolver(
   'deleteStory',
   async ({ assert, args, prisma: { query, mutation }, info }) => {
 
-    const storyId = args.id
-    const story = await query.story({ where: { id: storyId } }, '{ account { id } }')
+    const accountId = args.accountId
+    const storyId = args.storyId
+
+    const story = (await query.stories({
+      where: {
+        AND: [
+          {
+            id: storyId,
+          },
+          {
+            account: {
+              id: accountId,
+            },
+          },
+        ],
+      },
+    }, '{ account { id } }'))[0]
 
     if (!story) {
       throwNotFound()
     }
-
-    const accountId = story && story.account.id
 
     // await assert.accountAccess(accountId)  ..later
 
