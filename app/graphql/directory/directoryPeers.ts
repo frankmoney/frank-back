@@ -6,6 +6,7 @@ import {
   PeerWhereInput,
 } from 'app/graphql/generated/prisma'
 import createPrivateResolver from 'utils/createPrivateResolver'
+import normalizeString from 'utils/normalizeString'
 
 type DirectoryPeers = DirectoryPeersPeer[]
 
@@ -67,14 +68,15 @@ export default createPrivateResolver(
     }
 
     if (search) {
+      const searchNormalized = normalizeString(search)
       where.OR = [
         {
-          nameNormalized_contains: search,
+          nameNormalized_contains: searchNormalized,
         },
         {
           categories_some: {
             category: {
-              nameNormalized_contains: search,
+              nameNormalized_contains: searchNormalized,
             },
           },
         },
