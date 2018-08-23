@@ -1,3 +1,3 @@
-export const throwNotFound = () => {
-  throw new Error('Not Found')
+export const throwNotFound = (message?: string) => {
+  throw new Error(message || 'Not Found')
 }

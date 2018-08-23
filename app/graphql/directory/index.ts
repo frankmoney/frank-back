@@ -1,5 +1,6 @@
 import directoryPeer from './directoryPeer'
 import directoryPeers from './directoryPeers'
+import updatePayments from './updatePayments'
 import updatePeer from './updatePeer'
 
 export default {
@@ -8,6 +9,7 @@ export default {
     directoryPeers,
   },
   Mutation: {
+    updatePayments,
     updatePeer,
   },
 }

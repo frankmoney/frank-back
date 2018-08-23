@@ -16,6 +16,7 @@ type Query {
 }
 
 type Mutation {
+  updatePayments(accountId: ID!, updates: [UpdatePaymentsUpdateInput!]!): [Payment!]!
   updatePeer(peerId: ID!, update: UpdatePeerUpdateInput!): Peer!
   createStory(accountId: ID!, title: String!, body: JSON!, coverImage: JSON): Story!
   deleteStory(accountId: ID!, storyId: ID!): Story!
@@ -140,6 +141,11 @@ type User implements Node {
   lastName: String
   passwordHash: String!
   teams(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMember!]
+}
+
+input UpdatePaymentsUpdateInput {
+  paymentId: ID!
+  categoryId: ID
 }
 
 input UpdatePeerUpdateInput {
