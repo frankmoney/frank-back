@@ -2,6 +2,7 @@ type Query {
   accountCategories(accountId: ID!): [Category!]!
   directoryPeer(peerId: ID!): Peer!
   directoryPeers(accountId: ID!, sortBy: DirectoryPeersInputSortBy, donors: Boolean, recipients: Boolean, search: String, first: Int, skip: Int): [DirectoryPeersPeer!]!
+  directoryPeersCount(accountId: ID!, donors: Boolean, recipients: Boolean, search: String): DirectoryPeersCount!
   inbox(accountId: ID!, first: Int!, after: ID): [Payment!]!
   ledgerAccountStatistics(accountId: ID!, categoryId: ID): LedgerAccountStatistics
   ledgerBarChart(accountId: ID!, categoryId: ID, amountMin: Float, amountMax: Float, dateMin: DateTime, dateMax: DateTime, verified: Boolean): LedgerBarChart!
@@ -66,6 +67,10 @@ enum DirectoryPeersInputSortBy {
   total
   revenue
   spendings
+}
+
+type DirectoryPeersCount {
+  count: Int!
 }
 
 type Payment implements Node {
