@@ -47,7 +47,7 @@ export default createPrivateResolver(
 
     const {
       aggregate: { count },
-    } = await query.peersConnection({ where }, `{ aggregate: { count } }`)
+    } = await query.peersConnection({ where }, `{ aggregate { count } }`)
 
     return { count }
   }
