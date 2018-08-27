@@ -7,5 +7,6 @@ extend type Mutation {
     title: String,
     body: JSON,
     coverImage: JSON,
+    paymentsIds: [ID!]
   ): Story!
 }

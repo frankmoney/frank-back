@@ -21,7 +21,7 @@ type Mutation {
   updatePeer(peerId: ID!, update: UpdatePeerUpdateInput!): Peer!
   createStory(accountId: ID!, title: String!, body: JSON!, coverImage: JSON): Story!
   deleteStory(accountId: ID!, storyId: ID!): Story!
-  updateStory(accountId: ID!, storyId: ID!, title: String, body: JSON, coverImage: JSON): Story!
+  updateStory(accountId: ID!, storyId: ID!, title: String, body: JSON, coverImage: JSON, paymentsIds: [ID!]): Story!
   editTeamMemberRole(id: ID!, admin: Boolean!, canInvite: Boolean!, accountIds: [ID!]!): TeammateResult!
 }
 
@@ -116,6 +116,7 @@ type Story implements Node {
   title: String!
   body: Json!
   coverImage: Json
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
 }
 
 type TeamResult {
