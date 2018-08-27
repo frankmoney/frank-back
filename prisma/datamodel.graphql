@@ -114,4 +114,5 @@ type Story {
   title: String!
   body: Json!
   coverImage: Json
+  payments: [Payment!]!
 }
