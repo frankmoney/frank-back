@@ -8,7 +8,7 @@ export default createPrivateResolver(
     const accountId = args.accountId
     const storyId = args.storyId
 
-    const story: any = (await query.stories(
+    const story = (await query.stories<any>(
       {
         where: {
           AND: [
