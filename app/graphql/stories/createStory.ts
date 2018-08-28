@@ -1,5 +1,5 @@
 import createPrivateResolver from 'utils/createPrivateResolver'
-import _ from 'lodash'
+import R from 'ramda'
 
 export default createPrivateResolver(
   'createStory',
@@ -17,7 +17,7 @@ export default createPrivateResolver(
     if (args.paymentsIds) {
 
       data.payments = {
-        connect: _.map(args.paymentsIds, (id) => ({ id })),
+        connect: R.map((id) => ({ id }), args.paymentsIds),
       }
     }
 

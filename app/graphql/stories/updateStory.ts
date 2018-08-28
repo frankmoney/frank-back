@@ -1,6 +1,6 @@
 import { throwNotFound } from 'app/errors/NotFoundError'
 import createPrivateResolver from 'utils/createPrivateResolver'
-import _ from 'lodash'
+import R from 'ramda'
 
 export default createPrivateResolver(
   'updateStory',
@@ -40,13 +40,13 @@ export default createPrivateResolver(
 
     if (args.paymentsIds) {
 
-      const currentPaymentsIds = _.map(story.payments, (payment) => payment.id)
-      const toConnectPaymentsIds = _.difference(args.paymentsIds, currentPaymentsIds)
-      const toDisconnectPaymentsIds = _.difference(currentPaymentsIds, args.paymentsIds)
+      const currentPaymentsIds = R.map((payment: any) => payment.id, story.payments)
+      const toConnectPaymentsIds = R.difference(args.paymentsIds, currentPaymentsIds)
+      const toDisconnectPaymentsIds = R.difference(currentPaymentsIds, args.paymentsIds)
 
       data.payments = {
-        connect: _.map(toConnectPaymentsIds, (id) => ({ id })),
-        disconnect: _.map(toDisconnectPaymentsIds, (id) => ({ id })),
+        connect: R.map((id) => ({ id }), toConnectPaymentsIds),
+        disconnect: R.map((id) => ({ id }), toDisconnectPaymentsIds),
       }
     }
 
