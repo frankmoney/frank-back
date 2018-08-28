@@ -1,5 +1,5 @@
 # source: http://prisma.frank-dev1.frank.ly
-# timestamp: Wed Aug 22 2018 14:07:25 GMT+0300 (Russia TZ 2 Standard Time)
+# timestamp: Mon Aug 27 2018 17:15:09 GMT+0300 (Moscow Standard Time)
 
 type Account implements Node {
   id: ID!
@@ -1237,67 +1237,67 @@ type Mutation {
   createTeam(data: TeamCreateInput!): Team!
   createTeamMember(data: TeamMemberCreateInput!): TeamMember!
   createTeamMemberAccount(data: TeamMemberAccountCreateInput!): TeamMemberAccount!
-  createPayment(data: PaymentCreateInput!): Payment!
   createPeer(data: PeerCreateInput!): Peer!
   createComment(data: CommentCreateInput!): Comment!
   createPeerCategory(data: PeerCategoryCreateInput!): PeerCategory!
   createStory(data: StoryCreateInput!): Story!
   createUser(data: UserCreateInput!): User!
+  createPayment(data: PaymentCreateInput!): Payment!
   createCategory(data: CategoryCreateInput!): Category!
   createAccount(data: AccountCreateInput!): Account!
   updateTeam(data: TeamUpdateInput!, where: TeamWhereUniqueInput!): Team
   updateTeamMember(data: TeamMemberUpdateInput!, where: TeamMemberWhereUniqueInput!): TeamMember
   updateTeamMemberAccount(data: TeamMemberAccountUpdateInput!, where: TeamMemberAccountWhereUniqueInput!): TeamMemberAccount
-  updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
   updatePeer(data: PeerUpdateInput!, where: PeerWhereUniqueInput!): Peer
   updateComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
   updatePeerCategory(data: PeerCategoryUpdateInput!, where: PeerCategoryWhereUniqueInput!): PeerCategory
   updateStory(data: StoryUpdateInput!, where: StoryWhereUniqueInput!): Story
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
   updateCategory(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category
   updateAccount(data: AccountUpdateInput!, where: AccountWhereUniqueInput!): Account
   deleteTeam(where: TeamWhereUniqueInput!): Team
   deleteTeamMember(where: TeamMemberWhereUniqueInput!): TeamMember
   deleteTeamMemberAccount(where: TeamMemberAccountWhereUniqueInput!): TeamMemberAccount
-  deletePayment(where: PaymentWhereUniqueInput!): Payment
   deletePeer(where: PeerWhereUniqueInput!): Peer
   deleteComment(where: CommentWhereUniqueInput!): Comment
   deletePeerCategory(where: PeerCategoryWhereUniqueInput!): PeerCategory
   deleteStory(where: StoryWhereUniqueInput!): Story
   deleteUser(where: UserWhereUniqueInput!): User
+  deletePayment(where: PaymentWhereUniqueInput!): Payment
   deleteCategory(where: CategoryWhereUniqueInput!): Category
   deleteAccount(where: AccountWhereUniqueInput!): Account
   upsertTeam(where: TeamWhereUniqueInput!, create: TeamCreateInput!, update: TeamUpdateInput!): Team!
   upsertTeamMember(where: TeamMemberWhereUniqueInput!, create: TeamMemberCreateInput!, update: TeamMemberUpdateInput!): TeamMember!
   upsertTeamMemberAccount(where: TeamMemberAccountWhereUniqueInput!, create: TeamMemberAccountCreateInput!, update: TeamMemberAccountUpdateInput!): TeamMemberAccount!
-  upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
   upsertPeer(where: PeerWhereUniqueInput!, create: PeerCreateInput!, update: PeerUpdateInput!): Peer!
   upsertComment(where: CommentWhereUniqueInput!, create: CommentCreateInput!, update: CommentUpdateInput!): Comment!
   upsertPeerCategory(where: PeerCategoryWhereUniqueInput!, create: PeerCategoryCreateInput!, update: PeerCategoryUpdateInput!): PeerCategory!
   upsertStory(where: StoryWhereUniqueInput!, create: StoryCreateInput!, update: StoryUpdateInput!): Story!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
   upsertCategory(where: CategoryWhereUniqueInput!, create: CategoryCreateInput!, update: CategoryUpdateInput!): Category!
   upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
   updateManyTeams(data: TeamUpdateInput!, where: TeamWhereInput): BatchPayload!
   updateManyTeamMembers(data: TeamMemberUpdateInput!, where: TeamMemberWhereInput): BatchPayload!
   updateManyTeamMemberAccounts(data: TeamMemberAccountUpdateInput!, where: TeamMemberAccountWhereInput): BatchPayload!
-  updateManyPayments(data: PaymentUpdateInput!, where: PaymentWhereInput): BatchPayload!
   updateManyPeers(data: PeerUpdateInput!, where: PeerWhereInput): BatchPayload!
   updateManyComments(data: CommentUpdateInput!, where: CommentWhereInput): BatchPayload!
   updateManyPeerCategories(data: PeerCategoryUpdateInput!, where: PeerCategoryWhereInput): BatchPayload!
   updateManyStories(data: StoryUpdateInput!, where: StoryWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
+  updateManyPayments(data: PaymentUpdateInput!, where: PaymentWhereInput): BatchPayload!
   updateManyCategories(data: CategoryUpdateInput!, where: CategoryWhereInput): BatchPayload!
   updateManyAccounts(data: AccountUpdateInput!, where: AccountWhereInput): BatchPayload!
   deleteManyTeams(where: TeamWhereInput): BatchPayload!
   deleteManyTeamMembers(where: TeamMemberWhereInput): BatchPayload!
   deleteManyTeamMemberAccounts(where: TeamMemberAccountWhereInput): BatchPayload!
-  deleteManyPayments(where: PaymentWhereInput): BatchPayload!
   deleteManyPeers(where: PeerWhereInput): BatchPayload!
   deleteManyComments(where: CommentWhereInput): BatchPayload!
   deleteManyPeerCategories(where: PeerCategoryWhereInput): BatchPayload!
   deleteManyStories(where: StoryWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
+  deleteManyPayments(where: PaymentWhereInput): BatchPayload!
   deleteManyCategories(where: CategoryWhereInput): BatchPayload!
   deleteManyAccounts(where: AccountWhereInput): BatchPayload!
 }
@@ -1366,6 +1366,11 @@ input PaymentCreateInput {
   peer: PeerCreateOneWithoutPaymentsInput
   comments: CommentCreateManyWithoutPaymentInput
   category: CategoryCreateOneInput
+}
+
+input PaymentCreateManyInput {
+  create: [PaymentCreateInput!]
+  connect: [PaymentWhereUniqueInput!]
 }
 
 input PaymentCreateManyWithoutAccountInput {
@@ -1504,6 +1509,20 @@ input PaymentSubscriptionWhereInput {
   node: PaymentWhereInput
 }
 
+input PaymentUpdateDataInput {
+  postedOn: DateTime
+  amount: Float
+  peerName: String
+  peerNameNormalized: String
+  description: String
+  descriptionNormalized: String
+  rawData: Json
+  account: AccountUpdateOneWithoutPaymentsInput
+  peer: PeerUpdateOneWithoutPaymentsInput
+  comments: CommentUpdateManyWithoutPaymentInput
+  category: CategoryUpdateOneInput
+}
+
 input PaymentUpdateInput {
   postedOn: DateTime
   amount: Float
@@ -1516,6 +1535,15 @@ input PaymentUpdateInput {
   peer: PeerUpdateOneWithoutPaymentsInput
   comments: CommentUpdateManyWithoutPaymentInput
   category: CategoryUpdateOneInput
+}
+
+input PaymentUpdateManyInput {
+  create: [PaymentCreateInput!]
+  connect: [PaymentWhereUniqueInput!]
+  disconnect: [PaymentWhereUniqueInput!]
+  delete: [PaymentWhereUniqueInput!]
+  update: [PaymentUpdateWithWhereUniqueNestedInput!]
+  upsert: [PaymentUpsertWithWhereUniqueNestedInput!]
 }
 
 input PaymentUpdateManyWithoutAccountInput {
@@ -1583,6 +1611,11 @@ input PaymentUpdateWithoutPeerDataInput {
   category: CategoryUpdateOneInput
 }
 
+input PaymentUpdateWithWhereUniqueNestedInput {
+  where: PaymentWhereUniqueInput!
+  data: PaymentUpdateDataInput!
+}
+
 input PaymentUpdateWithWhereUniqueWithoutAccountInput {
   where: PaymentWhereUniqueInput!
   data: PaymentUpdateWithoutAccountDataInput!
@@ -1596,6 +1629,12 @@ input PaymentUpdateWithWhereUniqueWithoutPeerInput {
 input PaymentUpsertWithoutCommentsInput {
   update: PaymentUpdateWithoutCommentsDataInput!
   create: PaymentCreateWithoutCommentsInput!
+}
+
+input PaymentUpsertWithWhereUniqueNestedInput {
+  where: PaymentWhereUniqueInput!
+  update: PaymentUpdateDataInput!
+  create: PaymentCreateInput!
 }
 
 input PaymentUpsertWithWhereUniqueWithoutAccountInput {
@@ -2745,34 +2784,34 @@ type Query {
   teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team]!
   teamMembers(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMember]!
   teamMemberAccounts(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMemberAccount]!
-  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
   peers(where: PeerWhereInput, orderBy: PeerOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Peer]!
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment]!
   peerCategories(where: PeerCategoryWhereInput, orderBy: PeerCategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PeerCategory]!
   stories(where: StoryWhereInput, orderBy: StoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Story]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
   categories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category]!
   accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account]!
   team(where: TeamWhereUniqueInput!): Team
   teamMember(where: TeamMemberWhereUniqueInput!): TeamMember
   teamMemberAccount(where: TeamMemberAccountWhereUniqueInput!): TeamMemberAccount
-  payment(where: PaymentWhereUniqueInput!): Payment
   peer(where: PeerWhereUniqueInput!): Peer
   comment(where: CommentWhereUniqueInput!): Comment
   peerCategory(where: PeerCategoryWhereUniqueInput!): PeerCategory
   story(where: StoryWhereUniqueInput!): Story
   user(where: UserWhereUniqueInput!): User
+  payment(where: PaymentWhereUniqueInput!): Payment
   category(where: CategoryWhereUniqueInput!): Category
   account(where: AccountWhereUniqueInput!): Account
   teamsConnection(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamConnection!
   teamMembersConnection(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamMemberConnection!
   teamMemberAccountsConnection(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamMemberAccountConnection!
-  paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
   peersConnection(where: PeerWhereInput, orderBy: PeerOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PeerConnection!
   commentsConnection(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection!
   peerCategoriesConnection(where: PeerCategoryWhereInput, orderBy: PeerCategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PeerCategoryConnection!
   storiesConnection(where: StoryWhereInput, orderBy: StoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StoryConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
   categoriesConnection(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CategoryConnection!
   accountsConnection(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AccountConnection!
 
@@ -2789,6 +2828,7 @@ type Story implements Node {
   title: String!
   body: Json!
   coverImage: Json
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
 }
 
 """A connection to a list of items."""
@@ -2806,6 +2846,7 @@ input StoryCreateInput {
   body: Json!
   coverImage: Json
   account: AccountCreateOneInput!
+  payments: PaymentCreateManyInput
 }
 
 """An edge in a connection."""
@@ -2883,6 +2924,7 @@ input StoryUpdateInput {
   body: Json
   coverImage: Json
   account: AccountUpdateOneInput
+  payments: PaymentUpdateManyInput
 }
 
 input StoryWhereInput {
@@ -2975,6 +3017,9 @@ input StoryWhereInput {
   """All values not ending with the given string."""
   title_not_ends_with: String
   account: AccountWhereInput
+  payments_every: PaymentWhereInput
+  payments_some: PaymentWhereInput
+  payments_none: PaymentWhereInput
 }
 
 input StoryWhereUniqueInput {
@@ -2985,12 +3030,12 @@ type Subscription {
   team(where: TeamSubscriptionWhereInput): TeamSubscriptionPayload
   teamMember(where: TeamMemberSubscriptionWhereInput): TeamMemberSubscriptionPayload
   teamMemberAccount(where: TeamMemberAccountSubscriptionWhereInput): TeamMemberAccountSubscriptionPayload
-  payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
   peer(where: PeerSubscriptionWhereInput): PeerSubscriptionPayload
   comment(where: CommentSubscriptionWhereInput): CommentSubscriptionPayload
   peerCategory(where: PeerCategorySubscriptionWhereInput): PeerCategorySubscriptionPayload
   story(where: StorySubscriptionWhereInput): StorySubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
   category(where: CategorySubscriptionWhereInput): CategorySubscriptionPayload
   account(where: AccountSubscriptionWhereInput): AccountSubscriptionPayload
 }
