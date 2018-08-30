@@ -1,6 +1,8 @@
 import { ID, Type } from 'gql'
 import AccountType from '../AccountType'
+import CategoryType from '../CategoryType'
 import account from './account'
+import category from './category'
 
 const PaymentType = Type('Payment', type =>
   type.fields(field => ({
@@ -17,6 +19,8 @@ const PaymentType = Type('Payment', type =>
     rawData: field.ofJson().nullable(),
 
     account: field.ofType(AccountType).resolve(account),
+
+    category: field.ofType(CategoryType).resolve(category),
 
     // peer: field
     //   .ofType(PeerType)

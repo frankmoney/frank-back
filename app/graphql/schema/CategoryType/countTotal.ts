@@ -1,9 +1,9 @@
 import createCountPaymentsTotalResolver from '../../resolvers/createCountPaymentsTotalResolver'
 
 export default createCountPaymentsTotalResolver(
-  'Account:countTotal',
+  'AccountCategory:countTotal',
   ({ parent }) => ({
-    account: {
+    category: {
       id: parent.id,
     },
   })

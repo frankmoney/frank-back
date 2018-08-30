@@ -1,9 +1,9 @@
 import createCountPaymentsRevenueResolver from '../../resolvers/createCountPaymentsRevenueResolver'
 
 export default createCountPaymentsRevenueResolver(
-  'Account:countRevenue',
+  'AccountCategory:countRevenue',
   ({ parent }) => ({
-    account: {
+    category: {
       id: parent.id,
     },
   })

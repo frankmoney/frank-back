@@ -1,45 +1,26 @@
 import { Type } from 'gql'
+import AccountType from '../AccountType'
 import FloatValue from '../FloatValue'
 import IntValue from '../IntValue'
-import AccountCategoryType from '../AccountCategoryType'
 import PaymentType from '../PaymentType'
-import categories from './categories'
-import category from './category'
-import countCategories from './countCategories'
+import account from './account'
+import payments from './payments'
 import countPayments from './countPayments'
 import countRevenue from './countRevenue'
 import countSpending from './countSpending'
 import countTotal from './countTotal'
-import payments from './payments'
 
-const AccountType = Type('Account', type =>
+const CategoryType = Type('Category', type =>
   type.fields(field => ({
     id: field.ofID(),
 
     name: field.ofString(),
 
-    category: field
-      .ofType(AccountCategoryType)
-      .args(arg => ({
-        id: arg.ofID(),
-      }))
-      .resolve(category),
+    color: field.ofString(),
 
-    categories: field
-      .listOf(AccountCategoryType)
-      .args(arg => ({
-        first: arg.ofInt().nullable(),
-        skip: arg.ofInt().nullable(),
-        search: arg.ofString().nullable(),
-      }))
-      .resolve(categories),
+    account: field.ofType(AccountType).resolve(account),
 
-    countCategories: field
-      .listOf(AccountCategoryType)
-      .args(arg => ({
-        search: arg.ofString().nullable(),
-      }))
-      .resolve(countCategories),
+    // peers,
 
     payments: field
       .listOf(PaymentType)
@@ -73,4 +54,4 @@ const AccountType = Type('Account', type =>
   }))
 )
 
-export default AccountType
+export default CategoryType
