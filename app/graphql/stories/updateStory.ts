@@ -23,7 +23,7 @@ export default createPrivateResolver(
           ],
         },
       },
-      '{ id, payments { id } }',
+      '{ id, payments { id } }'
     ))[0]
 
     if (!story) {
@@ -39,14 +39,22 @@ export default createPrivateResolver(
     }
 
     if (args.paymentsIds) {
-
-      const currentPaymentsIds = R.map((payment: any) => payment.id, story.payments)
-      const toConnectPaymentsIds = R.difference(args.paymentsIds, currentPaymentsIds)
-      const toDisconnectPaymentsIds = R.difference(currentPaymentsIds, args.paymentsIds)
+      const currentPaymentsIds = R.map(
+        (payment: any) => payment.id,
+        story.payments
+      )
+      const toConnectPaymentsIds = R.difference(
+        args.paymentsIds,
+        currentPaymentsIds
+      )
+      const toDisconnectPaymentsIds = R.difference(
+        currentPaymentsIds,
+        args.paymentsIds
+      )
 
       data.payments = {
-        connect: R.map((id) => ({ id }), toConnectPaymentsIds),
-        disconnect: R.map((id) => ({ id }), toDisconnectPaymentsIds),
+        connect: R.map(id => ({ id }), toConnectPaymentsIds),
+        disconnect: R.map(id => ({ id }), toDisconnectPaymentsIds),
       }
     }
 
@@ -55,7 +63,7 @@ export default createPrivateResolver(
         where: { id: storyId },
         data,
       },
-      info,
+      info
     )
-  },
+  }
 )

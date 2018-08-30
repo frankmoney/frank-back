@@ -4,7 +4,6 @@ import R from 'ramda'
 export default createPrivateResolver(
   'createStory',
   ({ assert, args, prisma: { mutation }, info }) => {
-
     // await assert.accountAccess(accountId)  ..later
 
     const data: any = {
@@ -15,15 +14,11 @@ export default createPrivateResolver(
     }
 
     if (args.paymentsIds) {
-
       data.payments = {
-        connect: R.map((id) => ({ id }), args.paymentsIds),
+        connect: R.map(id => ({ id }), args.paymentsIds),
       }
     }
 
-    return mutation.createStory(
-      { data },
-      info,
-    )
-  },
+    return mutation.createStory({ data }, info)
+  }
 )
