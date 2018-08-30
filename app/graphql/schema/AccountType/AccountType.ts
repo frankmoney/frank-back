@@ -1,16 +1,22 @@
 import { Type } from 'gql'
 import FloatValue from '../FloatValue'
+import CategoryType from '../CategoryType'
 import IntValue from '../IntValue'
-import AccountCategoryType from '../AccountCategoryType'
 import PaymentType from '../PaymentType'
-import categories from './categories'
-import category from './category'
-import countCategories from './countCategories'
-import countPayments from './countPayments'
-import countRevenue from './countRevenue'
-import countSpending from './countSpending'
-import countTotal from './countTotal'
-import payments from './payments'
+import PeerType from '../PeerType'
+import PeersOrder from '../PeersOrder'
+import accountCategories from './accountCategories'
+import accountCategory from './accountCategory'
+import accountCountCategories from './accountCountCategories'
+import accountCountPayments from './accountCountPayments'
+import accountCountPeers from './accountCountPeers'
+import accountCountRevenue from './accountCountRevenue'
+import accountCountSpending from './accountCountSpending'
+import accountCountTotal from './accountCountTotal'
+import accountPayment from './accountPayment'
+import accountPayments from './accountPayments'
+import accountPeer from './accountPeer'
+import accountPeers from './accountPeers'
 
 const AccountType = Type('Account', type =>
   type.fields(field => ({
@@ -19,27 +25,63 @@ const AccountType = Type('Account', type =>
     name: field.ofString(),
 
     category: field
-      .ofType(AccountCategoryType)
+      .ofType(CategoryType)
       .args(arg => ({
         id: arg.ofID(),
       }))
-      .resolve(category),
+      .resolve(accountCategory),
 
     categories: field
-      .listOf(AccountCategoryType)
+      .listOf(CategoryType)
       .args(arg => ({
         first: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
         search: arg.ofString().nullable(),
       }))
-      .resolve(categories),
+      .resolve(accountCategories),
 
     countCategories: field
-      .listOf(AccountCategoryType)
+      .listOf(CategoryType)
       .args(arg => ({
         search: arg.ofString().nullable(),
       }))
-      .resolve(countCategories),
+      .resolve(accountCountCategories),
+
+    peer: field
+      .ofType(PeerType)
+      .args(arg => ({
+        id: arg.ofID(),
+      }))
+      .resolve(accountPeer),
+
+    peers: field
+      .ofType(PeerType)
+      .args(arg => ({
+        first: arg.ofInt().nullable(),
+        skip: arg.ofInt().nullable(),
+        sortBy: arg.ofType(PeersOrder),
+        donors: arg.ofBool().nullable(),
+        recipients: arg.ofBool().nullable(),
+        search: arg.ofString().nullable(),
+      }))
+      .resolve(accountPeers),
+
+    countPeers: field
+      .ofType(IntValue)
+      .args(arg => ({
+        sortBy: arg.ofType(PeersOrder),
+        donors: arg.ofBool().nullable(),
+        recipients: arg.ofBool().nullable(),
+        search: arg.ofString().nullable(),
+      }))
+      .resolve(accountCountPeers),
+
+    payment: field
+      .ofType(PaymentType)
+      .args(arg => ({
+        id: arg.ofID(),
+      }))
+      .resolve(accountPayment),
 
     payments: field
       .listOf(PaymentType)
@@ -52,7 +94,7 @@ const AccountType = Type('Account', type =>
         amountMax: arg.ofFloat().nullable(),
         search: arg.ofString().nullable(),
       }))
-      .resolve(payments),
+      .resolve(accountPayments),
 
     countPayments: field
       .ofType(IntValue)
@@ -63,13 +105,13 @@ const AccountType = Type('Account', type =>
         amountMax: arg.ofFloat().nullable(),
         search: arg.ofString().nullable(),
       }))
-      .resolve(countPayments),
+      .resolve(accountCountPayments),
 
-    total: field.ofType(FloatValue).resolve(countTotal),
+    countTotal: field.ofType(FloatValue).resolve(accountCountTotal),
 
-    revenue: field.ofType(FloatValue).resolve(countRevenue),
+    countRevenue: field.ofType(FloatValue).resolve(accountCountRevenue),
 
-    spending: field.ofType(FloatValue).resolve(countSpending),
+    countSpending: field.ofType(FloatValue).resolve(accountCountSpending),
   }))
 )
 

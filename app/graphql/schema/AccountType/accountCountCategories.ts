@@ -1,4 +1,4 @@
-import createCountCategoriesResolver from 'app/graphql/resolvers/createCountCategoriesResolver'
+import createCountCategoriesResolver from '../../resolvers/createCountCategoriesResolver'
 
 export default createCountCategoriesResolver(
   'Account:countCategories',

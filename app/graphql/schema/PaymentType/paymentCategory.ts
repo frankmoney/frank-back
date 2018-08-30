@@ -1,4 +1,4 @@
-import createCategoryResolver from 'app/graphql/resolvers/createCategoryResolver'
+import createCategoryResolver from '../../resolvers/createCategoryResolver'
 
 export default createCategoryResolver('Payment:category', ({ parent }) => ({
   peers_some: {

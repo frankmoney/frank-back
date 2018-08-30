@@ -23,6 +23,7 @@ import ObjectTypeFieldType from './ObjectTypeFieldType'
 import Resolver from './Resolver'
 import ScalarType from './ScalarType'
 import TypeRef from './TypeRef'
+import UnionType from './UnionType'
 
 export default class Schema {
   public readonly config: {
@@ -47,6 +48,7 @@ export default class Schema {
         | InputTypeField
         | FieldArgument
         | ListType
+        | UnionType
       >
       typeRefs: { [name: string]: GraphQLNamedType }
       types: {
@@ -76,6 +78,7 @@ export default class Schema {
           | InputTypeField
           | FieldArgument
           | ListType
+          | UnionType
       ): boolean {
         if (this.visitedNodes.has(node)) {
           return false
@@ -131,6 +134,7 @@ export default class Schema {
           | FieldArgument
           | FieldArgumentType
           | ListType
+          | UnionType
       ): T {
         if (node instanceof TypeRef) {
           return <T>node.config.type
@@ -140,7 +144,8 @@ export default class Schema {
           node instanceof EnumType ||
           node instanceof ScalarType ||
           node instanceof ObjectType ||
-          node instanceof InputType
+          node instanceof InputType ||
+          node instanceof UnionType
         ) {
           return <T>this._getType(node.config.name)
         }

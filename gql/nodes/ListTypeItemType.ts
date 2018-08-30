@@ -4,6 +4,7 @@ import ListType from './ListType'
 import ObjectType from './ObjectType'
 import ScalarType from './ScalarType'
 import TypeRef from './TypeRef'
+import UnionType from './UnionType'
 
 type ListTypeItemType =
   | TypeRef
@@ -12,5 +13,6 @@ type ListTypeItemType =
   | ObjectType
   | InputType
   | ListType
+  | UnionType
 
 export default ListTypeItemType

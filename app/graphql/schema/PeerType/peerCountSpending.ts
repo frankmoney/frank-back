@@ -1,9 +1,9 @@
 import createCountPaymentsSpendingResolver from '../../resolvers/createCountPaymentsSpendingResolver'
 
 export default createCountPaymentsSpendingResolver(
-  'AccountCategory:countSpending',
+  'Peer:countSpending',
   ({ parent }) => ({
-    category: {
+    peer: {
       id: parent.id,
     },
   })

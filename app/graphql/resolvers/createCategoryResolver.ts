@@ -23,7 +23,9 @@ const createCategoryResolver = <TArgs = any>(
       `{ id, name, color }`
     )
 
-    return (categories && categories[0]) || undefined
+    const category = (categories && categories[0]) || undefined
+
+    return category
   })
 
 export default createCategoryResolver

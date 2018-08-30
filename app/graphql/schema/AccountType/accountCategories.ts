@@ -1,4 +1,4 @@
-import createCategoriesResolver from 'app/graphql/resolvers/createCategoriesResolver'
+import createCategoriesResolver from '../../resolvers/createCategoriesResolver'
 
 export default createCategoriesResolver('Account:categories', ({ parent }) => ({
   account: {

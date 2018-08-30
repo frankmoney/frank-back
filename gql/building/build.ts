@@ -8,10 +8,12 @@ import ObjectTypeField from '../nodes/ObjectTypeField'
 import ScalarType from '../nodes/ScalarType'
 import Schema from '../nodes/Schema'
 import TypeRef from '../nodes/TypeRef'
+import UnionType from '../nodes/UnionType'
 import buildEnumType from './buildEnumType'
 import buildInputType from './buildInputType'
 import buildObjectType from './buildObjectType'
 import buildScalarType from './buildScalarType'
+import buildUnionType from './buildUnionType'
 import IBuildContext from './IBuildContext'
 
 const build = (
@@ -27,6 +29,7 @@ const build = (
     | InputTypeField
     | FieldArgument
     | ListType
+    | UnionType
 ) => {
   if (context.shouldVisit(node)) {
     if (node instanceof Schema) {
@@ -66,6 +69,11 @@ const build = (
       build(context, node.config.type)
     } else if (node instanceof ListType) {
       build(context, node.config.itemType)
+    } else if (node instanceof UnionType) {
+      context.tryAddType(node.config.name, node, buildUnionType)
+      for (const type of node.config.types) {
+        build(context, type)
+      }
     } else {
       throw new Error(`Unsupported node: ${node}`)
     }

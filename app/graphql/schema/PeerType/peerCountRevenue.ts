@@ -1,9 +1,9 @@
 import createCountPaymentsRevenueResolver from '../../resolvers/createCountPaymentsRevenueResolver'
 
 export default createCountPaymentsRevenueResolver(
-  'AccountCategory:countRevenue',
+  'Peer:countRevenue',
   ({ parent }) => ({
-    category: {
+    peer: {
       id: parent.id,
     },
   })

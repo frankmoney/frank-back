@@ -3,12 +3,18 @@ import AccountType from '../AccountType'
 import FloatValue from '../FloatValue'
 import IntValue from '../IntValue'
 import PaymentType from '../PaymentType'
-import account from './account'
-import payments from './payments'
-import countPayments from './countPayments'
-import countRevenue from './countRevenue'
-import countSpending from './countSpending'
-import countTotal from './countTotal'
+import PeerType from '../PeerType'
+import PeersOrder from '../PeersOrder'
+import categoryAccount from './categoryAccount'
+import categoryCountPayments from './categoryCountPayments'
+import categoryCountPeers from './categoryCountPeers'
+import categoryCountRevenue from './categoryCountRevenue'
+import categoryCountSpending from './categoryCountSpending'
+import categoryCountTotal from './categoryCountTotal'
+import categoryPayment from './categoryPayment'
+import categoryPayments from './categoryPayments'
+import categoryPeer from './categoryPeer'
+import categoryPeers from './categoryPeers'
 
 const CategoryType = Type('Category', type =>
   type.fields(field => ({
@@ -18,9 +24,43 @@ const CategoryType = Type('Category', type =>
 
     color: field.ofString(),
 
-    account: field.ofType(AccountType).resolve(account),
+    account: field.ofType(AccountType).resolve(categoryAccount),
 
-    // peers,
+    peer: field
+      .ofType(PeerType)
+      .args(arg => ({
+        id: arg.ofID(),
+      }))
+      .resolve(categoryPeer),
+
+    peers: field
+      .ofType(PeerType)
+      .args(arg => ({
+        first: arg.ofInt().nullable(),
+        skip: arg.ofInt().nullable(),
+        sortBy: arg.ofType(PeersOrder),
+        donors: arg.ofBool().nullable(),
+        recipients: arg.ofBool().nullable(),
+        search: arg.ofString().nullable(),
+      }))
+      .resolve(categoryPeers),
+
+    countPeers: field
+      .ofType(IntValue)
+      .args(arg => ({
+        sortBy: arg.ofType(PeersOrder),
+        donors: arg.ofBool().nullable(),
+        recipients: arg.ofBool().nullable(),
+        search: arg.ofString().nullable(),
+      }))
+      .resolve(categoryCountPeers),
+
+    payment: field
+      .ofType(PaymentType)
+      .args(arg => ({
+        id: arg.ofID(),
+      }))
+      .resolve(categoryPayment),
 
     payments: field
       .listOf(PaymentType)
@@ -33,7 +73,7 @@ const CategoryType = Type('Category', type =>
         amountMax: arg.ofFloat().nullable(),
         search: arg.ofString().nullable(),
       }))
-      .resolve(payments),
+      .resolve(categoryPayments),
 
     countPayments: field
       .ofType(IntValue)
@@ -44,13 +84,13 @@ const CategoryType = Type('Category', type =>
         amountMax: arg.ofFloat().nullable(),
         search: arg.ofString().nullable(),
       }))
-      .resolve(countPayments),
+      .resolve(categoryCountPayments),
 
-    total: field.ofType(FloatValue).resolve(countTotal),
+    total: field.ofType(FloatValue).resolve(categoryCountTotal),
 
-    revenue: field.ofType(FloatValue).resolve(countRevenue),
+    revenue: field.ofType(FloatValue).resolve(categoryCountRevenue),
 
-    spending: field.ofType(FloatValue).resolve(countSpending),
+    spending: field.ofType(FloatValue).resolve(categoryCountSpending),
   }))
 )
 

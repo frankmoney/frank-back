@@ -13,6 +13,7 @@ import Resolver from '../nodes/Resolver'
 import ScalarType from '../nodes/ScalarType'
 import Schema from '../nodes/Schema'
 import TypeRef from '../nodes/TypeRef'
+import UnionType from '../nodes/UnionType'
 
 interface IBuildContext {
   shouldVisit(
@@ -27,6 +28,7 @@ interface IBuildContext {
       | InputTypeField
       | FieldArgument
       | ListType
+      | UnionType
   ): boolean
 
   tryAddTypeRef(type: GraphQLType): void
@@ -51,6 +53,7 @@ interface IBuildContext {
       | FieldArgument
       | FieldArgumentType
       | ListType
+      | UnionType
   ): T
 
   getResolver(resolver?: Resolver): GraphQLFieldResolver<any, any> | undefined

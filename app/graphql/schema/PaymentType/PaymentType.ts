@@ -1,8 +1,10 @@
 import { ID, Type } from 'gql'
 import AccountType from '../AccountType'
 import CategoryType from '../CategoryType'
-import account from './account'
-import category from './category'
+import PeerType from '../PeerType'
+import paymentAccount from './paymentAccount'
+import paymentCategory from './paymentCategory'
+import paymentPeer from './paymentPeer'
 
 const PaymentType = Type('Payment', type =>
   type.fields(field => ({
@@ -18,14 +20,11 @@ const PaymentType = Type('Payment', type =>
 
     rawData: field.ofJson().nullable(),
 
-    account: field.ofType(AccountType).resolve(account),
+    account: field.ofType(AccountType).resolve(paymentAccount),
 
-    category: field.ofType(CategoryType).resolve(category),
+    category: field.ofType(CategoryType).resolve(paymentCategory),
 
-    // peer: field
-    //   .ofType(PeerType)
-    //   .nullable()
-    //   .resolve(peer),
+    peer: field.ofType(PeerType).resolve(paymentPeer),
   }))
 )
 

@@ -10,6 +10,7 @@ import ListType from './ListType'
 import ObjectType from './ObjectType'
 import ScalarType from './ScalarType'
 import TypeRef from './TypeRef'
+import UnionType from './UnionType'
 
 type ObjectTypeFieldType =
   | TypeRef<GraphQLEnumType>
@@ -21,5 +22,6 @@ type ObjectTypeFieldType =
   | ScalarType
   | ObjectType
   | ListType
+  | UnionType
 
 export default ObjectTypeFieldType
