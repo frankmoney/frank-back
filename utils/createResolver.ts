@@ -4,6 +4,11 @@ import { Context, ContextUser } from 'app/Context'
 import { ContextAssert, createContextAssert } from 'app/assert'
 import { Prisma } from 'app/graphql/generated/prisma'
 
+export type ResolverLogger = {
+  info(formatter: any, ...args: any[]): void
+  error(formatter: any, ...args: any[]): void
+}
+
 export type ResolverArg<TArgs = any> = {
   parent: any
   args: TArgs
@@ -12,6 +17,7 @@ export type ResolverArg<TArgs = any> = {
   user?: ContextUser
   prisma: Prisma
   assert: ContextAssert
+  log: ResolverLogger
 }
 
 export type Resolver<TArgs = any> = (arg: ResolverArg<TArgs>) => any
@@ -20,7 +26,11 @@ const createResolver = <TArgs = any>(
   resolver: string | undefined | Resolver<TArgs>,
   resolverImpl?: Resolver<TArgs>
 ) => {
-  const error = debug(`app:resolver:${resolver || '?'}:error`)
+  const log = {
+    info: debug(`app:resolver:${resolver || '?'}:info`),
+    error: debug(`app:resolver:${resolver || '?'}:error`),
+  }
+
   return async (
     parent: any,
     args: TArgs,
@@ -40,13 +50,14 @@ const createResolver = <TArgs = any>(
         user,
         prisma,
         assert,
+        log,
       }
 
       const fn = resolverImpl || <Resolver<TArgs>>resolver
 
       return await Promise.resolve(fn(arg))
     } catch (exc) {
-      error(exc)
+      log.error(exc)
       throw exc
     }
   }

@@ -3,7 +3,8 @@ import { makeExecutableSchema } from 'graphql-tools'
 import { Prisma } from 'prisma-binding'
 import { resolvers, typeDefs } from 'app/graphql'
 
-const schema = makeExecutableSchema({ typeDefs, resolvers })
+// const schema = makeExecutableSchema({ typeDefs, resolvers })
+import schema from './graphql/schema'
 
 const server = new ApolloServer({
   schema,
