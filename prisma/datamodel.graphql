@@ -43,6 +43,7 @@ type Account {
   team: Team!
   members: [TeamMemberAccount!]!
   peers: [Peer!]!
+  stories: [Story!]!
   rawData: Json
 }
 
