@@ -36,7 +36,7 @@ const createStoriesResolver = <TArgs = any>(
         first,
         skip,
       },
-      `{ id, title, body, coverImage }`,
+      `{ id, title, body, coverImage, isPublished, updatedAt }`,
     )
 
     return stories
