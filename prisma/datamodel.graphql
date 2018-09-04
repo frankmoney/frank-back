@@ -66,6 +66,7 @@ type Payment {
   comments: [Comment!]!
   category: Category
   rawData: Json!
+  story: Story
 }
 
 type Peer {
