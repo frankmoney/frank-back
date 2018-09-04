@@ -120,6 +120,7 @@ const AccountType = Type('Account', type =>
       .args(arg => ({
         first: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
+        isPublished: arg.ofBool().nullable(),
       }))
       .resolve(accountStories),
   })),

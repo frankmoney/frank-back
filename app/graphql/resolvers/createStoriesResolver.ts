@@ -29,6 +29,11 @@ const createStoriesResolver = <TArgs = any>(
 
     const skip = args.skip
 
+    if (!isNil(args.isPublished)) {
+      where.isPublished = args.isPublished
+    }
+
+
     const stories = await query.stories<Story[]>(
       {
         where,
