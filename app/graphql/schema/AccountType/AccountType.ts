@@ -3,6 +3,7 @@ import FloatValue from '../FloatValue'
 import CategoryType from '../CategoryType'
 import IntValue from '../IntValue'
 import PaymentType from '../PaymentType'
+import StoryType from '../StoryType'
 import PeerType from '../PeerType'
 import PeersOrder from '../PeersOrder'
 import accountCategories from './accountCategories'
@@ -15,6 +16,7 @@ import accountCountSpending from './accountCountSpending'
 import accountCountTotal from './accountCountTotal'
 import accountPayment from './accountPayment'
 import accountPayments from './accountPayments'
+import accountStories from './accountStories'
 import accountPeer from './accountPeer'
 import accountPeers from './accountPeers'
 
@@ -112,7 +114,15 @@ const AccountType = Type('Account', type =>
     countRevenue: field.ofType(FloatValue).resolve(accountCountRevenue),
 
     countSpending: field.ofType(FloatValue).resolve(accountCountSpending),
-  }))
+
+    stories: field
+      .listOf(StoryType)
+      .args(arg => ({
+        first: arg.ofInt().nullable(),
+        skip: arg.ofInt().nullable(),
+      }))
+      .resolve(accountStories),
+  })),
 )
 
 export default AccountType
