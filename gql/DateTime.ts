@@ -3,7 +3,7 @@ import { Kind, ValueNode } from 'graphql'
 import { isNil } from 'ramda'
 import Scalar from './Scalar'
 
-const DateTime = Scalar('Date', type =>
+const DateTime = Scalar('DateTime', type =>
   type
     .serialize((value: string) => format(value, 'YYYY-MM-DDTHH:mm:ss.SSS'))
     .parseValue((value: string) => format(value, 'YYYY-MM-DDTHH:mm:ss.SSS'))
