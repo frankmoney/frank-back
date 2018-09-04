@@ -1,5 +1,5 @@
 # source: http://prisma.frank-dev1.frank.ly
-# timestamp: Tue Sep 04 2018 12:53:12 GMT+0300 (Moscow Standard Time)
+# timestamp: Tue Sep 04 2018 15:41:39 GMT+0300 (Moscow Standard Time)
 
 type Account implements Node {
   id: ID!
@@ -2859,6 +2859,9 @@ type Story implements Node {
   body: Json!
   coverImage: Json
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
+  isPublished: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 """A connection to a list of items."""
@@ -2875,6 +2878,7 @@ input StoryCreateInput {
   title: String!
   body: Json!
   coverImage: Json
+  isPublished: Boolean
   account: AccountCreateOneWithoutStoriesInput!
   payments: PaymentCreateManyInput
 }
@@ -2888,6 +2892,7 @@ input StoryCreateWithoutAccountInput {
   title: String!
   body: Json!
   coverImage: Json
+  isPublished: Boolean
   payments: PaymentCreateManyInput
 }
 
@@ -2909,10 +2914,12 @@ enum StoryOrderByInput {
   body_DESC
   coverImage_ASC
   coverImage_DESC
-  updatedAt_ASC
-  updatedAt_DESC
+  isPublished_ASC
+  isPublished_DESC
   createdAt_ASC
   createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type StoryPreviousValues {
@@ -2920,6 +2927,9 @@ type StoryPreviousValues {
   title: String!
   body: Json!
   coverImage: Json
+  isPublished: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type StorySubscriptionPayload {
@@ -2965,6 +2975,7 @@ input StoryUpdateInput {
   title: String
   body: Json
   coverImage: Json
+  isPublished: Boolean
   account: AccountUpdateOneWithoutStoriesInput
   payments: PaymentUpdateManyInput
 }
@@ -2982,6 +2993,7 @@ input StoryUpdateWithoutAccountDataInput {
   title: String
   body: Json
   coverImage: Json
+  isPublished: Boolean
   payments: PaymentUpdateManyInput
 }
 
@@ -3085,6 +3097,54 @@ input StoryWhereInput {
 
   """All values not ending with the given string."""
   title_not_ends_with: String
+  isPublished: Boolean
+
+  """All values that are not equal to given value."""
+  isPublished_not: Boolean
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
   account: AccountWhereInput
   payments_every: PaymentWhereInput
   payments_some: PaymentWhereInput
