@@ -74,7 +74,7 @@ const createPaymentsResolver = <TArgs = any>(
         first,
         skip,
       },
-      `{ id, postedOn, peerName, description, rawData }`
+      `{ id, amount, postedOn, peerName, description, rawData }`
     )
 
     return payments

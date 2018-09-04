@@ -1,8 +1,9 @@
+import storyPayments from './storyPayments'
 import storyCountPayments from './storyCountPayments'
 import storyPaymentsDateRange from './storyPaymentsDateRange'
 import IntValue from 'app/graphql/schema/IntValue'
 import { ID, Type, DateTime } from 'gql'
-import AccountType from '../AccountType'
+import PaymentType from '../PaymentType'
 
 const StoryType = Type('Story', type =>
   type.fields(field => ({
@@ -17,6 +18,10 @@ const StoryType = Type('Story', type =>
     isPublished: field.ofBool(),
 
     updatedAt: field.ofDateTime(),
+
+    payments: field
+      .listOf(PaymentType)
+      .resolve(storyPayments),
 
     countPayments: field
       .ofType(IntValue)
