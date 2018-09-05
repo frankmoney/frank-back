@@ -11,7 +11,7 @@ const StoryType = Type('Story', type =>
 
     title: field.ofString(),
 
-    body: field.ofJson().nullable(),
+    body: field.ofJson(),
 
     coverImage: field.ofJson().nullable(),
 
