@@ -1,10 +1,11 @@
 import { Type } from 'gql'
 import AccountType from '../AccountType'
 import CategoryType from '../CategoryType'
-import DateValue from '../DateValue'
 import FloatValue from '../FloatValue'
 import IntValue from '../IntValue'
+import NullableDateValue from '../NullableDateValue'
 import PaymentType from '../PaymentType'
+import PaymentsOrder from '../PaymentsOrder'
 import peerAccount from './peerAccount'
 import peerCategories from './peerCategories'
 import peerCategory from './peerCategory'
@@ -22,15 +23,6 @@ const PeerType = Type('Peer', type =>
     id: field.ofID(),
 
     name: field.ofString(),
-
-    lastPaymentOn: field
-      .ofType(DateValue)
-      .nullable()
-      .args(arg => ({
-        incomes: arg.ofBool().nullable(),
-        expenses: arg.ofBool().nullable(),
-      }))
-      .resolve(peerLastPaymentOn),
 
     account: field.ofType(AccountType).resolve(peerAccount),
 
@@ -73,7 +65,9 @@ const PeerType = Type('Peer', type =>
         postedOnMax: arg.ofDate().nullable(),
         amountMin: arg.ofFloat().nullable(),
         amountMax: arg.ofFloat().nullable(),
+        verified: arg.ofBool().nullable(),
         search: arg.ofString().nullable(),
+        sortBy: arg.ofType(PaymentsOrder).nullable(),
       }))
       .resolve(peerPayments),
 
@@ -84,9 +78,18 @@ const PeerType = Type('Peer', type =>
         postedOnMax: arg.ofDate().nullable(),
         amountMin: arg.ofFloat().nullable(),
         amountMax: arg.ofFloat().nullable(),
+        verified: arg.ofBool().nullable(),
         search: arg.ofString().nullable(),
       }))
       .resolve(peerCountPayments),
+
+    lastPaymentOn: field
+      .ofType(NullableDateValue)
+      .args(arg => ({
+        incomes: arg.ofBool().nullable(),
+        expenses: arg.ofBool().nullable(),
+      }))
+      .resolve(peerLastPaymentOn),
 
     total: field.ofType(FloatValue).resolve(peerCountTotal),
 

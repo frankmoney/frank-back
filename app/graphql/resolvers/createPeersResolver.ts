@@ -52,20 +52,14 @@ const createPeersResolver = <TArgs = any>(
     let orderBy: PeerOrderByInput
     switch (args.sortBy) {
       default:
-      case PeersOrder.values.name:
+      case PeersOrder.values.name_ASC:
         orderBy = 'name_ASC'
         break
-      case PeersOrder.values.lastPaymentDate:
-        orderBy = 'lastPaymentDate_DESC'
-        break
-      case PeersOrder.values.total:
+      case PeersOrder.values.total_DESC:
         orderBy = 'total_DESC'
         break
-      case PeersOrder.values.revenue:
-        orderBy = 'revenue_DESC'
-        break
-      case PeersOrder.values.spending:
-        orderBy = 'spendings_DESC'
+      case PeersOrder.values.lastPaymentOn_DESC:
+        orderBy = 'lastPaymentDate_DESC'
         break
     }
 

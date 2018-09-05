@@ -1,4 +1,8 @@
-import { StoryWhereInput, Story, StoryOrderByInput } from 'app/graphql/generated/prisma'
+import {
+  StoryWhereInput,
+  Story,
+  StoryOrderByInput,
+} from 'app/graphql/generated/prisma'
 import { isNil } from 'ramda'
 import createPrivateResolver from 'utils/createPrivateResolver'
 
@@ -35,5 +39,5 @@ export default createPrivateResolver(
     })
 
     return stories
-  },
+  }
 )

@@ -19,19 +19,12 @@ const StoryType = Type('Story', type =>
 
     updatedAt: field.ofDateTime(),
 
-    payments: field
-      .listOf(PaymentType)
-      .resolve(storyPayments),
+    payments: field.listOf(PaymentType).resolve(storyPayments),
 
-    countPayments: field
-      .ofType(IntValue)
-      .resolve(storyCountPayments),
+    countPayments: field.ofType(IntValue).resolve(storyCountPayments),
 
-    paymentsDateRange: field
-      .listOf(DateTime)
-      .resolve(storyPaymentsDateRange)
-
-  })),
+    paymentsDateRange: field.listOf(DateTime).resolve(storyPaymentsDateRange),
+  }))
 )
 
 export default StoryType

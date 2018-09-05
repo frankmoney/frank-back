@@ -4,7 +4,6 @@ import R from 'ramda'
 export default createPrivateResolver(
   'storyPaymentsDateRange',
   async ({ parent, assert, args, prisma: { query } }) => {
-
     const payments = await query.payments(
       {
         where: {
@@ -12,7 +11,8 @@ export default createPrivateResolver(
         },
         orderBy: 'postedOn_DESC',
       },
-      '{ postedOn }')
+      '{ postedOn }'
+    )
 
     const dates = R.map(p => p.postedOn, payments)
 
@@ -23,5 +23,5 @@ export default createPrivateResolver(
     }
 
     return []
-  },
+  }
 )

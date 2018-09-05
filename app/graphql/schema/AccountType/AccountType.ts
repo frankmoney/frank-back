@@ -2,10 +2,13 @@ import { Type } from 'gql'
 import FloatValue from '../FloatValue'
 import CategoryType from '../CategoryType'
 import IntValue from '../IntValue'
+import LedgerBarChartType from '../LedgerBarChartType'
+import LedgerPieChartType from '../LedgerPieChartType'
 import PaymentType from '../PaymentType'
-import StoryType from '../StoryType'
+import PaymentsOrder from '../PaymentsOrder'
 import PeerType from '../PeerType'
 import PeersOrder from '../PeersOrder'
+import StoryType from '../StoryType'
 import accountCategories from './accountCategories'
 import accountCategory from './accountCategory'
 import accountCountCategories from './accountCountCategories'
@@ -14,11 +17,13 @@ import accountCountPeers from './accountCountPeers'
 import accountCountRevenue from './accountCountRevenue'
 import accountCountSpending from './accountCountSpending'
 import accountCountTotal from './accountCountTotal'
+import accountLedgerBarChart from './accountLedgerBarChart'
+import accountLedgerPieChart from './accountLedgerPieChart'
 import accountPayment from './accountPayment'
 import accountPayments from './accountPayments'
-import accountStories from './accountStories'
 import accountPeer from './accountPeer'
 import accountPeers from './accountPeers'
+import accountStories from './accountStories'
 
 const AccountType = Type('Account', type =>
   type.fields(field => ({
@@ -57,7 +62,7 @@ const AccountType = Type('Account', type =>
       .resolve(accountPeer),
 
     peers: field
-      .ofType(PeerType)
+      .listOf(PeerType)
       .args(arg => ({
         first: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
@@ -71,7 +76,6 @@ const AccountType = Type('Account', type =>
     countPeers: field
       .ofType(IntValue)
       .args(arg => ({
-        sortBy: arg.ofType(PeersOrder),
         donors: arg.ofBool().nullable(),
         recipients: arg.ofBool().nullable(),
         search: arg.ofString().nullable(),
@@ -94,7 +98,9 @@ const AccountType = Type('Account', type =>
         postedOnMax: arg.ofDate().nullable(),
         amountMin: arg.ofFloat().nullable(),
         amountMax: arg.ofFloat().nullable(),
+        verified: arg.ofBool().nullable(),
         search: arg.ofString().nullable(),
+        sortBy: arg.ofType(PaymentsOrder).nullable(),
       }))
       .resolve(accountPayments),
 
@@ -105,6 +111,7 @@ const AccountType = Type('Account', type =>
         postedOnMax: arg.ofDate().nullable(),
         amountMin: arg.ofFloat().nullable(),
         amountMax: arg.ofFloat().nullable(),
+        verified: arg.ofBool().nullable(),
         search: arg.ofString().nullable(),
       }))
       .resolve(accountCountPayments),
@@ -115,6 +122,24 @@ const AccountType = Type('Account', type =>
 
     countSpending: field.ofType(FloatValue).resolve(accountCountSpending),
 
+    ledgerBarChart: field
+      .ofType(LedgerBarChartType)
+      .args(arg => ({
+        postedOnMin: arg.ofDate().nullable(),
+        postedOnMax: arg.ofDate().nullable(),
+        amountMin: arg.ofFloat().nullable(),
+        amountMax: arg.ofFloat().nullable(),
+      }))
+      .resolve(accountLedgerBarChart),
+
+    ledgerPieChart: field
+      .ofType(LedgerPieChartType)
+      .args(arg => ({
+        postedOnMin: arg.ofDate().nullable(),
+        postedOnMax: arg.ofDate().nullable(),
+      }))
+      .resolve(accountLedgerPieChart),
+
     stories: field
       .listOf(StoryType)
       .args(arg => ({
@@ -123,7 +148,7 @@ const AccountType = Type('Account', type =>
         isPublished: arg.ofBool().nullable(),
       }))
       .resolve(accountStories),
-  })),
+  }))
 )
 
 export default AccountType

@@ -2,7 +2,9 @@ import { Type } from 'gql'
 import AccountType from '../AccountType'
 import FloatValue from '../FloatValue'
 import IntValue from '../IntValue'
+import LedgerBarChartType from '../LedgerBarChartType'
 import PaymentType from '../PaymentType'
+import PaymentsOrder from '../PaymentsOrder'
 import PeerType from '../PeerType'
 import PeersOrder from '../PeersOrder'
 import categoryAccount from './categoryAccount'
@@ -11,6 +13,7 @@ import categoryCountPeers from './categoryCountPeers'
 import categoryCountRevenue from './categoryCountRevenue'
 import categoryCountSpending from './categoryCountSpending'
 import categoryCountTotal from './categoryCountTotal'
+import categoryLedgerBarChart from './categoryLedgerBarChart'
 import categoryPayment from './categoryPayment'
 import categoryPayments from './categoryPayments'
 import categoryPeer from './categoryPeer'
@@ -48,7 +51,6 @@ const CategoryType = Type('Category', type =>
     countPeers: field
       .ofType(IntValue)
       .args(arg => ({
-        sortBy: arg.ofType(PeersOrder),
         donors: arg.ofBool().nullable(),
         recipients: arg.ofBool().nullable(),
         search: arg.ofString().nullable(),
@@ -71,7 +73,9 @@ const CategoryType = Type('Category', type =>
         postedOnMax: arg.ofDate().nullable(),
         amountMin: arg.ofFloat().nullable(),
         amountMax: arg.ofFloat().nullable(),
+        verified: arg.ofBool().nullable(),
         search: arg.ofString().nullable(),
+        sortBy: arg.ofType(PaymentsOrder).nullable(),
       }))
       .resolve(categoryPayments),
 
@@ -82,6 +86,7 @@ const CategoryType = Type('Category', type =>
         postedOnMax: arg.ofDate().nullable(),
         amountMin: arg.ofFloat().nullable(),
         amountMax: arg.ofFloat().nullable(),
+        verified: arg.ofBool().nullable(),
         search: arg.ofString().nullable(),
       }))
       .resolve(categoryCountPayments),
@@ -91,6 +96,16 @@ const CategoryType = Type('Category', type =>
     revenue: field.ofType(FloatValue).resolve(categoryCountRevenue),
 
     spending: field.ofType(FloatValue).resolve(categoryCountSpending),
+
+    ledgerBarChart: field
+      .ofType(LedgerBarChartType)
+      .args(arg => ({
+        postedOnMin: arg.ofDate().nullable(),
+        postedOnMax: arg.ofDate().nullable(),
+        amountMin: arg.ofFloat().nullable(),
+        amountMax: arg.ofFloat().nullable(),
+      }))
+      .resolve(categoryLedgerBarChart),
   }))
 )
 

@@ -8,6 +8,7 @@ import createPrivateResolver, {
   PrivateResolverArg,
 } from 'utils/createPrivateResolver'
 import normalizeString from 'utils/normalizeString'
+import PaymentsOrder from '../schema/PaymentsOrder'
 
 const createPaymentsResolver = <TArgs = any>(
   name: string,
@@ -61,7 +62,16 @@ const createPaymentsResolver = <TArgs = any>(
       ]
     }
 
-    const orderBy: PaymentOrderByInput = 'postedOn_DESC'
+    let orderBy: PaymentOrderByInput
+    switch (args.sortBy) {
+      default:
+      case PaymentsOrder.values.postedOn_DESC:
+        orderBy = 'postedOn_DESC'
+        break
+      case PaymentsOrder.values.amount_DESC:
+        orderBy = 'amount_DESC'
+        break
+    }
 
     const first = args.first
 
@@ -74,7 +84,7 @@ const createPaymentsResolver = <TArgs = any>(
         first,
         skip,
       },
-      `{ id, amount, postedOn, peerName, description, rawData }`
+      `{ id, postedOn, amount, peerName, description, rawData }`
     )
 
     return payments
