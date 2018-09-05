@@ -4,7 +4,7 @@ import createPrivateResolver from 'utils/createPrivateResolver'
 import R from 'ramda'
 
 export default createPrivateResolver(
-  'storiesUdate',
+  'storyUdate',
   async ({ assert, args, prisma: { query, mutation } }) => {
 
     const accountId = args.accountId

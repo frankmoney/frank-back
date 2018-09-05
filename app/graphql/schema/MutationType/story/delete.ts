@@ -2,7 +2,7 @@ import { throwNotFound } from 'app/errors/NotFoundError'
 import createPrivateResolver from 'utils/createPrivateResolver'
 
 export default createPrivateResolver(
-  'storiesDelete',
+  'storyDelete',
   async ({ assert, args, prisma: { query, mutation } }) => {
 
     const accountId = args.accountId

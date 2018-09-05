@@ -3,7 +3,7 @@ import createPrivateResolver from 'utils/createPrivateResolver'
 import R from 'ramda'
 
 export default createPrivateResolver(
-  'storiesCreate',
+  'storyCreate',
   async ({ assert, args, prisma: { mutation } }) => {
 
     await assert.accountAccess(args.accountId)

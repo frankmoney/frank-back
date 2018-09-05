@@ -1,12 +1,12 @@
 import { ID, String, Type, Json } from 'gql'
 import StoryType from '../StoryType'
-import storiesCreate from './stories/create'
-import storiesUpdate from './stories/update'
-import storiesDelete from './stories/delete'
+import storyCreate from './story/create'
+import storyUpdate from './story/update'
+import storyDelete from './story/delete'
 
-const QueryType = Type('Mutation', type =>
+const MutationType = Type('Mutation', type =>
   type.fields(field => ({
-    storiesCreate: field
+    storyCreate: field
       .ofType(StoryType)
       .args(arg => ({
         accountId: arg.ofType(ID),
@@ -15,8 +15,8 @@ const QueryType = Type('Mutation', type =>
         coverImage: arg.ofType(Json).nullable(),
         paymentsIds: arg.listOf(ID).nullable(),
       }))
-      .resolve(storiesCreate),
-    storiesUpdate: field
+      .resolve(storyCreate),
+    storyUpdate: field
       .ofType(StoryType)
       .args(arg => ({
         accountId: arg.ofType(ID),
@@ -26,15 +26,15 @@ const QueryType = Type('Mutation', type =>
         coverImage: arg.ofType(Json).nullable(),
         paymentsIds: arg.listOf(ID).nullable(),
       }))
-      .resolve(storiesUpdate),
-    storiesDelete: field
+      .resolve(storyUpdate),
+    storyDelete: field
       .ofType(StoryType)
       .args(arg => ({
         accountId: arg.ofType(ID),
         storyId: arg.ofType(ID),
       }))
-      .resolve(storiesDelete),
+      .resolve(storyDelete),
   })),
 )
 
-export default QueryType
+export default MutationType
