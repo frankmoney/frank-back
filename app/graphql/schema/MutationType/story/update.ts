@@ -62,7 +62,7 @@ const resolver = createPrivateResolver(
       }
     }
 
-    return mutation.updateStory({
+    return await mutation.updateStory({
       where: { id: storyId },
       data,
     })

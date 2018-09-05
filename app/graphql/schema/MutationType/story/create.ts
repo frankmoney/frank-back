@@ -23,7 +23,7 @@ const resolver = createPrivateResolver(
       }
     }
 
-    return mutation.createStory({ data })
+    return await mutation.createStory({ data })
   },
 )
 

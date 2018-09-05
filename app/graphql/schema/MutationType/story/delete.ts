@@ -34,7 +34,7 @@ const resolver = createPrivateResolver(
 
     await assert.accountAccess(accountId)
 
-    return mutation.deleteStory({
+    return await mutation.deleteStory({
       where: { id: storyId },
     })
   },
