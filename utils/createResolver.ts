@@ -5,6 +5,7 @@ import { ContextAssert, createContextAssert } from 'app/assert'
 import { Prisma } from 'app/graphql/generated/prisma'
 
 export type ResolverLogger = {
+  trace(formatter: any, ...args: any[]): void
   info(formatter: any, ...args: any[]): void
   error(formatter: any, ...args: any[]): void
 }
@@ -27,6 +28,7 @@ const createResolver = <TArgs = any>(
   resolverImpl?: Resolver<TArgs>
 ) => {
   const log = {
+    trace: debug(`app:resolver:${resolver || '?'}:trace`),
     info: debug(`app:resolver:${resolver || '?'}:info`),
     error: debug(`app:resolver:${resolver || '?'}:error`),
   }
@@ -55,7 +57,11 @@ const createResolver = <TArgs = any>(
 
       const fn = resolverImpl || <Resolver<TArgs>>resolver
 
-      return await Promise.resolve(fn(arg))
+      const result = await Promise.resolve(fn(arg))
+
+      log.trace('result:', result)
+
+      return result
     } catch (exc) {
       log.error(exc)
       throw exc

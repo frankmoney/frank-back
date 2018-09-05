@@ -1,16 +1,20 @@
 import { ApolloServer } from 'apollo-server'
-import { makeExecutableSchema } from 'graphql-tools'
+import debug from 'debug'
 import { Prisma } from 'prisma-binding'
-import { resolvers, typeDefs } from 'app/graphql'
 
-// const schema = makeExecutableSchema({ typeDefs, resolvers })
 import schema from './graphql/schema'
+
+const log = {
+  trace: debug('app:server:trace'),
+}
 
 const server = new ApolloServer({
   schema,
   context({ req }: any) {
+    log.trace('user id:', req.headers['x-authenticated-user-id'])
     return {
-      user: { id: req.headers['x-authenticated-user-id'] },
+      // user: { id: req.headers['x-authenticated-user-id'] },
+      user: { id: 'cjkhv9pqg0hhf0a168cnsreq6' },
       prisma: new Prisma({
         typeDefs: 'app/graphql/generated/prisma.graphql',
         endpoint: process.env.PRISMA_ENDPOINT,

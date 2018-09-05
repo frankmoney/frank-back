@@ -10,7 +10,7 @@ export default createPrivateResolver(
       id: args.id,
     }
 
-    const account = await query.account<Account>({ where })
+    const account = await query.account<Account>({ where }, `{ id, name }`)
 
     return account
   }
