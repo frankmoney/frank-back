@@ -1,9 +1,9 @@
 import { throwNotFound } from 'app/errors/NotFoundError'
 import { StoryUpdateInput } from 'app/graphql/generated/prisma'
 import StoryType from 'app/graphql/schema/StoryType'
-import { ID, String, Json } from 'gql'
+import { ID, String, Json, Bool } from 'gql'
 import createPrivateResolver from 'utils/createPrivateResolver'
-import R from 'ramda'
+import R, { isNil } from 'ramda'
 
 const storyUpdate = createPrivateResolver(
   'Mutation:story:update',
@@ -42,6 +42,10 @@ const storyUpdate = createPrivateResolver(
       coverImage: args.coverImage && JSON.parse(args.coverImage),
     }
 
+    if (!isNil(args.isPublished)) {
+      data.isPublished = args.isPublished
+    }
+
     if (args.paymentsIds) {
       const currentPaymentsIds = R.map(
         (payment: any) => payment.id,
@@ -75,6 +79,7 @@ export default (field: any) => field
   .args((arg: any) => ({
     accountId: arg.ofType(ID),
     storyId: arg.ofType(ID),
+    isPublished: arg.ofType(Bool).nullable(),
     title: arg.ofType(String).nullable(),
     body: arg.ofType(Json).nullable(),
     coverImage: arg.ofType(Json).nullable(),
