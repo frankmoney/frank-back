@@ -1553,7 +1553,7 @@ es-to-primitive@^1.1.1:
     is-date-object "^1.0.1"
     is-symbol "^1.0.1"
 
-es6-promise@^4.0.3, es6-promise@^4.1.1:
+es6-promise@^4.0.3, es6-promise@^4.0.5, es6-promise@^4.1.1:
   version "4.2.4"
   resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.2.4.tgz#dc4221c2b16518760bd8c39a52d8f356fc00ed29"
 
@@ -3654,6 +3654,13 @@ multimatch@^2.1.0:
 mute-stream@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
+
+mx-atrium@^0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/mx-atrium/-/mx-atrium-0.0.10.tgz#38eab8cc5a5a63ac2b039702cad0e1c0761f5768"
+  dependencies:
+    es6-promise "^4.0.5"
+    isomorphic-fetch "^2.2.1"
 
 nan@^2.9.2:
   version "2.10.0"
