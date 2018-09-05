@@ -11,11 +11,8 @@ export default createPrivateResolver(
     const data: StoryCreateInput = {
       title: args.title,
       body: JSON.parse(args.body),
+      coverImage: args.coverImage && JSON.parse(args.coverImage),
       account: { connect: { id: args.accountId } },
-    }
-
-    if (args.coverImage) {
-      data.coverImage = JSON.parse(args.coverImage)
     }
 
     if (args.paymentsIds) {
