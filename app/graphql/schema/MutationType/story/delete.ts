@@ -1,7 +1,9 @@
+import StoryType from 'app/graphql/schema/StoryType'
+import { ID } from 'gql'
 import { throwNotFound } from 'app/errors/NotFoundError'
 import createPrivateResolver from 'utils/createPrivateResolver'
 
-export default createPrivateResolver(
+const resolver = createPrivateResolver(
   'storyDelete',
   async ({ assert, args, prisma: { query, mutation } }) => {
 
@@ -37,3 +39,11 @@ export default createPrivateResolver(
     })
   },
 )
+
+export default (field: any) => field
+  .ofType(StoryType)
+  .args((arg: any) => ({
+    accountId: arg.ofType(ID),
+    storyId: arg.ofType(ID),
+  }))
+  .resolve(resolver)

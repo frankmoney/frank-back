@@ -1,9 +1,11 @@
 import { throwNotFound } from 'app/errors/NotFoundError'
 import { StoryUpdateInput } from 'app/graphql/generated/prisma'
+import StoryType from 'app/graphql/schema/StoryType'
+import { ID, String, Json } from 'gql'
 import createPrivateResolver from 'utils/createPrivateResolver'
 import R from 'ramda'
 
-export default createPrivateResolver(
+const resolver = createPrivateResolver(
   'storyUdate',
   async ({ assert, args, prisma: { query, mutation } }) => {
 
@@ -66,3 +68,16 @@ export default createPrivateResolver(
     })
   },
 )
+
+
+export default (field: any) => field
+  .ofType(StoryType)
+  .args((arg: any) => ({
+    accountId: arg.ofType(ID),
+    storyId: arg.ofType(ID),
+    title: arg.ofType(String).nullable(),
+    body: arg.ofType(Json).nullable(),
+    coverImage: arg.ofType(Json).nullable(),
+    paymentsIds: arg.listOf(ID).nullable(),
+  }))
+  .resolve(resolver)
