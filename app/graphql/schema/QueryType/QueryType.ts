@@ -1,10 +1,13 @@
 import { ID, String, Type } from 'gql'
 import AccountType from '../AccountType'
 import MeType from '../MeType'
+import StoryType from '../StoryType'
 import TeamType from '../TeamType'
 import account from './account'
 import accounts from './accounts'
 import me from './me'
+import story from './story'
+import stories from './stories'
 import team from './team'
 
 const QueryType = Type('Query', type =>
@@ -29,6 +32,22 @@ const QueryType = Type('Query', type =>
         search: arg.ofType(String).nullable(),
       }))
       .resolve(accounts),
+
+    story: field
+      .ofType(StoryType)
+      .args(arg => ({
+        id: arg.ofType(ID),
+      }))
+      .resolve(story),
+
+    stories: field
+      .listOf(StoryType)
+      .args(arg => ({
+        first: arg.ofInt().nullable(),
+        skip: arg.ofInt().nullable(),
+        isPublished: arg.ofBool().nullable(),
+      }))
+      .resolve(stories),
   }))
 )
 

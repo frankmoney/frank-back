@@ -8,6 +8,7 @@ import PaymentType from '../PaymentType'
 import PaymentsOrder from '../PaymentsOrder'
 import PeerType from '../PeerType'
 import PeersOrder from '../PeersOrder'
+import StoryType from '../StoryType'
 import accountCategories from './accountCategories'
 import accountCategory from './accountCategory'
 import accountCountCategories from './accountCountCategories'
@@ -22,6 +23,7 @@ import accountPayment from './accountPayment'
 import accountPayments from './accountPayments'
 import accountPeer from './accountPeer'
 import accountPeers from './accountPeers'
+import accountStories from './accountStories'
 
 const AccountType = Type('Account', type =>
   type.fields(field => ({
@@ -137,6 +139,15 @@ const AccountType = Type('Account', type =>
         postedOnMax: arg.ofDate().nullable(),
       }))
       .resolve(accountLedgerPieChart),
+
+    stories: field
+      .listOf(StoryType)
+      .args(arg => ({
+        first: arg.ofInt().nullable(),
+        skip: arg.ofInt().nullable(),
+        isPublished: arg.ofBool().nullable(),
+      }))
+      .resolve(accountStories),
   }))
 )
 
