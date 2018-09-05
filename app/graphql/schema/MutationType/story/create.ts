@@ -4,8 +4,8 @@ import { ID, String, Json } from 'gql'
 import createPrivateResolver from 'utils/createPrivateResolver'
 import R from 'ramda'
 
-const resolver = createPrivateResolver(
-  'storyCreate',
+const storyCreate = createPrivateResolver(
+  'Mutation:story:create',
   async ({ assert, args, prisma: { mutation } }) => {
 
     await assert.accountAccess(args.accountId)
@@ -37,4 +37,4 @@ export default (field: any) => field
     coverImage: arg.ofType(Json).nullable(),
     paymentsIds: arg.listOf(ID).nullable(),
   }))
-  .resolve(resolver)
+  .resolve(storyCreate)

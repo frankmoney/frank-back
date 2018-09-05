@@ -5,8 +5,8 @@ import { ID, String, Json } from 'gql'
 import createPrivateResolver from 'utils/createPrivateResolver'
 import R from 'ramda'
 
-const resolver = createPrivateResolver(
-  'storyUdate',
+const storyUpdate = createPrivateResolver(
+  'Mutation:story:update',
   async ({ assert, args, prisma: { query, mutation } }) => {
 
     const accountId = args.accountId
@@ -80,4 +80,4 @@ export default (field: any) => field
     coverImage: arg.ofType(Json).nullable(),
     paymentsIds: arg.listOf(ID).nullable(),
   }))
-  .resolve(resolver)
+  .resolve(storyUpdate)

@@ -3,8 +3,8 @@ import { ID } from 'gql'
 import { throwNotFound } from 'app/errors/NotFoundError'
 import createPrivateResolver from 'utils/createPrivateResolver'
 
-const resolver = createPrivateResolver(
-  'storyDelete',
+const storyDelete = createPrivateResolver(
+  'Mutation:story:delete',
   async ({ assert, args, prisma: { query, mutation } }) => {
 
     const accountId = args.accountId
@@ -46,4 +46,4 @@ export default (field: any) => field
     accountId: arg.ofType(ID),
     storyId: arg.ofType(ID),
   }))
-  .resolve(resolver)
+  .resolve(storyDelete)
