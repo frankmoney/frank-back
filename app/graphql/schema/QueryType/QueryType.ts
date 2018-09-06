@@ -1,6 +1,7 @@
-import { ID, String, Type } from 'gql'
+import { ID, String, Type, Json } from 'gql'
 import AccountType from '../AccountType'
 import MeType from '../MeType'
+import OnboardingType from '../OnboardingType'
 import StoryType from '../StoryType'
 import TeamType from '../TeamType'
 import account from './account'
@@ -9,6 +10,8 @@ import me from './me'
 import story from './story'
 import stories from './stories'
 import team from './team'
+import onboardingInstitutions from './onboardingInstitutions'
+import onboarding from './onboarding'
 
 const QueryType = Type('Query', type =>
   type.fields(field => ({
@@ -48,7 +51,18 @@ const QueryType = Type('Query', type =>
         isPublished: arg.ofBool().nullable(),
       }))
       .resolve(stories),
-  }))
+
+    onboardingInstitutions: field
+      .listOf(Json)
+      .args(arg => ({
+        name: arg.ofString().nullable(),
+      }))
+      .resolve(onboardingInstitutions),
+
+    onboarding: field
+      .ofType(OnboardingType).nullable()
+      .resolve(onboarding),
+  })),
 )
 
 export default QueryType

@@ -2051,6 +2051,16 @@ enum TeamMemberOrderByInput {
   createdAt_DESC
 }
 
+type Onboarding implements Node {
+  id: ID!
+  user(where: UserWhereInput): User!
+  step: String!
+  institution: Json!
+  credentials: Json!
+  accounts: Json
+  account: Json
+}
+
 type Team implements Node {
   id: ID!
   name: String!
