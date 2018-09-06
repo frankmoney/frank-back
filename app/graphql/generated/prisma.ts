@@ -1529,7 +1529,7 @@ type Onboarding implements Node {
   step: String!
   institution: Json!
   credentials: Json!
-  choose_account: Json
+  accounts: Json
   account: Json
 }
 
@@ -1547,7 +1547,7 @@ input OnboardingCreateInput {
   step: String!
   institution: Json!
   credentials: Json!
-  choose_account: Json
+  accounts: Json
   account: Json
   user: UserCreateOneInput!
 }
@@ -1570,8 +1570,8 @@ enum OnboardingOrderByInput {
   institution_DESC
   credentials_ASC
   credentials_DESC
-  choose_account_ASC
-  choose_account_DESC
+  accounts_ASC
+  accounts_DESC
   account_ASC
   account_DESC
   updatedAt_ASC
@@ -1585,7 +1585,7 @@ type OnboardingPreviousValues {
   step: String!
   institution: Json!
   credentials: Json!
-  choose_account: Json
+  accounts: Json
   account: Json
 }
 
@@ -1632,7 +1632,7 @@ input OnboardingUpdateInput {
   step: String
   institution: Json
   credentials: Json
-  choose_account: Json
+  accounts: Json
   account: Json
   user: UserUpdateOneInput
 }
@@ -5029,8 +5029,8 @@ export type OnboardingOrderByInput =   'id_ASC' |
   'institution_DESC' |
   'credentials_ASC' |
   'credentials_DESC' |
-  'choose_account_ASC' |
-  'choose_account_DESC' |
+  'accounts_ASC' |
+  'accounts_DESC' |
   'account_ASC' |
   'account_DESC' |
   'updatedAt_ASC' |
@@ -5641,7 +5641,7 @@ export interface OnboardingUpdateInput {
   step?: String
   institution?: Json
   credentials?: Json
-  choose_account?: Json
+  accounts?: Json
   account?: Json
   user?: UserUpdateOneInput
 }
@@ -5957,7 +5957,7 @@ export interface OnboardingCreateInput {
   step: String
   institution: Json
   credentials: Json
-  choose_account?: Json
+  accounts?: Json
   account?: Json
   user: UserCreateOneInput
 }
@@ -7448,7 +7448,7 @@ export interface Onboarding extends Node {
   step: String
   institution: Json
   credentials: Json
-  choose_account?: Json
+  accounts?: Json
   account?: Json
 }
 
@@ -7821,7 +7821,7 @@ export interface OnboardingPreviousValues {
   step: String
   institution: Json
   credentials: Json
-  choose_account?: Json
+  accounts?: Json
   account?: Json
 }
 
