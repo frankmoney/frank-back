@@ -2057,7 +2057,7 @@ type Onboarding implements Node {
   step: String!
   institution: Json!
   credentials: Json!
-  choose_account: Json
+  accounts: Json
   account: Json
 }
 
