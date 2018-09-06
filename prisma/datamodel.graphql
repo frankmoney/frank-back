@@ -121,3 +121,13 @@ type Story {
   createdAt: DateTime!
   updatedAt: DateTime!
 }
+
+type Onboarding {
+  id: ID! @unique
+  user: User!
+  step: String!
+  institution: Json!
+  credentials: Json!
+  choose_account: Json
+  account: Json
+}

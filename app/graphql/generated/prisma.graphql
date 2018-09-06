@@ -1,5 +1,5 @@
 # source: http://prisma.frank-dev1.frank.ly
-# timestamp: Tue Sep 04 2018 17:17:54 GMT+0300 (Moscow Standard Time)
+# timestamp: Thu Sep 06 2018 16:33:09 GMT+0300 (Moscow Standard Time)
 
 type Account implements Node {
   id: ID!
@@ -648,6 +648,10 @@ type AggregateComment {
   count: Int!
 }
 
+type AggregateOnboarding {
+  count: Int!
+}
+
 type AggregatePayment {
   count: Int!
 }
@@ -1273,6 +1277,7 @@ type Mutation {
   createComment(data: CommentCreateInput!): Comment!
   createPeerCategory(data: PeerCategoryCreateInput!): PeerCategory!
   createStory(data: StoryCreateInput!): Story!
+  createOnboarding(data: OnboardingCreateInput!): Onboarding!
   createUser(data: UserCreateInput!): User!
   createCategory(data: CategoryCreateInput!): Category!
   updateTeam(data: TeamUpdateInput!, where: TeamWhereUniqueInput!): Team
@@ -1284,6 +1289,7 @@ type Mutation {
   updateComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
   updatePeerCategory(data: PeerCategoryUpdateInput!, where: PeerCategoryWhereUniqueInput!): PeerCategory
   updateStory(data: StoryUpdateInput!, where: StoryWhereUniqueInput!): Story
+  updateOnboarding(data: OnboardingUpdateInput!, where: OnboardingWhereUniqueInput!): Onboarding
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateCategory(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category
   deleteTeam(where: TeamWhereUniqueInput!): Team
@@ -1295,6 +1301,7 @@ type Mutation {
   deleteComment(where: CommentWhereUniqueInput!): Comment
   deletePeerCategory(where: PeerCategoryWhereUniqueInput!): PeerCategory
   deleteStory(where: StoryWhereUniqueInput!): Story
+  deleteOnboarding(where: OnboardingWhereUniqueInput!): Onboarding
   deleteUser(where: UserWhereUniqueInput!): User
   deleteCategory(where: CategoryWhereUniqueInput!): Category
   upsertTeam(where: TeamWhereUniqueInput!, create: TeamCreateInput!, update: TeamUpdateInput!): Team!
@@ -1306,6 +1313,7 @@ type Mutation {
   upsertComment(where: CommentWhereUniqueInput!, create: CommentCreateInput!, update: CommentUpdateInput!): Comment!
   upsertPeerCategory(where: PeerCategoryWhereUniqueInput!, create: PeerCategoryCreateInput!, update: PeerCategoryUpdateInput!): PeerCategory!
   upsertStory(where: StoryWhereUniqueInput!, create: StoryCreateInput!, update: StoryUpdateInput!): Story!
+  upsertOnboarding(where: OnboardingWhereUniqueInput!, create: OnboardingCreateInput!, update: OnboardingUpdateInput!): Onboarding!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertCategory(where: CategoryWhereUniqueInput!, create: CategoryCreateInput!, update: CategoryUpdateInput!): Category!
   updateManyTeams(data: TeamUpdateInput!, where: TeamWhereInput): BatchPayload!
@@ -1317,6 +1325,7 @@ type Mutation {
   updateManyComments(data: CommentUpdateInput!, where: CommentWhereInput): BatchPayload!
   updateManyPeerCategories(data: PeerCategoryUpdateInput!, where: PeerCategoryWhereInput): BatchPayload!
   updateManyStories(data: StoryUpdateInput!, where: StoryWhereInput): BatchPayload!
+  updateManyOnboardings(data: OnboardingUpdateInput!, where: OnboardingWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
   updateManyCategories(data: CategoryUpdateInput!, where: CategoryWhereInput): BatchPayload!
   deleteManyTeams(where: TeamWhereInput): BatchPayload!
@@ -1328,6 +1337,7 @@ type Mutation {
   deleteManyComments(where: CommentWhereInput): BatchPayload!
   deleteManyPeerCategories(where: PeerCategoryWhereInput): BatchPayload!
   deleteManyStories(where: StoryWhereInput): BatchPayload!
+  deleteManyOnboardings(where: OnboardingWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyCategories(where: CategoryWhereInput): BatchPayload!
 }
@@ -1342,6 +1352,216 @@ enum MutationType {
 interface Node {
   """The id of the object."""
   id: ID!
+}
+
+type Onboarding implements Node {
+  id: ID!
+  user(where: UserWhereInput): User!
+  step: String!
+  institution: Json!
+  credentials: Json!
+  choose_account: Json
+  account: Json
+}
+
+"""A connection to a list of items."""
+type OnboardingConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [OnboardingEdge]!
+  aggregate: AggregateOnboarding!
+}
+
+input OnboardingCreateInput {
+  step: String!
+  institution: Json!
+  credentials: Json!
+  choose_account: Json
+  account: Json
+  user: UserCreateOneInput!
+}
+
+"""An edge in a connection."""
+type OnboardingEdge {
+  """The item at the end of the edge."""
+  node: Onboarding!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum OnboardingOrderByInput {
+  id_ASC
+  id_DESC
+  step_ASC
+  step_DESC
+  institution_ASC
+  institution_DESC
+  credentials_ASC
+  credentials_DESC
+  choose_account_ASC
+  choose_account_DESC
+  account_ASC
+  account_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type OnboardingPreviousValues {
+  id: ID!
+  step: String!
+  institution: Json!
+  credentials: Json!
+  choose_account: Json
+  account: Json
+}
+
+type OnboardingSubscriptionPayload {
+  mutation: MutationType!
+  node: Onboarding
+  updatedFields: [String!]
+  previousValues: OnboardingPreviousValues
+}
+
+input OnboardingSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [OnboardingSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [OnboardingSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [OnboardingSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: OnboardingWhereInput
+}
+
+input OnboardingUpdateInput {
+  step: String
+  institution: Json
+  credentials: Json
+  choose_account: Json
+  account: Json
+  user: UserUpdateOneInput
+}
+
+input OnboardingWhereInput {
+  """Logical AND on all given filters."""
+  AND: [OnboardingWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [OnboardingWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [OnboardingWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  step: String
+
+  """All values that are not equal to given value."""
+  step_not: String
+
+  """All values that are contained in given list."""
+  step_in: [String!]
+
+  """All values that are not contained in given list."""
+  step_not_in: [String!]
+
+  """All values less than the given value."""
+  step_lt: String
+
+  """All values less than or equal the given value."""
+  step_lte: String
+
+  """All values greater than the given value."""
+  step_gt: String
+
+  """All values greater than or equal the given value."""
+  step_gte: String
+
+  """All values containing the given string."""
+  step_contains: String
+
+  """All values not containing the given string."""
+  step_not_contains: String
+
+  """All values starting with the given string."""
+  step_starts_with: String
+
+  """All values not starting with the given string."""
+  step_not_starts_with: String
+
+  """All values ending with the given string."""
+  step_ends_with: String
+
+  """All values not ending with the given string."""
+  step_not_ends_with: String
+  user: UserWhereInput
+}
+
+input OnboardingWhereUniqueInput {
+  id: ID
 }
 
 """Information about pagination in a connection."""
@@ -2844,6 +3064,7 @@ type Query {
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment]!
   peerCategories(where: PeerCategoryWhereInput, orderBy: PeerCategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PeerCategory]!
   stories(where: StoryWhereInput, orderBy: StoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Story]!
+  onboardings(where: OnboardingWhereInput, orderBy: OnboardingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Onboarding]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   categories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category]!
   team(where: TeamWhereUniqueInput!): Team
@@ -2855,6 +3076,7 @@ type Query {
   comment(where: CommentWhereUniqueInput!): Comment
   peerCategory(where: PeerCategoryWhereUniqueInput!): PeerCategory
   story(where: StoryWhereUniqueInput!): Story
+  onboarding(where: OnboardingWhereUniqueInput!): Onboarding
   user(where: UserWhereUniqueInput!): User
   category(where: CategoryWhereUniqueInput!): Category
   teamsConnection(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamConnection!
@@ -2866,6 +3088,7 @@ type Query {
   commentsConnection(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection!
   peerCategoriesConnection(where: PeerCategoryWhereInput, orderBy: PeerCategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PeerCategoryConnection!
   storiesConnection(where: StoryWhereInput, orderBy: StoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StoryConnection!
+  onboardingsConnection(where: OnboardingWhereInput, orderBy: OnboardingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OnboardingConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   categoriesConnection(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CategoryConnection!
 
@@ -3224,6 +3447,7 @@ type Subscription {
   comment(where: CommentSubscriptionWhereInput): CommentSubscriptionPayload
   peerCategory(where: PeerCategorySubscriptionWhereInput): PeerCategorySubscriptionPayload
   story(where: StorySubscriptionWhereInput): StorySubscriptionPayload
+  onboarding(where: OnboardingSubscriptionWhereInput): OnboardingSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   category(where: CategorySubscriptionWhereInput): CategorySubscriptionPayload
 }
