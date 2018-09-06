@@ -44,10 +44,10 @@ const selectInstitution = createPrivateResolver(
     const onboarding = (await mutation.createOnboarding({
       data: {
         step: CREDENTIALS_STEP,
-        institution,
+        institution: humps.camelizeKeys(institution),
         credentials: {
           status: AWAITING_INPUT_STATUS,
-          fields: credentials,
+          fields: humps.camelizeKeys(credentials),
         },
         user: {
           connect: { id: user.id },
