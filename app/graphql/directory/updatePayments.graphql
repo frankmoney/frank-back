@@ -2,7 +2,8 @@
 
 extend type Mutation {
   updatePayments(
-    accountId: ID!, updates: [UpdatePaymentsUpdateInput!]!
+    accountId: ID!,
+    updates: [UpdatePaymentsUpdateInput!]!
   ): [Payment!]!
 }
 

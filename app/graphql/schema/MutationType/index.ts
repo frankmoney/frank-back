@@ -4,6 +4,8 @@ import storyUpdate from './story/update'
 import storyDelete from './story/delete'
 import onboardingInstitutions from './onboarding/institutions'
 import onboardingInstitutionCredentials from './onboarding/institutionCredentials'
+import paymentUpdate from './payment/update'
+import peerUpdate from './peer/update'
 
 const MutationType = Type('Mutation', type =>
   type.fields(field => ({
@@ -12,6 +14,8 @@ const MutationType = Type('Mutation', type =>
     storyDelete: storyDelete(field),
     onboardingInstitutions: onboardingInstitutions(field),
     onboardingInstitutionCredentials: onboardingInstitutionCredentials(field),
+    paymentUpdate: paymentUpdate(field),
+    peerUpdate: peerUpdate(field),
   })),
 )
 
