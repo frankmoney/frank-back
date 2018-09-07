@@ -1,5 +1,5 @@
-import { Mutation, Onboarding, Prisma } from 'app/graphql/generated/prisma'
-import { CHECKING_STATUS, MX_TEMP_USER } from 'app/graphql/schema/OnboardingType/index'
+import { Onboarding, Prisma } from 'app/graphql/generated/prisma'
+import { MX_TEMP_USER } from 'app/graphql/schema/OnboardingType/index'
 import {
   ACCOUNTS_STEP,
   AWAITING_INPUT_STATUS,

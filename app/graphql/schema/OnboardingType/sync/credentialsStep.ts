@@ -6,6 +6,7 @@ import {
   SUCCESS_STATUS,
 } from 'app/graphql/schema/OnboardingType/index'
 import R from 'ramda'
+import debug from 'debug'
 
 export default async (onboarding: Onboarding, member: any, prisma: Prisma): Promise<Onboarding> => {
 
