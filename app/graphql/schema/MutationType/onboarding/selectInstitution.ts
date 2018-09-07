@@ -1,22 +1,20 @@
 import { ID, String, Bool } from 'gql'
 import createPrivateResolver from 'utils/createPrivateResolver'
-import Atrium from 'mx-atrium'
 import humps from 'humps'
 import OnboardingType, {
   CREDENTIALS_STEP,
   AWAITING_INPUT_STATUS,
   findExistedOnboarding,
+  AtriumClient,
 } from 'app/graphql/schema/OnboardingType'
 import { throwArgumentError } from 'app/errors/ArgumentError'
-
-const AtriumClient = new Atrium.Client(process.env.MX_API_KEY, process.env.MX_CLIENT_ID, Atrium.environments.development)
 
 const selectInstitution = createPrivateResolver(
   'Mutation:onboarding:selectInstitution',
   async ({
            user,
            args: { institutionCode },
-           prisma: { query, mutation },
+           prisma,
          }) => {
 
     const credentials = (await AtriumClient.listCredentials({
@@ -27,13 +25,13 @@ const selectInstitution = createPrivateResolver(
 
     const institution = (await AtriumClient.readInstitution({ params: { institutionCode } }))['institution']
 
-    const existedOnboarding = await findExistedOnboarding(user.id, query)
+    const existedOnboarding = await findExistedOnboarding(user.id, prisma)
 
     if (existedOnboarding) {
       throwArgumentError()
     }
 
-    const onboarding = (await mutation.createOnboarding({
+    const onboarding = (await prisma.mutation.createOnboarding({
       data: {
         step: CREDENTIALS_STEP,
         institution: humps.camelizeKeys(institution),

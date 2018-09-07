@@ -1,13 +1,18 @@
 import { OnboardingWhereInput } from 'app/graphql/generated/prisma'
 import createPrivateResolver from 'utils/createPrivateResolver'
-import { findExistedOnboarding } from 'app/graphql/schema/OnboardingType'
+import { findExistedOnboarding, syncOnboardingState } from 'app/graphql/schema/OnboardingType'
 
 export default createPrivateResolver(
   'onboarding',
-  async ({ user, prisma: { query } }) => {
+  async ({ user, prisma }) => {
 
-    const existedOnboarding = await findExistedOnboarding(user.id, query)
+    const existedOnboarding = await findExistedOnboarding(user.id, prisma)
 
-    return existedOnboarding
+    if (existedOnboarding) {
+
+      return await syncOnboardingState(existedOnboarding, prisma)
+    } else {
+      return null
+    }
   },
 )

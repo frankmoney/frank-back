@@ -2,6 +2,7 @@ import { throwArgumentError } from 'app/errors/ArgumentError'
 import { Mutation, Onboarding } from 'app/graphql/generated/prisma'
 import OnboradingType, {
   findExistedOnboarding,
+  syncOnboardingState,
   MX_TEMP_USER,
   CREDENTIALS_STEP,
   ACCOUNTS_STEP,
@@ -17,99 +18,75 @@ import R from 'ramda'
 
 const AtriumClient = new Atrium.Client(process.env.MX_API_KEY, process.env.MX_CLIENT_ID, Atrium.environments.development)
 
-const updateStateByMember = (member: any, onboarding: Onboarding, mutation: Mutation) => {
-
-  if (member.connection_status == CONNECTED_MXSTATUS
-    && onboarding.credentials.status != SUCCESS_STATUS) {
-
-    AtriumClient.listAccounts({
-      params: {
-        userGuid: member.user_guid,
-        records_per_page: 1000, //max value
-      },
-    }).then(({ accounts }: any) => {
-
-      accounts = R.filter((account: any) => account.member_guid == member.guid, accounts)
-
-      const accountStatus = R.isNil(onboarding.accounts) ? AWAITING_INPUT_STATUS : onboarding.accounts.status
-      const step = onboarding.step == CREDENTIALS_STEP ? ACCOUNTS_STEP : onboarding.step
-
-      mutation.updateOnboarding({
-        where: { id: onboarding.id },
-        data: {
-          step,
-          credentials: {
-            ...onboarding.credentials,
-            status: SUCCESS_STATUS,
-          },
-          accounts: {
-            status: accountStatus,
-            items: accounts,
-          },
-        },
-      })
-
-    })
-  }
-}
-
 const enterCredentials = createPrivateResolver(
   'Mutation:onboarding:enterCredentials',
   async ({
            user,
            args: { credentials },
-           prisma: { query, mutation },
+           prisma,
          }) => {
 
-    let existedOnboarding = await findExistedOnboarding(user.id, query)
+    const existedOnboarding = await findExistedOnboarding(user.id, prisma)
 
     if (!existedOnboarding) {
       throwArgumentError()
     }
 
-    existedOnboarding = await mutation.updateOnboarding({
-      where: { id: existedOnboarding.id },
+    let updatedOnboarding = <Onboarding>existedOnboarding
+
+    updatedOnboarding = await prisma.mutation.updateOnboarding<Onboarding>({
+      where: { id: updatedOnboarding.id },
       data: {
+        step: CREDENTIALS_STEP,
         credentials: {
-          ...existedOnboarding.credentials,
+          ...updatedOnboarding.credentials,
           status: CHECKING_STATUS,
         },
       },
-    })
+    });
 
-    const institutionCode = existedOnboarding.institution.code
+    // do async stuff, find and sync member or create new member
+    (function() {
 
-    AtriumClient.listMembers({
-      params: {
-        userGuid: MX_TEMP_USER,
-        records_per_page: 1000, //max value
-      },
-    }).then(({ members }: any) => {
+      const institutionCode = updatedOnboarding.institution.code
 
-      const existMember = R.find(R.propEq('institution_code', institutionCode))(members)
+      AtriumClient.listMembers({
+        params: {
+          userGuid: MX_TEMP_USER,
+          records_per_page: 1000, //max value
+        },
+      }).then(({ members }: any) => {
 
-      if (existMember) {
+        const existMember = R.find(R.propEq('institution_code', institutionCode))(members)
 
-        updateStateByMember(existMember, existedOnboarding, mutation)
+        if (existMember) {
 
-      } else {
+          syncOnboardingState(updatedOnboarding, prisma)
 
-        AtriumClient.createMember({
-          params: { userGuid: MX_TEMP_USER },
-          body: {
-            'member': {
-              'institution_code': existedOnboarding.institution.code,
-              credentials,
+        } else {
+
+          AtriumClient.createMember({
+            params: { userGuid: MX_TEMP_USER },
+            body: {
+              'member': {
+                'institution_code': institutionCode,
+                credentials,
+              },
             },
-          },
-        }).then(({ member }: any) => {
+          }).then(({ member }: any) => {
 
-          updateStateByMember(member, existedOnboarding, mutation)
-        })
-      }
-    })
+            prisma.mutation.updateOnboarding({
+              where: { id: updatedOnboarding.id },
+              data: {
+                memberGUID: member.guid,
+              },
+            })
+          })
+        }
+      })
+    })()
 
-    return existedOnboarding
+    return updatedOnboarding
   },
 )
 
