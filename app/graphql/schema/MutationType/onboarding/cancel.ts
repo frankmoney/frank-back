@@ -1,28 +1,31 @@
 import { Bool } from 'gql'
 import createPrivateResolver from 'utils/createPrivateResolver'
-import Atrium from 'mx-atrium'
-
-const AtriumClient = new Atrium.Client(process.env.MX_API_KEY, process.env.MX_CLIENT_ID, Atrium.environments.development)
-// const MX_TEMP_USER = 'USR-5a980496-bcec-5a05-436e-fb81ab7c8677'
-
-const COMPLETED_STEP = 'completed'
+import { AtriumClient, findExistedOnboarding, MX_TEMP_USER } from 'app/graphql/schema/OnboardingType'
 
 const onboardingCancel = createPrivateResolver(
   'Mutation:onboarding:cancel',
   async ({
            user,
            args: { institutionCode },
-           prisma: { mutation },
+           prisma,
          }) => {
 
-    await mutation.deleteManyOnboardings({
-      where: {
-        AND: [
-          { step_not: COMPLETED_STEP },
-          { user: { id: user.id } },
-        ],
-      },
-    })
+    const existedOnboarding = await findExistedOnboarding(user.id, prisma)
+
+    if (existedOnboarding) {
+
+      if (existedOnboarding.memberGUID) {
+
+        await AtriumClient.deleteMember({
+          params: {
+            userGuid: MX_TEMP_USER,
+            memberGuid: existedOnboarding.memberGUID,
+          },
+        })
+      }
+
+      await prisma.mutation.deleteOnboarding({ where: { id: existedOnboarding.id } })
+    }
 
     return true
   },

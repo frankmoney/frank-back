@@ -1,21 +1,18 @@
 import { OnboardingWhereInput } from 'app/graphql/generated/prisma'
 import createPrivateResolver from 'utils/createPrivateResolver'
-
-const COMPLETED_STEP = 'completed'
+import { findExistedOnboarding, syncOnboardingState } from 'app/graphql/schema/OnboardingType'
 
 export default createPrivateResolver(
   'onboarding',
-  async ({ user, prisma: { query } }) => {
+  async ({ user, prisma }) => {
 
-    const existedOnboarding = (await query.onboardings({
-      where: {
-        AND: [
-          { step_not: COMPLETED_STEP },
-          { user: { id: user.id } },
-        ],
-      },
-    }))[0]
+    const existedOnboarding = await findExistedOnboarding(user.id, prisma)
 
-    return existedOnboarding
+    if (existedOnboarding) {
+
+      return await syncOnboardingState(existedOnboarding, prisma)
+    } else {
+      return null
+    }
   },
 )
