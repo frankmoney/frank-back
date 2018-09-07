@@ -130,4 +130,5 @@ type Onboarding {
   credentials: Json!
   accounts: Json
   account: Json
+  memberGUID: String
 }
