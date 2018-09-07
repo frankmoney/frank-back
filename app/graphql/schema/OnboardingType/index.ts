@@ -1,8 +1,13 @@
 import { Type } from 'gql'
 
 export const CREDENTIALS_STEP = 'credentials'
+export const ACCOUNTS_STEP = 'accounts'
 export const COMPLETED_STEP = 'completed'
 export const AWAITING_INPUT_STATUS = 'awaiting_input'
+export const CHECKING_STATUS = 'checking'
+export const SUCCESS_STATUS = 'success'
+
+export const CONNECTED_MXSTATUS = 'CONNECTED'
 
 export const MX_TEMP_USER = 'USR-5a980496-bcec-5a05-436e-fb81ab7c8677'
 
@@ -11,8 +16,8 @@ export default Type('Onboarding', type =>
     step: field.ofString(),
     institution: field.ofJson(),
     credentials: field.ofJson(),
-    accounts: field.ofJson(),
-    account: field.ofJson(),
+    accounts: field.ofJson().nullable(),
+    account: field.ofJson().nullable(),
   })),
 )
 
