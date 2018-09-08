@@ -1,11 +1,12 @@
+import R from 'ramda'
+import { ID, String, Json } from 'gql'
+import createMutations from 'utils/createMutations'
+import createPrivateResolver from 'utils/createPrivateResolver'
 import { StoryCreateInput } from 'app/graphql/generated/prisma'
 import StoryType from 'app/graphql/schema/StoryType'
-import { ID, String, Json } from 'gql'
-import createPrivateResolver from 'utils/createPrivateResolver'
-import R from 'ramda'
 
 const storyCreate = createPrivateResolver(
-  'Mutation:story:create',
+  'Mutation:storyCreate',
   async ({ assert, args, prisma: { mutation } }) => {
     await assert.accountAccess(args.accountId)
 
@@ -26,8 +27,8 @@ const storyCreate = createPrivateResolver(
   }
 )
 
-export default (field: any) =>
-  field
+export default createMutations(field => ({
+  storyCreate: field
     .ofType(StoryType)
     .args((arg: any) => ({
       accountId: arg.ofType(ID),
@@ -36,4 +37,5 @@ export default (field: any) =>
       coverImage: arg.ofType(Json).nullable(),
       paymentsIds: arg.listOf(ID).nullable(),
     }))
-    .resolve(storyCreate)
+    .resolve(storyCreate),
+}))

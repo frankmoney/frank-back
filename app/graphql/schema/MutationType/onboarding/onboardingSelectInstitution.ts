@@ -1,9 +1,9 @@
-import { ID, String, Bool } from 'gql'
-import createPrivateResolver from 'utils/createPrivateResolver'
-import Atrium from 'mx-atrium'
 import humps from 'humps'
-import OnboardingType from 'app/graphql/schema/OnboardingType'
+import Atrium from 'mx-atrium'
+import createMutations from 'utils/createMutations'
+import createPrivateResolver from 'utils/createPrivateResolver'
 import { throwArgumentError } from 'app/errors/ArgumentError'
+import OnboardingType from 'app/graphql/schema/OnboardingType'
 
 const AtriumClient = new Atrium.Client(
   process.env.MX_API_KEY,
@@ -16,8 +16,8 @@ const CREDENTIALS_STEP = 'credentials'
 const COMPLETED_STEP = 'completed'
 const AWAITING_INPUT_STATUS = 'awaiting_input'
 
-const selectInstitution = createPrivateResolver(
-  'Mutation:onboarding:selectInstitution',
+const onboardingSelectInstitution = createPrivateResolver(
+  'Mutation:onboardingSelectInstitution',
   async ({ user, args: { institutionCode }, prisma: { query, mutation } }) => {
     const { credentials } = await AtriumClient.listCredentials({
       params: {
@@ -57,10 +57,11 @@ const selectInstitution = createPrivateResolver(
   }
 )
 
-export default (field: any) =>
-  field
+export default createMutations(field => ({
+  onboardingSelectInstitution: field
     .ofType(OnboardingType)
-    .args((arg: any) => ({
-      institutionCode: arg.ofType(String),
+    .args(arg => ({
+      institutionCode: arg.ofString(),
     }))
-    .resolve(selectInstitution)
+    .resolve(onboardingSelectInstitution),
+}))

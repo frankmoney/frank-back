@@ -1,10 +1,11 @@
-import StoryType from 'app/graphql/schema/StoryType'
 import { ID } from 'gql'
-import { throwNotFound } from 'app/errors/NotFoundError'
+import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'utils/createPrivateResolver'
+import { throwNotFound } from 'app/errors/NotFoundError'
+import StoryType from 'app/graphql/schema/StoryType'
 
 const storyDelete = createPrivateResolver(
-  'Mutation:story:delete',
+  'Mutation:storyDelete',
   async ({ assert, args, prisma: { query, mutation } }) => {
     const accountId = args.accountId
     const storyId = args.storyId
@@ -39,11 +40,12 @@ const storyDelete = createPrivateResolver(
   }
 )
 
-export default (field: any) =>
-  field
+export default createMutations(field => ({
+  storyDelete: field
     .ofType(StoryType)
     .args((arg: any) => ({
       accountId: arg.ofType(ID),
       storyId: arg.ofType(ID),
     }))
-    .resolve(storyDelete)
+    .resolve(storyDelete),
+}))

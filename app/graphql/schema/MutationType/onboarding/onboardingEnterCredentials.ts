@@ -1,6 +1,7 @@
-import { Bool, Json } from 'gql'
-import createPrivateResolver from 'utils/createPrivateResolver'
 import Atrium from 'mx-atrium'
+import { Json } from 'gql'
+import createMutations from 'utils/createMutations'
+import createPrivateResolver from 'utils/createPrivateResolver'
 
 const AtriumClient = new Atrium.Client(
   process.env.MX_API_KEY,
@@ -9,8 +10,8 @@ const AtriumClient = new Atrium.Client(
 )
 // const MX_TEMP_USER = 'USR-5a980496-bcec-5a05-436e-fb81ab7c8677'
 
-const enterCredentials = createPrivateResolver(
-  'Mutation:onboarding:enterCredentials',
+const onboardingEnterCredentials = createPrivateResolver(
+  'Mutation:onboardingEnterCredentials',
   async ({ user, args: { institutionCode }, prisma: { mutation } }) => {
     await new Promise(resolve => setTimeout(resolve, 1000))
 
@@ -18,10 +19,11 @@ const enterCredentials = createPrivateResolver(
   }
 )
 
-export default (field: any) =>
-  field
-    .ofType(Bool)
-    .args((arg: any) => ({
+export default createMutations(field => ({
+  onboardingEnterCredentials: field
+    .ofBool()
+    .args(arg => ({
       credentials: arg.listOf(Json),
     }))
-    .resolve(enterCredentials)
+    .resolve(onboardingEnterCredentials),
+}))

@@ -1,12 +1,13 @@
+import * as R from 'ramda'
+import { ID, String, Json, Bool } from 'gql'
+import createMutations from 'utils/createMutations'
+import createPrivateResolver from 'utils/createPrivateResolver'
 import { throwNotFound } from 'app/errors/NotFoundError'
 import { StoryUpdateInput } from 'app/graphql/generated/prisma'
 import StoryType from 'app/graphql/schema/StoryType'
-import { ID, String, Json, Bool } from 'gql'
-import createPrivateResolver from 'utils/createPrivateResolver'
-import R, { isNil } from 'ramda'
 
 const storyUpdate = createPrivateResolver(
-  'Mutation:story:update',
+  'Mutation:storyUpdate',
   async ({ assert, args, prisma: { query, mutation } }) => {
     const accountId = args.accountId
     const storyId = args.storyId
@@ -41,7 +42,7 @@ const storyUpdate = createPrivateResolver(
       coverImage: args.coverImage && JSON.parse(args.coverImage),
     }
 
-    if (!isNil(args.isPublished)) {
+    if (!R.isNil(args.isPublished)) {
       data.isPublished = args.isPublished
     }
 
@@ -72,8 +73,8 @@ const storyUpdate = createPrivateResolver(
   }
 )
 
-export default (field: any) =>
-  field
+export default createMutations(field => ({
+  storyUpdate: field
     .ofType(StoryType)
     .args((arg: any) => ({
       accountId: arg.ofType(ID),
@@ -84,4 +85,5 @@ export default (field: any) =>
       coverImage: arg.ofType(Json).nullable(),
       paymentsIds: arg.listOf(ID).nullable(),
     }))
-    .resolve(storyUpdate)
+    .resolve(storyUpdate),
+}))

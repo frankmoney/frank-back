@@ -1,6 +1,6 @@
-import { Bool } from 'gql'
-import createPrivateResolver from 'utils/createPrivateResolver'
 import Atrium from 'mx-atrium'
+import createMutations from 'utils/createMutations'
+import createPrivateResolver from 'utils/createPrivateResolver'
 
 const AtriumClient = new Atrium.Client(
   process.env.MX_API_KEY,
@@ -12,7 +12,7 @@ const AtriumClient = new Atrium.Client(
 const COMPLETED_STEP = 'completed'
 
 const onboardingCancel = createPrivateResolver(
-  'Mutation:onboarding:cancel',
+  'Mutation:onboardingCancel',
   async ({ user, args: { institutionCode }, prisma: { mutation } }) => {
     await mutation.deleteManyOnboardings({
       where: {
@@ -24,4 +24,6 @@ const onboardingCancel = createPrivateResolver(
   }
 )
 
-export default (field: any) => field.ofType(Bool).resolve(onboardingCancel)
+export default createMutations(field => ({
+  onboardingCancel: field.ofBool().resolve(onboardingCancel),
+}))

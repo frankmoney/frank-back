@@ -1,20 +1,14 @@
+import createMutations from 'utils/createMutations'
+import createPrivateResolver from 'utils/createPrivateResolver'
 import {
   PaymentUpdateInput,
   PaymentWhereUniqueInput,
 } from 'app/graphql/generated/prisma'
-import { ID, Json, String, Type, Input } from 'gql'
-import createPrivateResolver from 'utils/createPrivateResolver'
 import PaymentType from 'app/graphql/schema/PaymentType'
-
-const UpdatePaymentsUpdateInput = Input('UpdatePaymentsUpdateInput', type =>
-  type.fields(field => ({
-    paymentId: field.ofType(ID),
-    categoryId: field.ofType(ID).nullable(),
-  }))
-)
+import UpdatePaymentsUpdateInput from 'app/graphql/schema/UpdatePaymentsUpdateInput'
 
 const paymentUpdate = createPrivateResolver(
-  'Mutation:payment:update',
+  'Mutation:paymentUpdate',
   async ({
     assert,
     args: { accountId, updates },
@@ -66,11 +60,12 @@ const paymentUpdate = createPrivateResolver(
   }
 )
 
-export default (field: any) =>
-  field
+export default createMutations(field => ({
+  paymentUpdate: field
     .listOf(PaymentType)
     .args((arg: any) => ({
-      accountId: arg.ofType(ID),
+      accountId: arg.ofID(),
       updates: arg.listOf(UpdatePaymentsUpdateInput),
     }))
-    .resolve(paymentUpdate)
+    .resolve(paymentUpdate),
+}))
