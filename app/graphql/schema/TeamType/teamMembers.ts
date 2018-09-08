@@ -13,6 +13,7 @@ import {
   TeamWhereInput,
 } from 'app/graphql/generated/prisma'
 import createPrivateResolver from 'utils/createPrivateResolver'
+import getTeamMemberAcl from 'utils/getTeamMemberAcl'
 
 const teamMembers = createPrivateResolver(
   'Team:members',
@@ -62,18 +63,7 @@ const teamMembers = createPrivateResolver(
         .map(x => <KeyValuePair<string, Account>>[x.id, x])
     )
 
-    const getAcl = (member: TeamMember) => {
-      const myself = member === self
-      const admin = self.role === 'ADMIN'
-
-      return {
-        remove: admin && !myself,
-        editRole: admin,
-        editAvatar: admin || myself,
-        editProfile: admin || myself,
-        editPassword: myself,
-      }
-    }
+    const getAcl = (member: TeamMember) => getTeamMemberAcl(self, member)
 
     const result = team.members!.map(member => ({
       id: member.user.id,

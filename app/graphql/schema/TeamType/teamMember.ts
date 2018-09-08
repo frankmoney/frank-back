@@ -1,5 +1,6 @@
 import { TeamMember, TeamMemberWhereInput } from 'app/graphql/generated/prisma'
 import createPrivateResolver from 'utils/createPrivateResolver'
+import getTeamMemberAcl from 'utils/getTeamMemberAcl'
 
 const teamMembers = createPrivateResolver(
   'Team:member',
@@ -53,13 +54,7 @@ const teamMembers = createPrivateResolver(
       accountIds: member
         .accounts!.map(({ id }) => id)
         .filter(id => self.accounts!.filter(x => x.id === id).length),
-      acl: {
-        remove: self.role === 'ADMIN' && member !== self,
-        editRole: self.role === 'ADMIN',
-        editAvatar: self.role === 'ADMIN' || member === self,
-        editProfile: self.role === 'ADMIN' || member === self,
-        editPassword: member === self,
-      },
+      acl: getTeamMemberAcl(self, member),
     }
 
     return result
