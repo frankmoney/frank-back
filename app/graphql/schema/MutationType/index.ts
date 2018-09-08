@@ -18,7 +18,7 @@ const MutationType = Type('Mutation', type =>
     onboardingSelectInstitution: onboardingSelectInstitution(field),
     onboardingCancel: onboardingCancel(field),
     onboardingEnterCredentials: onboardingEnterCredentials(field),
-  })),
+  }))
 )
 
 export default MutationType

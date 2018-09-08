@@ -60,9 +60,10 @@ const QueryType = Type('Query', type =>
       .resolve(onboardingInstitutions),
 
     onboarding: field
-      .ofType(OnboardingType).nullable()
+      .ofType(OnboardingType)
+      .nullable()
       .resolve(onboarding),
-  })),
+  }))
 )
 
 export default QueryType

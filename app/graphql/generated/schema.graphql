@@ -2059,6 +2059,7 @@ type Onboarding implements Node {
   credentials: Json!
   accounts: Json
   account: Json
+  memberGUID: String
 }
 
 type Team implements Node {

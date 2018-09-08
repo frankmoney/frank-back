@@ -6,7 +6,6 @@ import createPrivateResolver from 'utils/createPrivateResolver'
 const storyDelete = createPrivateResolver(
   'Mutation:story:delete',
   async ({ assert, args, prisma: { query, mutation } }) => {
-
     const accountId = args.accountId
     const storyId = args.storyId
 
@@ -25,7 +24,7 @@ const storyDelete = createPrivateResolver(
           ],
         },
       },
-      '{ id }',
+      '{ id }'
     ))[0]
 
     if (!story) {
@@ -37,13 +36,14 @@ const storyDelete = createPrivateResolver(
     return await mutation.deleteStory({
       where: { id: storyId },
     })
-  },
+  }
 )
 
-export default (field: any) => field
-  .ofType(StoryType)
-  .args((arg: any) => ({
-    accountId: arg.ofType(ID),
-    storyId: arg.ofType(ID),
-  }))
-  .resolve(storyDelete)
+export default (field: any) =>
+  field
+    .ofType(StoryType)
+    .args((arg: any) => ({
+      accountId: arg.ofType(ID),
+      storyId: arg.ofType(ID),
+    }))
+    .resolve(storyDelete)

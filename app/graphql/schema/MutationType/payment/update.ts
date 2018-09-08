@@ -10,15 +10,16 @@ const UpdatePaymentsUpdateInput = Input('UpdatePaymentsUpdateInput', type =>
   type.fields(field => ({
     paymentId: field.ofType(ID),
     categoryId: field.ofType(ID).nullable(),
-  })))
+  }))
+)
 
 const paymentUpdate = createPrivateResolver(
   'Mutation:payment:update',
   async ({
-           assert,
-           args: { accountId, updates },
-           prisma: { query, mutation },
-         }) => {
+    assert,
+    args: { accountId, updates },
+    prisma: { query, mutation },
+  }) => {
     await assert.accountAccess(accountId)
 
     const paymentIds = updates.map((x: { paymentId: string }) => x.paymentId)
@@ -35,12 +36,12 @@ const paymentUpdate = createPrivateResolver(
         category {
           id
         }
-      }`,
+      }`
     )
 
     for (const { id, category } of payments) {
       const { categoryId } = updates.filter(
-        (x: { paymentId: string }) => x.paymentId === id,
+        (x: { paymentId: string }) => x.paymentId === id
       )[0]
       if (((category && category.id) || null) !== categoryId) {
         const where: PaymentWhereUniqueInput = { id }
@@ -57,18 +58,19 @@ const paymentUpdate = createPrivateResolver(
       }
     }
 
-    const result = await query.payments(
-      { where: { id_in: payments.map(x => x.id) } },
-    )
+    const result = await query.payments({
+      where: { id_in: payments.map(x => x.id) },
+    })
 
     return result
-  },
+  }
 )
 
-export default (field: any) => field
-  .listOf(PaymentType)
-  .args((arg: any) => ({
-    accountId: arg.ofType(ID),
-    updates: arg.listOf(UpdatePaymentsUpdateInput),
-  }))
-  .resolve(paymentUpdate)
+export default (field: any) =>
+  field
+    .listOf(PaymentType)
+    .args((arg: any) => ({
+      accountId: arg.ofType(ID),
+      updates: arg.listOf(UpdatePaymentsUpdateInput),
+    }))
+    .resolve(paymentUpdate)

@@ -9,7 +9,7 @@ const OnboardingType = Type('Onboarding', type =>
     credentials: field.ofJson(),
     accounts: field.ofJson(),
     account: field.ofJson(),
-  })),
+  }))
 )
 
 export default OnboardingType

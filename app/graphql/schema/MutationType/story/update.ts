@@ -8,7 +8,6 @@ import R, { isNil } from 'ramda'
 const storyUpdate = createPrivateResolver(
   'Mutation:story:update',
   async ({ assert, args, prisma: { query, mutation } }) => {
-
     const accountId = args.accountId
     const storyId = args.storyId
 
@@ -27,7 +26,7 @@ const storyUpdate = createPrivateResolver(
           ],
         },
       },
-      '{ id, payments { id } }',
+      '{ id, payments { id } }'
     ))[0]
 
     if (!story) {
@@ -49,15 +48,15 @@ const storyUpdate = createPrivateResolver(
     if (args.paymentsIds) {
       const currentPaymentsIds = R.map(
         (payment: any) => payment.id,
-        story.payments,
+        story.payments
       )
       const toConnectPaymentsIds = R.difference(
         args.paymentsIds,
-        currentPaymentsIds,
+        currentPaymentsIds
       )
       const toDisconnectPaymentsIds = R.difference(
         currentPaymentsIds,
-        args.paymentsIds,
+        args.paymentsIds
       )
 
       data.payments = {
@@ -70,19 +69,19 @@ const storyUpdate = createPrivateResolver(
       where: { id: storyId },
       data,
     })
-  },
+  }
 )
 
-
-export default (field: any) => field
-  .ofType(StoryType)
-  .args((arg: any) => ({
-    accountId: arg.ofType(ID),
-    storyId: arg.ofType(ID),
-    isPublished: arg.ofType(Bool).nullable(),
-    title: arg.ofType(String).nullable(),
-    body: arg.ofType(Json).nullable(),
-    coverImage: arg.ofType(Json).nullable(),
-    paymentsIds: arg.listOf(ID).nullable(),
-  }))
-  .resolve(storyUpdate)
+export default (field: any) =>
+  field
+    .ofType(StoryType)
+    .args((arg: any) => ({
+      accountId: arg.ofType(ID),
+      storyId: arg.ofType(ID),
+      isPublished: arg.ofType(Bool).nullable(),
+      title: arg.ofType(String).nullable(),
+      body: arg.ofType(Json).nullable(),
+      coverImage: arg.ofType(Json).nullable(),
+      paymentsIds: arg.listOf(ID).nullable(),
+    }))
+    .resolve(storyUpdate)

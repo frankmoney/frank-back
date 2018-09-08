@@ -1,3 +1,4 @@
 declare module 'mx-atrium' {
-  export default: any
+  const def: any
+  export default def
 }

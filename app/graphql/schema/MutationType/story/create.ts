@@ -7,7 +7,6 @@ import R from 'ramda'
 const storyCreate = createPrivateResolver(
   'Mutation:story:create',
   async ({ assert, args, prisma: { mutation } }) => {
-
     await assert.accountAccess(args.accountId)
 
     const data: StoryCreateInput = {
@@ -24,17 +23,17 @@ const storyCreate = createPrivateResolver(
     }
 
     return await mutation.createStory({ data })
-  },
+  }
 )
 
-
-export default (field: any) => field
-  .ofType(StoryType)
-  .args((arg: any) => ({
-    accountId: arg.ofType(ID),
-    title: arg.ofType(String),
-    body: arg.ofType(Json),
-    coverImage: arg.ofType(Json).nullable(),
-    paymentsIds: arg.listOf(ID).nullable(),
-  }))
-  .resolve(storyCreate)
+export default (field: any) =>
+  field
+    .ofType(StoryType)
+    .args((arg: any) => ({
+      accountId: arg.ofType(ID),
+      title: arg.ofType(String),
+      body: arg.ofType(Json),
+      coverImage: arg.ofType(Json).nullable(),
+      paymentsIds: arg.listOf(ID).nullable(),
+    }))
+    .resolve(storyCreate)
