@@ -7,8 +7,6 @@ const tsNodeBin = path.join(
   tsNodePkg.bin['ts-node']
 )
 
-const genSchemaAsync = () => spawnAsync('node', 'scripts', 'gen', 'schema')
-
 const startAsync = args =>
   envCmdAsync(
     'node',
@@ -21,6 +19,5 @@ const startAsync = args =>
   )
 
 module.exports = async (...args) => {
-  await genSchemaAsync()
   await startAsync(args)
 }

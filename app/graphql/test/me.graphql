@@ -1,5 +1,0 @@
-# import User from '../generated/prisma.graphql'
-
-extend type Query {
-  me: User
-}

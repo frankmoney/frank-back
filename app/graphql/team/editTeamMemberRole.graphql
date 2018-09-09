@@ -1,8 +1,0 @@
-extend type Mutation {
-  editTeamMemberRole(
-    id: ID!,
-    admin: Boolean!,
-    canInvite: Boolean!,
-    accountIds: [ID!]!
-  ): TeammateResult!
-}

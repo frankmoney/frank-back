@@ -23,8 +23,6 @@ module.exports = async (...files) => {
     ...files
   )
 
-  await spawnAsync('node', 'scripts', 'gen', 'schema')
-
   await spawnAsync('node', tslintBin, '-p', path.join(__dirname, '..'))
 
   await spawnAsync(

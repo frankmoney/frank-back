@@ -1,5 +1,0 @@
-# import Payment from '../generated/prisma.graphql'
-
-extend type Query {
-  inbox(accountId: ID!, first: Int!, after: ID): [Payment!]!
-}
