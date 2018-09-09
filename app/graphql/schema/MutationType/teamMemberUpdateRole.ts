@@ -12,20 +12,24 @@ import TeamMemberType from 'app/graphql/schema/TeamMemberType'
 
 const getTeamMember = async ({
   user,
-  args,
   query,
+  id,
 }: {
   user: { id: string }
-  args: { id: string }
   query: Query
+  id: string
 }) => {
   const where: TeamMemberWhereInput = {
     OR: [
       {
-        id: user.id,
+        user: {
+          id: user.id,
+        },
       },
       {
-        id: args.id,
+        user: {
+          id,
+        },
       },
     ],
     team: {
@@ -60,7 +64,7 @@ const getTeamMember = async ({
   )
 
   const self = members.filter(x => x.user.id === user.id)[0]
-  const member = members.filter(x => x.user.id === args.id)[0]
+  const member = members.filter(x => x.user.id === id)[0]
 
   if (!self || !member) {
     return undefined
@@ -76,8 +80,8 @@ const getTeamMember = async ({
     admin: member.role === 'ADMIN',
     canInvite: member.canInvite,
     accountIds: member
-      .accounts!.map(({ id }) => id)
-      .filter(id => self.accounts!.filter(x => x.id === id).length),
+      .accounts!.map(x => x.account.id)
+      .filter(x => self.accounts!.filter(y => y.id === x).length),
     acl: getTeamMemberAcl(self, member),
   }
 
@@ -96,7 +100,7 @@ export default createMutations(field => ({
     .resolve(
       createPrivateResolver(
         'Mutation:teamMemberUpdateRole',
-        async ({ user, args, prisma: { query, mutation } }) => {
+        async ({ log, user, args, prisma: { query, mutation } }) => {
           const where: TeamMemberWhereInput = {
             user: {
               OR: [{ id: args.id }, { id: user.id }],
@@ -152,22 +156,22 @@ export default createMutations(field => ({
             data: {
               role: args.admin ? 'ADMIN' : 'MEMBER',
               canInvite: args.canInvite,
-              accounts: args.accountIds.map((id: string) => ({
-                create: {
+              accounts: {
+                create: args.accountIds.map((id: string) => ({
                   account: {
                     connect: {
                       id,
                     },
                   },
-                },
-              })),
+                })),
+              },
             },
           })
 
           const result = await getTeamMember({
             user,
-            args,
             query,
+            id: args.id,
           })
 
           return result

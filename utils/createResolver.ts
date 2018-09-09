@@ -3,12 +3,7 @@ import { GraphQLResolveInfo } from 'graphql'
 import { Context, ContextUser } from 'app/Context'
 import { ContextAssert, createContextAssert } from 'app/assert'
 import { Prisma } from 'app/graphql/generated/prisma'
-
-export type ResolverLogger = {
-  trace(formatter: any, ...args: any[]): void
-  info(formatter: any, ...args: any[]): void
-  error(formatter: any, ...args: any[]): void
-}
+import createLogger, { Logger } from './createLogger'
 
 export type ResolverArg<TArgs = any> = {
   parent: any
@@ -18,7 +13,7 @@ export type ResolverArg<TArgs = any> = {
   user?: ContextUser
   prisma: Prisma
   assert: ContextAssert
-  log: ResolverLogger
+  log: Logger
 }
 
 export type Resolver<TArgs = any> = (arg: ResolverArg<TArgs>) => any
@@ -27,11 +22,7 @@ const createResolver = <TArgs = any>(
   resolver: string | undefined | Resolver<TArgs>,
   resolverImpl?: Resolver<TArgs>
 ) => {
-  const log = {
-    trace: debug(`app:resolver:${resolver || '?'}:trace`),
-    info: debug(`app:resolver:${resolver || '?'}:info`),
-    error: debug(`app:resolver:${resolver || '?'}:error`),
-  }
+  const log = createLogger(`app:resolver:${resolver || '?'}`)
 
   return async (
     parent: any,

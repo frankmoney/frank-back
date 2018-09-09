@@ -52,8 +52,8 @@ const teamMembers = createPrivateResolver(
       admin: member.role === 'ADMIN',
       canInvite: member.canInvite,
       accountIds: member
-        .accounts!.map(({ id }) => id)
-        .filter(id => self.accounts!.filter(x => x.id === id).length),
+        .accounts!.map(x => x.account.id)
+        .filter(id => self.accounts!.filter(x => x.account.id === id).length),
       acl: getTeamMemberAcl(self, member),
     }
 

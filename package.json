@@ -8,8 +8,8 @@
     "deploy": "node scripts deploy",
     "gen": "node scripts gen",
     "migrations": "node scripts migrations",
-    "lint": "node node_modules/tslint/bin/tslint -p . && echo \"eslint: no lint errors\"",
-    "lint-fix": "node node_modules/tslint/bin/tslint -p . --fix && echo \"eslint: no lint errors\"",
+    "lint": "node node_modules/tslint/bin/tslint -p . && echo \"no lint errors\"",
+    "lint-fix": "node node_modules/tslint/bin/tslint -p . --fix && echo \"no lint errors\"",
     "prettier": "node node_modules/prettier/bin-prettier.js -l **/*.js **/*.ts **/*.json",
     "prettier-fix": "node node_modules/prettier/bin-prettier.js --write **/*.js **/*.ts **/*.json",
     "start": "node scripts start"
