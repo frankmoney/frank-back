@@ -15,11 +15,11 @@ const GOOGLE_PROJECT_NAME = 'frank-money'
 const GOOGLE_BUCKET_NAME = 'frank-dev-assets'
 const GOOGLE_STORAGE_DOMAIN = 'https://storage.googleapis.com'
 
-const IMAGE_WITDH = 850 * 2
+const DEFAULT_WITDH = 850
 
 fs.writeFileSync(
   GOOGLE_KEYS_FILE_NAME,
-  Buffer.from(GOOGLE_KEYS_BASE64, 'base64').toString('utf8')
+  Buffer.from(GOOGLE_KEYS_BASE64, 'base64').toString('utf8'),
 )
 
 const GCBUCKET = Storage({
@@ -48,18 +48,44 @@ app.post('/', async (req, res, next) => {
 
     await image.mv(tempPath)
 
-    await new Promise((res, rej) =>
-      gm(tempPath)
-        .resizeExact(IMAGE_WITDH)
-        .write(tempPath, err => (err ? rej(err) : res()))
+    const gmImage = gm(tempPath)
+
+    const origFileName = `orig_${fileName}`
+
+    await GCBUCKET.upload(tempPath, {
+      public: true,
+      destination: origFileName,
+    })
+
+    const { width, height } = await new Promise((res, rej) =>
+      gmImage.size((err, size) => res(size)),
     )
 
-    const [file, apiResponce] = await GCBUCKET.upload(tempPath, {
+    const crop = req.body && req.body.crop
+      ? req.body.crop.split(',').map(parseFloat)
+      : [0, 0, 1, 1]
+
+    const outputWidth = req.body && req.body.width
+      ? parseInt(req.body.width)
+      : DEFAULT_WITDH
+
+    await new Promise((res, rej) =>
+      gmImage
+        .crop(width * crop[2], height * crop[3], width * crop[0], height * crop[1])
+        .resizeExact(outputWidth * 2)
+        .write(tempPath, err => (err ? rej(err) : res())),
+    )
+
+    const sizedFileName = `${outputWidth}_${fileName}`
+
+    await GCBUCKET.upload(tempPath, {
       public: true,
+      destination: sizedFileName,
     })
 
     res.json({
-      default: `${GOOGLE_STORAGE_DOMAIN}/${file.bucket.name}/${file.name}`,
+      original: `${GOOGLE_STORAGE_DOMAIN}/${GOOGLE_BUCKET_NAME}/${origFileName}`,
+      sized: `${GOOGLE_STORAGE_DOMAIN}/${GOOGLE_BUCKET_NAME}/${sizedFileName}`,
     })
   } catch (exc) {
     err(exc)
