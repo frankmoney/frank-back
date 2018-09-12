@@ -1,3 +1,4 @@
+import { Onboarding } from 'app/graphql/generated/prisma'
 import AtriumClient from 'app/onboarding/atriumClient'
 import { MX_TEMP_USER } from 'app/onboarding/constants'
 import findExistedOnboarding from 'app/onboarding/findExistedOnboarding'
@@ -12,21 +13,25 @@ const onboardingCancel = createPrivateResolver(
            prisma,
          }) => {
 
-    const existedOnboarding = await findExistedOnboarding(user.id, prisma)
+    const existingOnboarding = await findExistedOnboarding(user.id, prisma)
 
-    if (existedOnboarding) {
 
-      if (existedOnboarding.memberGuid) {
+    if (existingOnboarding) {
+
+      try {
+
+        const { memberGuid } = await prisma.mutation.deleteOnboarding<Onboarding>({ where: { id: existingOnboarding.id } }, '{ memberGuid }')
 
         await AtriumClient.deleteMember({
           params: {
             userGuid: MX_TEMP_USER,
-            memberGuid: existedOnboarding.memberGuid,
+            memberGuid,
           },
         })
-      }
 
-      await prisma.mutation.deleteOnboarding({ where: { id: existedOnboarding.id } })
+      } catch (exc) {
+        // ignore
+      }
     }
 
     return true

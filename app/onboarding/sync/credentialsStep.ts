@@ -2,7 +2,6 @@ import { Onboarding, Prisma } from 'app/graphql/generated/prisma'
 import AtriumClient from 'app/onboarding/atriumClient'
 import {
   ACCOUNTS_STEP,
-  AWAITING_INPUT_STATUS,
   CONNECTED_MXSTATUS,
   CREDENTIALS_STEP,
   SUCCESS_STATUS,
@@ -26,7 +25,7 @@ export default async (onboarding: Onboarding, member: any, prisma: Prisma): Prom
 
     accounts = R.filter((account: any) => account.member_guid === member.guid, accounts)
 
-    const updatedOnboarding = <Onboarding>await prisma.mutation.updateOnboarding({
+    const updatedOnboarding = await prisma.mutation.updateOnboarding<Onboarding>({
       where: { id: onboarding.id },
       data: {
         step: ACCOUNTS_STEP,
@@ -34,10 +33,7 @@ export default async (onboarding: Onboarding, member: any, prisma: Prisma): Prom
           ...onboarding.credentials,
           status: SUCCESS_STATUS,
         },
-        accounts: {
-          status: AWAITING_INPUT_STATUS,
-          items: accounts,
-        },
+        accounts,
       },
     })
 

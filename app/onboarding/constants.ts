@@ -1,6 +1,7 @@
 // steps
 export const CREDENTIALS_STEP = 'credentials'
 export const ACCOUNTS_STEP = 'accounts'
+export const ACCOUNT_STEP = 'account'
 export const COMPLETED_STEP = 'completed'
 
 // statuses

@@ -6,11 +6,11 @@ export default createPrivateResolver(
   'onboarding',
   async ({ user, prisma }) => {
 
-    const existedOnboarding = await findExistedOnboarding(user.id, prisma)
+    const existingOnboarding = await findExistedOnboarding(user.id, prisma)
 
-    if (existedOnboarding) {
+    if (existingOnboarding) {
 
-      return await syncOnboardingState(existedOnboarding, prisma)
+      return await syncOnboardingState(existingOnboarding, prisma)
     } else {
       return null
     }

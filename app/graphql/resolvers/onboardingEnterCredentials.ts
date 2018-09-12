@@ -1,5 +1,6 @@
 import { throwArgumentError } from 'app/errors/ArgumentError'
 import { Onboarding } from 'app/graphql/generated/prisma'
+import OnboardingType from 'app/graphql/schema/OnboardingType'
 import AtriumClient from 'app/onboarding/atriumClient'
 import { CHECKING_STATUS, CREDENTIALS_STEP, MX_TEMP_USER } from 'app/onboarding/constants'
 import findExistedOnboarding from 'app/onboarding/findExistedOnboarding'
@@ -17,13 +18,13 @@ const onboardingEnterCredentials = createPrivateResolver(
            prisma,
          }) => {
 
-    const existedOnboarding = await findExistedOnboarding(user.id, prisma)
+    const existingOnboarding = await findExistedOnboarding(user.id, prisma)
 
-    if (!existedOnboarding) {
+    if (!existingOnboarding) {
       throwArgumentError()
     }
 
-    let updatedOnboarding = <Onboarding>existedOnboarding
+    let updatedOnboarding = <Onboarding>existingOnboarding
 
     updatedOnboarding = await prisma.mutation.updateOnboarding<Onboarding>({
       where: { id: updatedOnboarding.id },
@@ -83,7 +84,7 @@ const onboardingEnterCredentials = createPrivateResolver(
 
 export default createMutations(field => ({
   onboardingEnterCredentials: field
-    .ofBool()
+    .ofType(OnboardingType)
     .args(arg => ({
       credentials: arg.listOf(Json),
     }))

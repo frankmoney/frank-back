@@ -26,13 +26,13 @@ const onboardingSelectInstitution = createPrivateResolver(
 
     const { institution } = await AtriumClient.readInstitution({ params: { institutionCode } })
 
-    const existedOnboarding = await findExistedOnboarding(user.id, prisma)
+    const existingOnboarding = await findExistedOnboarding(user.id, prisma)
 
-    if (existedOnboarding) {
+    if (existingOnboarding) {
       throwArgumentError()
     }
 
-    const onboarding = (await prisma.mutation.createOnboarding({
+    const onboarding = await prisma.mutation.createOnboarding({
       data: {
         step: CREDENTIALS_STEP,
         institution: humps.camelizeKeys(institution),
@@ -44,7 +44,7 @@ const onboardingSelectInstitution = createPrivateResolver(
           connect: { id: user.id },
         },
       },
-    }))
+    })
 
     return onboarding
   },
