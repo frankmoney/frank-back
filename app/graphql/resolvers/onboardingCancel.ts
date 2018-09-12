@@ -16,12 +16,12 @@ const onboardingCancel = createPrivateResolver(
 
     if (existedOnboarding) {
 
-      if (existedOnboarding.memberGUID) {
+      if (existedOnboarding.memberGuid) {
 
         await AtriumClient.deleteMember({
           params: {
             userGuid: MX_TEMP_USER,
-            memberGuid: existedOnboarding.memberGUID,
+            memberGuid: existedOnboarding.memberGuid,
           },
         })
       }

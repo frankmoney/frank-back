@@ -69,7 +69,7 @@ const onboardingEnterCredentials = createPrivateResolver(
             prisma.mutation.updateOnboarding({
               where: { id: updatedOnboarding.id },
               data: {
-                memberGUID: member.guid,
+                memberGuid: member.guid,
               },
             })
           })

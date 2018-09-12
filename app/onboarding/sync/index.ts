@@ -11,7 +11,7 @@ export default async (onboarding: Onboarding, prisma: Prisma): Promise<Onboardin
   const { member } = await AtriumClient.readMember({
     params: {
       userGuid: MX_TEMP_USER,
-      memberGuid: onboarding.memberGUID,
+      memberGuid: onboarding.memberGuid,
     },
   })
 
