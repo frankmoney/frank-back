@@ -1,9 +1,11 @@
 import fs from 'fs'
+import download from 'download-file'
 import gm from 'gm'
 import Storage from '@google-cloud/storage'
 import express from 'express'
 import fileUpload from 'express-fileupload'
 import debug from 'debug'
+import { basename } from 'path'
 
 const log = debug('app:image-uploader')
 const err = debug('app:image-uploader:error')
@@ -16,10 +18,11 @@ const GOOGLE_BUCKET_NAME = 'frank-dev-assets'
 const GOOGLE_STORAGE_DOMAIN = 'https://storage.googleapis.com'
 
 const DEFAULT_WITDH = 850
+const ORIG_PREFIX = 'orig_'
 
 fs.writeFileSync(
   GOOGLE_KEYS_FILE_NAME,
-  Buffer.from(GOOGLE_KEYS_BASE64, 'base64').toString('utf8')
+  Buffer.from(GOOGLE_KEYS_BASE64, 'base64').toString('utf8'),
 )
 
 const GCBUCKET = Storage({
@@ -34,31 +37,62 @@ app.get('/', (req, res) => res.end('Use POST'))
 app.use(fileUpload())
 
 app.post('/', async (req, res, next) => {
+
   if (!req.files || !req.files.image) {
-    return res.status(400).end('Please send "image".')
+    if (!req.body || !req.body.imageUrl) {
+
+      return res.status(400).end('Please send "image" or "imageUrl".')
+    }
   }
 
-  let tempPath = ''
+  let tempPath,
+    fileName,
+    gmImage,
+    origFileName
 
   try {
-    const image = req.files.image
-    const fileExt = image.name.split('.').pop()
-    const fileName = `${image.md5}.${fileExt}`
-    tempPath = `./tmp/${fileName}`
 
-    await image.mv(tempPath)
+    if (req.body.imageUrl) {
 
-    const gmImage = gm(tempPath)
+      fileName = basename(req.body.imageUrl)
+      fileName = fileName.replace(ORIG_PREFIX, '')
+      tempPath = `./tmp/${fileName}`
 
-    const origFileName = `orig_${fileName}`
+      const options = {
+        directory: './tmp/',
+        filename: fileName,
+      }
 
-    await GCBUCKET.upload(tempPath, {
-      public: true,
-      destination: origFileName,
-    })
+      await new Promise((res, rej) => download(req.body.imageUrl, options, (err) => {
+        if (err) throw err
+        res()
+      }))
+
+      gmImage = gm(tempPath)
+
+      origFileName = `${ORIG_PREFIX}${fileName}`
+
+    } else {
+
+      const image = req.files.image
+      const fileExt = image.name.split('.').pop()
+      fileName = `${image.md5}.${fileExt}`
+      tempPath = `./tmp/${fileName}`
+
+      await image.mv(tempPath)
+
+      gmImage = gm(tempPath)
+
+      origFileName = `${ORIG_PREFIX}${fileName}`
+
+      await GCBUCKET.upload(tempPath, {
+        public: true,
+        destination: origFileName,
+      })
+    }
 
     const { width, height } = await new Promise((res, rej) =>
-      gmImage.size((err, size) => res(size))
+      gmImage.size((err, size) => res(size)),
     )
 
     const crop =
@@ -75,10 +109,10 @@ app.post('/', async (req, res, next) => {
           width * crop[2],
           height * crop[3],
           width * crop[0],
-          height * crop[1]
+          height * crop[1],
         )
         .resizeExact(outputWidth * 2)
-        .write(tempPath, err => (err ? rej(err) : res()))
+        .write(tempPath, err => (err ? rej(err) : res())),
     )
 
     const sizedFileName = `${outputWidth}_${fileName}`
@@ -94,6 +128,7 @@ app.post('/', async (req, res, next) => {
     })
   } catch (exc) {
     err(exc)
+    console.log(exc)
     res.status(500).end('Something wrong.')
   } finally {
     fs.unlink(tempPath, exc => exc && err(exc))
