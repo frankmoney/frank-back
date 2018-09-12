@@ -28,8 +28,8 @@ const onboardingUpdateAccountInfo = createPrivateResolver(
         step: ACCOUNT_STEP,
         account: {
           ...updatedOnboarding.account,
-          frankTitle: title,
-          frankDescription: description,
+          frankTitle: title || updatedOnboarding.account.frankTitle,
+          frankDescription: description || updatedOnboarding.account.frankDescription,
         },
       },
     })
