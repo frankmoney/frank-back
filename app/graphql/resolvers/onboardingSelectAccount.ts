@@ -2,7 +2,7 @@ import { throwArgumentError } from 'app/errors/ArgumentError'
 import { Onboarding } from 'app/graphql/generated/prisma'
 import OnboardingType from 'app/graphql/schema/OnboardingType'
 import { ACCOUNT_STEP } from 'app/onboarding/constants'
-import findExistedOnboarding from 'app/onboarding/findExistedOnboarding'
+import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
 import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'utils/createPrivateResolver'
 import R from 'ramda'
@@ -15,18 +15,16 @@ const onboardingSelectAccount = createPrivateResolver(
            prisma,
          }) => {
 
-    const existingOnboarding = await findExistedOnboarding(user.id, prisma)
+    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
     if (!existingOnboarding) {
-      throwArgumentError()
+      return throwArgumentError()
     }
 
-    let updatedOnboarding = <Onboarding>existingOnboarding
+    const mxAccount = R.find(R.propEq('guid', accountGuid), existingOnboarding.accounts)
 
-    const mxAccount = R.find(R.propEq('guid', accountGuid), updatedOnboarding.accounts)
-
-    updatedOnboarding = await prisma.mutation.updateOnboarding<Onboarding>({
-      where: { id: updatedOnboarding.id },
+    const updatedOnboarding = await prisma.mutation.updateOnboarding<Onboarding>({
+      where: { id: existingOnboarding.id },
       data: {
         step: ACCOUNT_STEP,
         account: {

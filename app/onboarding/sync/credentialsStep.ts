@@ -7,14 +7,11 @@ import {
   SUCCESS_STATUS,
 } from 'app/onboarding/constants'
 import R from 'ramda'
-import debug from 'debug'
 
 export default async (onboarding: Onboarding, member: any, prisma: Prisma): Promise<Onboarding> => {
 
   if (onboarding.step === CREDENTIALS_STEP
     && member.connection_status === CONNECTED_MXSTATUS) {
-
-    debug('step credentials -> accounts')
 
     let { accounts } = await AtriumClient.listAccounts({
       params: {

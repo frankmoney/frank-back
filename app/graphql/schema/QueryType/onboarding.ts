@@ -1,12 +1,12 @@
 import syncOnboardingState from 'app/onboarding/sync'
-import findExistedOnboarding from 'app/onboarding/findExistedOnboarding'
+import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
 import createPrivateResolver from 'utils/createPrivateResolver'
 
 export default createPrivateResolver(
   'onboarding',
   async ({ user, prisma }) => {
 
-    const existingOnboarding = await findExistedOnboarding(user.id, prisma)
+    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
     if (existingOnboarding) {
 

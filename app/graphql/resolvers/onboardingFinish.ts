@@ -2,7 +2,7 @@ import { throwArgumentError } from 'app/errors/ArgumentError'
 import { Onboarding } from 'app/graphql/generated/prisma'
 import AccountType from 'app/graphql/schema/AccountType/AccountType'
 import { COMPLETED_STEP } from 'app/onboarding/constants'
-import findExistedOnboarding from 'app/onboarding/findExistedOnboarding'
+import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
 import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'utils/createPrivateResolver'
 
@@ -15,16 +15,14 @@ const onboardingFinish = createPrivateResolver(
            prisma,
          }) => {
 
-    const existingOnboarding = await findExistedOnboarding(user.id, prisma)
+    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
     if (!existingOnboarding) {
-      throwArgumentError()
+      return throwArgumentError()
     }
 
-    let updatedOnboarding = <Onboarding>existingOnboarding
-
-    updatedOnboarding = await prisma.mutation.updateOnboarding<Onboarding>({
-      where: { id: updatedOnboarding.id },
+    const updatedOnboarding = await prisma.mutation.updateOnboarding<Onboarding>({
+      where: { id: existingOnboarding.id },
       data: {
         step: COMPLETED_STEP,
       },

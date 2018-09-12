@@ -1,7 +1,7 @@
 import { Onboarding } from 'app/graphql/generated/prisma'
 import AtriumClient from 'app/onboarding/atriumClient'
 import { MX_TEMP_USER } from 'app/onboarding/constants'
-import findExistedOnboarding from 'app/onboarding/findExistedOnboarding'
+import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
 import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'utils/createPrivateResolver'
 
@@ -13,7 +13,7 @@ const onboardingCancel = createPrivateResolver(
            prisma,
          }) => {
 
-    const existingOnboarding = await findExistedOnboarding(user.id, prisma)
+    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
 
     if (existingOnboarding) {

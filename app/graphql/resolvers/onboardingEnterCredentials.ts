@@ -3,7 +3,7 @@ import { Onboarding } from 'app/graphql/generated/prisma'
 import OnboardingType from 'app/graphql/schema/OnboardingType'
 import AtriumClient from 'app/onboarding/atriumClient'
 import { CHECKING_STATUS, CREDENTIALS_STEP, MX_TEMP_USER } from 'app/onboarding/constants'
-import findExistedOnboarding from 'app/onboarding/findExistedOnboarding'
+import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
 import syncOnboardingState from 'app/onboarding/sync'
 import { Json } from 'gql'
 import createMutations from 'utils/createMutations'
@@ -18,7 +18,7 @@ const onboardingEnterCredentials = createPrivateResolver(
            prisma,
          }) => {
 
-    const existingOnboarding = await findExistedOnboarding(user.id, prisma)
+    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
     if (!existingOnboarding) {
       throwArgumentError()
@@ -49,9 +49,9 @@ const onboardingEnterCredentials = createPrivateResolver(
         },
       }).then(({ members }: any) => {
 
-        const existMember = R.find(R.propEq('institution_code', institutionCode))(members)
+        const existingMember = R.find(R.propEq('institution_code', institutionCode))(members)
 
-        if (existMember) {
+        if (existingMember) {
 
           syncOnboardingState(updatedOnboarding, prisma)
 
@@ -60,7 +60,7 @@ const onboardingEnterCredentials = createPrivateResolver(
           AtriumClient.createMember({
             params: { userGuid: MX_TEMP_USER },
             body: {
-              'member': {
+              member: {
                 'institution_code': institutionCode,
                 credentials,
               },

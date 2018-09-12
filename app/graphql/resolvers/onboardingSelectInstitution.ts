@@ -1,6 +1,6 @@
 import OnboardingType from 'app/graphql/schema/OnboardingType/OnboardingType'
 import AtriumClient from 'app/onboarding/atriumClient'
-import findExistedOnboarding from 'app/onboarding/findExistedOnboarding'
+import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
 import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'utils/createPrivateResolver'
 import humps from 'humps'
@@ -26,7 +26,7 @@ const onboardingSelectInstitution = createPrivateResolver(
 
     const { institution } = await AtriumClient.readInstitution({ params: { institutionCode } })
 
-    const existingOnboarding = await findExistedOnboarding(user.id, prisma)
+    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
     if (existingOnboarding) {
       throwArgumentError()
