@@ -19,7 +19,7 @@ const DEFAULT_WITDH = 850
 
 fs.writeFileSync(
   GOOGLE_KEYS_FILE_NAME,
-  Buffer.from(GOOGLE_KEYS_BASE64, 'base64').toString('utf8'),
+  Buffer.from(GOOGLE_KEYS_BASE64, 'base64').toString('utf8')
 )
 
 const GCBUCKET = Storage({
@@ -58,22 +58,27 @@ app.post('/', async (req, res, next) => {
     })
 
     const { width, height } = await new Promise((res, rej) =>
-      gmImage.size((err, size) => res(size)),
+      gmImage.size((err, size) => res(size))
     )
 
-    const crop = req.body && req.body.crop
-      ? req.body.crop.split(',').map(parseFloat)
-      : [0, 0, 1, 1]
+    const crop =
+      req.body && req.body.crop
+        ? req.body.crop.split(',').map(parseFloat)
+        : [0, 0, 1, 1]
 
-    const outputWidth = req.body && req.body.width
-      ? parseInt(req.body.width)
-      : DEFAULT_WITDH
+    const outputWidth =
+      req.body && req.body.width ? parseInt(req.body.width) : DEFAULT_WITDH
 
     await new Promise((res, rej) =>
       gmImage
-        .crop(width * crop[2], height * crop[3], width * crop[0], height * crop[1])
+        .crop(
+          width * crop[2],
+          height * crop[3],
+          width * crop[0],
+          height * crop[1]
+        )
         .resizeExact(outputWidth * 2)
-        .write(tempPath, err => (err ? rej(err) : res())),
+        .write(tempPath, err => (err ? rej(err) : res()))
     )
 
     const sizedFileName = `${outputWidth}_${fileName}`
