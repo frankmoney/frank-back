@@ -5,6 +5,7 @@ import onboardingSelectInstitution from 'app/graphql/resolvers/onboardingSelectI
 import onboardingSelectAccount from 'app/graphql/resolvers/onboardingSelectAccount'
 import onboardingUpdateAccountInfo from 'app/graphql/resolvers/onboardingUpdateAccountInfo'
 import onboardingFinish from 'app/graphql/resolvers/onboardingFinish'
+import onboardingUpdateCategories from 'app/graphql/resolvers/onboardingUpdateCategories'
 
 export default createMutations(field => ({
   ...onboardingCancel(field),
@@ -13,4 +14,5 @@ export default createMutations(field => ({
   ...onboardingSelectAccount(field),
   ...onboardingUpdateAccountInfo(field),
   ...onboardingFinish(field),
+  ...onboardingUpdateCategories(field)
 }))

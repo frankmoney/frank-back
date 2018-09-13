@@ -21,21 +21,28 @@ const onboardingFinish = createPrivateResolver(
       return throwArgumentError()
     }
 
-    const updatedOnboarding = await prisma.mutation.updateOnboarding<Onboarding>({
-      where: { id: existingOnboarding.id },
-      data: {
-        step: COMPLETED_STEP,
-      },
-    })
+    const categories = existingOnboarding.categories.map((category: any) => ({
+      ...category,
+      nameNormalized: category.name.toLowerCase(),
+    }))
 
-    const name = updatedOnboarding.account.frankTitle
-      || updatedOnboarding.account.name
+    const name = existingOnboarding.account.frankTitle
+      || existingOnboarding.account.name
 
     const account = await prisma.mutation.createAccount({
       data: {
         name,
-        rawData: updatedOnboarding.account,
+        rawData: existingOnboarding.account,
         team: { connect: { id: FRANK_TEMA_ID } },
+        categories: { create: categories },
+      },
+    })
+
+
+    await prisma.mutation.updateOnboarding<Onboarding>({
+      where: { id: existingOnboarding.id },
+      data: {
+        step: COMPLETED_STEP,
       },
     })
 
