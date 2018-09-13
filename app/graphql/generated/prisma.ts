@@ -1531,6 +1531,7 @@ type Onboarding implements Node {
   credentials: Json!
   accounts: Json
   account: Json
+  categories: Json
   memberGuid: String
 }
 
@@ -1550,6 +1551,7 @@ input OnboardingCreateInput {
   credentials: Json!
   accounts: Json
   account: Json
+  categories: Json
   memberGuid: String
   user: UserCreateOneInput!
 }
@@ -1576,6 +1578,8 @@ enum OnboardingOrderByInput {
   accounts_DESC
   account_ASC
   account_DESC
+  categories_ASC
+  categories_DESC
   memberGuid_ASC
   memberGuid_DESC
   updatedAt_ASC
@@ -1591,6 +1595,7 @@ type OnboardingPreviousValues {
   credentials: Json!
   accounts: Json
   account: Json
+  categories: Json
   memberGuid: String
 }
 
@@ -1639,6 +1644,7 @@ input OnboardingUpdateInput {
   credentials: Json
   accounts: Json
   account: Json
+  categories: Json
   memberGuid: String
   user: UserUpdateOneInput
 }
@@ -5079,6 +5085,8 @@ export type OnboardingOrderByInput =   'id_ASC' |
   'accounts_DESC' |
   'account_ASC' |
   'account_DESC' |
+  'categories_ASC' |
+  'categories_DESC' |
   'memberGuid_ASC' |
   'memberGuid_DESC' |
   'updatedAt_ASC' |
@@ -5705,6 +5713,7 @@ export interface OnboardingUpdateInput {
   credentials?: Json
   accounts?: Json
   account?: Json
+  categories?: Json
   memberGuid?: String
   user?: UserUpdateOneInput
 }
@@ -6022,6 +6031,7 @@ export interface OnboardingCreateInput {
   credentials: Json
   accounts?: Json
   account?: Json
+  categories?: Json
   memberGuid?: String
   user: UserCreateOneInput
 }
@@ -7514,6 +7524,7 @@ export interface Onboarding extends Node {
   credentials: Json
   accounts?: Json
   account?: Json
+  categories?: Json
   memberGuid?: String
 }
 
@@ -7888,6 +7899,7 @@ export interface OnboardingPreviousValues {
   credentials: Json
   accounts?: Json
   account?: Json
+  categories?: Json
   memberGuid?: String
 }
 

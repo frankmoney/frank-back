@@ -1,5 +1,5 @@
 # source: http://prisma.frank-dev1.frank.ly
-# timestamp: Wed Sep 12 2018 12:25:17 GMT+0500 (Yekaterinburg Standard Time)
+# timestamp: Thu Sep 13 2018 14:10:38 GMT+0500 (Yekaterinburg Standard Time)
 
 type Account implements Node {
   id: ID!
@@ -1362,6 +1362,7 @@ type Onboarding implements Node {
   credentials: Json!
   accounts: Json
   account: Json
+  categories: Json
   memberGuid: String
 }
 
@@ -1381,6 +1382,7 @@ input OnboardingCreateInput {
   credentials: Json!
   accounts: Json
   account: Json
+  categories: Json
   memberGuid: String
   user: UserCreateOneInput!
 }
@@ -1407,6 +1409,8 @@ enum OnboardingOrderByInput {
   accounts_DESC
   account_ASC
   account_DESC
+  categories_ASC
+  categories_DESC
   memberGuid_ASC
   memberGuid_DESC
   updatedAt_ASC
@@ -1422,6 +1426,7 @@ type OnboardingPreviousValues {
   credentials: Json!
   accounts: Json
   account: Json
+  categories: Json
   memberGuid: String
 }
 
@@ -1470,6 +1475,7 @@ input OnboardingUpdateInput {
   credentials: Json
   accounts: Json
   account: Json
+  categories: Json
   memberGuid: String
   user: UserUpdateOneInput
 }
