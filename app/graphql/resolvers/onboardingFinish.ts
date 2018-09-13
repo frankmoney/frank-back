@@ -5,6 +5,7 @@ import { COMPLETED_STEP } from 'app/onboarding/constants'
 import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
 import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'utils/createPrivateResolver'
+import normalizeString from 'utils/normalizeString'
 
 const FRANK_TEMA_ID = 'cjk8djl16000h07164aewu80g'
 
@@ -23,7 +24,7 @@ const onboardingFinish = createPrivateResolver(
 
     const categories = existingOnboarding.categories.map((category: any) => ({
       ...category,
-      nameNormalized: category.name.toLowerCase(),
+      nameNormalized: normalizeString(category.name),
     }))
 
     const name = existingOnboarding.account.frankTitle
@@ -39,7 +40,7 @@ const onboardingFinish = createPrivateResolver(
     })
 
 
-    await prisma.mutation.updateOnboarding<Onboarding>({
+    await prisma.mutation.updateOnboarding({
       where: { id: existingOnboarding.id },
       data: {
         step: COMPLETED_STEP,
