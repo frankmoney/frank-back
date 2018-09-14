@@ -3,6 +3,7 @@ import {
   Story,
   StoryOrderByInput,
 } from 'app/graphql/generated/prisma'
+import { FULL_STORY_QUERY } from 'app/graphql/schema/StoryType'
 import { isNil } from 'ramda'
 import createPrivateResolver from 'utils/createPrivateResolver'
 
@@ -36,8 +37,8 @@ export default createPrivateResolver(
       orderBy,
       first,
       skip,
-    })
+    }, FULL_STORY_QUERY)
 
     return stories
-  }
+  },
 )

@@ -1,5 +1,5 @@
 # source: http://prisma.frank-dev1.frank.ly
-# timestamp: Fri Sep 07 2018 15:27:07 GMT+0300 (Moscow Standard Time)
+# timestamp: Fri Sep 14 2018 14:17:27 GMT+0500 (Yekaterinburg Standard Time)
 
 type Account implements Node {
   id: ID!
@@ -668,6 +668,10 @@ type AggregateStory {
   count: Int!
 }
 
+type AggregateStoryData {
+  count: Int!
+}
+
 type AggregateTeam {
   count: Int!
 }
@@ -1277,6 +1281,7 @@ type Mutation {
   createComment(data: CommentCreateInput!): Comment!
   createPeerCategory(data: PeerCategoryCreateInput!): PeerCategory!
   createStory(data: StoryCreateInput!): Story!
+  createStoryData(data: StoryDataCreateInput!): StoryData!
   createOnboarding(data: OnboardingCreateInput!): Onboarding!
   createUser(data: UserCreateInput!): User!
   createCategory(data: CategoryCreateInput!): Category!
@@ -1289,6 +1294,7 @@ type Mutation {
   updateComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
   updatePeerCategory(data: PeerCategoryUpdateInput!, where: PeerCategoryWhereUniqueInput!): PeerCategory
   updateStory(data: StoryUpdateInput!, where: StoryWhereUniqueInput!): Story
+  updateStoryData(data: StoryDataUpdateInput!, where: StoryDataWhereUniqueInput!): StoryData
   updateOnboarding(data: OnboardingUpdateInput!, where: OnboardingWhereUniqueInput!): Onboarding
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateCategory(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category
@@ -1301,6 +1307,7 @@ type Mutation {
   deleteComment(where: CommentWhereUniqueInput!): Comment
   deletePeerCategory(where: PeerCategoryWhereUniqueInput!): PeerCategory
   deleteStory(where: StoryWhereUniqueInput!): Story
+  deleteStoryData(where: StoryDataWhereUniqueInput!): StoryData
   deleteOnboarding(where: OnboardingWhereUniqueInput!): Onboarding
   deleteUser(where: UserWhereUniqueInput!): User
   deleteCategory(where: CategoryWhereUniqueInput!): Category
@@ -1313,6 +1320,7 @@ type Mutation {
   upsertComment(where: CommentWhereUniqueInput!, create: CommentCreateInput!, update: CommentUpdateInput!): Comment!
   upsertPeerCategory(where: PeerCategoryWhereUniqueInput!, create: PeerCategoryCreateInput!, update: PeerCategoryUpdateInput!): PeerCategory!
   upsertStory(where: StoryWhereUniqueInput!, create: StoryCreateInput!, update: StoryUpdateInput!): Story!
+  upsertStoryData(where: StoryDataWhereUniqueInput!, create: StoryDataCreateInput!, update: StoryDataUpdateInput!): StoryData!
   upsertOnboarding(where: OnboardingWhereUniqueInput!, create: OnboardingCreateInput!, update: OnboardingUpdateInput!): Onboarding!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertCategory(where: CategoryWhereUniqueInput!, create: CategoryCreateInput!, update: CategoryUpdateInput!): Category!
@@ -1325,6 +1333,7 @@ type Mutation {
   updateManyComments(data: CommentUpdateInput!, where: CommentWhereInput): BatchPayload!
   updateManyPeerCategories(data: PeerCategoryUpdateInput!, where: PeerCategoryWhereInput): BatchPayload!
   updateManyStories(data: StoryUpdateInput!, where: StoryWhereInput): BatchPayload!
+  updateManyStoryDatas(data: StoryDataUpdateInput!, where: StoryDataWhereInput): BatchPayload!
   updateManyOnboardings(data: OnboardingUpdateInput!, where: OnboardingWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
   updateManyCategories(data: CategoryUpdateInput!, where: CategoryWhereInput): BatchPayload!
@@ -1337,6 +1346,7 @@ type Mutation {
   deleteManyComments(where: CommentWhereInput): BatchPayload!
   deleteManyPeerCategories(where: PeerCategoryWhereInput): BatchPayload!
   deleteManyStories(where: StoryWhereInput): BatchPayload!
+  deleteManyStoryDatas(where: StoryDataWhereInput): BatchPayload!
   deleteManyOnboardings(where: OnboardingWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyCategories(where: CategoryWhereInput): BatchPayload!
@@ -1362,7 +1372,8 @@ type Onboarding implements Node {
   credentials: Json!
   accounts: Json
   account: Json
-  memberGUID: String
+  categories: Json
+  memberGuid: String
 }
 
 """A connection to a list of items."""
@@ -1381,7 +1392,8 @@ input OnboardingCreateInput {
   credentials: Json!
   accounts: Json
   account: Json
-  memberGUID: String
+  categories: Json
+  memberGuid: String
   user: UserCreateOneInput!
 }
 
@@ -1407,8 +1419,10 @@ enum OnboardingOrderByInput {
   accounts_DESC
   account_ASC
   account_DESC
-  memberGUID_ASC
-  memberGUID_DESC
+  categories_ASC
+  categories_DESC
+  memberGuid_ASC
+  memberGuid_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -1422,7 +1436,8 @@ type OnboardingPreviousValues {
   credentials: Json!
   accounts: Json
   account: Json
-  memberGUID: String
+  categories: Json
+  memberGuid: String
 }
 
 type OnboardingSubscriptionPayload {
@@ -1470,7 +1485,8 @@ input OnboardingUpdateInput {
   credentials: Json
   accounts: Json
   account: Json
-  memberGUID: String
+  categories: Json
+  memberGuid: String
   user: UserUpdateOneInput
 }
 
@@ -1563,46 +1579,46 @@ input OnboardingWhereInput {
 
   """All values not ending with the given string."""
   step_not_ends_with: String
-  memberGUID: String
+  memberGuid: String
 
   """All values that are not equal to given value."""
-  memberGUID_not: String
+  memberGuid_not: String
 
   """All values that are contained in given list."""
-  memberGUID_in: [String!]
+  memberGuid_in: [String!]
 
   """All values that are not contained in given list."""
-  memberGUID_not_in: [String!]
+  memberGuid_not_in: [String!]
 
   """All values less than the given value."""
-  memberGUID_lt: String
+  memberGuid_lt: String
 
   """All values less than or equal the given value."""
-  memberGUID_lte: String
+  memberGuid_lte: String
 
   """All values greater than the given value."""
-  memberGUID_gt: String
+  memberGuid_gt: String
 
   """All values greater than or equal the given value."""
-  memberGUID_gte: String
+  memberGuid_gte: String
 
   """All values containing the given string."""
-  memberGUID_contains: String
+  memberGuid_contains: String
 
   """All values not containing the given string."""
-  memberGUID_not_contains: String
+  memberGuid_not_contains: String
 
   """All values starting with the given string."""
-  memberGUID_starts_with: String
+  memberGuid_starts_with: String
 
   """All values not starting with the given string."""
-  memberGUID_not_starts_with: String
+  memberGuid_not_starts_with: String
 
   """All values ending with the given string."""
-  memberGUID_ends_with: String
+  memberGuid_ends_with: String
 
   """All values not ending with the given string."""
-  memberGUID_not_ends_with: String
+  memberGuid_not_ends_with: String
   user: UserWhereInput
 }
 
@@ -1638,7 +1654,7 @@ type Payment implements Node {
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
   category(where: CategoryWhereInput): Category
   rawData: Json!
-  story(where: StoryWhereInput): Story
+  storyData(where: StoryDataWhereInput): StoryData
 }
 
 """A connection to a list of items."""
@@ -1663,7 +1679,7 @@ input PaymentCreateInput {
   peer: PeerCreateOneWithoutPaymentsInput
   comments: CommentCreateManyWithoutPaymentInput
   category: CategoryCreateOneInput
-  story: StoryCreateOneWithoutPaymentsInput
+  storyData: StoryDataCreateOneWithoutPaymentsInput
 }
 
 input PaymentCreateManyWithoutAccountInput {
@@ -1676,8 +1692,8 @@ input PaymentCreateManyWithoutPeerInput {
   connect: [PaymentWhereUniqueInput!]
 }
 
-input PaymentCreateManyWithoutStoryInput {
-  create: [PaymentCreateWithoutStoryInput!]
+input PaymentCreateManyWithoutStoryDataInput {
+  create: [PaymentCreateWithoutStoryDataInput!]
   connect: [PaymentWhereUniqueInput!]
 }
 
@@ -1697,7 +1713,7 @@ input PaymentCreateWithoutAccountInput {
   peer: PeerCreateOneWithoutPaymentsInput
   comments: CommentCreateManyWithoutPaymentInput
   category: CategoryCreateOneInput
-  story: StoryCreateOneWithoutPaymentsInput
+  storyData: StoryDataCreateOneWithoutPaymentsInput
 }
 
 input PaymentCreateWithoutCommentsInput {
@@ -1711,7 +1727,7 @@ input PaymentCreateWithoutCommentsInput {
   account: AccountCreateOneWithoutPaymentsInput!
   peer: PeerCreateOneWithoutPaymentsInput
   category: CategoryCreateOneInput
-  story: StoryCreateOneWithoutPaymentsInput
+  storyData: StoryDataCreateOneWithoutPaymentsInput
 }
 
 input PaymentCreateWithoutPeerInput {
@@ -1725,10 +1741,10 @@ input PaymentCreateWithoutPeerInput {
   account: AccountCreateOneWithoutPaymentsInput!
   comments: CommentCreateManyWithoutPaymentInput
   category: CategoryCreateOneInput
-  story: StoryCreateOneWithoutPaymentsInput
+  storyData: StoryDataCreateOneWithoutPaymentsInput
 }
 
-input PaymentCreateWithoutStoryInput {
+input PaymentCreateWithoutStoryDataInput {
   postedOn: DateTime!
   amount: Float!
   peerName: String
@@ -1836,7 +1852,7 @@ input PaymentUpdateInput {
   peer: PeerUpdateOneWithoutPaymentsInput
   comments: CommentUpdateManyWithoutPaymentInput
   category: CategoryUpdateOneInput
-  story: StoryUpdateOneWithoutPaymentsInput
+  storyData: StoryDataUpdateOneWithoutPaymentsInput
 }
 
 input PaymentUpdateManyWithoutAccountInput {
@@ -1857,13 +1873,13 @@ input PaymentUpdateManyWithoutPeerInput {
   upsert: [PaymentUpsertWithWhereUniqueWithoutPeerInput!]
 }
 
-input PaymentUpdateManyWithoutStoryInput {
-  create: [PaymentCreateWithoutStoryInput!]
+input PaymentUpdateManyWithoutStoryDataInput {
+  create: [PaymentCreateWithoutStoryDataInput!]
   connect: [PaymentWhereUniqueInput!]
   disconnect: [PaymentWhereUniqueInput!]
   delete: [PaymentWhereUniqueInput!]
-  update: [PaymentUpdateWithWhereUniqueWithoutStoryInput!]
-  upsert: [PaymentUpsertWithWhereUniqueWithoutStoryInput!]
+  update: [PaymentUpdateWithWhereUniqueWithoutStoryDataInput!]
+  upsert: [PaymentUpsertWithWhereUniqueWithoutStoryDataInput!]
 }
 
 input PaymentUpdateOneWithoutCommentsInput {
@@ -1885,7 +1901,7 @@ input PaymentUpdateWithoutAccountDataInput {
   peer: PeerUpdateOneWithoutPaymentsInput
   comments: CommentUpdateManyWithoutPaymentInput
   category: CategoryUpdateOneInput
-  story: StoryUpdateOneWithoutPaymentsInput
+  storyData: StoryDataUpdateOneWithoutPaymentsInput
 }
 
 input PaymentUpdateWithoutCommentsDataInput {
@@ -1899,7 +1915,7 @@ input PaymentUpdateWithoutCommentsDataInput {
   account: AccountUpdateOneWithoutPaymentsInput
   peer: PeerUpdateOneWithoutPaymentsInput
   category: CategoryUpdateOneInput
-  story: StoryUpdateOneWithoutPaymentsInput
+  storyData: StoryDataUpdateOneWithoutPaymentsInput
 }
 
 input PaymentUpdateWithoutPeerDataInput {
@@ -1913,10 +1929,10 @@ input PaymentUpdateWithoutPeerDataInput {
   account: AccountUpdateOneWithoutPaymentsInput
   comments: CommentUpdateManyWithoutPaymentInput
   category: CategoryUpdateOneInput
-  story: StoryUpdateOneWithoutPaymentsInput
+  storyData: StoryDataUpdateOneWithoutPaymentsInput
 }
 
-input PaymentUpdateWithoutStoryDataInput {
+input PaymentUpdateWithoutStoryDataDataInput {
   postedOn: DateTime
   amount: Float
   peerName: String
@@ -1940,9 +1956,9 @@ input PaymentUpdateWithWhereUniqueWithoutPeerInput {
   data: PaymentUpdateWithoutPeerDataInput!
 }
 
-input PaymentUpdateWithWhereUniqueWithoutStoryInput {
+input PaymentUpdateWithWhereUniqueWithoutStoryDataInput {
   where: PaymentWhereUniqueInput!
-  data: PaymentUpdateWithoutStoryDataInput!
+  data: PaymentUpdateWithoutStoryDataDataInput!
 }
 
 input PaymentUpsertWithoutCommentsInput {
@@ -1962,10 +1978,10 @@ input PaymentUpsertWithWhereUniqueWithoutPeerInput {
   create: PaymentCreateWithoutPeerInput!
 }
 
-input PaymentUpsertWithWhereUniqueWithoutStoryInput {
+input PaymentUpsertWithWhereUniqueWithoutStoryDataInput {
   where: PaymentWhereUniqueInput!
-  update: PaymentUpdateWithoutStoryDataInput!
-  create: PaymentCreateWithoutStoryInput!
+  update: PaymentUpdateWithoutStoryDataDataInput!
+  create: PaymentCreateWithoutStoryDataInput!
 }
 
 input PaymentWhereInput {
@@ -2227,7 +2243,7 @@ input PaymentWhereInput {
   comments_some: CommentWhereInput
   comments_none: CommentWhereInput
   category: CategoryWhereInput
-  story: StoryWhereInput
+  storyData: StoryDataWhereInput
 }
 
 input PaymentWhereUniqueInput {
@@ -3110,6 +3126,7 @@ type Query {
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment]!
   peerCategories(where: PeerCategoryWhereInput, orderBy: PeerCategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PeerCategory]!
   stories(where: StoryWhereInput, orderBy: StoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Story]!
+  storyDatas(where: StoryDataWhereInput, orderBy: StoryDataOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [StoryData]!
   onboardings(where: OnboardingWhereInput, orderBy: OnboardingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Onboarding]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   categories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category]!
@@ -3122,6 +3139,7 @@ type Query {
   comment(where: CommentWhereUniqueInput!): Comment
   peerCategory(where: PeerCategoryWhereUniqueInput!): PeerCategory
   story(where: StoryWhereUniqueInput!): Story
+  storyData(where: StoryDataWhereUniqueInput!): StoryData
   onboarding(where: OnboardingWhereUniqueInput!): Onboarding
   user(where: UserWhereUniqueInput!): User
   category(where: CategoryWhereUniqueInput!): Category
@@ -3134,6 +3152,7 @@ type Query {
   commentsConnection(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection!
   peerCategoriesConnection(where: PeerCategoryWhereInput, orderBy: PeerCategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PeerCategoryConnection!
   storiesConnection(where: StoryWhereInput, orderBy: StoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StoryConnection!
+  storyDatasConnection(where: StoryDataWhereInput, orderBy: StoryDataOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StoryDataConnection!
   onboardingsConnection(where: OnboardingWhereInput, orderBy: OnboardingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OnboardingConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   categoriesConnection(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CategoryConnection!
@@ -3148,10 +3167,8 @@ type Query {
 type Story implements Node {
   id: ID!
   account(where: AccountWhereInput): Account!
-  title: String!
-  body: Json!
-  coverImage: Json
-  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
+  draftData(where: StoryDataWhereInput): StoryData!
+  publicData(where: StoryDataWhereInput): StoryData
   isPublished: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -3168,12 +3185,10 @@ type StoryConnection {
 }
 
 input StoryCreateInput {
-  title: String!
-  body: Json!
-  coverImage: Json
   isPublished: Boolean
   account: AccountCreateOneWithoutStoriesInput!
-  payments: PaymentCreateManyWithoutStoryInput
+  draftData: StoryDataCreateOneWithoutDraftStoryInput!
+  publicData: StoryDataCreateOneWithoutPublicStoryInput
 }
 
 input StoryCreateManyWithoutAccountInput {
@@ -3181,37 +3196,112 @@ input StoryCreateManyWithoutAccountInput {
   connect: [StoryWhereUniqueInput!]
 }
 
-input StoryCreateOneWithoutPaymentsInput {
-  create: StoryCreateWithoutPaymentsInput
+input StoryCreateOneWithoutDraftDataInput {
+  create: StoryCreateWithoutDraftDataInput
+  connect: StoryWhereUniqueInput
+}
+
+input StoryCreateOneWithoutPublicDataInput {
+  create: StoryCreateWithoutPublicDataInput
   connect: StoryWhereUniqueInput
 }
 
 input StoryCreateWithoutAccountInput {
-  title: String!
-  body: Json!
-  coverImage: Json
   isPublished: Boolean
-  payments: PaymentCreateManyWithoutStoryInput
+  draftData: StoryDataCreateOneWithoutDraftStoryInput!
+  publicData: StoryDataCreateOneWithoutPublicStoryInput
 }
 
-input StoryCreateWithoutPaymentsInput {
+input StoryCreateWithoutDraftDataInput {
+  isPublished: Boolean
+  account: AccountCreateOneWithoutStoriesInput!
+  publicData: StoryDataCreateOneWithoutPublicStoryInput
+}
+
+input StoryCreateWithoutPublicDataInput {
+  isPublished: Boolean
+  account: AccountCreateOneWithoutStoriesInput!
+  draftData: StoryDataCreateOneWithoutDraftStoryInput!
+}
+
+type StoryData implements Node {
+  id: ID!
   title: String!
   body: Json!
   coverImage: Json
-  isPublished: Boolean
-  account: AccountCreateOneWithoutStoriesInput!
+  payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
+  draftStory(where: StoryWhereInput): Story
+  publicStory(where: StoryWhereInput): Story
+}
+
+"""A connection to a list of items."""
+type StoryDataConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [StoryDataEdge]!
+  aggregate: AggregateStoryData!
+}
+
+input StoryDataCreateInput {
+  title: String!
+  body: Json!
+  coverImage: Json
+  payments: PaymentCreateManyWithoutStoryDataInput
+  draftStory: StoryCreateOneWithoutDraftDataInput
+  publicStory: StoryCreateOneWithoutPublicDataInput
+}
+
+input StoryDataCreateOneWithoutDraftStoryInput {
+  create: StoryDataCreateWithoutDraftStoryInput
+  connect: StoryDataWhereUniqueInput
+}
+
+input StoryDataCreateOneWithoutPaymentsInput {
+  create: StoryDataCreateWithoutPaymentsInput
+  connect: StoryDataWhereUniqueInput
+}
+
+input StoryDataCreateOneWithoutPublicStoryInput {
+  create: StoryDataCreateWithoutPublicStoryInput
+  connect: StoryDataWhereUniqueInput
+}
+
+input StoryDataCreateWithoutDraftStoryInput {
+  title: String!
+  body: Json!
+  coverImage: Json
+  payments: PaymentCreateManyWithoutStoryDataInput
+  publicStory: StoryCreateOneWithoutPublicDataInput
+}
+
+input StoryDataCreateWithoutPaymentsInput {
+  title: String!
+  body: Json!
+  coverImage: Json
+  draftStory: StoryCreateOneWithoutDraftDataInput
+  publicStory: StoryCreateOneWithoutPublicDataInput
+}
+
+input StoryDataCreateWithoutPublicStoryInput {
+  title: String!
+  body: Json!
+  coverImage: Json
+  payments: PaymentCreateManyWithoutStoryDataInput
+  draftStory: StoryCreateOneWithoutDraftDataInput
 }
 
 """An edge in a connection."""
-type StoryEdge {
+type StoryDataEdge {
   """The item at the end of the edge."""
-  node: Story!
+  node: StoryData!
 
   """A cursor for use in pagination."""
   cursor: String!
 }
 
-enum StoryOrderByInput {
+enum StoryDataOrderByInput {
   id_ASC
   id_DESC
   title_ASC
@@ -3220,40 +3310,35 @@ enum StoryOrderByInput {
   body_DESC
   coverImage_ASC
   coverImage_DESC
-  isPublished_ASC
-  isPublished_DESC
-  createdAt_ASC
-  createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
 }
 
-type StoryPreviousValues {
+type StoryDataPreviousValues {
   id: ID!
   title: String!
   body: Json!
   coverImage: Json
-  isPublished: Boolean!
-  createdAt: DateTime!
-  updatedAt: DateTime!
 }
 
-type StorySubscriptionPayload {
+type StoryDataSubscriptionPayload {
   mutation: MutationType!
-  node: Story
+  node: StoryData
   updatedFields: [String!]
-  previousValues: StoryPreviousValues
+  previousValues: StoryDataPreviousValues
 }
 
-input StorySubscriptionWhereInput {
+input StoryDataSubscriptionWhereInput {
   """Logical AND on all given filters."""
-  AND: [StorySubscriptionWhereInput!]
+  AND: [StoryDataSubscriptionWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [StorySubscriptionWhereInput!]
+  OR: [StoryDataSubscriptionWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [StorySubscriptionWhereInput!]
+  NOT: [StoryDataSubscriptionWhereInput!]
 
   """
   The subscription event gets dispatched when it's listed in mutation_in
@@ -3274,77 +3359,92 @@ input StorySubscriptionWhereInput {
   The subscription event gets only dispatched when some of the field names included in this list have been updated
   """
   updatedFields_contains_some: [String!]
-  node: StoryWhereInput
+  node: StoryDataWhereInput
 }
 
-input StoryUpdateInput {
+input StoryDataUpdateInput {
   title: String
   body: Json
   coverImage: Json
-  isPublished: Boolean
-  account: AccountUpdateOneWithoutStoriesInput
-  payments: PaymentUpdateManyWithoutStoryInput
+  payments: PaymentUpdateManyWithoutStoryDataInput
+  draftStory: StoryUpdateOneWithoutDraftDataInput
+  publicStory: StoryUpdateOneWithoutPublicDataInput
 }
 
-input StoryUpdateManyWithoutAccountInput {
-  create: [StoryCreateWithoutAccountInput!]
-  connect: [StoryWhereUniqueInput!]
-  disconnect: [StoryWhereUniqueInput!]
-  delete: [StoryWhereUniqueInput!]
-  update: [StoryUpdateWithWhereUniqueWithoutAccountInput!]
-  upsert: [StoryUpsertWithWhereUniqueWithoutAccountInput!]
+input StoryDataUpdateOneWithoutDraftStoryInput {
+  create: StoryDataCreateWithoutDraftStoryInput
+  connect: StoryDataWhereUniqueInput
+  delete: Boolean
+  update: StoryDataUpdateWithoutDraftStoryDataInput
+  upsert: StoryDataUpsertWithoutDraftStoryInput
 }
 
-input StoryUpdateOneWithoutPaymentsInput {
-  create: StoryCreateWithoutPaymentsInput
-  connect: StoryWhereUniqueInput
+input StoryDataUpdateOneWithoutPaymentsInput {
+  create: StoryDataCreateWithoutPaymentsInput
+  connect: StoryDataWhereUniqueInput
   disconnect: Boolean
   delete: Boolean
-  update: StoryUpdateWithoutPaymentsDataInput
-  upsert: StoryUpsertWithoutPaymentsInput
+  update: StoryDataUpdateWithoutPaymentsDataInput
+  upsert: StoryDataUpsertWithoutPaymentsInput
 }
 
-input StoryUpdateWithoutAccountDataInput {
+input StoryDataUpdateOneWithoutPublicStoryInput {
+  create: StoryDataCreateWithoutPublicStoryInput
+  connect: StoryDataWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: StoryDataUpdateWithoutPublicStoryDataInput
+  upsert: StoryDataUpsertWithoutPublicStoryInput
+}
+
+input StoryDataUpdateWithoutDraftStoryDataInput {
   title: String
   body: Json
   coverImage: Json
-  isPublished: Boolean
-  payments: PaymentUpdateManyWithoutStoryInput
+  payments: PaymentUpdateManyWithoutStoryDataInput
+  publicStory: StoryUpdateOneWithoutPublicDataInput
 }
 
-input StoryUpdateWithoutPaymentsDataInput {
+input StoryDataUpdateWithoutPaymentsDataInput {
   title: String
   body: Json
   coverImage: Json
-  isPublished: Boolean
-  account: AccountUpdateOneWithoutStoriesInput
+  draftStory: StoryUpdateOneWithoutDraftDataInput
+  publicStory: StoryUpdateOneWithoutPublicDataInput
 }
 
-input StoryUpdateWithWhereUniqueWithoutAccountInput {
-  where: StoryWhereUniqueInput!
-  data: StoryUpdateWithoutAccountDataInput!
+input StoryDataUpdateWithoutPublicStoryDataInput {
+  title: String
+  body: Json
+  coverImage: Json
+  payments: PaymentUpdateManyWithoutStoryDataInput
+  draftStory: StoryUpdateOneWithoutDraftDataInput
 }
 
-input StoryUpsertWithoutPaymentsInput {
-  update: StoryUpdateWithoutPaymentsDataInput!
-  create: StoryCreateWithoutPaymentsInput!
+input StoryDataUpsertWithoutDraftStoryInput {
+  update: StoryDataUpdateWithoutDraftStoryDataInput!
+  create: StoryDataCreateWithoutDraftStoryInput!
 }
 
-input StoryUpsertWithWhereUniqueWithoutAccountInput {
-  where: StoryWhereUniqueInput!
-  update: StoryUpdateWithoutAccountDataInput!
-  create: StoryCreateWithoutAccountInput!
+input StoryDataUpsertWithoutPaymentsInput {
+  update: StoryDataUpdateWithoutPaymentsDataInput!
+  create: StoryDataCreateWithoutPaymentsInput!
 }
 
-input StoryWhereInput {
+input StoryDataUpsertWithoutPublicStoryInput {
+  update: StoryDataUpdateWithoutPublicStoryDataInput!
+  create: StoryDataCreateWithoutPublicStoryInput!
+}
+
+input StoryDataWhereInput {
   """Logical AND on all given filters."""
-  AND: [StoryWhereInput!]
+  AND: [StoryDataWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [StoryWhereInput!]
+  OR: [StoryDataWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [StoryWhereInput!]
+  NOT: [StoryDataWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -3425,6 +3525,205 @@ input StoryWhereInput {
 
   """All values not ending with the given string."""
   title_not_ends_with: String
+  payments_every: PaymentWhereInput
+  payments_some: PaymentWhereInput
+  payments_none: PaymentWhereInput
+  draftStory: StoryWhereInput
+  publicStory: StoryWhereInput
+}
+
+input StoryDataWhereUniqueInput {
+  id: ID
+}
+
+"""An edge in a connection."""
+type StoryEdge {
+  """The item at the end of the edge."""
+  node: Story!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum StoryOrderByInput {
+  id_ASC
+  id_DESC
+  isPublished_ASC
+  isPublished_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type StoryPreviousValues {
+  id: ID!
+  isPublished: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type StorySubscriptionPayload {
+  mutation: MutationType!
+  node: Story
+  updatedFields: [String!]
+  previousValues: StoryPreviousValues
+}
+
+input StorySubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [StorySubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [StorySubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [StorySubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: StoryWhereInput
+}
+
+input StoryUpdateInput {
+  isPublished: Boolean
+  account: AccountUpdateOneWithoutStoriesInput
+  draftData: StoryDataUpdateOneWithoutDraftStoryInput
+  publicData: StoryDataUpdateOneWithoutPublicStoryInput
+}
+
+input StoryUpdateManyWithoutAccountInput {
+  create: [StoryCreateWithoutAccountInput!]
+  connect: [StoryWhereUniqueInput!]
+  disconnect: [StoryWhereUniqueInput!]
+  delete: [StoryWhereUniqueInput!]
+  update: [StoryUpdateWithWhereUniqueWithoutAccountInput!]
+  upsert: [StoryUpsertWithWhereUniqueWithoutAccountInput!]
+}
+
+input StoryUpdateOneWithoutDraftDataInput {
+  create: StoryCreateWithoutDraftDataInput
+  connect: StoryWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: StoryUpdateWithoutDraftDataDataInput
+  upsert: StoryUpsertWithoutDraftDataInput
+}
+
+input StoryUpdateOneWithoutPublicDataInput {
+  create: StoryCreateWithoutPublicDataInput
+  connect: StoryWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: StoryUpdateWithoutPublicDataDataInput
+  upsert: StoryUpsertWithoutPublicDataInput
+}
+
+input StoryUpdateWithoutAccountDataInput {
+  isPublished: Boolean
+  draftData: StoryDataUpdateOneWithoutDraftStoryInput
+  publicData: StoryDataUpdateOneWithoutPublicStoryInput
+}
+
+input StoryUpdateWithoutDraftDataDataInput {
+  isPublished: Boolean
+  account: AccountUpdateOneWithoutStoriesInput
+  publicData: StoryDataUpdateOneWithoutPublicStoryInput
+}
+
+input StoryUpdateWithoutPublicDataDataInput {
+  isPublished: Boolean
+  account: AccountUpdateOneWithoutStoriesInput
+  draftData: StoryDataUpdateOneWithoutDraftStoryInput
+}
+
+input StoryUpdateWithWhereUniqueWithoutAccountInput {
+  where: StoryWhereUniqueInput!
+  data: StoryUpdateWithoutAccountDataInput!
+}
+
+input StoryUpsertWithoutDraftDataInput {
+  update: StoryUpdateWithoutDraftDataDataInput!
+  create: StoryCreateWithoutDraftDataInput!
+}
+
+input StoryUpsertWithoutPublicDataInput {
+  update: StoryUpdateWithoutPublicDataDataInput!
+  create: StoryCreateWithoutPublicDataInput!
+}
+
+input StoryUpsertWithWhereUniqueWithoutAccountInput {
+  where: StoryWhereUniqueInput!
+  update: StoryUpdateWithoutAccountDataInput!
+  create: StoryCreateWithoutAccountInput!
+}
+
+input StoryWhereInput {
+  """Logical AND on all given filters."""
+  AND: [StoryWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [StoryWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [StoryWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
   isPublished: Boolean
 
   """All values that are not equal to given value."""
@@ -3474,9 +3773,8 @@ input StoryWhereInput {
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
   account: AccountWhereInput
-  payments_every: PaymentWhereInput
-  payments_some: PaymentWhereInput
-  payments_none: PaymentWhereInput
+  draftData: StoryDataWhereInput
+  publicData: StoryDataWhereInput
 }
 
 input StoryWhereUniqueInput {
@@ -3493,6 +3791,7 @@ type Subscription {
   comment(where: CommentSubscriptionWhereInput): CommentSubscriptionPayload
   peerCategory(where: PeerCategorySubscriptionWhereInput): PeerCategorySubscriptionPayload
   story(where: StorySubscriptionWhereInput): StorySubscriptionPayload
+  storyData(where: StoryDataSubscriptionWhereInput): StoryDataSubscriptionPayload
   onboarding(where: OnboardingSubscriptionWhereInput): OnboardingSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   category(where: CategorySubscriptionWhereInput): CategorySubscriptionPayload

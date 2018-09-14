@@ -5,26 +5,30 @@ import IntValue from 'app/graphql/schema/IntValue'
 import { ID, Type, DateTime } from 'gql'
 import PaymentType from '../PaymentType'
 
+const StoryDataType = Type('StoryData', type =>
+  type.fields(field => ({
+
+    title: field.ofString(),
+    body: field.ofJson(),
+    coverImage: field.ofJson().nullable(),
+    payments: field.listOf(PaymentType).resolve(storyPayments),
+    countPayments: field.ofType(IntValue).resolve(storyCountPayments),
+    paymentsDateRange: field.listOf(DateTime).resolve(storyPaymentsDateRange),
+  })),
+)
+
 const StoryType = Type('Story', type =>
   type.fields(field => ({
     id: field.ofType(ID),
-
-    title: field.ofString(),
-
-    body: field.ofJson(),
-
-    coverImage: field.ofJson().nullable(),
 
     isPublished: field.ofBool(),
 
     updatedAt: field.ofDateTime(),
 
-    payments: field.listOf(PaymentType).resolve(storyPayments),
+    draftData: field.ofType(StoryDataType),
 
-    countPayments: field.ofType(IntValue).resolve(storyCountPayments),
-
-    paymentsDateRange: field.listOf(DateTime).resolve(storyPaymentsDateRange),
-  }))
+    publicData: field.ofType(StoryDataType).nullable(),
+  })),
 )
 
 export default StoryType
