@@ -4,7 +4,7 @@ import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'utils/createPrivateResolver'
 import { throwNotFound } from 'app/errors/NotFoundError'
 import { StoryUpdateInput } from 'app/graphql/generated/prisma'
-import StoryType from 'app/graphql/schema/StoryType'
+import StoryType, { FULL_STORY_QUERY } from 'app/graphql/schema/StoryType'
 
 const storyUpdate = createPrivateResolver(
   'Mutation:storyUpdate',
@@ -27,7 +27,7 @@ const storyUpdate = createPrivateResolver(
           ],
         },
       },
-      '{ id, draftData { id, payments { id } } }',
+      FULL_STORY_QUERY,
     ))[0]
 
     if (!story) {
@@ -68,7 +68,7 @@ const storyUpdate = createPrivateResolver(
       data,
     })
 
-    return await query.story({ where: { id: story.id } })
+    return await query.story({ where: { id: story.id } }, FULL_STORY_QUERY)
   },
 )
 
