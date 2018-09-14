@@ -1,5 +1,5 @@
 # source: http://prisma.frank-dev1.frank.ly
-# timestamp: Fri Sep 14 2018 14:12:48 GMT+0500 (Yekaterinburg Standard Time)
+# timestamp: Fri Sep 14 2018 14:17:27 GMT+0500 (Yekaterinburg Standard Time)
 
 type Account implements Node {
   id: ID!
@@ -1294,6 +1294,7 @@ type Mutation {
   updateComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
   updatePeerCategory(data: PeerCategoryUpdateInput!, where: PeerCategoryWhereUniqueInput!): PeerCategory
   updateStory(data: StoryUpdateInput!, where: StoryWhereUniqueInput!): Story
+  updateStoryData(data: StoryDataUpdateInput!, where: StoryDataWhereUniqueInput!): StoryData
   updateOnboarding(data: OnboardingUpdateInput!, where: OnboardingWhereUniqueInput!): Onboarding
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateCategory(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category
@@ -1306,6 +1307,7 @@ type Mutation {
   deleteComment(where: CommentWhereUniqueInput!): Comment
   deletePeerCategory(where: PeerCategoryWhereUniqueInput!): PeerCategory
   deleteStory(where: StoryWhereUniqueInput!): Story
+  deleteStoryData(where: StoryDataWhereUniqueInput!): StoryData
   deleteOnboarding(where: OnboardingWhereUniqueInput!): Onboarding
   deleteUser(where: UserWhereUniqueInput!): User
   deleteCategory(where: CategoryWhereUniqueInput!): Category
@@ -1318,6 +1320,7 @@ type Mutation {
   upsertComment(where: CommentWhereUniqueInput!, create: CommentCreateInput!, update: CommentUpdateInput!): Comment!
   upsertPeerCategory(where: PeerCategoryWhereUniqueInput!, create: PeerCategoryCreateInput!, update: PeerCategoryUpdateInput!): PeerCategory!
   upsertStory(where: StoryWhereUniqueInput!, create: StoryCreateInput!, update: StoryUpdateInput!): Story!
+  upsertStoryData(where: StoryDataWhereUniqueInput!, create: StoryDataCreateInput!, update: StoryDataUpdateInput!): StoryData!
   upsertOnboarding(where: OnboardingWhereUniqueInput!, create: OnboardingCreateInput!, update: OnboardingUpdateInput!): Onboarding!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertCategory(where: CategoryWhereUniqueInput!, create: CategoryCreateInput!, update: CategoryUpdateInput!): Category!
@@ -3136,6 +3139,7 @@ type Query {
   comment(where: CommentWhereUniqueInput!): Comment
   peerCategory(where: PeerCategoryWhereUniqueInput!): PeerCategory
   story(where: StoryWhereUniqueInput!): Story
+  storyData(where: StoryDataWhereUniqueInput!): StoryData
   onboarding(where: OnboardingWhereUniqueInput!): Onboarding
   user(where: UserWhereUniqueInput!): User
   category(where: CategoryWhereUniqueInput!): Category
@@ -3220,7 +3224,8 @@ input StoryCreateWithoutPublicDataInput {
   draftData: StoryDataCreateOneWithoutDraftStoryInput!
 }
 
-type StoryData {
+type StoryData implements Node {
+  id: ID!
   title: String!
   body: Json!
   coverImage: Json
@@ -3250,14 +3255,17 @@ input StoryDataCreateInput {
 
 input StoryDataCreateOneWithoutDraftStoryInput {
   create: StoryDataCreateWithoutDraftStoryInput
+  connect: StoryDataWhereUniqueInput
 }
 
 input StoryDataCreateOneWithoutPaymentsInput {
   create: StoryDataCreateWithoutPaymentsInput
+  connect: StoryDataWhereUniqueInput
 }
 
 input StoryDataCreateOneWithoutPublicStoryInput {
   create: StoryDataCreateWithoutPublicStoryInput
+  connect: StoryDataWhereUniqueInput
 }
 
 input StoryDataCreateWithoutDraftStoryInput {
@@ -3294,14 +3302,14 @@ type StoryDataEdge {
 }
 
 enum StoryDataOrderByInput {
+  id_ASC
+  id_DESC
   title_ASC
   title_DESC
   body_ASC
   body_DESC
   coverImage_ASC
   coverImage_DESC
-  id_ASC
-  id_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -3309,6 +3317,7 @@ enum StoryDataOrderByInput {
 }
 
 type StoryDataPreviousValues {
+  id: ID!
   title: String!
   body: Json!
   coverImage: Json
@@ -3364,6 +3373,7 @@ input StoryDataUpdateInput {
 
 input StoryDataUpdateOneWithoutDraftStoryInput {
   create: StoryDataCreateWithoutDraftStoryInput
+  connect: StoryDataWhereUniqueInput
   delete: Boolean
   update: StoryDataUpdateWithoutDraftStoryDataInput
   upsert: StoryDataUpsertWithoutDraftStoryInput
@@ -3371,6 +3381,7 @@ input StoryDataUpdateOneWithoutDraftStoryInput {
 
 input StoryDataUpdateOneWithoutPaymentsInput {
   create: StoryDataCreateWithoutPaymentsInput
+  connect: StoryDataWhereUniqueInput
   disconnect: Boolean
   delete: Boolean
   update: StoryDataUpdateWithoutPaymentsDataInput
@@ -3379,6 +3390,7 @@ input StoryDataUpdateOneWithoutPaymentsInput {
 
 input StoryDataUpdateOneWithoutPublicStoryInput {
   create: StoryDataCreateWithoutPublicStoryInput
+  connect: StoryDataWhereUniqueInput
   disconnect: Boolean
   delete: Boolean
   update: StoryDataUpdateWithoutPublicStoryDataInput
@@ -3433,6 +3445,46 @@ input StoryDataWhereInput {
 
   """Logical NOT on all given filters combined by AND."""
   NOT: [StoryDataWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
   title: String
 
   """All values that are not equal to given value."""
@@ -3478,6 +3530,10 @@ input StoryDataWhereInput {
   payments_none: PaymentWhereInput
   draftStory: StoryWhereInput
   publicStory: StoryWhereInput
+}
+
+input StoryDataWhereUniqueInput {
+  id: ID
 }
 
 """An edge in a connection."""

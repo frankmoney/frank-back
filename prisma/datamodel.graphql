@@ -121,6 +121,7 @@ type Story {
 }
 
 type StoryData {
+  id: ID! @unique
   title: String!
   body: Json!
   coverImage: Json
