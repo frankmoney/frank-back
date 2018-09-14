@@ -14,6 +14,7 @@ import {
 } from 'app/graphql/generated/prisma'
 import createPrivateResolver from 'utils/createPrivateResolver'
 import getTeamMemberAcl from 'utils/getTeamMemberAcl'
+import mapTeamMemberRoleFromPrisma from 'utils/mapTeamMemberRoleFromPrisma'
 
 const teamMembers = createPrivateResolver(
   'Team:members',
@@ -72,6 +73,7 @@ const teamMembers = createPrivateResolver(
       lastName: member.user.lastName,
       firstName: member.user.firstName,
       avatar: {},
+      role: mapTeamMemberRoleFromPrisma(member.role),
       admin: member.role === 'ADMIN',
       canInvite: member.canInvite,
       accountIds: member
