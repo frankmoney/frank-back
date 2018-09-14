@@ -1,16 +1,17 @@
 import { throwArgumentError } from 'app/errors/ArgumentError'
 import { Onboarding } from 'app/graphql/generated/prisma'
 import OnboardingType from 'app/graphql/schema/OnboardingType'
-import { ACCOUNT_STEP } from 'app/onboarding/constants'
+import { CATEGORIES_STEP } from 'app/onboarding/constants'
 import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
+import { Json } from 'gql'
 import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'utils/createPrivateResolver'
 
-const onboardingUpdateAccountInfo = createPrivateResolver(
-  'Mutation:onboarding:updateAccountInfo',
+const onboardingUpdateCategories = createPrivateResolver(
+  'Mutation:onboarding:updateCategories',
   async ({
            user,
-           args: { title, description },
+           args: { categories },
            prisma,
          }) => {
 
@@ -23,12 +24,8 @@ const onboardingUpdateAccountInfo = createPrivateResolver(
     const updatedOnboarding = await prisma.mutation.updateOnboarding<Onboarding>({
       where: { id: existingOnboarding.id },
       data: {
-        step: ACCOUNT_STEP,
-        account: {
-          ...existingOnboarding.account,
-          frankTitle: title || existingOnboarding.account.frankTitle,
-          frankDescription: description || existingOnboarding.account.frankDescription,
-        },
+        step: CATEGORIES_STEP,
+        categories,
       },
     })
 
@@ -37,11 +34,10 @@ const onboardingUpdateAccountInfo = createPrivateResolver(
 )
 
 export default createMutations(field => ({
-  onboardingUpdateAccountInfo: field
+  onboardingUpdateCategories: field
     .ofType(OnboardingType)
     .args(arg => ({
-      title: arg.ofString().nullable(),
-      description: arg.ofString().nullable(),
+      categories: arg.listOf(Json),
     }))
-    .resolve(onboardingUpdateAccountInfo),
+    .resolve(onboardingUpdateCategories),
 }))
