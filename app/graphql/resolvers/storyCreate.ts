@@ -3,7 +3,7 @@ import { ID, String, Json } from 'gql'
 import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'utils/createPrivateResolver'
 import { StoryCreateInput, StoryDataCreateOneWithoutDraftStoryInput } from 'app/graphql/generated/prisma'
-import StoryType from 'app/graphql/schema/StoryType'
+import StoryType, { FULL_STORY_QUERY } from 'app/graphql/schema/StoryType'
 
 const storyCreate = createPrivateResolver(
   'Mutation:storyCreate',
@@ -29,7 +29,7 @@ const storyCreate = createPrivateResolver(
       }
     }
 
-    return await mutation.createStory({ data })
+    return await mutation.createStory({ data }, FULL_STORY_QUERY)
   },
 )
 
