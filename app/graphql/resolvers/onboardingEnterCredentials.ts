@@ -62,7 +62,7 @@ const onboardingEnterCredentials = createPrivateResolver(
             body: {
               member: {
                 'institution_code': institutionCode,
-                credentials,
+                credentials: credentials.map(JSON.parse),
               },
             },
           }).then(({ member }: any) => {
