@@ -7,11 +7,11 @@ export default createPrivateResolver(
     const payments = await query.payments(
       {
         where: {
-          story: { id: parent.id },
+          storyData: { id: parent.id },
         },
         orderBy: 'postedOn_DESC',
       },
-      '{ postedOn }'
+      '{ postedOn }',
     )
 
     const dates = R.map(p => p.postedOn, payments)
@@ -23,5 +23,5 @@ export default createPrivateResolver(
     }
 
     return []
-  }
+  },
 )

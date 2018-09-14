@@ -1,7 +1,7 @@
 import createPaymentsResolver from '../../resolvers/createPaymentsResolver'
 
 export default createPaymentsResolver('Story:payments', ({ parent }) => ({
-  story: {
+  storyData: {
     id: parent.id,
   },
 }))

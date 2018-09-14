@@ -12,7 +12,7 @@ const storyUpdate = createPrivateResolver(
     const accountId = args.accountId
     const storyId = args.storyId
 
-    const story = (await query.stories<any>(
+    const story = (await query.stories(
       {
         where: {
           AND: [
@@ -27,7 +27,7 @@ const storyUpdate = createPrivateResolver(
           ],
         },
       },
-      '{ id, payments { id } }'
+      '{ id, draftData { id, payments { id } } }',
     ))[0]
 
     if (!story) {
@@ -36,28 +36,25 @@ const storyUpdate = createPrivateResolver(
 
     await assert.accountAccess(accountId)
 
-    const data: StoryUpdateInput = {
+    const data = {
       title: args.title,
       body: args.body && JSON.parse(args.body),
       coverImage: args.coverImage && JSON.parse(args.coverImage),
-    }
-
-    if (!R.isNil(args.isPublished)) {
-      data.isPublished = args.isPublished
+      payments: {},
     }
 
     if (args.paymentsIds) {
       const currentPaymentsIds = R.map(
         (payment: any) => payment.id,
-        story.payments
+        story.draftData.payments || [],
       )
       const toConnectPaymentsIds = R.difference(
         args.paymentsIds,
-        currentPaymentsIds
+        currentPaymentsIds,
       )
       const toDisconnectPaymentsIds = R.difference(
         currentPaymentsIds,
-        args.paymentsIds
+        args.paymentsIds,
       )
 
       data.payments = {
@@ -66,11 +63,13 @@ const storyUpdate = createPrivateResolver(
       }
     }
 
-    return await mutation.updateStory({
-      where: { id: storyId },
+    await mutation.updateStoryData({
+      where: { id: story.draftData.id },
       data,
     })
-  }
+
+    return await query.story({ where: { id: story.id } })
+  },
 )
 
 export default createMutations(field => ({
@@ -79,7 +78,6 @@ export default createMutations(field => ({
     .args((arg: any) => ({
       accountId: arg.ofType(ID),
       storyId: arg.ofType(ID),
-      isPublished: arg.ofType(Bool).nullable(),
       title: arg.ofType(String).nullable(),
       body: arg.ofType(Json).nullable(),
       coverImage: arg.ofType(Json).nullable(),

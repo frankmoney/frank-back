@@ -3,8 +3,8 @@ import createCountPaymentsResolver from '../../resolvers/createCountPaymentsReso
 export default createCountPaymentsResolver(
   'Story:countPayments',
   ({ parent }) => ({
-    story: {
+    storyData: {
       id: parent.id,
     },
-  })
+  }),
 )
