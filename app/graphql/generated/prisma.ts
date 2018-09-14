@@ -3377,8 +3377,8 @@ type StoryData {
   body: Json!
   coverImage: Json
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
-  draftStory(where: StoryWhereInput): Story!
-  publicStory(where: StoryWhereInput): Story!
+  draftStory(where: StoryWhereInput): Story
+  publicStory(where: StoryWhereInput): Story
 }
 
 """A connection to a list of items."""
@@ -3396,8 +3396,8 @@ input StoryDataCreateInput {
   body: Json!
   coverImage: Json
   payments: PaymentCreateManyInput
-  draftStory: StoryCreateOneWithoutDraftDataInput!
-  publicStory: StoryCreateOneWithoutPublicDataInput!
+  draftStory: StoryCreateOneWithoutDraftDataInput
+  publicStory: StoryCreateOneWithoutPublicDataInput
 }
 
 input StoryDataCreateOneWithoutDraftStoryInput {
@@ -3413,7 +3413,7 @@ input StoryDataCreateWithoutDraftStoryInput {
   body: Json!
   coverImage: Json
   payments: PaymentCreateManyInput
-  publicStory: StoryCreateOneWithoutPublicDataInput!
+  publicStory: StoryCreateOneWithoutPublicDataInput
 }
 
 input StoryDataCreateWithoutPublicStoryInput {
@@ -3421,7 +3421,7 @@ input StoryDataCreateWithoutPublicStoryInput {
   body: Json!
   coverImage: Json
   payments: PaymentCreateManyInput
-  draftStory: StoryCreateOneWithoutDraftDataInput!
+  draftStory: StoryCreateOneWithoutDraftDataInput
 }
 
 """An edge in a connection."""
@@ -3684,6 +3684,7 @@ input StoryUpdateManyWithoutAccountInput {
 input StoryUpdateOneWithoutDraftDataInput {
   create: StoryCreateWithoutDraftDataInput
   connect: StoryWhereUniqueInput
+  disconnect: Boolean
   delete: Boolean
   update: StoryUpdateWithoutDraftDataDataInput
   upsert: StoryUpsertWithoutDraftDataInput
@@ -3692,6 +3693,7 @@ input StoryUpdateOneWithoutDraftDataInput {
 input StoryUpdateOneWithoutPublicDataInput {
   create: StoryCreateWithoutPublicDataInput
   connect: StoryWhereUniqueInput
+  disconnect: Boolean
   delete: Boolean
   update: StoryUpdateWithoutPublicDataDataInput
   upsert: StoryUpsertWithoutPublicDataInput
@@ -5615,7 +5617,7 @@ export interface StoryDataCreateWithoutDraftStoryInput {
   body: Json
   coverImage?: Json
   payments?: PaymentCreateManyInput
-  publicStory: StoryCreateOneWithoutPublicDataInput
+  publicStory?: StoryCreateOneWithoutPublicDataInput
 }
 
 export interface StoryDataSubscriptionWhereInput {
@@ -5993,7 +5995,7 @@ export interface StoryDataCreateWithoutPublicStoryInput {
   body: Json
   coverImage?: Json
   payments?: PaymentCreateManyInput
-  draftStory: StoryCreateOneWithoutDraftDataInput
+  draftStory?: StoryCreateOneWithoutDraftDataInput
 }
 
 export interface UserWhereUniqueInput {
@@ -6237,8 +6239,8 @@ export interface StoryDataCreateInput {
   body: Json
   coverImage?: Json
   payments?: PaymentCreateManyInput
-  draftStory: StoryCreateOneWithoutDraftDataInput
-  publicStory: StoryCreateOneWithoutPublicDataInput
+  draftStory?: StoryCreateOneWithoutDraftDataInput
+  publicStory?: StoryCreateOneWithoutPublicDataInput
 }
 
 export interface PeerCategoryUpdateWithoutPeerDataInput {
@@ -7338,6 +7340,7 @@ export interface PaymentUpdateDataInput {
 export interface StoryUpdateOneWithoutDraftDataInput {
   create?: StoryCreateWithoutDraftDataInput
   connect?: StoryWhereUniqueInput
+  disconnect?: Boolean
   delete?: Boolean
   update?: StoryUpdateWithoutDraftDataDataInput
   upsert?: StoryUpsertWithoutDraftDataInput
@@ -7501,6 +7504,7 @@ export interface TeamMemberAccountCreateManyWithoutAccountInput {
 export interface StoryUpdateOneWithoutPublicDataInput {
   create?: StoryCreateWithoutPublicDataInput
   connect?: StoryWhereUniqueInput
+  disconnect?: Boolean
   delete?: Boolean
   update?: StoryUpdateWithoutPublicDataDataInput
   upsert?: StoryUpsertWithoutPublicDataInput
@@ -7870,8 +7874,8 @@ export interface StoryData {
   body: Json
   coverImage?: Json
   payments?: Payment[]
-  draftStory: Story
-  publicStory: Story
+  draftStory?: Story
+  publicStory?: Story
 }
 
 /*

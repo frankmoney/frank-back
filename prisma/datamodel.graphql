@@ -124,8 +124,8 @@ type StoryData {
   body: Json!
   coverImage: Json
   payments: [Payment!]!
-  draftStory: Story! @relation(name: "StoryDraftData")
-  publicStory: Story! @relation(name: "StoryPublicData")
+  draftStory: Story @relation(name: "StoryDraftData")
+  publicStory: Story @relation(name: "StoryPublicData")
 }
 
 type Onboarding {
