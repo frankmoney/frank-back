@@ -1553,7 +1553,8 @@ type Onboarding implements Node {
   accounts: Json
   account: Json
   categories: Json
-  memberGuid: String
+  mxMemberGuid: String
+  mxUserGuid: String
 }
 
 """A connection to a list of items."""
@@ -1573,7 +1574,8 @@ input OnboardingCreateInput {
   accounts: Json
   account: Json
   categories: Json
-  memberGuid: String
+  mxMemberGuid: String
+  mxUserGuid: String
   user: UserCreateOneInput!
 }
 
@@ -1601,8 +1603,10 @@ enum OnboardingOrderByInput {
   account_DESC
   categories_ASC
   categories_DESC
-  memberGuid_ASC
-  memberGuid_DESC
+  mxMemberGuid_ASC
+  mxMemberGuid_DESC
+  mxUserGuid_ASC
+  mxUserGuid_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -1617,7 +1621,8 @@ type OnboardingPreviousValues {
   accounts: Json
   account: Json
   categories: Json
-  memberGuid: String
+  mxMemberGuid: String
+  mxUserGuid: String
 }
 
 type OnboardingSubscriptionPayload {
@@ -1666,7 +1671,8 @@ input OnboardingUpdateInput {
   accounts: Json
   account: Json
   categories: Json
-  memberGuid: String
+  mxMemberGuid: String
+  mxUserGuid: String
   user: UserUpdateOneInput
 }
 
@@ -1759,46 +1765,86 @@ input OnboardingWhereInput {
 
   """All values not ending with the given string."""
   step_not_ends_with: String
-  memberGuid: String
+  mxMemberGuid: String
 
   """All values that are not equal to given value."""
-  memberGuid_not: String
+  mxMemberGuid_not: String
 
   """All values that are contained in given list."""
-  memberGuid_in: [String!]
+  mxMemberGuid_in: [String!]
 
   """All values that are not contained in given list."""
-  memberGuid_not_in: [String!]
+  mxMemberGuid_not_in: [String!]
 
   """All values less than the given value."""
-  memberGuid_lt: String
+  mxMemberGuid_lt: String
 
   """All values less than or equal the given value."""
-  memberGuid_lte: String
+  mxMemberGuid_lte: String
 
   """All values greater than the given value."""
-  memberGuid_gt: String
+  mxMemberGuid_gt: String
 
   """All values greater than or equal the given value."""
-  memberGuid_gte: String
+  mxMemberGuid_gte: String
 
   """All values containing the given string."""
-  memberGuid_contains: String
+  mxMemberGuid_contains: String
 
   """All values not containing the given string."""
-  memberGuid_not_contains: String
+  mxMemberGuid_not_contains: String
 
   """All values starting with the given string."""
-  memberGuid_starts_with: String
+  mxMemberGuid_starts_with: String
 
   """All values not starting with the given string."""
-  memberGuid_not_starts_with: String
+  mxMemberGuid_not_starts_with: String
 
   """All values ending with the given string."""
-  memberGuid_ends_with: String
+  mxMemberGuid_ends_with: String
 
   """All values not ending with the given string."""
-  memberGuid_not_ends_with: String
+  mxMemberGuid_not_ends_with: String
+  mxUserGuid: String
+
+  """All values that are not equal to given value."""
+  mxUserGuid_not: String
+
+  """All values that are contained in given list."""
+  mxUserGuid_in: [String!]
+
+  """All values that are not contained in given list."""
+  mxUserGuid_not_in: [String!]
+
+  """All values less than the given value."""
+  mxUserGuid_lt: String
+
+  """All values less than or equal the given value."""
+  mxUserGuid_lte: String
+
+  """All values greater than the given value."""
+  mxUserGuid_gt: String
+
+  """All values greater than or equal the given value."""
+  mxUserGuid_gte: String
+
+  """All values containing the given string."""
+  mxUserGuid_contains: String
+
+  """All values not containing the given string."""
+  mxUserGuid_not_contains: String
+
+  """All values starting with the given string."""
+  mxUserGuid_starts_with: String
+
+  """All values not starting with the given string."""
+  mxUserGuid_not_starts_with: String
+
+  """All values ending with the given string."""
+  mxUserGuid_ends_with: String
+
+  """All values not ending with the given string."""
+  mxUserGuid_not_ends_with: String
   user: UserWhereInput
 }
 
@@ -5377,8 +5423,10 @@ export type OnboardingOrderByInput =   'id_ASC' |
   'account_DESC' |
   'categories_ASC' |
   'categories_DESC' |
-  'memberGuid_ASC' |
-  'memberGuid_DESC' |
+  'mxMemberGuid_ASC' |
+  'mxMemberGuid_DESC' |
+  'mxUserGuid_ASC' |
+  'mxUserGuid_DESC' |
   'updatedAt_ASC' |
   'updatedAt_DESC' |
   'createdAt_ASC' |
@@ -6030,20 +6078,34 @@ export interface OnboardingWhereInput {
   step_not_starts_with?: String
   step_ends_with?: String
   step_not_ends_with?: String
-  memberGuid?: String
-  memberGuid_not?: String
-  memberGuid_in?: String[] | String
-  memberGuid_not_in?: String[] | String
-  memberGuid_lt?: String
-  memberGuid_lte?: String
-  memberGuid_gt?: String
-  memberGuid_gte?: String
-  memberGuid_contains?: String
-  memberGuid_not_contains?: String
-  memberGuid_starts_with?: String
-  memberGuid_not_starts_with?: String
-  memberGuid_ends_with?: String
-  memberGuid_not_ends_with?: String
+  mxMemberGuid?: String
+  mxMemberGuid_not?: String
+  mxMemberGuid_in?: String[] | String
+  mxMemberGuid_not_in?: String[] | String
+  mxMemberGuid_lt?: String
+  mxMemberGuid_lte?: String
+  mxMemberGuid_gt?: String
+  mxMemberGuid_gte?: String
+  mxMemberGuid_contains?: String
+  mxMemberGuid_not_contains?: String
+  mxMemberGuid_starts_with?: String
+  mxMemberGuid_not_starts_with?: String
+  mxMemberGuid_ends_with?: String
+  mxMemberGuid_not_ends_with?: String
+  mxUserGuid?: String
+  mxUserGuid_not?: String
+  mxUserGuid_in?: String[] | String
+  mxUserGuid_not_in?: String[] | String
+  mxUserGuid_lt?: String
+  mxUserGuid_lte?: String
+  mxUserGuid_gt?: String
+  mxUserGuid_gte?: String
+  mxUserGuid_contains?: String
+  mxUserGuid_not_contains?: String
+  mxUserGuid_starts_with?: String
+  mxUserGuid_not_starts_with?: String
+  mxUserGuid_ends_with?: String
+  mxUserGuid_not_ends_with?: String
   user?: UserWhereInput
 }
 
@@ -6060,7 +6122,8 @@ export interface OnboardingUpdateInput {
   accounts?: Json
   account?: Json
   categories?: Json
-  memberGuid?: String
+  mxMemberGuid?: String
+  mxUserGuid?: String
   user?: UserUpdateOneInput
 }
 
@@ -6382,7 +6445,8 @@ export interface OnboardingCreateInput {
   accounts?: Json
   account?: Json
   categories?: Json
-  memberGuid?: String
+  mxMemberGuid?: String
+  mxUserGuid?: String
   user: UserCreateOneInput
 }
 
@@ -8008,7 +8072,8 @@ export interface Onboarding extends Node {
   accounts?: Json
   account?: Json
   categories?: Json
-  memberGuid?: String
+  mxMemberGuid?: String
+  mxUserGuid?: String
 }
 
 export interface AggregateCategory {
@@ -8332,7 +8397,8 @@ export interface OnboardingPreviousValues {
   accounts?: Json
   account?: Json
   categories?: Json
-  memberGuid?: String
+  mxMemberGuid?: String
+  mxUserGuid?: String
 }
 
 /*

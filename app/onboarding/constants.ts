@@ -12,6 +12,3 @@ export const SUCCESS_STATUS = 'success'
 
 // MX statuses
 export const CONNECTED_MXSTATUS = 'CONNECTED'
-
-// others
-export const MX_TEMP_USER = 'USR-8b857430-06cd-c1e3-e0bf-d6a5145b9eaa'

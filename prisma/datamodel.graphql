@@ -139,5 +139,6 @@ type Onboarding {
   accounts: Json
   account: Json
   categories: Json
-  memberGuid: String
+  mxMemberGuid: String @rename(oldName: "memberGuid")
+  mxUserGuid: String
 }
