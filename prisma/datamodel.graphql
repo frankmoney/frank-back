@@ -28,7 +28,6 @@ type TeamMember {
   user: User!
   role: TeamMemberRole! @default(value: "MEMBER")
   canInvite: Boolean! @default(value: "false")
-  accounts: [TeamMemberAccount!]!
 }
 
 type Account {
@@ -41,16 +40,9 @@ type Account {
   categories: [Category!]!
   payments: [Payment!]!
   team: Team!
-  members: [TeamMemberAccount!]!
   peers: [Peer!]!
   stories: [Story!]!
   rawData: Json
-}
-
-type TeamMemberAccount {
-  id: ID! @unique
-  teamMember: TeamMember!
-  account: Account!
 }
 
 type Payment {
