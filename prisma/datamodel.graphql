@@ -27,7 +27,6 @@ type TeamMember {
   team: Team!
   user: User!
   role: TeamMemberRole! @default(value: "MEMBER")
-  canInvite: Boolean! @default(value: "false")
 }
 
 type Account {
@@ -131,6 +130,6 @@ type Onboarding {
   accounts: Json
   account: Json
   categories: Json
-  mxMemberGuid: String @rename(oldName: "memberGuid")
+  mxMemberGuid: String
   mxUserGuid: String
 }

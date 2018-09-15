@@ -1,6 +1,6 @@
 import { find, pathEq } from 'ramda'
 import { throwNotFound } from 'app/errors/NotFoundError'
-import { TeamMember} from 'app/graphql/generated/prisma'
+import { TeamMember } from 'app/graphql/generated/prisma'
 import createPrivateResolver from 'utils/createPrivateResolver'
 import getTeamMemberAcl from 'utils/getTeamMemberAcl'
 import mapTeamMemberRoleFromPrisma from 'utils/mapTeamMemberRoleFromPrisma'
@@ -21,10 +21,7 @@ const teamMemberUpdateRole = createPrivateResolver(
     const members = await query.teamMembers<TeamMember[]>(
       {
         where: {
-          OR: [
-            { user: { id: user.id } },
-            { user: { id: args.id } },
-          ],
+          OR: [{ user: { id: user.id } }, { user: { id: args.id } }],
           team: {
             members_some: {
               user: {
@@ -32,7 +29,7 @@ const teamMemberUpdateRole = createPrivateResolver(
               },
             },
           },
-        }
+        },
       },
       `{
         role

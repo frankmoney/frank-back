@@ -1,5 +1,5 @@
+import { Type } from 'gql'
 import TeamMemberRoleEnum from 'app/graphql/schema/TeamMemberRoleEnum'
-import { String, Type } from 'gql'
 import TeamMemberAclType from './TeamMemberAclType'
 
 const TeamMemberType = Type('TeamMember', type =>
@@ -11,9 +11,6 @@ const TeamMemberType = Type('TeamMember', type =>
     firstName: field.ofString().nullable(),
     avatar: field.ofJson(),
     role: field.ofType(TeamMemberRoleEnum),
-    admin: field.ofBool(),
-    canInvite: field.ofBool(),
-    accountIds: field.listOf(String),
     acl: field.ofType(TeamMemberAclType),
   }))
 )

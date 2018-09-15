@@ -6,20 +6,18 @@ import createPrivateResolver from 'utils/createPrivateResolver'
 
 const onboardingCancel = createPrivateResolver(
   'Mutation:onboarding:cancel',
-  async ({
-           user,
-           args: { institutionCode },
-           prisma,
-         }) => {
-
+  async ({ user, args: { institutionCode }, prisma }) => {
     const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
-
     if (existingOnboarding) {
-
       try {
-
-        const { mxMemberGuid, mxUserGuid } = await prisma.mutation.deleteOnboarding<Onboarding>({ where: { id: existingOnboarding.id } }, '{ mxMemberGuid, mxUserGuid }')
+        const {
+          mxMemberGuid,
+          mxUserGuid,
+        } = await prisma.mutation.deleteOnboarding<Onboarding>(
+          { where: { id: existingOnboarding.id } },
+          '{ mxMemberGuid, mxUserGuid }'
+        )
 
         await AtriumClient.deleteMember({
           params: {
@@ -27,14 +25,13 @@ const onboardingCancel = createPrivateResolver(
             memberGuid: mxMemberGuid,
           },
         })
-
       } catch (exc) {
         // ignore
       }
     }
 
     return true
-  },
+  }
 )
 
 export default createMutations(field => ({

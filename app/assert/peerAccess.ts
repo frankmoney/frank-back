@@ -12,8 +12,9 @@ const assertPeerAccess = async (
         user: {
           id: userId,
         },
-        accounts_some: {
-          account: {
+        role_in: ['ADMIN', 'MANAGER'],
+        team: {
+          accounts_some: {
             peers_some: {
               id: peerId,
             },

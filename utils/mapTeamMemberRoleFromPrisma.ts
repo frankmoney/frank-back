@@ -1,8 +1,12 @@
 import { throwArgumentError } from 'app/errors/ArgumentError'
 import { TeamMemberRole } from 'app/graphql/generated/prisma'
-import TeamMemberRoleEnum, { TeamMemberRoleEnumKeys } from 'app/graphql/schema/TeamMemberRoleEnum'
+import TeamMemberRoleEnum, {
+  TeamMemberRoleEnumKeys,
+} from 'app/graphql/schema/TeamMemberRoleEnum'
 
-const mapTeamMemberRoleFromPrisma = (role: TeamMemberRole): TeamMemberRoleEnumKeys => {
+const mapTeamMemberRoleFromPrisma = (
+  role: TeamMemberRole
+): TeamMemberRoleEnumKeys => {
   switch (role) {
     case 'ADMIN':
       return TeamMemberRoleEnum.values.administrator

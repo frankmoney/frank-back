@@ -9,21 +9,21 @@ import R from 'ramda'
 
 const onboardingSelectAccount = createPrivateResolver(
   'Mutation:onboarding:selectAccount',
-  async ({
-           user,
-           args: { accountGuid },
-           prisma,
-         }) => {
-
+  async ({ user, args: { accountGuid }, prisma }) => {
     const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
     if (!existingOnboarding) {
       return throwArgumentError()
     }
 
-    const mxAccount = R.find(R.propEq('guid', accountGuid), existingOnboarding.accounts)
+    const mxAccount = R.find(
+      R.propEq('guid', accountGuid),
+      existingOnboarding.accounts
+    )
 
-    const updatedOnboarding = await prisma.mutation.updateOnboarding<Onboarding>({
+    const updatedOnboarding = await prisma.mutation.updateOnboarding<
+      Onboarding
+    >({
       where: { id: existingOnboarding.id },
       data: {
         step: ACCOUNT_STEP,
@@ -36,7 +36,7 @@ const onboardingSelectAccount = createPrivateResolver(
     })
 
     return updatedOnboarding
-  },
+  }
 )
 
 export default createMutations(field => ({

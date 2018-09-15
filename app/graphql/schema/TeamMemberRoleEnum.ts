@@ -6,7 +6,4 @@ const TeamMemberRoleEnum = Enum('TeamMemberRole', type =>
 
 export default TeamMemberRoleEnum
 
-export type TeamMemberRoleEnumKeys =
-  | 'administrator'
-  | 'manager'
-  | 'observer'
+export type TeamMemberRoleEnumKeys = 'administrator' | 'manager' | 'observer'

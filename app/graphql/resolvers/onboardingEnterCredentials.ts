@@ -12,12 +12,7 @@ import R from 'ramda'
 
 const onboardingEnterCredentials = createPrivateResolver(
   'Mutation:onboarding:enterCredentials',
-  async ({
-           user,
-           args: { credentials },
-           prisma,
-         }) => {
-
+  async ({ user, args: { credentials }, prisma }) => {
     const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
     if (!existingOnboarding) {
@@ -35,11 +30,10 @@ const onboardingEnterCredentials = createPrivateResolver(
           status: CHECKING_STATUS,
         },
       },
-    });
+    })
 
     // do async stuff: find and sync member or create new member
-    (() => {
-
+    ;(() => {
       const institutionCode = updatedOnboarding.institution.code
 
       AtriumClient.createUser({
@@ -49,37 +43,36 @@ const onboardingEnterCredentials = createPrivateResolver(
           },
         },
       }).then(({ user: { guid } }: any) => {
-
-        prisma.mutation.updateOnboarding({
-          where: { id: updatedOnboarding.id },
-          data: {
-            mxUserGuid: guid,
-          },
-        }).then(() => {
-
-          AtriumClient.createMember({
-            params: { userGuid: guid },
-            body: {
-              member: {
-                'institution_code': institutionCode,
-                credentials: credentials.map(JSON.parse),
-              },
+        prisma.mutation
+          .updateOnboarding({
+            where: { id: updatedOnboarding.id },
+            data: {
+              mxUserGuid: guid,
             },
-          }).then(({ member }: any) => {
-
-            prisma.mutation.updateOnboarding({
-              where: { id: updatedOnboarding.id },
-              data: {
-                mxMemberGuid: member.guid,
+          })
+          .then(() => {
+            AtriumClient.createMember({
+              params: { userGuid: guid },
+              body: {
+                member: {
+                  institution_code: institutionCode,
+                  credentials: credentials.map(JSON.parse),
+                },
               },
+            }).then(({ member }: any) => {
+              prisma.mutation.updateOnboarding({
+                where: { id: updatedOnboarding.id },
+                data: {
+                  mxMemberGuid: member.guid,
+                },
+              })
             })
           })
-        })
       })
     })()
 
     return updatedOnboarding
-  },
+  }
 )
 
 export default createMutations(field => ({

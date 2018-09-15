@@ -1,7 +1,11 @@
 import { throwForbidden } from 'app/errors/ForbiddenError'
 import { Query } from 'app/graphql/generated/prisma'
 
-const assertCanUpdateTeamMemberRole = async (currentUserId: string, subjectUserId: string, { query }: { query: Query }) => {
+const assertCanUpdateTeamMemberRole = async (
+  currentUserId: string,
+  subjectUserId: string,
+  { query }: { query: Query }
+) => {
   const teamMembers = await query.teamMembers({
     where: {
       user: { id: subjectUserId },

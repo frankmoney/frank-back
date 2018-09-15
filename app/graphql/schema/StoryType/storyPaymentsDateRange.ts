@@ -11,7 +11,7 @@ export default createPrivateResolver(
         },
         orderBy: 'postedOn_DESC',
       },
-      '{ postedOn }',
+      '{ postedOn }'
     )
 
     const dates = R.map(p => p.postedOn, payments)
@@ -23,5 +23,5 @@ export default createPrivateResolver(
     }
 
     return []
-  },
+  }
 )

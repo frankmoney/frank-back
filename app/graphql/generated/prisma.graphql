@@ -1,5 +1,5 @@
 # source: http://prisma.frank-dev1.frank.ly
-# timestamp: Fri Sep 14 2018 19:46:36 GMT+0500 (Yekaterinburg Standard Time)
+# timestamp: Sun Sep 16 2018 01:28:45 GMT+0300 (Russia TZ 2 Standard Time)
 
 type Account implements Node {
   id: ID!
@@ -11,7 +11,6 @@ type Account implements Node {
   categories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category!]
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
   team(where: TeamWhereInput): Team!
-  members(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMemberAccount!]
   peers(where: PeerWhereInput, orderBy: PeerOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Peer!]
   stories(where: StoryWhereInput, orderBy: StoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Story!]
   rawData: Json
@@ -37,7 +36,6 @@ input AccountCreateInput {
   categories: CategoryCreateManyWithoutAccountInput
   payments: PaymentCreateManyWithoutAccountInput
   team: TeamCreateOneWithoutAccountsInput!
-  members: TeamMemberAccountCreateManyWithoutAccountInput
   peers: PeerCreateManyWithoutAccountInput
   stories: StoryCreateManyWithoutAccountInput
 }
@@ -49,11 +47,6 @@ input AccountCreateManyWithoutTeamInput {
 
 input AccountCreateOneWithoutCategoriesInput {
   create: AccountCreateWithoutCategoriesInput
-  connect: AccountWhereUniqueInput
-}
-
-input AccountCreateOneWithoutMembersInput {
-  create: AccountCreateWithoutMembersInput
   connect: AccountWhereUniqueInput
 }
 
@@ -81,21 +74,6 @@ input AccountCreateWithoutCategoriesInput {
   rawData: Json
   payments: PaymentCreateManyWithoutAccountInput
   team: TeamCreateOneWithoutAccountsInput!
-  members: TeamMemberAccountCreateManyWithoutAccountInput
-  peers: PeerCreateManyWithoutAccountInput
-  stories: StoryCreateManyWithoutAccountInput
-}
-
-input AccountCreateWithoutMembersInput {
-  name: String!
-  nameNormalized: String
-  balance: Float
-  revenue: Float
-  spendings: Float
-  rawData: Json
-  categories: CategoryCreateManyWithoutAccountInput
-  payments: PaymentCreateManyWithoutAccountInput
-  team: TeamCreateOneWithoutAccountsInput!
   peers: PeerCreateManyWithoutAccountInput
   stories: StoryCreateManyWithoutAccountInput
 }
@@ -109,7 +87,6 @@ input AccountCreateWithoutPaymentsInput {
   rawData: Json
   categories: CategoryCreateManyWithoutAccountInput
   team: TeamCreateOneWithoutAccountsInput!
-  members: TeamMemberAccountCreateManyWithoutAccountInput
   peers: PeerCreateManyWithoutAccountInput
   stories: StoryCreateManyWithoutAccountInput
 }
@@ -124,7 +101,6 @@ input AccountCreateWithoutPeersInput {
   categories: CategoryCreateManyWithoutAccountInput
   payments: PaymentCreateManyWithoutAccountInput
   team: TeamCreateOneWithoutAccountsInput!
-  members: TeamMemberAccountCreateManyWithoutAccountInput
   stories: StoryCreateManyWithoutAccountInput
 }
 
@@ -138,7 +114,6 @@ input AccountCreateWithoutStoriesInput {
   categories: CategoryCreateManyWithoutAccountInput
   payments: PaymentCreateManyWithoutAccountInput
   team: TeamCreateOneWithoutAccountsInput!
-  members: TeamMemberAccountCreateManyWithoutAccountInput
   peers: PeerCreateManyWithoutAccountInput
 }
 
@@ -151,7 +126,6 @@ input AccountCreateWithoutTeamInput {
   rawData: Json
   categories: CategoryCreateManyWithoutAccountInput
   payments: PaymentCreateManyWithoutAccountInput
-  members: TeamMemberAccountCreateManyWithoutAccountInput
   peers: PeerCreateManyWithoutAccountInput
   stories: StoryCreateManyWithoutAccountInput
 }
@@ -245,7 +219,6 @@ input AccountUpdateInput {
   categories: CategoryUpdateManyWithoutAccountInput
   payments: PaymentUpdateManyWithoutAccountInput
   team: TeamUpdateOneWithoutAccountsInput
-  members: TeamMemberAccountUpdateManyWithoutAccountInput
   peers: PeerUpdateManyWithoutAccountInput
   stories: StoryUpdateManyWithoutAccountInput
 }
@@ -265,14 +238,6 @@ input AccountUpdateOneWithoutCategoriesInput {
   delete: Boolean
   update: AccountUpdateWithoutCategoriesDataInput
   upsert: AccountUpsertWithoutCategoriesInput
-}
-
-input AccountUpdateOneWithoutMembersInput {
-  create: AccountCreateWithoutMembersInput
-  connect: AccountWhereUniqueInput
-  delete: Boolean
-  update: AccountUpdateWithoutMembersDataInput
-  upsert: AccountUpsertWithoutMembersInput
 }
 
 input AccountUpdateOneWithoutPaymentsInput {
@@ -308,21 +273,6 @@ input AccountUpdateWithoutCategoriesDataInput {
   rawData: Json
   payments: PaymentUpdateManyWithoutAccountInput
   team: TeamUpdateOneWithoutAccountsInput
-  members: TeamMemberAccountUpdateManyWithoutAccountInput
-  peers: PeerUpdateManyWithoutAccountInput
-  stories: StoryUpdateManyWithoutAccountInput
-}
-
-input AccountUpdateWithoutMembersDataInput {
-  name: String
-  nameNormalized: String
-  balance: Float
-  revenue: Float
-  spendings: Float
-  rawData: Json
-  categories: CategoryUpdateManyWithoutAccountInput
-  payments: PaymentUpdateManyWithoutAccountInput
-  team: TeamUpdateOneWithoutAccountsInput
   peers: PeerUpdateManyWithoutAccountInput
   stories: StoryUpdateManyWithoutAccountInput
 }
@@ -336,7 +286,6 @@ input AccountUpdateWithoutPaymentsDataInput {
   rawData: Json
   categories: CategoryUpdateManyWithoutAccountInput
   team: TeamUpdateOneWithoutAccountsInput
-  members: TeamMemberAccountUpdateManyWithoutAccountInput
   peers: PeerUpdateManyWithoutAccountInput
   stories: StoryUpdateManyWithoutAccountInput
 }
@@ -351,7 +300,6 @@ input AccountUpdateWithoutPeersDataInput {
   categories: CategoryUpdateManyWithoutAccountInput
   payments: PaymentUpdateManyWithoutAccountInput
   team: TeamUpdateOneWithoutAccountsInput
-  members: TeamMemberAccountUpdateManyWithoutAccountInput
   stories: StoryUpdateManyWithoutAccountInput
 }
 
@@ -365,7 +313,6 @@ input AccountUpdateWithoutStoriesDataInput {
   categories: CategoryUpdateManyWithoutAccountInput
   payments: PaymentUpdateManyWithoutAccountInput
   team: TeamUpdateOneWithoutAccountsInput
-  members: TeamMemberAccountUpdateManyWithoutAccountInput
   peers: PeerUpdateManyWithoutAccountInput
 }
 
@@ -378,7 +325,6 @@ input AccountUpdateWithoutTeamDataInput {
   rawData: Json
   categories: CategoryUpdateManyWithoutAccountInput
   payments: PaymentUpdateManyWithoutAccountInput
-  members: TeamMemberAccountUpdateManyWithoutAccountInput
   peers: PeerUpdateManyWithoutAccountInput
   stories: StoryUpdateManyWithoutAccountInput
 }
@@ -391,11 +337,6 @@ input AccountUpdateWithWhereUniqueWithoutTeamInput {
 input AccountUpsertWithoutCategoriesInput {
   update: AccountUpdateWithoutCategoriesDataInput!
   create: AccountCreateWithoutCategoriesInput!
-}
-
-input AccountUpsertWithoutMembersInput {
-  update: AccountUpdateWithoutMembersDataInput!
-  create: AccountCreateWithoutMembersInput!
 }
 
 input AccountUpsertWithoutPaymentsInput {
@@ -621,9 +562,6 @@ input AccountWhereInput {
   payments_some: PaymentWhereInput
   payments_none: PaymentWhereInput
   team: TeamWhereInput
-  members_every: TeamMemberAccountWhereInput
-  members_some: TeamMemberAccountWhereInput
-  members_none: TeamMemberAccountWhereInput
   peers_every: PeerWhereInput
   peers_some: PeerWhereInput
   peers_none: PeerWhereInput
@@ -677,10 +615,6 @@ type AggregateTeam {
 }
 
 type AggregateTeamMember {
-  count: Int!
-}
-
-type AggregateTeamMemberAccount {
   count: Int!
 }
 
@@ -1275,7 +1209,6 @@ type Mutation {
   createTeam(data: TeamCreateInput!): Team!
   createTeamMember(data: TeamMemberCreateInput!): TeamMember!
   createAccount(data: AccountCreateInput!): Account!
-  createTeamMemberAccount(data: TeamMemberAccountCreateInput!): TeamMemberAccount!
   createPayment(data: PaymentCreateInput!): Payment!
   createPeer(data: PeerCreateInput!): Peer!
   createComment(data: CommentCreateInput!): Comment!
@@ -1288,7 +1221,6 @@ type Mutation {
   updateTeam(data: TeamUpdateInput!, where: TeamWhereUniqueInput!): Team
   updateTeamMember(data: TeamMemberUpdateInput!, where: TeamMemberWhereUniqueInput!): TeamMember
   updateAccount(data: AccountUpdateInput!, where: AccountWhereUniqueInput!): Account
-  updateTeamMemberAccount(data: TeamMemberAccountUpdateInput!, where: TeamMemberAccountWhereUniqueInput!): TeamMemberAccount
   updatePayment(data: PaymentUpdateInput!, where: PaymentWhereUniqueInput!): Payment
   updatePeer(data: PeerUpdateInput!, where: PeerWhereUniqueInput!): Peer
   updateComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
@@ -1301,7 +1233,6 @@ type Mutation {
   deleteTeam(where: TeamWhereUniqueInput!): Team
   deleteTeamMember(where: TeamMemberWhereUniqueInput!): TeamMember
   deleteAccount(where: AccountWhereUniqueInput!): Account
-  deleteTeamMemberAccount(where: TeamMemberAccountWhereUniqueInput!): TeamMemberAccount
   deletePayment(where: PaymentWhereUniqueInput!): Payment
   deletePeer(where: PeerWhereUniqueInput!): Peer
   deleteComment(where: CommentWhereUniqueInput!): Comment
@@ -1314,7 +1245,6 @@ type Mutation {
   upsertTeam(where: TeamWhereUniqueInput!, create: TeamCreateInput!, update: TeamUpdateInput!): Team!
   upsertTeamMember(where: TeamMemberWhereUniqueInput!, create: TeamMemberCreateInput!, update: TeamMemberUpdateInput!): TeamMember!
   upsertAccount(where: AccountWhereUniqueInput!, create: AccountCreateInput!, update: AccountUpdateInput!): Account!
-  upsertTeamMemberAccount(where: TeamMemberAccountWhereUniqueInput!, create: TeamMemberAccountCreateInput!, update: TeamMemberAccountUpdateInput!): TeamMemberAccount!
   upsertPayment(where: PaymentWhereUniqueInput!, create: PaymentCreateInput!, update: PaymentUpdateInput!): Payment!
   upsertPeer(where: PeerWhereUniqueInput!, create: PeerCreateInput!, update: PeerUpdateInput!): Peer!
   upsertComment(where: CommentWhereUniqueInput!, create: CommentCreateInput!, update: CommentUpdateInput!): Comment!
@@ -1327,7 +1257,6 @@ type Mutation {
   updateManyTeams(data: TeamUpdateInput!, where: TeamWhereInput): BatchPayload!
   updateManyTeamMembers(data: TeamMemberUpdateInput!, where: TeamMemberWhereInput): BatchPayload!
   updateManyAccounts(data: AccountUpdateInput!, where: AccountWhereInput): BatchPayload!
-  updateManyTeamMemberAccounts(data: TeamMemberAccountUpdateInput!, where: TeamMemberAccountWhereInput): BatchPayload!
   updateManyPayments(data: PaymentUpdateInput!, where: PaymentWhereInput): BatchPayload!
   updateManyPeers(data: PeerUpdateInput!, where: PeerWhereInput): BatchPayload!
   updateManyComments(data: CommentUpdateInput!, where: CommentWhereInput): BatchPayload!
@@ -1340,7 +1269,6 @@ type Mutation {
   deleteManyTeams(where: TeamWhereInput): BatchPayload!
   deleteManyTeamMembers(where: TeamMemberWhereInput): BatchPayload!
   deleteManyAccounts(where: AccountWhereInput): BatchPayload!
-  deleteManyTeamMemberAccounts(where: TeamMemberAccountWhereInput): BatchPayload!
   deleteManyPayments(where: PaymentWhereInput): BatchPayload!
   deleteManyPeers(where: PeerWhereInput): BatchPayload!
   deleteManyComments(where: CommentWhereInput): BatchPayload!
@@ -3166,7 +3094,6 @@ type Query {
   teams(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Team]!
   teamMembers(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMember]!
   accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account]!
-  teamMemberAccounts(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMemberAccount]!
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment]!
   peers(where: PeerWhereInput, orderBy: PeerOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Peer]!
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment]!
@@ -3179,7 +3106,6 @@ type Query {
   team(where: TeamWhereUniqueInput!): Team
   teamMember(where: TeamMemberWhereUniqueInput!): TeamMember
   account(where: AccountWhereUniqueInput!): Account
-  teamMemberAccount(where: TeamMemberAccountWhereUniqueInput!): TeamMemberAccount
   payment(where: PaymentWhereUniqueInput!): Payment
   peer(where: PeerWhereUniqueInput!): Peer
   comment(where: CommentWhereUniqueInput!): Comment
@@ -3192,7 +3118,6 @@ type Query {
   teamsConnection(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamConnection!
   teamMembersConnection(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamMemberConnection!
   accountsConnection(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): AccountConnection!
-  teamMemberAccountsConnection(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamMemberAccountConnection!
   paymentsConnection(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PaymentConnection!
   peersConnection(where: PeerWhereInput, orderBy: PeerOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PeerConnection!
   commentsConnection(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CommentConnection!
@@ -3831,7 +3756,6 @@ type Subscription {
   team(where: TeamSubscriptionWhereInput): TeamSubscriptionPayload
   teamMember(where: TeamMemberSubscriptionWhereInput): TeamMemberSubscriptionPayload
   account(where: AccountSubscriptionWhereInput): AccountSubscriptionPayload
-  teamMemberAccount(where: TeamMemberAccountSubscriptionWhereInput): TeamMemberAccountSubscriptionPayload
   payment(where: PaymentSubscriptionWhereInput): PaymentSubscriptionPayload
   peer(where: PeerSubscriptionWhereInput): PeerSubscriptionPayload
   comment(where: CommentSubscriptionWhereInput): CommentSubscriptionPayload
@@ -3904,218 +3828,6 @@ type TeamMember implements Node {
   team(where: TeamWhereInput): Team!
   user(where: UserWhereInput): User!
   role: TeamMemberRole!
-  canInvite: Boolean!
-  accounts(where: TeamMemberAccountWhereInput, orderBy: TeamMemberAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMemberAccount!]
-}
-
-type TeamMemberAccount implements Node {
-  id: ID!
-  teamMember(where: TeamMemberWhereInput): TeamMember!
-  account(where: AccountWhereInput): Account!
-}
-
-"""A connection to a list of items."""
-type TeamMemberAccountConnection {
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """A list of edges."""
-  edges: [TeamMemberAccountEdge]!
-  aggregate: AggregateTeamMemberAccount!
-}
-
-input TeamMemberAccountCreateInput {
-  teamMember: TeamMemberCreateOneWithoutAccountsInput!
-  account: AccountCreateOneWithoutMembersInput!
-}
-
-input TeamMemberAccountCreateManyWithoutAccountInput {
-  create: [TeamMemberAccountCreateWithoutAccountInput!]
-  connect: [TeamMemberAccountWhereUniqueInput!]
-}
-
-input TeamMemberAccountCreateManyWithoutTeamMemberInput {
-  create: [TeamMemberAccountCreateWithoutTeamMemberInput!]
-  connect: [TeamMemberAccountWhereUniqueInput!]
-}
-
-input TeamMemberAccountCreateWithoutAccountInput {
-  teamMember: TeamMemberCreateOneWithoutAccountsInput!
-}
-
-input TeamMemberAccountCreateWithoutTeamMemberInput {
-  account: AccountCreateOneWithoutMembersInput!
-}
-
-"""An edge in a connection."""
-type TeamMemberAccountEdge {
-  """The item at the end of the edge."""
-  node: TeamMemberAccount!
-
-  """A cursor for use in pagination."""
-  cursor: String!
-}
-
-enum TeamMemberAccountOrderByInput {
-  id_ASC
-  id_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  createdAt_ASC
-  createdAt_DESC
-}
-
-type TeamMemberAccountPreviousValues {
-  id: ID!
-}
-
-type TeamMemberAccountSubscriptionPayload {
-  mutation: MutationType!
-  node: TeamMemberAccount
-  updatedFields: [String!]
-  previousValues: TeamMemberAccountPreviousValues
-}
-
-input TeamMemberAccountSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [TeamMemberAccountSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [TeamMemberAccountSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [TeamMemberAccountSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: TeamMemberAccountWhereInput
-}
-
-input TeamMemberAccountUpdateInput {
-  teamMember: TeamMemberUpdateOneWithoutAccountsInput
-  account: AccountUpdateOneWithoutMembersInput
-}
-
-input TeamMemberAccountUpdateManyWithoutAccountInput {
-  create: [TeamMemberAccountCreateWithoutAccountInput!]
-  connect: [TeamMemberAccountWhereUniqueInput!]
-  disconnect: [TeamMemberAccountWhereUniqueInput!]
-  delete: [TeamMemberAccountWhereUniqueInput!]
-  update: [TeamMemberAccountUpdateWithWhereUniqueWithoutAccountInput!]
-  upsert: [TeamMemberAccountUpsertWithWhereUniqueWithoutAccountInput!]
-}
-
-input TeamMemberAccountUpdateManyWithoutTeamMemberInput {
-  create: [TeamMemberAccountCreateWithoutTeamMemberInput!]
-  connect: [TeamMemberAccountWhereUniqueInput!]
-  disconnect: [TeamMemberAccountWhereUniqueInput!]
-  delete: [TeamMemberAccountWhereUniqueInput!]
-  update: [TeamMemberAccountUpdateWithWhereUniqueWithoutTeamMemberInput!]
-  upsert: [TeamMemberAccountUpsertWithWhereUniqueWithoutTeamMemberInput!]
-}
-
-input TeamMemberAccountUpdateWithoutAccountDataInput {
-  teamMember: TeamMemberUpdateOneWithoutAccountsInput
-}
-
-input TeamMemberAccountUpdateWithoutTeamMemberDataInput {
-  account: AccountUpdateOneWithoutMembersInput
-}
-
-input TeamMemberAccountUpdateWithWhereUniqueWithoutAccountInput {
-  where: TeamMemberAccountWhereUniqueInput!
-  data: TeamMemberAccountUpdateWithoutAccountDataInput!
-}
-
-input TeamMemberAccountUpdateWithWhereUniqueWithoutTeamMemberInput {
-  where: TeamMemberAccountWhereUniqueInput!
-  data: TeamMemberAccountUpdateWithoutTeamMemberDataInput!
-}
-
-input TeamMemberAccountUpsertWithWhereUniqueWithoutAccountInput {
-  where: TeamMemberAccountWhereUniqueInput!
-  update: TeamMemberAccountUpdateWithoutAccountDataInput!
-  create: TeamMemberAccountCreateWithoutAccountInput!
-}
-
-input TeamMemberAccountUpsertWithWhereUniqueWithoutTeamMemberInput {
-  where: TeamMemberAccountWhereUniqueInput!
-  update: TeamMemberAccountUpdateWithoutTeamMemberDataInput!
-  create: TeamMemberAccountCreateWithoutTeamMemberInput!
-}
-
-input TeamMemberAccountWhereInput {
-  """Logical AND on all given filters."""
-  AND: [TeamMemberAccountWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [TeamMemberAccountWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [TeamMemberAccountWhereInput!]
-  id: ID
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID!]
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID!]
-
-  """All values less than the given value."""
-  id_lt: ID
-
-  """All values less than or equal the given value."""
-  id_lte: ID
-
-  """All values greater than the given value."""
-  id_gt: ID
-
-  """All values greater than or equal the given value."""
-  id_gte: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values not ending with the given string."""
-  id_not_ends_with: ID
-  teamMember: TeamMemberWhereInput
-  account: AccountWhereInput
-}
-
-input TeamMemberAccountWhereUniqueInput {
-  id: ID
 }
 
 """A connection to a list of items."""
@@ -4130,10 +3842,8 @@ type TeamMemberConnection {
 
 input TeamMemberCreateInput {
   role: TeamMemberRole
-  canInvite: Boolean
   team: TeamCreateOneWithoutMembersInput!
   user: UserCreateOneWithoutTeamsInput!
-  accounts: TeamMemberAccountCreateManyWithoutTeamMemberInput
 }
 
 input TeamMemberCreateManyWithoutTeamInput {
@@ -4146,30 +3856,14 @@ input TeamMemberCreateManyWithoutUserInput {
   connect: [TeamMemberWhereUniqueInput!]
 }
 
-input TeamMemberCreateOneWithoutAccountsInput {
-  create: TeamMemberCreateWithoutAccountsInput
-  connect: TeamMemberWhereUniqueInput
-}
-
-input TeamMemberCreateWithoutAccountsInput {
-  role: TeamMemberRole
-  canInvite: Boolean
-  team: TeamCreateOneWithoutMembersInput!
-  user: UserCreateOneWithoutTeamsInput!
-}
-
 input TeamMemberCreateWithoutTeamInput {
   role: TeamMemberRole
-  canInvite: Boolean
   user: UserCreateOneWithoutTeamsInput!
-  accounts: TeamMemberAccountCreateManyWithoutTeamMemberInput
 }
 
 input TeamMemberCreateWithoutUserInput {
   role: TeamMemberRole
-  canInvite: Boolean
   team: TeamCreateOneWithoutMembersInput!
-  accounts: TeamMemberAccountCreateManyWithoutTeamMemberInput
 }
 
 """An edge in a connection."""
@@ -4186,8 +3880,6 @@ enum TeamMemberOrderByInput {
   id_DESC
   role_ASC
   role_DESC
-  canInvite_ASC
-  canInvite_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -4197,7 +3889,6 @@ enum TeamMemberOrderByInput {
 type TeamMemberPreviousValues {
   id: ID!
   role: TeamMemberRole!
-  canInvite: Boolean!
 }
 
 enum TeamMemberRole {
@@ -4247,10 +3938,8 @@ input TeamMemberSubscriptionWhereInput {
 
 input TeamMemberUpdateInput {
   role: TeamMemberRole
-  canInvite: Boolean
   team: TeamUpdateOneWithoutMembersInput
   user: UserUpdateOneWithoutTeamsInput
-  accounts: TeamMemberAccountUpdateManyWithoutTeamMemberInput
 }
 
 input TeamMemberUpdateManyWithoutTeamInput {
@@ -4271,33 +3960,14 @@ input TeamMemberUpdateManyWithoutUserInput {
   upsert: [TeamMemberUpsertWithWhereUniqueWithoutUserInput!]
 }
 
-input TeamMemberUpdateOneWithoutAccountsInput {
-  create: TeamMemberCreateWithoutAccountsInput
-  connect: TeamMemberWhereUniqueInput
-  delete: Boolean
-  update: TeamMemberUpdateWithoutAccountsDataInput
-  upsert: TeamMemberUpsertWithoutAccountsInput
-}
-
-input TeamMemberUpdateWithoutAccountsDataInput {
-  role: TeamMemberRole
-  canInvite: Boolean
-  team: TeamUpdateOneWithoutMembersInput
-  user: UserUpdateOneWithoutTeamsInput
-}
-
 input TeamMemberUpdateWithoutTeamDataInput {
   role: TeamMemberRole
-  canInvite: Boolean
   user: UserUpdateOneWithoutTeamsInput
-  accounts: TeamMemberAccountUpdateManyWithoutTeamMemberInput
 }
 
 input TeamMemberUpdateWithoutUserDataInput {
   role: TeamMemberRole
-  canInvite: Boolean
   team: TeamUpdateOneWithoutMembersInput
-  accounts: TeamMemberAccountUpdateManyWithoutTeamMemberInput
 }
 
 input TeamMemberUpdateWithWhereUniqueWithoutTeamInput {
@@ -4308,11 +3978,6 @@ input TeamMemberUpdateWithWhereUniqueWithoutTeamInput {
 input TeamMemberUpdateWithWhereUniqueWithoutUserInput {
   where: TeamMemberWhereUniqueInput!
   data: TeamMemberUpdateWithoutUserDataInput!
-}
-
-input TeamMemberUpsertWithoutAccountsInput {
-  update: TeamMemberUpdateWithoutAccountsDataInput!
-  create: TeamMemberCreateWithoutAccountsInput!
 }
 
 input TeamMemberUpsertWithWhereUniqueWithoutTeamInput {
@@ -4386,15 +4051,8 @@ input TeamMemberWhereInput {
 
   """All values that are not contained in given list."""
   role_not_in: [TeamMemberRole!]
-  canInvite: Boolean
-
-  """All values that are not equal to given value."""
-  canInvite_not: Boolean
   team: TeamWhereInput
   user: UserWhereInput
-  accounts_every: TeamMemberAccountWhereInput
-  accounts_some: TeamMemberAccountWhereInput
-  accounts_none: TeamMemberAccountWhereInput
 }
 
 input TeamMemberWhereUniqueInput {

@@ -5,7 +5,6 @@ import createPrivateResolver from 'utils/createPrivateResolver'
 export default createPrivateResolver(
   'Mutation:onboarding:institutions',
   async ({ args: { name } }) => {
-
     const { institutions } = await AtriumClient.listInstitutions({
       params: {
         name,
@@ -13,5 +12,5 @@ export default createPrivateResolver(
     })
 
     return humps.camelizeKeys(institutions)
-  },
+  }
 )

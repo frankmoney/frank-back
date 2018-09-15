@@ -12,8 +12,8 @@ const assertAccountAccess = async (
         user: {
           id: userId,
         },
-        accounts_some: {
-          account: {
+        team: {
+          accounts_some: {
             id: accountId,
           },
         },

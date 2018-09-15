@@ -11,11 +11,7 @@ const FRANK_TEMA_ID = 'cjk8djl16000h07164aewu80g'
 
 const onboardingFinish = createPrivateResolver(
   'Mutation:onboarding:finish',
-  async ({
-           user,
-           prisma,
-         }) => {
-
+  async ({ user, prisma }) => {
     const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
     if (!existingOnboarding) {
@@ -27,8 +23,8 @@ const onboardingFinish = createPrivateResolver(
       nameNormalized: normalizeString(category.name),
     }))
 
-    const name = existingOnboarding.account.frankTitle
-      || existingOnboarding.account.name
+    const name =
+      existingOnboarding.account.frankTitle || existingOnboarding.account.name
 
     const account = await prisma.mutation.createAccount({
       data: {
@@ -39,7 +35,6 @@ const onboardingFinish = createPrivateResolver(
       },
     })
 
-
     await prisma.mutation.updateOnboarding({
       where: { id: existingOnboarding.id },
       data: {
@@ -48,11 +43,9 @@ const onboardingFinish = createPrivateResolver(
     })
 
     return account
-  },
+  }
 )
 
 export default createMutations(field => ({
-  onboardingFinish: field
-    .ofType(AccountType)
-    .resolve(onboardingFinish),
+  onboardingFinish: field.ofType(AccountType).resolve(onboardingFinish),
 }))
