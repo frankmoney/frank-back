@@ -33,6 +33,9 @@ const createStoriesResolver = <TArgs = any>(
       where.isPublished = args.isPublished
     }
 
+    const paymentScheme = `{ id, postedOn, amount, peerName, description }`
+    const storyScheme = `{ title, body, coverImage, payments ${paymentScheme} }`
+
     const stories = await query.stories<Story[]>(
       {
         where,
@@ -40,7 +43,7 @@ const createStoriesResolver = <TArgs = any>(
         first,
         skip,
       },
-      `{ id, title, body, coverImage, isPublished, updatedAt }`
+      `{ id, isPublished, updatedAt, draftData ${storyScheme}, publicData ${storyScheme} }`
     )
 
     return stories
