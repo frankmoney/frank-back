@@ -12,8 +12,8 @@ export default createPrivateResolver(
   async ({ user, args, prisma: { query } }) => {
     const where: StoryWhereInput = {
       account: {
-        members_some: {
-          teamMember: {
+        team: {
+          members_some: {
             user: {
               id: user.id,
             },
@@ -32,13 +32,16 @@ export default createPrivateResolver(
       where.isPublished = args.isPublished
     }
 
-    const stories = await query.stories<Story[]>({
-      where,
-      orderBy,
-      first,
-      skip,
-    }, FULL_STORY_QUERY)
+    const stories = await query.stories<Story[]>(
+      {
+        where,
+        orderBy,
+        first,
+        skip,
+      },
+      FULL_STORY_QUERY
+    )
 
     return stories
-  },
+  }
 )

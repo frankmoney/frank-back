@@ -8,32 +8,30 @@ import createPrivateResolver from 'utils/createPrivateResolver'
 
 const onboardingUpdateAccountInfo = createPrivateResolver(
   'Mutation:onboarding:updateAccountInfo',
-  async ({
-           user,
-           args: { title, description },
-           prisma,
-         }) => {
-
+  async ({ user, args: { title, description }, prisma }) => {
     const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
     if (!existingOnboarding) {
       return throwArgumentError()
     }
 
-    const updatedOnboarding = await prisma.mutation.updateOnboarding<Onboarding>({
+    const updatedOnboarding = await prisma.mutation.updateOnboarding<
+      Onboarding
+    >({
       where: { id: existingOnboarding.id },
       data: {
         step: ACCOUNT_STEP,
         account: {
           ...existingOnboarding.account,
           frankTitle: title || existingOnboarding.account.frankTitle,
-          frankDescription: description || existingOnboarding.account.frankDescription,
+          frankDescription:
+            description || existingOnboarding.account.frankDescription,
         },
       },
     })
 
     return updatedOnboarding
-  },
+  }
 )
 
 export default createMutations(field => ({

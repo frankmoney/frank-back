@@ -26,7 +26,7 @@ const storyPublish = createPrivateResolver(
           ],
         },
       },
-      FULL_STORY_QUERY,
+      FULL_STORY_QUERY
     ))[0]
 
     if (!story) {
@@ -38,43 +38,45 @@ const storyPublish = createPrivateResolver(
     let updatedStory
 
     if (args.isPublished) {
-
       if (story.publicData) {
-
         await mutation.deleteStoryData({
           where: { id: story.publicData.id },
         })
       }
 
-      updatedStory = await mutation.updateStory({
-        where: { id: storyId },
-        data: {
-          isPublished: true,
-          publicData: {
-            create: {
-              title: story.draftData.title,
-              body: story.draftData.body,
-              coverImage: story.draftData.coverImage,
-              payments: {
-                connect: story.draftData.payments,
+      updatedStory = await mutation.updateStory(
+        {
+          where: { id: storyId },
+          data: {
+            isPublished: true,
+            publicData: {
+              create: {
+                title: story.draftData.title,
+                body: story.draftData.body,
+                coverImage: story.draftData.coverImage,
+                payments: {
+                  connect: story.draftData.payments,
+                },
               },
             },
           },
         },
-      }, FULL_STORY_QUERY)
-    }
-    else {
-
-      updatedStory = await mutation.updateStory({
-        where: { id: storyId },
-        data: {
-          isPublished: false,
+        FULL_STORY_QUERY
+      )
+    } else {
+      updatedStory = await mutation.updateStory(
+        {
+          where: { id: storyId },
+          data: {
+            isPublished: false,
+          },
         },
-      }, FULL_STORY_QUERY)
+        FULL_STORY_QUERY
+      )
     }
 
     return updatedStory
-  },
+  }
 )
 
 export default createMutations(field => ({

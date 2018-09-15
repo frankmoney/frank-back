@@ -6,5 +6,5 @@ export default createCountPaymentsResolver(
     storyData: {
       id: parent.id,
     },
-  }),
+  })
 )

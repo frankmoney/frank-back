@@ -8,11 +8,15 @@ import {
 } from 'app/onboarding/constants'
 import R from 'ramda'
 
-export default async (onboarding: Onboarding, member: any, prisma: Prisma): Promise<Onboarding> => {
-
-  if (onboarding.step === CREDENTIALS_STEP
-    && member.connection_status === CONNECTED_MXSTATUS) {
-
+export default async (
+  onboarding: Onboarding,
+  member: any,
+  prisma: Prisma
+): Promise<Onboarding> => {
+  if (
+    onboarding.step === CREDENTIALS_STEP &&
+    member.connection_status === CONNECTED_MXSTATUS
+  ) {
     let { accounts } = await AtriumClient.listAccounts({
       params: {
         userGuid: member.user_guid,
@@ -20,9 +24,14 @@ export default async (onboarding: Onboarding, member: any, prisma: Prisma): Prom
       },
     })
 
-    accounts = R.filter((account: any) => account.member_guid === member.guid, accounts)
+    accounts = R.filter(
+      (account: any) => account.member_guid === member.guid,
+      accounts
+    )
 
-    const updatedOnboarding = await prisma.mutation.updateOnboarding<Onboarding>({
+    const updatedOnboarding = await prisma.mutation.updateOnboarding<
+      Onboarding
+    >({
       where: { id: onboarding.id },
       data: {
         step: ACCOUNTS_STEP,

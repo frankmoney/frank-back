@@ -2,8 +2,10 @@ import { Onboarding, Prisma } from 'app/graphql/generated/prisma'
 import AtriumClient from 'app/onboarding/atriumClient'
 import credentialsStep from './credentialsStep'
 
-export default async (onboarding: Onboarding, prisma: Prisma): Promise<Onboarding> => {
-
+export default async (
+  onboarding: Onboarding,
+  prisma: Prisma
+): Promise<Onboarding> => {
   const { member } = await AtriumClient.readMember({
     params: {
       userGuid: onboarding.mxUserGuid,
@@ -12,7 +14,6 @@ export default async (onboarding: Onboarding, prisma: Prisma): Promise<Onboardin
   })
 
   if (member) {
-
     onboarding = await credentialsStep(onboarding, member, prisma)
   }
 

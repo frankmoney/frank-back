@@ -7,14 +7,13 @@ import PaymentType from '../PaymentType'
 
 const StoryDataType = Type('StoryData', type =>
   type.fields(field => ({
-
     title: field.ofString(),
     body: field.ofJson(),
     coverImage: field.ofJson().nullable(),
     payments: field.listOf(PaymentType).resolve(storyPayments),
     countPayments: field.ofType(IntValue).resolve(storyCountPayments),
     paymentsDateRange: field.listOf(DateTime).resolve(storyPaymentsDateRange),
-  })),
+  }))
 )
 
 const StoryType = Type('Story', type =>
@@ -28,7 +27,7 @@ const StoryType = Type('Story', type =>
     draftData: field.ofType(StoryDataType),
 
     publicData: field.ofType(StoryDataType).nullable(),
-  })),
+  }))
 )
 
 export default StoryType

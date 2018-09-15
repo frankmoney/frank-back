@@ -27,7 +27,7 @@ const storyUpdate = createPrivateResolver(
           ],
         },
       },
-      FULL_STORY_QUERY,
+      FULL_STORY_QUERY
     ))[0]
 
     if (!story) {
@@ -46,15 +46,15 @@ const storyUpdate = createPrivateResolver(
     if (args.paymentsIds) {
       const currentPaymentsIds = R.map(
         (payment: any) => payment.id,
-        story.draftData.payments || [],
+        story.draftData.payments || []
       )
       const toConnectPaymentsIds = R.difference(
         args.paymentsIds,
-        currentPaymentsIds,
+        currentPaymentsIds
       )
       const toDisconnectPaymentsIds = R.difference(
         currentPaymentsIds,
-        args.paymentsIds,
+        args.paymentsIds
       )
 
       data.payments = {
@@ -69,7 +69,7 @@ const storyUpdate = createPrivateResolver(
     })
 
     return await query.story({ where: { id: story.id } }, FULL_STORY_QUERY)
-  },
+  }
 )
 
 export default createMutations(field => ({

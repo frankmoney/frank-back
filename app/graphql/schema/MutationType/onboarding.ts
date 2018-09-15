@@ -14,5 +14,5 @@ export default createMutations(field => ({
   ...onboardingSelectAccount(field),
   ...onboardingUpdateAccountInfo(field),
   ...onboardingFinish(field),
-  ...onboardingUpdateCategories(field)
+  ...onboardingUpdateCategories(field),
 }))

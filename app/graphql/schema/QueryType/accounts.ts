@@ -6,8 +6,8 @@ export default createPrivateResolver(
   'accounts',
   async ({ user, args, prisma: { query } }) => {
     const where: AccountWhereInput = {
-      members_some: {
-        teamMember: {
+      team: {
+        members_some: {
           user: {
             id: user.id,
           },

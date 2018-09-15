@@ -6,7 +6,7 @@ const getTeamMemberAcl = (self: TeamMember, member: TeamMember) => {
 
   return {
     remove: admin && !myself,
-    editRole: admin,
+    editRole: admin && !myself,
     editAvatar: admin || myself,
     editProfile: admin || myself,
     editPassword: myself,

@@ -1,6 +1,7 @@
 import { TeamMember, TeamMemberWhereInput } from 'app/graphql/generated/prisma'
 import createPrivateResolver from 'utils/createPrivateResolver'
 import getTeamMemberAcl from 'utils/getTeamMemberAcl'
+import mapTeamMemberRoleFromPrisma from 'utils/mapTeamMemberRoleFromPrisma'
 
 const teamMembers = createPrivateResolver(
   'Team:member',
@@ -18,7 +19,6 @@ const teamMembers = createPrivateResolver(
       { where },
       `{
         role
-        canInvite
       
         user {
           id
@@ -49,11 +49,7 @@ const teamMembers = createPrivateResolver(
       lastName: member.user.lastName,
       firstName: member.user.firstName,
       avatar: {},
-      admin: member.role === 'ADMIN',
-      canInvite: member.canInvite,
-      accountIds: member
-        .accounts!.map(x => x.account.id)
-        .filter(id => self.accounts!.filter(x => x.account.id === id).length),
+      role: mapTeamMemberRoleFromPrisma(member.role),
       acl: getTeamMemberAcl(self, member),
     }
 

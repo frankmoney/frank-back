@@ -1,19 +1,8 @@
-import {
-  KeyValuePair,
-  contains,
-  find,
-  fromPairs,
-  identity,
-  pathEq,
-} from 'ramda'
-import {
-  Account,
-  Team,
-  TeamMember,
-  TeamWhereInput,
-} from 'app/graphql/generated/prisma'
+import { find, pathEq } from 'ramda'
+import { Team, TeamMember, TeamWhereInput } from 'app/graphql/generated/prisma'
 import createPrivateResolver from 'utils/createPrivateResolver'
 import getTeamMemberAcl from 'utils/getTeamMemberAcl'
+import mapTeamMemberRoleFromPrisma from 'utils/mapTeamMemberRoleFromPrisma'
 
 const teamMembers = createPrivateResolver(
   'Team:members',
@@ -55,14 +44,6 @@ const teamMembers = createPrivateResolver(
 
     const self = find(pathEq(['user', 'id'], user.id), team.members!)!
 
-    const accountIds = self.accounts!.map(x => x.account.id)
-
-    const accounts = fromPairs(
-      team
-        .accounts!.filter(({ id }) => contains(id, accountIds))
-        .map(x => <KeyValuePair<string, Account>>[x.id, x])
-    )
-
     const getAcl = (member: TeamMember) => getTeamMemberAcl(self, member)
 
     const result = team.members!.map(member => ({
@@ -72,12 +53,7 @@ const teamMembers = createPrivateResolver(
       lastName: member.user.lastName,
       firstName: member.user.firstName,
       avatar: {},
-      admin: member.role === 'ADMIN',
-      canInvite: member.canInvite,
-      accountIds: member
-        .accounts!.map(x => accounts[x.account.id])
-        .filter(identity)
-        .map(({ id }) => id),
+      role: mapTeamMemberRoleFromPrisma(member.role),
       acl: getAcl(member),
     }))
 
