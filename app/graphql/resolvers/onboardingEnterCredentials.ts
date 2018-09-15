@@ -2,7 +2,7 @@ import { throwArgumentError } from 'app/errors/ArgumentError'
 import { Onboarding } from 'app/graphql/generated/prisma'
 import OnboardingType from 'app/graphql/schema/OnboardingType'
 import AtriumClient from 'app/onboarding/atriumClient'
-import { CHECKING_STATUS, CREDENTIALS_STEP, MX_TEMP_USER } from 'app/onboarding/constants'
+import { CHECKING_STATUS, CREDENTIALS_STEP } from 'app/onboarding/constants'
 import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
 import syncOnboardingState from 'app/onboarding/sync'
 import { Json } from 'gql'
@@ -42,27 +42,27 @@ const onboardingEnterCredentials = createPrivateResolver(
 
       const institutionCode = updatedOnboarding.institution.code
 
-      AtriumClient.listMembers({
-        params: {
-          userGuid: MX_TEMP_USER,
-          records_per_page: 1000, // max value
+      AtriumClient.createUser({
+        body: {
+          user: {
+            metadata: '{"first_name": "auth_generated_user"}',
+          },
         },
-      }).then(({ members }: any) => {
+      }).then(({ user: { guid } }: any) => {
 
-        const existingMember = R.find(R.propEq('institution_code', institutionCode))(members)
-
-        if (existingMember) {
-
-          syncOnboardingState(updatedOnboarding, prisma)
-
-        } else {
+        prisma.mutation.updateOnboarding({
+          where: { id: updatedOnboarding.id },
+          data: {
+            mxUserGuid: guid,
+          },
+        }).then(() => {
 
           AtriumClient.createMember({
-            params: { userGuid: MX_TEMP_USER },
+            params: { userGuid: guid },
             body: {
               member: {
                 'institution_code': institutionCode,
-                credentials,
+                credentials: credentials.map(JSON.parse),
               },
             },
           }).then(({ member }: any) => {
@@ -70,11 +70,11 @@ const onboardingEnterCredentials = createPrivateResolver(
             prisma.mutation.updateOnboarding({
               where: { id: updatedOnboarding.id },
               data: {
-                memberGuid: member.guid,
+                mxMemberGuid: member.guid,
               },
             })
           })
-        }
+        })
       })
     })()
 
