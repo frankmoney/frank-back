@@ -35,15 +35,15 @@ const storyPublish = createPrivateResolver(
 
     await assert.accountAccess(accountId)
 
+    if (story.publicData) {
+      await mutation.deleteStoryData({
+        where: { id: story.publicData.id },
+      })
+    }
+
     let updatedStory
 
     if (args.isPublished) {
-      if (story.publicData) {
-        await mutation.deleteStoryData({
-          where: { id: story.publicData.id },
-        })
-      }
-
       updatedStory = await mutation.updateStory(
         {
           where: { id: storyId },

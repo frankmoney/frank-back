@@ -1,3 +1,4 @@
+import { FULL_STORY_QUERY } from 'app/graphql/schema/StoryType'
 import { isNil } from 'ramda'
 import {
   Story,
@@ -33,9 +34,6 @@ const createStoriesResolver = <TArgs = any>(
       where.isPublished = args.isPublished
     }
 
-    const paymentScheme = `{ id, postedOn, amount, peerName, description }`
-    const storyScheme = `{ title, body, coverImage, payments ${paymentScheme} }`
-
     const stories = await query.stories<Story[]>(
       {
         where,
@@ -43,7 +41,7 @@ const createStoriesResolver = <TArgs = any>(
         first,
         skip,
       },
-      `{ id, isPublished, updatedAt, draftData ${storyScheme}, publicData ${storyScheme} }`
+      FULL_STORY_QUERY
     )
 
     return stories
