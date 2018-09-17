@@ -17,14 +17,6 @@ const createAccountResolver = <TArgs = any>(
 
     const where = await Promise.resolve(predicate(arg))
 
-    where.members_some = {
-      teamMember: {
-        user: {
-          id: user.id,
-        },
-      },
-    }
-
     const first = 1
 
     const accounts = await query.categories<Account[]>(
