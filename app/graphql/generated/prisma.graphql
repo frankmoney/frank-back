@@ -1,5 +1,5 @@
 # source: http://prisma.frank-dev1.frank.ly
-# timestamp: Mon Sep 17 2018 16:04:58 GMT+0500 (Yekaterinburg Standard Time)
+# timestamp: Mon Sep 17 2018 17:11:57 GMT+0300 (Russia TZ 2 Standard Time)
 
 type Account implements Node {
   id: ID!
@@ -622,6 +622,10 @@ type AggregateTeam {
   count: Int!
 }
 
+type AggregateTeamInvite {
+  count: Int!
+}
+
 type AggregateTeamMember {
   count: Int!
 }
@@ -1226,6 +1230,7 @@ type Mutation {
   createOnboarding(data: OnboardingCreateInput!): Onboarding!
   createMxUser(data: MxUserCreateInput!): MxUser!
   createMxMember(data: MxMemberCreateInput!): MxMember!
+  createTeamInvite(data: TeamInviteCreateInput!): TeamInvite!
   createUser(data: UserCreateInput!): User!
   createCategory(data: CategoryCreateInput!): Category!
   updateTeam(data: TeamUpdateInput!, where: TeamWhereUniqueInput!): Team
@@ -1240,6 +1245,7 @@ type Mutation {
   updateOnboarding(data: OnboardingUpdateInput!, where: OnboardingWhereUniqueInput!): Onboarding
   updateMxUser(data: MxUserUpdateInput!, where: MxUserWhereUniqueInput!): MxUser
   updateMxMember(data: MxMemberUpdateInput!, where: MxMemberWhereUniqueInput!): MxMember
+  updateTeamInvite(data: TeamInviteUpdateInput!, where: TeamInviteWhereUniqueInput!): TeamInvite
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateCategory(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category
   deleteTeam(where: TeamWhereUniqueInput!): Team
@@ -1254,6 +1260,7 @@ type Mutation {
   deleteOnboarding(where: OnboardingWhereUniqueInput!): Onboarding
   deleteMxUser(where: MxUserWhereUniqueInput!): MxUser
   deleteMxMember(where: MxMemberWhereUniqueInput!): MxMember
+  deleteTeamInvite(where: TeamInviteWhereUniqueInput!): TeamInvite
   deleteUser(where: UserWhereUniqueInput!): User
   deleteCategory(where: CategoryWhereUniqueInput!): Category
   upsertTeam(where: TeamWhereUniqueInput!, create: TeamCreateInput!, update: TeamUpdateInput!): Team!
@@ -1268,6 +1275,7 @@ type Mutation {
   upsertOnboarding(where: OnboardingWhereUniqueInput!, create: OnboardingCreateInput!, update: OnboardingUpdateInput!): Onboarding!
   upsertMxUser(where: MxUserWhereUniqueInput!, create: MxUserCreateInput!, update: MxUserUpdateInput!): MxUser!
   upsertMxMember(where: MxMemberWhereUniqueInput!, create: MxMemberCreateInput!, update: MxMemberUpdateInput!): MxMember!
+  upsertTeamInvite(where: TeamInviteWhereUniqueInput!, create: TeamInviteCreateInput!, update: TeamInviteUpdateInput!): TeamInvite!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertCategory(where: CategoryWhereUniqueInput!, create: CategoryCreateInput!, update: CategoryUpdateInput!): Category!
   updateManyTeams(data: TeamUpdateInput!, where: TeamWhereInput): BatchPayload!
@@ -1282,6 +1290,7 @@ type Mutation {
   updateManyOnboardings(data: OnboardingUpdateInput!, where: OnboardingWhereInput): BatchPayload!
   updateManyMxUsers(data: MxUserUpdateInput!, where: MxUserWhereInput): BatchPayload!
   updateManyMxMembers(data: MxMemberUpdateInput!, where: MxMemberWhereInput): BatchPayload!
+  updateManyTeamInvites(data: TeamInviteUpdateInput!, where: TeamInviteWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
   updateManyCategories(data: CategoryUpdateInput!, where: CategoryWhereInput): BatchPayload!
   deleteManyTeams(where: TeamWhereInput): BatchPayload!
@@ -1296,6 +1305,7 @@ type Mutation {
   deleteManyOnboardings(where: OnboardingWhereInput): BatchPayload!
   deleteManyMxUsers(where: MxUserWhereInput): BatchPayload!
   deleteManyMxMembers(where: MxMemberWhereInput): BatchPayload!
+  deleteManyTeamInvites(where: TeamInviteWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyCategories(where: CategoryWhereInput): BatchPayload!
 }
@@ -3591,6 +3601,7 @@ type Query {
   onboardings(where: OnboardingWhereInput, orderBy: OnboardingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Onboarding]!
   mxUsers(where: MxUserWhereInput, orderBy: MxUserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MxUser]!
   mxMembers(where: MxMemberWhereInput, orderBy: MxMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MxMember]!
+  teamInvites(where: TeamInviteWhereInput, orderBy: TeamInviteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamInvite]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   categories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category]!
   team(where: TeamWhereUniqueInput!): Team
@@ -3605,6 +3616,7 @@ type Query {
   onboarding(where: OnboardingWhereUniqueInput!): Onboarding
   mxUser(where: MxUserWhereUniqueInput!): MxUser
   mxMember(where: MxMemberWhereUniqueInput!): MxMember
+  teamInvite(where: TeamInviteWhereUniqueInput!): TeamInvite
   user(where: UserWhereUniqueInput!): User
   category(where: CategoryWhereUniqueInput!): Category
   teamsConnection(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamConnection!
@@ -3619,6 +3631,7 @@ type Query {
   onboardingsConnection(where: OnboardingWhereInput, orderBy: OnboardingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OnboardingConnection!
   mxUsersConnection(where: MxUserWhereInput, orderBy: MxUserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): MxUserConnection!
   mxMembersConnection(where: MxMemberWhereInput, orderBy: MxMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): MxMemberConnection!
+  teamInvitesConnection(where: TeamInviteWhereInput, orderBy: TeamInviteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamInviteConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   categoriesConnection(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CategoryConnection!
 
@@ -4307,6 +4320,7 @@ type Subscription {
   onboarding(where: OnboardingSubscriptionWhereInput): OnboardingSubscriptionPayload
   mxUser(where: MxUserSubscriptionWhereInput): MxUserSubscriptionPayload
   mxMember(where: MxMemberSubscriptionWhereInput): MxMemberSubscriptionPayload
+  teamInvite(where: TeamInviteSubscriptionWhereInput): TeamInviteSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   category(where: CategorySubscriptionWhereInput): CategorySubscriptionPayload
 }
@@ -4317,6 +4331,7 @@ type Team implements Node {
   nameNormalized: String
   accounts(where: AccountWhereInput, orderBy: AccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Account!]
   members(where: TeamMemberWhereInput, orderBy: TeamMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamMember!]
+  invites(where: TeamInviteWhereInput, orderBy: TeamInviteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TeamInvite!]
 }
 
 """A connection to a list of items."""
@@ -4334,10 +4349,16 @@ input TeamCreateInput {
   nameNormalized: String
   accounts: AccountCreateManyWithoutTeamInput
   members: TeamMemberCreateManyWithoutTeamInput
+  invites: TeamInviteCreateManyWithoutTeamInput
 }
 
 input TeamCreateOneWithoutAccountsInput {
   create: TeamCreateWithoutAccountsInput
+  connect: TeamWhereUniqueInput
+}
+
+input TeamCreateOneWithoutInvitesInput {
+  create: TeamCreateWithoutInvitesInput
   connect: TeamWhereUniqueInput
 }
 
@@ -4350,12 +4371,21 @@ input TeamCreateWithoutAccountsInput {
   name: String!
   nameNormalized: String
   members: TeamMemberCreateManyWithoutTeamInput
+  invites: TeamInviteCreateManyWithoutTeamInput
+}
+
+input TeamCreateWithoutInvitesInput {
+  name: String!
+  nameNormalized: String
+  accounts: AccountCreateManyWithoutTeamInput
+  members: TeamMemberCreateManyWithoutTeamInput
 }
 
 input TeamCreateWithoutMembersInput {
   name: String!
   nameNormalized: String
   accounts: AccountCreateManyWithoutTeamInput
+  invites: TeamInviteCreateManyWithoutTeamInput
 }
 
 """An edge in a connection."""
@@ -4365,6 +4395,291 @@ type TeamEdge {
 
   """A cursor for use in pagination."""
   cursor: String!
+}
+
+type TeamInvite implements Node {
+  id: ID!
+  email: String!
+  role: TeamMemberRole!
+  note: String
+  team(where: TeamWhereInput): Team!
+}
+
+"""A connection to a list of items."""
+type TeamInviteConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [TeamInviteEdge]!
+  aggregate: AggregateTeamInvite!
+}
+
+input TeamInviteCreateInput {
+  email: String!
+  role: TeamMemberRole!
+  note: String
+  team: TeamCreateOneWithoutInvitesInput!
+}
+
+input TeamInviteCreateManyWithoutTeamInput {
+  create: [TeamInviteCreateWithoutTeamInput!]
+  connect: [TeamInviteWhereUniqueInput!]
+}
+
+input TeamInviteCreateWithoutTeamInput {
+  email: String!
+  role: TeamMemberRole!
+  note: String
+}
+
+"""An edge in a connection."""
+type TeamInviteEdge {
+  """The item at the end of the edge."""
+  node: TeamInvite!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum TeamInviteOrderByInput {
+  id_ASC
+  id_DESC
+  email_ASC
+  email_DESC
+  role_ASC
+  role_DESC
+  note_ASC
+  note_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type TeamInvitePreviousValues {
+  id: ID!
+  email: String!
+  role: TeamMemberRole!
+  note: String
+}
+
+type TeamInviteSubscriptionPayload {
+  mutation: MutationType!
+  node: TeamInvite
+  updatedFields: [String!]
+  previousValues: TeamInvitePreviousValues
+}
+
+input TeamInviteSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [TeamInviteSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [TeamInviteSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [TeamInviteSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: TeamInviteWhereInput
+}
+
+input TeamInviteUpdateInput {
+  email: String
+  role: TeamMemberRole
+  note: String
+  team: TeamUpdateOneWithoutInvitesInput
+}
+
+input TeamInviteUpdateManyWithoutTeamInput {
+  create: [TeamInviteCreateWithoutTeamInput!]
+  connect: [TeamInviteWhereUniqueInput!]
+  disconnect: [TeamInviteWhereUniqueInput!]
+  delete: [TeamInviteWhereUniqueInput!]
+  update: [TeamInviteUpdateWithWhereUniqueWithoutTeamInput!]
+  upsert: [TeamInviteUpsertWithWhereUniqueWithoutTeamInput!]
+}
+
+input TeamInviteUpdateWithoutTeamDataInput {
+  email: String
+  role: TeamMemberRole
+  note: String
+}
+
+input TeamInviteUpdateWithWhereUniqueWithoutTeamInput {
+  where: TeamInviteWhereUniqueInput!
+  data: TeamInviteUpdateWithoutTeamDataInput!
+}
+
+input TeamInviteUpsertWithWhereUniqueWithoutTeamInput {
+  where: TeamInviteWhereUniqueInput!
+  update: TeamInviteUpdateWithoutTeamDataInput!
+  create: TeamInviteCreateWithoutTeamInput!
+}
+
+input TeamInviteWhereInput {
+  """Logical AND on all given filters."""
+  AND: [TeamInviteWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [TeamInviteWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [TeamInviteWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  email: String
+
+  """All values that are not equal to given value."""
+  email_not: String
+
+  """All values that are contained in given list."""
+  email_in: [String!]
+
+  """All values that are not contained in given list."""
+  email_not_in: [String!]
+
+  """All values less than the given value."""
+  email_lt: String
+
+  """All values less than or equal the given value."""
+  email_lte: String
+
+  """All values greater than the given value."""
+  email_gt: String
+
+  """All values greater than or equal the given value."""
+  email_gte: String
+
+  """All values containing the given string."""
+  email_contains: String
+
+  """All values not containing the given string."""
+  email_not_contains: String
+
+  """All values starting with the given string."""
+  email_starts_with: String
+
+  """All values not starting with the given string."""
+  email_not_starts_with: String
+
+  """All values ending with the given string."""
+  email_ends_with: String
+
+  """All values not ending with the given string."""
+  email_not_ends_with: String
+  role: TeamMemberRole
+
+  """All values that are not equal to given value."""
+  role_not: TeamMemberRole
+
+  """All values that are contained in given list."""
+  role_in: [TeamMemberRole!]
+
+  """All values that are not contained in given list."""
+  role_not_in: [TeamMemberRole!]
+  note: String
+
+  """All values that are not equal to given value."""
+  note_not: String
+
+  """All values that are contained in given list."""
+  note_in: [String!]
+
+  """All values that are not contained in given list."""
+  note_not_in: [String!]
+
+  """All values less than the given value."""
+  note_lt: String
+
+  """All values less than or equal the given value."""
+  note_lte: String
+
+  """All values greater than the given value."""
+  note_gt: String
+
+  """All values greater than or equal the given value."""
+  note_gte: String
+
+  """All values containing the given string."""
+  note_contains: String
+
+  """All values not containing the given string."""
+  note_not_contains: String
+
+  """All values starting with the given string."""
+  note_starts_with: String
+
+  """All values not starting with the given string."""
+  note_not_starts_with: String
+
+  """All values ending with the given string."""
+  note_ends_with: String
+
+  """All values not ending with the given string."""
+  note_not_ends_with: String
+  team: TeamWhereInput
+}
+
+input TeamInviteWhereUniqueInput {
+  id: ID
 }
 
 type TeamMember implements Node {
@@ -4666,6 +4981,7 @@ input TeamUpdateInput {
   nameNormalized: String
   accounts: AccountUpdateManyWithoutTeamInput
   members: TeamMemberUpdateManyWithoutTeamInput
+  invites: TeamInviteUpdateManyWithoutTeamInput
 }
 
 input TeamUpdateOneWithoutAccountsInput {
@@ -4674,6 +4990,14 @@ input TeamUpdateOneWithoutAccountsInput {
   delete: Boolean
   update: TeamUpdateWithoutAccountsDataInput
   upsert: TeamUpsertWithoutAccountsInput
+}
+
+input TeamUpdateOneWithoutInvitesInput {
+  create: TeamCreateWithoutInvitesInput
+  connect: TeamWhereUniqueInput
+  delete: Boolean
+  update: TeamUpdateWithoutInvitesDataInput
+  upsert: TeamUpsertWithoutInvitesInput
 }
 
 input TeamUpdateOneWithoutMembersInput {
@@ -4688,17 +5012,31 @@ input TeamUpdateWithoutAccountsDataInput {
   name: String
   nameNormalized: String
   members: TeamMemberUpdateManyWithoutTeamInput
+  invites: TeamInviteUpdateManyWithoutTeamInput
+}
+
+input TeamUpdateWithoutInvitesDataInput {
+  name: String
+  nameNormalized: String
+  accounts: AccountUpdateManyWithoutTeamInput
+  members: TeamMemberUpdateManyWithoutTeamInput
 }
 
 input TeamUpdateWithoutMembersDataInput {
   name: String
   nameNormalized: String
   accounts: AccountUpdateManyWithoutTeamInput
+  invites: TeamInviteUpdateManyWithoutTeamInput
 }
 
 input TeamUpsertWithoutAccountsInput {
   update: TeamUpdateWithoutAccountsDataInput!
   create: TeamCreateWithoutAccountsInput!
+}
+
+input TeamUpsertWithoutInvitesInput {
+  update: TeamUpdateWithoutInvitesDataInput!
+  create: TeamCreateWithoutInvitesInput!
 }
 
 input TeamUpsertWithoutMembersInput {
@@ -4841,6 +5179,9 @@ input TeamWhereInput {
   members_every: TeamMemberWhereInput
   members_some: TeamMemberWhereInput
   members_none: TeamMemberWhereInput
+  invites_every: TeamInviteWhereInput
+  invites_some: TeamInviteWhereInput
+  invites_none: TeamInviteWhereInput
 }
 
 input TeamWhereUniqueInput {

@@ -11,20 +11,20 @@ const onboardingCancel = createPrivateResolver(
 
     if (existingOnboarding) {
       try {
-        const {
-          mxMemberGuid,
-          mxUserGuid,
-        } = await prisma.mutation.deleteOnboarding<Onboarding>(
-          { where: { id: existingOnboarding.id } },
-          '{ mxMemberGuid, mxUserGuid }'
-        )
-
-        await AtriumClient.deleteMember({
-          params: {
-            userGuid: mxUserGuid,
-            memberGuid: mxMemberGuid,
-          },
-        })
+        // const {
+        //   mxMemberGuid,
+        //   mxUserGuid,
+        // } = await prisma.mutation.deleteOnboarding<Onboarding>(
+        //   { where: { id: existingOnboarding.id } },
+        //   '{ mxMemberGuid, mxUserGuid }'
+        // )
+        //
+        // await AtriumClient.deleteMember({
+        //   params: {
+        //     userGuid: mxUserGuid,
+        //     memberGuid: mxMemberGuid,
+        //   },
+        // })
       } catch (exc) {
         // ignore
       }

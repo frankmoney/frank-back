@@ -10,8 +10,8 @@ const server = new ApolloServer({
   context({ req }: any) {
     log.trace('user id:', req.headers['x-authenticated-user-id'])
     return {
-      // user: { id: 'cjkhv9pqg0hhf0a168cnsreq6' },
-      user: { id: req.headers['x-authenticated-user-id'] },
+      user: { id: 'cjkhv9pqg0hhf0a168cnsreq6' },
+      // user: { id: req.headers['x-authenticated-user-id'] },
       prisma: new Prisma({
         typeDefs: 'app/graphql/generated/prisma.graphql',
         endpoint: process.env.PRISMA_ENDPOINT,
