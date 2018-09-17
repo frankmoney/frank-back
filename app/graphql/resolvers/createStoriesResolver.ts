@@ -13,8 +13,8 @@ import normalizeString from 'utils/normalizeString'
 const createStoriesResolver = <TArgs = any>(
   name: string,
   predicate: (
-    arg: PrivateResolverArg<TArgs>,
-  ) => StoryWhereInput | Promise<StoryWhereInput>,
+    arg: PrivateResolverArg<TArgs>
+  ) => StoryWhereInput | Promise<StoryWhereInput>
 ) =>
   createPrivateResolver(name, async arg => {
     const {
@@ -41,7 +41,7 @@ const createStoriesResolver = <TArgs = any>(
         first,
         skip,
       },
-      FULL_STORY_QUERY,
+      FULL_STORY_QUERY
     )
 
     return stories

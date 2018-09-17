@@ -26,7 +26,7 @@ const storyPublish = createPrivateResolver(
           ],
         },
       },
-      FULL_STORY_QUERY,
+      FULL_STORY_QUERY
     ))[0]
 
     if (!story) {
@@ -44,7 +44,6 @@ const storyPublish = createPrivateResolver(
     let updatedStory
 
     if (args.isPublished) {
-
       updatedStory = await mutation.updateStory(
         {
           where: { id: storyId },
@@ -62,10 +61,9 @@ const storyPublish = createPrivateResolver(
             },
           },
         },
-        FULL_STORY_QUERY,
+        FULL_STORY_QUERY
       )
     } else {
-
       updatedStory = await mutation.updateStory(
         {
           where: { id: storyId },
@@ -73,12 +71,12 @@ const storyPublish = createPrivateResolver(
             isPublished: false,
           },
         },
-        FULL_STORY_QUERY,
+        FULL_STORY_QUERY
       )
     }
 
     return updatedStory
-  },
+  }
 )
 
 export default createMutations(field => ({

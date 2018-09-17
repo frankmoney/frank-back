@@ -2,7 +2,6 @@ import StoryType from './StoryType'
 
 export default StoryType
 
-
 const paymentScheme = `{ id, postedOn, amount, peerName, description }`
 const storyDateScheme = `{ title, body, coverImage, updatedAt, payments ${paymentScheme} }`
 

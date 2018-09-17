@@ -15,7 +15,7 @@ const StoryDataType = Type('StoryData', type =>
     countPayments: field.ofType(IntValue).resolve(storyCountPayments),
     paymentsDateRange: field.listOf(DateTime).resolve(storyPaymentsDateRange),
     updatedAt: field.ofDateTime(),
-  })),
+  }))
 )
 
 const StoryType = Type('Story', type =>
@@ -25,7 +25,7 @@ const StoryType = Type('Story', type =>
     draftData: field.ofType(StoryDataType),
     publicData: field.ofType(StoryDataType).nullable(),
     hasUnpublishedDraft: field.ofBool().resolve(storyHasUnpublishedDraft),
-  })),
+  }))
 )
 
 export default StoryType
