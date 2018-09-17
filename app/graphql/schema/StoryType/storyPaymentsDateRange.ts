@@ -17,7 +17,7 @@ export default createPrivateResolver(
     const dates = R.map(p => p.postedOn, payments)
 
     if (dates.length === 1) {
-      return dates
+      return [...dates, ...dates]
     } else if (dates.length > 1) {
       return [dates.pop(), dates[0]]
     }
