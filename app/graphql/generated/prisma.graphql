@@ -1,5 +1,5 @@
 # source: http://prisma.frank-dev1.frank.ly
-# timestamp: Mon Sep 17 2018 12:02:47 GMT+0500 (Yekaterinburg Standard Time)
+# timestamp: Mon Sep 17 2018 16:04:58 GMT+0500 (Yekaterinburg Standard Time)
 
 type Account implements Node {
   id: ID!
@@ -583,6 +583,14 @@ type AggregateCategory {
 }
 
 type AggregateComment {
+  count: Int!
+}
+
+type AggregateMxMember {
+  count: Int!
+}
+
+type AggregateMxUser {
   count: Int!
 }
 
@@ -1216,6 +1224,8 @@ type Mutation {
   createStory(data: StoryCreateInput!): Story!
   createStoryData(data: StoryDataCreateInput!): StoryData!
   createOnboarding(data: OnboardingCreateInput!): Onboarding!
+  createMxUser(data: MxUserCreateInput!): MxUser!
+  createMxMember(data: MxMemberCreateInput!): MxMember!
   createUser(data: UserCreateInput!): User!
   createCategory(data: CategoryCreateInput!): Category!
   updateTeam(data: TeamUpdateInput!, where: TeamWhereUniqueInput!): Team
@@ -1228,6 +1238,8 @@ type Mutation {
   updateStory(data: StoryUpdateInput!, where: StoryWhereUniqueInput!): Story
   updateStoryData(data: StoryDataUpdateInput!, where: StoryDataWhereUniqueInput!): StoryData
   updateOnboarding(data: OnboardingUpdateInput!, where: OnboardingWhereUniqueInput!): Onboarding
+  updateMxUser(data: MxUserUpdateInput!, where: MxUserWhereUniqueInput!): MxUser
+  updateMxMember(data: MxMemberUpdateInput!, where: MxMemberWhereUniqueInput!): MxMember
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateCategory(data: CategoryUpdateInput!, where: CategoryWhereUniqueInput!): Category
   deleteTeam(where: TeamWhereUniqueInput!): Team
@@ -1240,6 +1252,8 @@ type Mutation {
   deleteStory(where: StoryWhereUniqueInput!): Story
   deleteStoryData(where: StoryDataWhereUniqueInput!): StoryData
   deleteOnboarding(where: OnboardingWhereUniqueInput!): Onboarding
+  deleteMxUser(where: MxUserWhereUniqueInput!): MxUser
+  deleteMxMember(where: MxMemberWhereUniqueInput!): MxMember
   deleteUser(where: UserWhereUniqueInput!): User
   deleteCategory(where: CategoryWhereUniqueInput!): Category
   upsertTeam(where: TeamWhereUniqueInput!, create: TeamCreateInput!, update: TeamUpdateInput!): Team!
@@ -1252,6 +1266,8 @@ type Mutation {
   upsertStory(where: StoryWhereUniqueInput!, create: StoryCreateInput!, update: StoryUpdateInput!): Story!
   upsertStoryData(where: StoryDataWhereUniqueInput!, create: StoryDataCreateInput!, update: StoryDataUpdateInput!): StoryData!
   upsertOnboarding(where: OnboardingWhereUniqueInput!, create: OnboardingCreateInput!, update: OnboardingUpdateInput!): Onboarding!
+  upsertMxUser(where: MxUserWhereUniqueInput!, create: MxUserCreateInput!, update: MxUserUpdateInput!): MxUser!
+  upsertMxMember(where: MxMemberWhereUniqueInput!, create: MxMemberCreateInput!, update: MxMemberUpdateInput!): MxMember!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertCategory(where: CategoryWhereUniqueInput!, create: CategoryCreateInput!, update: CategoryUpdateInput!): Category!
   updateManyTeams(data: TeamUpdateInput!, where: TeamWhereInput): BatchPayload!
@@ -1264,6 +1280,8 @@ type Mutation {
   updateManyStories(data: StoryUpdateInput!, where: StoryWhereInput): BatchPayload!
   updateManyStoryDatas(data: StoryDataUpdateInput!, where: StoryDataWhereInput): BatchPayload!
   updateManyOnboardings(data: OnboardingUpdateInput!, where: OnboardingWhereInput): BatchPayload!
+  updateManyMxUsers(data: MxUserUpdateInput!, where: MxUserWhereInput): BatchPayload!
+  updateManyMxMembers(data: MxMemberUpdateInput!, where: MxMemberWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
   updateManyCategories(data: CategoryUpdateInput!, where: CategoryWhereInput): BatchPayload!
   deleteManyTeams(where: TeamWhereInput): BatchPayload!
@@ -1276,6 +1294,8 @@ type Mutation {
   deleteManyStories(where: StoryWhereInput): BatchPayload!
   deleteManyStoryDatas(where: StoryDataWhereInput): BatchPayload!
   deleteManyOnboardings(where: OnboardingWhereInput): BatchPayload!
+  deleteManyMxUsers(where: MxUserWhereInput): BatchPayload!
+  deleteManyMxMembers(where: MxMemberWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyCategories(where: CategoryWhereInput): BatchPayload!
 }
@@ -1284,6 +1304,524 @@ enum MutationType {
   CREATED
   UPDATED
   DELETED
+}
+
+type MxMember implements Node {
+  id: ID!
+  mxGuid: String!
+  institutionCode: String!
+  user(where: MxUserWhereInput): MxUser!
+  onboarding(where: OnboardingWhereInput): Onboarding!
+}
+
+"""A connection to a list of items."""
+type MxMemberConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [MxMemberEdge]!
+  aggregate: AggregateMxMember!
+}
+
+input MxMemberCreateInput {
+  mxGuid: String!
+  institutionCode: String!
+  user: MxUserCreateOneWithoutMembersInput!
+  onboarding: OnboardingCreateOneWithoutMemberInput!
+}
+
+input MxMemberCreateManyWithoutUserInput {
+  create: [MxMemberCreateWithoutUserInput!]
+  connect: [MxMemberWhereUniqueInput!]
+}
+
+input MxMemberCreateOneWithoutOnboardingInput {
+  create: MxMemberCreateWithoutOnboardingInput
+  connect: MxMemberWhereUniqueInput
+}
+
+input MxMemberCreateWithoutOnboardingInput {
+  mxGuid: String!
+  institutionCode: String!
+  user: MxUserCreateOneWithoutMembersInput!
+}
+
+input MxMemberCreateWithoutUserInput {
+  mxGuid: String!
+  institutionCode: String!
+  onboarding: OnboardingCreateOneWithoutMemberInput!
+}
+
+"""An edge in a connection."""
+type MxMemberEdge {
+  """The item at the end of the edge."""
+  node: MxMember!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum MxMemberOrderByInput {
+  id_ASC
+  id_DESC
+  mxGuid_ASC
+  mxGuid_DESC
+  institutionCode_ASC
+  institutionCode_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type MxMemberPreviousValues {
+  id: ID!
+  mxGuid: String!
+  institutionCode: String!
+}
+
+type MxMemberSubscriptionPayload {
+  mutation: MutationType!
+  node: MxMember
+  updatedFields: [String!]
+  previousValues: MxMemberPreviousValues
+}
+
+input MxMemberSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [MxMemberSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [MxMemberSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [MxMemberSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: MxMemberWhereInput
+}
+
+input MxMemberUpdateInput {
+  mxGuid: String
+  institutionCode: String
+  user: MxUserUpdateOneWithoutMembersInput
+  onboarding: OnboardingUpdateOneWithoutMemberInput
+}
+
+input MxMemberUpdateManyWithoutUserInput {
+  create: [MxMemberCreateWithoutUserInput!]
+  connect: [MxMemberWhereUniqueInput!]
+  disconnect: [MxMemberWhereUniqueInput!]
+  delete: [MxMemberWhereUniqueInput!]
+  update: [MxMemberUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [MxMemberUpsertWithWhereUniqueWithoutUserInput!]
+}
+
+input MxMemberUpdateOneWithoutOnboardingInput {
+  create: MxMemberCreateWithoutOnboardingInput
+  connect: MxMemberWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: MxMemberUpdateWithoutOnboardingDataInput
+  upsert: MxMemberUpsertWithoutOnboardingInput
+}
+
+input MxMemberUpdateWithoutOnboardingDataInput {
+  mxGuid: String
+  institutionCode: String
+  user: MxUserUpdateOneWithoutMembersInput
+}
+
+input MxMemberUpdateWithoutUserDataInput {
+  mxGuid: String
+  institutionCode: String
+  onboarding: OnboardingUpdateOneWithoutMemberInput
+}
+
+input MxMemberUpdateWithWhereUniqueWithoutUserInput {
+  where: MxMemberWhereUniqueInput!
+  data: MxMemberUpdateWithoutUserDataInput!
+}
+
+input MxMemberUpsertWithoutOnboardingInput {
+  update: MxMemberUpdateWithoutOnboardingDataInput!
+  create: MxMemberCreateWithoutOnboardingInput!
+}
+
+input MxMemberUpsertWithWhereUniqueWithoutUserInput {
+  where: MxMemberWhereUniqueInput!
+  update: MxMemberUpdateWithoutUserDataInput!
+  create: MxMemberCreateWithoutUserInput!
+}
+
+input MxMemberWhereInput {
+  """Logical AND on all given filters."""
+  AND: [MxMemberWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [MxMemberWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [MxMemberWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  mxGuid: String
+
+  """All values that are not equal to given value."""
+  mxGuid_not: String
+
+  """All values that are contained in given list."""
+  mxGuid_in: [String!]
+
+  """All values that are not contained in given list."""
+  mxGuid_not_in: [String!]
+
+  """All values less than the given value."""
+  mxGuid_lt: String
+
+  """All values less than or equal the given value."""
+  mxGuid_lte: String
+
+  """All values greater than the given value."""
+  mxGuid_gt: String
+
+  """All values greater than or equal the given value."""
+  mxGuid_gte: String
+
+  """All values containing the given string."""
+  mxGuid_contains: String
+
+  """All values not containing the given string."""
+  mxGuid_not_contains: String
+
+  """All values starting with the given string."""
+  mxGuid_starts_with: String
+
+  """All values not starting with the given string."""
+  mxGuid_not_starts_with: String
+
+  """All values ending with the given string."""
+  mxGuid_ends_with: String
+
+  """All values not ending with the given string."""
+  mxGuid_not_ends_with: String
+  institutionCode: String
+
+  """All values that are not equal to given value."""
+  institutionCode_not: String
+
+  """All values that are contained in given list."""
+  institutionCode_in: [String!]
+
+  """All values that are not contained in given list."""
+  institutionCode_not_in: [String!]
+
+  """All values less than the given value."""
+  institutionCode_lt: String
+
+  """All values less than or equal the given value."""
+  institutionCode_lte: String
+
+  """All values greater than the given value."""
+  institutionCode_gt: String
+
+  """All values greater than or equal the given value."""
+  institutionCode_gte: String
+
+  """All values containing the given string."""
+  institutionCode_contains: String
+
+  """All values not containing the given string."""
+  institutionCode_not_contains: String
+
+  """All values starting with the given string."""
+  institutionCode_starts_with: String
+
+  """All values not starting with the given string."""
+  institutionCode_not_starts_with: String
+
+  """All values ending with the given string."""
+  institutionCode_ends_with: String
+
+  """All values not ending with the given string."""
+  institutionCode_not_ends_with: String
+  user: MxUserWhereInput
+  onboarding: OnboardingWhereInput
+}
+
+input MxMemberWhereUniqueInput {
+  id: ID
+}
+
+type MxUser implements Node {
+  id: ID!
+  mxGuid: String!
+  members(where: MxMemberWhereInput, orderBy: MxMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MxMember!]
+}
+
+"""A connection to a list of items."""
+type MxUserConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [MxUserEdge]!
+  aggregate: AggregateMxUser!
+}
+
+input MxUserCreateInput {
+  mxGuid: String!
+  members: MxMemberCreateManyWithoutUserInput
+}
+
+input MxUserCreateOneWithoutMembersInput {
+  create: MxUserCreateWithoutMembersInput
+  connect: MxUserWhereUniqueInput
+}
+
+input MxUserCreateWithoutMembersInput {
+  mxGuid: String!
+}
+
+"""An edge in a connection."""
+type MxUserEdge {
+  """The item at the end of the edge."""
+  node: MxUser!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum MxUserOrderByInput {
+  id_ASC
+  id_DESC
+  mxGuid_ASC
+  mxGuid_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type MxUserPreviousValues {
+  id: ID!
+  mxGuid: String!
+}
+
+type MxUserSubscriptionPayload {
+  mutation: MutationType!
+  node: MxUser
+  updatedFields: [String!]
+  previousValues: MxUserPreviousValues
+}
+
+input MxUserSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [MxUserSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [MxUserSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [MxUserSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: MxUserWhereInput
+}
+
+input MxUserUpdateInput {
+  mxGuid: String
+  members: MxMemberUpdateManyWithoutUserInput
+}
+
+input MxUserUpdateOneWithoutMembersInput {
+  create: MxUserCreateWithoutMembersInput
+  connect: MxUserWhereUniqueInput
+  delete: Boolean
+  update: MxUserUpdateWithoutMembersDataInput
+  upsert: MxUserUpsertWithoutMembersInput
+}
+
+input MxUserUpdateWithoutMembersDataInput {
+  mxGuid: String
+}
+
+input MxUserUpsertWithoutMembersInput {
+  update: MxUserUpdateWithoutMembersDataInput!
+  create: MxUserCreateWithoutMembersInput!
+}
+
+input MxUserWhereInput {
+  """Logical AND on all given filters."""
+  AND: [MxUserWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [MxUserWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [MxUserWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  mxGuid: String
+
+  """All values that are not equal to given value."""
+  mxGuid_not: String
+
+  """All values that are contained in given list."""
+  mxGuid_in: [String!]
+
+  """All values that are not contained in given list."""
+  mxGuid_not_in: [String!]
+
+  """All values less than the given value."""
+  mxGuid_lt: String
+
+  """All values less than or equal the given value."""
+  mxGuid_lte: String
+
+  """All values greater than the given value."""
+  mxGuid_gt: String
+
+  """All values greater than or equal the given value."""
+  mxGuid_gte: String
+
+  """All values containing the given string."""
+  mxGuid_contains: String
+
+  """All values not containing the given string."""
+  mxGuid_not_contains: String
+
+  """All values starting with the given string."""
+  mxGuid_starts_with: String
+
+  """All values not starting with the given string."""
+  mxGuid_not_starts_with: String
+
+  """All values ending with the given string."""
+  mxGuid_ends_with: String
+
+  """All values not ending with the given string."""
+  mxGuid_not_ends_with: String
+  members_every: MxMemberWhereInput
+  members_some: MxMemberWhereInput
+  members_none: MxMemberWhereInput
+}
+
+input MxUserWhereUniqueInput {
+  id: ID
 }
 
 """An object with an ID"""
@@ -1301,8 +1839,7 @@ type Onboarding implements Node {
   accounts: Json
   account: Json
   categories: Json
-  mxMemberGuid: String
-  mxUserGuid: String
+  member(where: MxMemberWhereInput): MxMember
 }
 
 """A connection to a list of items."""
@@ -1322,8 +1859,22 @@ input OnboardingCreateInput {
   accounts: Json
   account: Json
   categories: Json
-  mxMemberGuid: String
-  mxUserGuid: String
+  user: UserCreateOneInput!
+  member: MxMemberCreateOneWithoutOnboardingInput
+}
+
+input OnboardingCreateOneWithoutMemberInput {
+  create: OnboardingCreateWithoutMemberInput
+  connect: OnboardingWhereUniqueInput
+}
+
+input OnboardingCreateWithoutMemberInput {
+  step: String!
+  institution: Json!
+  credentials: Json!
+  accounts: Json
+  account: Json
+  categories: Json
   user: UserCreateOneInput!
 }
 
@@ -1351,10 +1902,6 @@ enum OnboardingOrderByInput {
   account_DESC
   categories_ASC
   categories_DESC
-  mxMemberGuid_ASC
-  mxMemberGuid_DESC
-  mxUserGuid_ASC
-  mxUserGuid_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -1369,8 +1916,6 @@ type OnboardingPreviousValues {
   accounts: Json
   account: Json
   categories: Json
-  mxMemberGuid: String
-  mxUserGuid: String
 }
 
 type OnboardingSubscriptionPayload {
@@ -1419,9 +1964,31 @@ input OnboardingUpdateInput {
   accounts: Json
   account: Json
   categories: Json
-  mxMemberGuid: String
-  mxUserGuid: String
   user: UserUpdateOneInput
+  member: MxMemberUpdateOneWithoutOnboardingInput
+}
+
+input OnboardingUpdateOneWithoutMemberInput {
+  create: OnboardingCreateWithoutMemberInput
+  connect: OnboardingWhereUniqueInput
+  delete: Boolean
+  update: OnboardingUpdateWithoutMemberDataInput
+  upsert: OnboardingUpsertWithoutMemberInput
+}
+
+input OnboardingUpdateWithoutMemberDataInput {
+  step: String
+  institution: Json
+  credentials: Json
+  accounts: Json
+  account: Json
+  categories: Json
+  user: UserUpdateOneInput
+}
+
+input OnboardingUpsertWithoutMemberInput {
+  update: OnboardingUpdateWithoutMemberDataInput!
+  create: OnboardingCreateWithoutMemberInput!
 }
 
 input OnboardingWhereInput {
@@ -1513,87 +2080,8 @@ input OnboardingWhereInput {
 
   """All values not ending with the given string."""
   step_not_ends_with: String
-  mxMemberGuid: String
-
-  """All values that are not equal to given value."""
-  mxMemberGuid_not: String
-
-  """All values that are contained in given list."""
-  mxMemberGuid_in: [String!]
-
-  """All values that are not contained in given list."""
-  mxMemberGuid_not_in: [String!]
-
-  """All values less than the given value."""
-  mxMemberGuid_lt: String
-
-  """All values less than or equal the given value."""
-  mxMemberGuid_lte: String
-
-  """All values greater than the given value."""
-  mxMemberGuid_gt: String
-
-  """All values greater than or equal the given value."""
-  mxMemberGuid_gte: String
-
-  """All values containing the given string."""
-  mxMemberGuid_contains: String
-
-  """All values not containing the given string."""
-  mxMemberGuid_not_contains: String
-
-  """All values starting with the given string."""
-  mxMemberGuid_starts_with: String
-
-  """All values not starting with the given string."""
-  mxMemberGuid_not_starts_with: String
-
-  """All values ending with the given string."""
-  mxMemberGuid_ends_with: String
-
-  """All values not ending with the given string."""
-  mxMemberGuid_not_ends_with: String
-  mxUserGuid: String
-
-  """All values that are not equal to given value."""
-  mxUserGuid_not: String
-
-  """All values that are contained in given list."""
-  mxUserGuid_in: [String!]
-
-  """All values that are not contained in given list."""
-  mxUserGuid_not_in: [String!]
-
-  """All values less than the given value."""
-  mxUserGuid_lt: String
-
-  """All values less than or equal the given value."""
-  mxUserGuid_lte: String
-
-  """All values greater than the given value."""
-  mxUserGuid_gt: String
-
-  """All values greater than or equal the given value."""
-  mxUserGuid_gte: String
-
-  """All values containing the given string."""
-  mxUserGuid_contains: String
-
-  """All values not containing the given string."""
-  mxUserGuid_not_contains: String
-
-  """All values starting with the given string."""
-  mxUserGuid_starts_with: String
-
-  """All values not starting with the given string."""
-  mxUserGuid_not_starts_with: String
-
-  """All values ending with the given string."""
-  mxUserGuid_ends_with: String
-
-  """All values not ending with the given string."""
-  mxUserGuid_not_ends_with: String
   user: UserWhereInput
+  member: MxMemberWhereInput
 }
 
 input OnboardingWhereUniqueInput {
@@ -3101,6 +3589,8 @@ type Query {
   stories(where: StoryWhereInput, orderBy: StoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Story]!
   storyDatas(where: StoryDataWhereInput, orderBy: StoryDataOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [StoryData]!
   onboardings(where: OnboardingWhereInput, orderBy: OnboardingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Onboarding]!
+  mxUsers(where: MxUserWhereInput, orderBy: MxUserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MxUser]!
+  mxMembers(where: MxMemberWhereInput, orderBy: MxMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MxMember]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   categories(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Category]!
   team(where: TeamWhereUniqueInput!): Team
@@ -3113,6 +3603,8 @@ type Query {
   story(where: StoryWhereUniqueInput!): Story
   storyData(where: StoryDataWhereUniqueInput!): StoryData
   onboarding(where: OnboardingWhereUniqueInput!): Onboarding
+  mxUser(where: MxUserWhereUniqueInput!): MxUser
+  mxMember(where: MxMemberWhereUniqueInput!): MxMember
   user(where: UserWhereUniqueInput!): User
   category(where: CategoryWhereUniqueInput!): Category
   teamsConnection(where: TeamWhereInput, orderBy: TeamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TeamConnection!
@@ -3125,6 +3617,8 @@ type Query {
   storiesConnection(where: StoryWhereInput, orderBy: StoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StoryConnection!
   storyDatasConnection(where: StoryDataWhereInput, orderBy: StoryDataOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StoryDataConnection!
   onboardingsConnection(where: OnboardingWhereInput, orderBy: OnboardingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OnboardingConnection!
+  mxUsersConnection(where: MxUserWhereInput, orderBy: MxUserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): MxUserConnection!
+  mxMembersConnection(where: MxMemberWhereInput, orderBy: MxMemberOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): MxMemberConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   categoriesConnection(where: CategoryWhereInput, orderBy: CategoryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CategoryConnection!
 
@@ -3811,6 +4305,8 @@ type Subscription {
   story(where: StorySubscriptionWhereInput): StorySubscriptionPayload
   storyData(where: StoryDataSubscriptionWhereInput): StoryDataSubscriptionPayload
   onboarding(where: OnboardingSubscriptionWhereInput): OnboardingSubscriptionPayload
+  mxUser(where: MxUserSubscriptionWhereInput): MxUserSubscriptionPayload
+  mxMember(where: MxMemberSubscriptionWhereInput): MxMemberSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   category(where: CategorySubscriptionWhereInput): CategorySubscriptionPayload
 }
