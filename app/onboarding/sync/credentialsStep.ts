@@ -1,4 +1,4 @@
-import { Onboarding, Prisma } from 'app/graphql/generated/prisma'
+import { MxMember, Onboarding, Prisma } from 'app/graphql/generated/prisma'
 import AtriumClient from 'app/onboarding/atriumClient'
 import {
   ACCOUNTS_STEP,
@@ -6,32 +6,36 @@ import {
   CREDENTIALS_STEP,
   SUCCESS_STATUS,
 } from 'app/onboarding/constants'
-import R from 'ramda'
+import humps from 'humps'
 
 export default async (
   onboarding: Onboarding,
-  member: any,
-  prisma: Prisma
+  mxMember: MxMember,
+  prisma: Prisma,
 ): Promise<Onboarding> => {
+
+  const mxUserGuid = mxMember.user.mxGuid
+
+  const { member } = await AtriumClient.readMember({
+    params: {
+      userGuid: mxUserGuid,
+      memberGuid: mxMember.mxGuid,
+    },
+  })
+
   if (
     onboarding.step === CREDENTIALS_STEP &&
     member.connection_status === CONNECTED_MXSTATUS
   ) {
-    let { accounts } = await AtriumClient.listAccounts({
+
+    const { accounts } = await AtriumClient.listMemberAccounts({
       params: {
-        userGuid: member.user_guid,
-        records_per_page: 1000, // max value
+        userGuid: mxUserGuid,
+        memberGuid: mxMember.mxGuid,
       },
     })
 
-    accounts = R.filter(
-      (account: any) => account.member_guid === member.guid,
-      accounts
-    )
-
-    const updatedOnboarding = await prisma.mutation.updateOnboarding<
-      Onboarding
-    >({
+    const updatedOnboarding = await prisma.mutation.updateOnboarding<Onboarding>({
       where: { id: onboarding.id },
       data: {
         step: ACCOUNTS_STEP,
@@ -39,7 +43,7 @@ export default async (
           ...onboarding.credentials,
           status: SUCCESS_STATUS,
         },
-        accounts,
+        accounts: humps.camelizeKeys(accounts),
       },
     })
 

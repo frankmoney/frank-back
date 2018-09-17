@@ -1,5 +1,4 @@
-import { Onboarding } from 'app/graphql/generated/prisma'
-import AtriumClient from 'app/onboarding/atriumClient'
+import { CANCELED_STEP } from 'app/onboarding/constants'
 import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
 import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'utils/createPrivateResolver'
@@ -7,31 +6,21 @@ import createPrivateResolver from 'utils/createPrivateResolver'
 const onboardingCancel = createPrivateResolver(
   'Mutation:onboarding:cancel',
   async ({ user, args: { institutionCode }, prisma }) => {
+
     const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
     if (existingOnboarding) {
-      try {
-        const {
-          mxMemberGuid,
-          mxUserGuid,
-        } = await prisma.mutation.deleteOnboarding<Onboarding>(
-          { where: { id: existingOnboarding.id } },
-          '{ mxMemberGuid, mxUserGuid }'
-        )
 
-        await AtriumClient.deleteMember({
-          params: {
-            userGuid: mxUserGuid,
-            memberGuid: mxMemberGuid,
-          },
-        })
-      } catch (exc) {
-        // ignore
-      }
+      await prisma.mutation.updateOnboarding({
+        where: { id: existingOnboarding.id },
+        data: {
+          step: CANCELED_STEP,
+        },
+      })
     }
 
     return true
-  }
+  },
 )
 
 export default createMutations(field => ({
