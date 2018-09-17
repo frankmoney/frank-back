@@ -8,8 +8,8 @@ export default async (
 ): Promise<Onboarding> => {
   const { member } = await AtriumClient.readMember({
     params: {
-      userGuid: onboarding.member!.user.mxGuid,
-      memberGuid: onboarding.member!.mxGuid,
+      userGuid: onboarding.mxUserGuid,
+      memberGuid: onboarding.mxMemberGuid,
     },
   })
 

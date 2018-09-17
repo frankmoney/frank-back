@@ -43,31 +43,31 @@ const onboardingEnterCredentials = createPrivateResolver(
           },
         },
       }).then(({ user: { guid } }: any) => {
-        // prisma.mutation
-        //   .updateOnboarding({
-        //     where: { id: updatedOnboarding.id },
-        //     data: {
-        //       mxUserGuid: guid,
-        //     },
-        //   })
-        //   .then(() => {
-        //     AtriumClient.createMember({
-        //       params: { userGuid: guid },
-        //       body: {
-        //         member: {
-        //           institution_code: institutionCode,
-        //           credentials: credentials.map(JSON.parse),
-        //         },
-        //       },
-        //     }).then(({ member }: any) => {
-        //       prisma.mutation.updateOnboarding({
-        //         where: { id: updatedOnboarding.id },
-        //         data: {
-        //           mxMemberGuid: member.guid,
-        //         },
-        //       })
-        //     })
-        //   })
+        prisma.mutation
+          .updateOnboarding({
+            where: { id: updatedOnboarding.id },
+            data: {
+              mxUserGuid: guid,
+            },
+          })
+          .then(() => {
+            AtriumClient.createMember({
+              params: { userGuid: guid },
+              body: {
+                member: {
+                  institution_code: institutionCode,
+                  credentials: credentials.map(JSON.parse),
+                },
+              },
+            }).then(({ member }: any) => {
+              prisma.mutation.updateOnboarding({
+                where: { id: updatedOnboarding.id },
+                data: {
+                  mxMemberGuid: member.guid,
+                },
+              })
+            })
+          })
       })
     })()
 
