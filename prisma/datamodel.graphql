@@ -119,6 +119,8 @@ type StoryData {
   payments: [Payment!]!
   draftStory: Story @relation(name: "StoryDraftData")
   publicStory: Story @relation(name: "StoryPublicData")
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Onboarding {

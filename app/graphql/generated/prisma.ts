@@ -3372,6 +3372,8 @@ type StoryData implements Node {
   payments(where: PaymentWhereInput, orderBy: PaymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Payment!]
   draftStory(where: StoryWhereInput): Story
   publicStory(where: StoryWhereInput): Story
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 """A connection to a list of items."""
@@ -3450,10 +3452,10 @@ enum StoryDataOrderByInput {
   body_DESC
   coverImage_ASC
   coverImage_DESC
-  updatedAt_ASC
-  updatedAt_DESC
   createdAt_ASC
   createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type StoryDataPreviousValues {
@@ -3461,6 +3463,8 @@ type StoryDataPreviousValues {
   title: String!
   body: Json!
   coverImage: Json
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type StoryDataSubscriptionPayload {
@@ -3665,6 +3669,50 @@ input StoryDataWhereInput {
 
   """All values not ending with the given string."""
   title_not_ends_with: String
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
   payments_every: PaymentWhereInput
   payments_some: PaymentWhereInput
   payments_none: PaymentWhereInput
@@ -4989,10 +5037,10 @@ export type StoryDataOrderByInput =   'id_ASC' |
   'body_DESC' |
   'coverImage_ASC' |
   'coverImage_DESC' |
-  'updatedAt_ASC' |
-  'updatedAt_DESC' |
   'createdAt_ASC' |
-  'createdAt_DESC'
+  'createdAt_DESC' |
+  'updatedAt_ASC' |
+  'updatedAt_DESC'
 
 export type TeamMemberRole =   'ADMIN' |
   'MANAGER' |
@@ -5252,6 +5300,22 @@ export interface StoryDataWhereInput {
   title_not_starts_with?: String
   title_ends_with?: String
   title_not_ends_with?: String
+  createdAt?: DateTime
+  createdAt_not?: DateTime
+  createdAt_in?: DateTime[] | DateTime
+  createdAt_not_in?: DateTime[] | DateTime
+  createdAt_lt?: DateTime
+  createdAt_lte?: DateTime
+  createdAt_gt?: DateTime
+  createdAt_gte?: DateTime
+  updatedAt?: DateTime
+  updatedAt_not?: DateTime
+  updatedAt_in?: DateTime[] | DateTime
+  updatedAt_not_in?: DateTime[] | DateTime
+  updatedAt_lt?: DateTime
+  updatedAt_lte?: DateTime
+  updatedAt_gt?: DateTime
+  updatedAt_gte?: DateTime
   payments_every?: PaymentWhereInput
   payments_some?: PaymentWhereInput
   payments_none?: PaymentWhereInput
@@ -7632,6 +7696,8 @@ export interface StoryData extends Node {
   payments?: Payment[]
   draftStory?: Story
   publicStory?: Story
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 /*
@@ -8005,6 +8071,8 @@ export interface StoryDataPreviousValues {
   title: String
   body: Json
   coverImage?: Json
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 export interface StoryDataSubscriptionPayload {
