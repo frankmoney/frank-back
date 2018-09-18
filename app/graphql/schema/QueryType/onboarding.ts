@@ -1,4 +1,4 @@
-import syncOnboardingState from 'app/onboarding/sync'
+import syncOnboardingState from 'app/onboarding/syncMemberStatus'
 import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
 import createPrivateResolver from 'utils/createPrivateResolver'
 

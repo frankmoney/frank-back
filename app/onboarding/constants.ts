@@ -10,6 +10,8 @@ export const CANCELED_STEP = 'canceled'
 export const AWAITING_INPUT_STATUS = 'awaiting_input'
 export const CHECKING_STATUS = 'checking'
 export const SUCCESS_STATUS = 'success'
+export const DENIED_STATUS = 'denied'
 
 // MX statuses
 export const CONNECTED_MXSTATUS = 'CONNECTED'
+export const DENIED_MXSTATUS = 'DENIED'
