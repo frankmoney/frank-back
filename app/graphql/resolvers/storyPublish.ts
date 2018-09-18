@@ -3,6 +3,7 @@ import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'utils/createPrivateResolver'
 import { throwNotFound } from 'app/errors/NotFoundError'
 import StoryType, { FULL_STORY_QUERY } from 'app/graphql/schema/StoryType'
+import { StoryDataCreateOneWithoutPublicStoryInput } from 'app/graphql/generated/prisma'
 import R from 'ramda'
 
 const storyPublish = createPrivateResolver(
@@ -44,21 +45,26 @@ const storyPublish = createPrivateResolver(
     let updatedStory
 
     if (args.isPublished) {
+      const publicData: StoryDataCreateOneWithoutPublicStoryInput = {
+        create: {
+          title: story.draftData.title,
+          body: story.draftData.body,
+          coverImage: story.draftData.coverImage,
+        },
+      }
+
+      if (story.draftData.payments) {
+        publicData.create!.payments = {
+          connect: R.map(({ id }) => ({ id }), story.draftData.payments),
+        }
+      }
+
       updatedStory = await mutation.updateStory(
         {
           where: { id: storyId },
           data: {
             isPublished: true,
-            publicData: {
-              create: {
-                title: story.draftData.title,
-                body: story.draftData.body,
-                coverImage: story.draftData.coverImage,
-                payments: {
-                  connect: story.draftData.payments,
-                },
-              },
-            },
+            publicData,
           },
         },
         FULL_STORY_QUERY
