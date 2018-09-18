@@ -11,7 +11,11 @@ export default async (
   prisma: Prisma,
 ): Promise<Onboarding> => {
 
+  console.log('Sync member status')
+
   if (onboarding.step === CREDENTIALS_STEP) {
+
+    console.log('Step == credentials')
 
     const mxMember = (await prisma.query.mxMembers({
       where: {
@@ -20,6 +24,8 @@ export default async (
     }, '{id, mxGuid, institutionCode, user {id, mxGuid}}'))[0]
 
     if (mxMember) {
+
+      console.log('Have mxMember')
 
       const mxUserGuid = mxMember.user.mxGuid
 
@@ -48,7 +54,7 @@ export default async (
 
       } else {
 
-        // unhandled status here
+        console.log('unhandled status ' + member.connection_status)
       }
     }
 

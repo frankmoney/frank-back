@@ -9,6 +9,8 @@ import humps from 'humps'
 
 export default async (args: HandlerInterface): Promise<Onboarding> => {
 
+  console.log('connectedHandler')
+
   const { onboarding, userGuid, memberGuid, prisma } = args
 
   if (
@@ -16,6 +18,8 @@ export default async (args: HandlerInterface): Promise<Onboarding> => {
     || onboarding.step !== ACCOUNTS_STEP
     || onboarding.credentials.status !== SUCCESS_STATUS
   ) {
+
+    console.log('update onboarding for accounts step')
 
     const { accounts } = await AtriumClient.listMemberAccounts({
       params: {

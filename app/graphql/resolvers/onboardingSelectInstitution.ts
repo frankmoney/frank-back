@@ -14,6 +14,12 @@ const onboardingSelectInstitution = createPrivateResolver(
   'Mutation:onboarding:selectInstitution',
   async ({ user, args: { institutionCode }, prisma }) => {
 
+    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
+
+    if (existingOnboarding) {
+      return throwArgumentError()
+    }
+
     const { credentials } = await AtriumClient.listCredentials({
       params: {
         institutionCode,
@@ -23,12 +29,6 @@ const onboardingSelectInstitution = createPrivateResolver(
     const { institution } = await AtriumClient.readInstitution({
       params: { institutionCode },
     })
-
-    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
-
-    if (existingOnboarding) {
-      return throwArgumentError()
-    }
 
     const onboarding = await prisma.mutation.createOnboarding({
       data: {
@@ -45,7 +45,7 @@ const onboardingSelectInstitution = createPrivateResolver(
     })
 
     return onboarding
-  }
+  },
 )
 
 export default createMutations(field => ({

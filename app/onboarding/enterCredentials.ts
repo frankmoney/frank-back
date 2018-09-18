@@ -73,7 +73,7 @@ const createMxMember = async (
     body: {
       member: {
         institution_code: institutionCode,
-        credentials: credentials.map(JSON.parse),
+        credentials,
       },
     },
   })
