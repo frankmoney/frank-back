@@ -13,6 +13,12 @@ import { throwArgumentError } from 'app/errors/ArgumentError'
 const onboardingSelectInstitution = createPrivateResolver(
   'Mutation:onboarding:selectInstitution',
   async ({ user, args: { institutionCode }, prisma }) => {
+    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
+
+    if (existingOnboarding) {
+      return throwArgumentError()
+    }
+
     const { credentials } = await AtriumClient.listCredentials({
       params: {
         institutionCode,
@@ -22,12 +28,6 @@ const onboardingSelectInstitution = createPrivateResolver(
     const { institution } = await AtriumClient.readInstitution({
       params: { institutionCode },
     })
-
-    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
-
-    if (existingOnboarding) {
-      throwArgumentError()
-    }
 
     const onboarding = await prisma.mutation.createOnboarding({
       data: {

@@ -22,7 +22,7 @@ const onboardingUpdateCategories = createPrivateResolver(
       where: { id: existingOnboarding.id },
       data: {
         step: CATEGORIES_STEP,
-        categories: categories.map(JSON.parse),
+        categories: categories.map((x: string) => JSON.parse(x)),
       },
     })
 

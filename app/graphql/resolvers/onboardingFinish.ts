@@ -7,8 +7,6 @@ import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'utils/createPrivateResolver'
 import normalizeString from 'utils/normalizeString'
 
-const FRANK_TEMA_ID = 'cjk8djl16000h07164aewu80g'
-
 const onboardingFinish = createPrivateResolver(
   'Mutation:onboarding:finish',
   async ({ user, prisma }) => {
@@ -26,11 +24,15 @@ const onboardingFinish = createPrivateResolver(
     const name =
       existingOnboarding.account.frankTitle || existingOnboarding.account.name
 
+    const team = (await prisma.query.teams({
+      where: { members_some: { user: { id: user.id } } },
+    }))[0]
+
     const account = await prisma.mutation.createAccount({
       data: {
         name,
         rawData: existingOnboarding.account,
-        team: { connect: { id: FRANK_TEMA_ID } },
+        team: { connect: { id: team.id } },
         categories: { create: categories },
       },
     })
