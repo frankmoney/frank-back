@@ -1,22 +1,22 @@
 import { throwArgumentError } from 'app/errors/ArgumentError'
 import { Onboarding } from 'app/graphql/generated/prisma'
 import OnboardingType from 'app/graphql/schema/OnboardingType'
-import { CHECKING_STATUS, CREDENTIALS_STEP } from 'app/onboarding/constants'
+import { CHECKING_STATUS, MFA_STEP } from 'app/onboarding/constants'
 import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
-import enterCredentials from 'app/onboarding/enterCredentials'
+import enterMfaCredentials from 'app/onboarding/enterMfaCredentials'
 import { Json } from 'gql'
 import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'utils/createPrivateResolver'
 
-const onboardingEnterCredentials = createPrivateResolver(
-  'Mutation:onboarding:enterCredentials',
+const onboardingEnterMfaCredentials = createPrivateResolver(
+  'Mutation:onboarding:enterMfaCredentials',
   async ({ user, args: { credentials }, prisma }) => {
     const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
     if (
       !existingOnboarding
-      || existingOnboarding.step !== CREDENTIALS_STEP
-      || existingOnboarding.credentials.status === CHECKING_STATUS
+      || existingOnboarding.step !== MFA_STEP
+      || existingOnboarding.mfa.status === CHECKING_STATUS
     ) {
       return throwArgumentError()
     }
@@ -26,26 +26,25 @@ const onboardingEnterCredentials = createPrivateResolver(
     >({
       where: { id: existingOnboarding.id },
       data: {
-        step: CREDENTIALS_STEP,
-        credentials: {
-          ...existingOnboarding.credentials,
+        mfa: {
+          ...existingOnboarding.mfa,
           status: CHECKING_STATUS,
         },
       },
     })
 
     // background
-    enterCredentials(updatedOnboarding, prisma, credentials)
+    enterMfaCredentials(updatedOnboarding, prisma, credentials)
 
     return updatedOnboarding
   }
 )
 
 export default createMutations(field => ({
-  onboardingEnterCredentials: field
+  onboardingEnterMfaCredentials: field
     .ofType(OnboardingType)
     .args(arg => ({
       credentials: arg.listOf(Json),
     }))
-    .resolve(onboardingEnterCredentials),
+    .resolve(onboardingEnterMfaCredentials),
 }))

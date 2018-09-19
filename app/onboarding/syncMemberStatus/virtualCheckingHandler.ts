@@ -8,7 +8,7 @@ import {
 import { StatusHandler } from 'app/onboarding/syncMemberStatus/StatusHandler'
 import createLogger from 'utils/createLogger'
 
-const log = createLogger('app:onboarding:syncMemberStatus:updatedHandler')
+const log = createLogger('app:onboarding:syncMemberStatus:virtualCheckingHandler')
 
 const handler: StatusHandler = async ({ onboarding, prisma }) => {
   log.debug('start')
