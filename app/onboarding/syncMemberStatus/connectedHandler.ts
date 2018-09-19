@@ -6,6 +6,9 @@ import {
 } from 'app/onboarding/constants'
 import { StatusHandler } from 'app/onboarding/syncMemberStatus/StatusHandler'
 import humps from 'humps'
+import createLogger from 'utils/createLogger'
+
+const log = createLogger('app:onboarding:syncMemberStatus:connectedHandler')
 
 const handler: StatusHandler = async ({
                                         onboarding,
@@ -14,7 +17,7 @@ const handler: StatusHandler = async ({
                                         prisma,
                                       }) => {
 
-  console.log('connectedHandler')
+  log.debug('start')
 
   if (
     !onboarding.accounts
@@ -22,7 +25,7 @@ const handler: StatusHandler = async ({
     || onboarding.credentials.status !== SUCCESS_STATUS
   ) {
 
-    console.log('update onboarding for accounts step')
+    log.debug('updating data')
 
     const { accounts } = await AtriumClient.listMemberAccounts({
       params: {

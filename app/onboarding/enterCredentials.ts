@@ -1,9 +1,14 @@
 import { MxUser, Onboarding, Prisma } from 'app/graphql/generated/prisma'
 import AtriumClient from 'app/onboarding/atriumClient'
+import createLogger from 'utils/createLogger'
+
+const LOGGER_PREFIX = 'app:onboarding:enterCredentials'
 
 const findFreeMxUser = async (institutionCode: string, prisma: Prisma) => {
 
-  console.log('findFreeMxUser')
+  const log = createLogger(`${LOGGER_PREFIX}:findFreeMxUser`)
+
+  log.debug('start')
 
   const users = await prisma.query.mxUsers({
     where: {
@@ -20,7 +25,9 @@ const findFreeMxUser = async (institutionCode: string, prisma: Prisma) => {
 
 const createNewMxUser = async (prisma: Prisma) => {
 
-  console.log('createNewMxUser')
+  const log = createLogger(`${LOGGER_PREFIX}:createNewMxUser`)
+
+  log.debug('start')
 
   const { user } = await AtriumClient.createUser({
     body: {
@@ -39,19 +46,21 @@ const createNewMxUser = async (prisma: Prisma) => {
 
 const mxUserForInstitution = async (institutionCode: string, prisma: Prisma) => {
 
-  console.log('mxUserForInstitution')
+  const log = createLogger(`${LOGGER_PREFIX}:mxUserForInstitution`)
+
+  log.debug('start')
 
   const user = await findFreeMxUser(institutionCode, prisma)
 
   if (user) {
 
-    console.log('have free mxUser')
+    log.debug('have free mxUser')
 
     return user
   }
   else {
 
-    console.log('create new mxUser')
+    log.debug('don\'t have free mxUser')
 
     return await createNewMxUser(prisma)
   }
@@ -64,7 +73,9 @@ const createMxMember = async (
   prisma: Prisma,
 ) => {
 
-  console.log('createMxMember')
+  const log = createLogger(`${LOGGER_PREFIX}:createMxMember`)
+
+  log.debug('start')
 
   const institutionCode = onboarding.institution.code
 
@@ -94,7 +105,9 @@ export default async (
   credentials: any,
 ) => {
 
-  console.log('enterCredentials')
+  const log = createLogger(LOGGER_PREFIX)
+
+  log.debug('start')
 
   const institutionCode = onboarding.institution.code
   credentials = credentials.map(JSON.parse)
@@ -107,7 +120,7 @@ export default async (
 
   if (existingMember) {
 
-    console.log('have existing mxMember')
+    log.debug('have member - update credentials')
 
     await AtriumClient.updateMember({
       params: {
@@ -119,12 +132,12 @@ export default async (
 
   } else {
 
-    console.log('create new mxMember')
+    log.debug('don\'t have member - create new')
 
     const mxUser = await mxUserForInstitution(institutionCode, prisma)
 
     await createMxMember(mxUser, onboarding, credentials, prisma)
   }
 
-  console.log('end enterCredentials')
+  log.debug('end')
 }
