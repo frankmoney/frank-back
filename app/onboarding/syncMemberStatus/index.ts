@@ -2,6 +2,7 @@ import { Onboarding, Prisma } from 'app/graphql/generated/prisma'
 import AtriumClient from 'app/onboarding/atriumClient'
 import {
   CHALLENGED_MXSTATUS,
+  FAILED_MXSTATUS,
   CONNECTED_MXSTATUS,
   CREDENTIALS_STEP,
   DENIED_MXSTATUS,
@@ -10,6 +11,7 @@ import {
 import { StatusHandler, HandlerArg } from 'app/onboarding/syncMemberStatus/StatusHandler'
 import deniedHandler from './deniedHandler'
 import connectedHandler from './connectedHandler'
+import failedHandler from './failedHandler'
 import createLogger from 'utils/createLogger'
 
 const log = createLogger(`app:onboarding:syncMemberStatus`)
@@ -17,6 +19,7 @@ const log = createLogger(`app:onboarding:syncMemberStatus`)
 const handlers: { [status: string]: StatusHandler } = {
   [CONNECTED_MXSTATUS]: connectedHandler,
   [DENIED_MXSTATUS]: deniedHandler,
+  [FAILED_MXSTATUS]: failedHandler,
 }
 
 export default async (

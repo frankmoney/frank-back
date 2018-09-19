@@ -1,15 +1,15 @@
 import { Onboarding } from 'app/graphql/generated/prisma'
-import { DENIED_STATUS } from 'app/onboarding/constants'
+import { FAILED_STATUS } from 'app/onboarding/constants'
 import { StatusHandler } from 'app/onboarding/syncMemberStatus/StatusHandler'
 import createLogger from 'utils/createLogger'
 
-const log = createLogger('app:onboarding:syncMemberStatus:deniedHandler')
+const log = createLogger('app:onboarding:syncMemberStatus:failedHandler')
 
 const handler: StatusHandler = async ({ onboarding, prisma }) => {
 
   log.debug('start')
 
-  if (onboarding.credentials.status !== DENIED_STATUS) {
+  if (onboarding.credentials.status !== FAILED_STATUS) {
 
     log.debug('updating data')
 
@@ -18,7 +18,7 @@ const handler: StatusHandler = async ({ onboarding, prisma }) => {
       data: {
         credentials: {
           ...onboarding.credentials,
-          status: DENIED_STATUS,
+          status: FAILED_STATUS,
         },
       },
     })

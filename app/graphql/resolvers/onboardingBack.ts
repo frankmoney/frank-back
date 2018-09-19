@@ -3,7 +3,7 @@ import { OnboardingUpdateInput } from 'app/graphql/generated/prisma'
 import OnboardingType from 'app/graphql/schema/OnboardingType/OnboardingType'
 import {
   ACCOUNT_STEP,
-  ACCOUNTS_STEP,
+  ACCOUNTS_STEP, AWAITING_INPUT_STATUS,
   CATEGORIES_STEP,
   CREDENTIALS_STEP, MFA_STEP,
 } from 'app/onboarding/constants'
@@ -19,6 +19,11 @@ const onboardingBack = createPrivateResolver(
 
     if (!existingOnboarding) {
       return throwArgumentError()
+    }
+
+    if (existingOnboarding.step === CREDENTIALS_STEP) {
+
+      return existingOnboarding
     }
 
     let newStep = CREDENTIALS_STEP
@@ -40,6 +45,10 @@ const onboardingBack = createPrivateResolver(
 
     if (newStep === CREDENTIALS_STEP) {
       data.member = { disconnect: true }
+      data.credentials = {
+        ...existingOnboarding.credentials,
+        status: AWAITING_INPUT_STATUS,
+      }
     }
 
     return await prisma.mutation.updateOnboarding({
