@@ -20,7 +20,6 @@ const onboardingUpdateAccountInfo = createPrivateResolver(
     >({
       where: { id: existingOnboarding.id },
       data: {
-        step: ACCOUNT_STEP,
         account: {
           ...existingOnboarding.account,
           frankTitle: title || existingOnboarding.account.frankTitle,
