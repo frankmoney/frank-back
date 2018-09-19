@@ -110,7 +110,7 @@ export default async (
   log.debug('start')
 
   const institutionCode = onboarding.institution.code
-  credentials = credentials.map(JSON.parse)
+  credentials = credentials.map((x: string) => JSON.parse(x))
 
   const existingMember = (await prisma.query.mxMembers({
     where: {
