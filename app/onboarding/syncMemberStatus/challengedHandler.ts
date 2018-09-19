@@ -17,7 +17,6 @@ const handler: StatusHandler = async ({
   onboarding,
   userGuid,
   memberGuid,
-  member,
   prisma,
 }) => {
   log.debug('start')
@@ -25,8 +24,7 @@ const handler: StatusHandler = async ({
   if (
     !onboarding.mfa ||
     onboarding.step !== MFA_STEP ||
-    onboarding.credentials.status !== SUCCESS_STATUS ||
-    member.connection_status === EXPIRED_MXSTATUS // 204 - not content
+    onboarding.credentials.status !== SUCCESS_STATUS
   ) {
     log.debug('updating data')
 
