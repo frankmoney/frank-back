@@ -146,5 +146,5 @@ type MxMember {
   mxGuid: String!
   institutionCode: String!
   user: MxUser!
-  onboarding: Onboarding!
+  onboarding: Onboarding
 }

@@ -1502,7 +1502,7 @@ type MxMember implements Node {
   mxGuid: String!
   institutionCode: String!
   user(where: MxUserWhereInput): MxUser!
-  onboarding(where: OnboardingWhereInput): Onboarding!
+  onboarding(where: OnboardingWhereInput): Onboarding
 }
 
 """A connection to a list of items."""
@@ -1519,7 +1519,7 @@ input MxMemberCreateInput {
   mxGuid: String!
   institutionCode: String!
   user: MxUserCreateOneWithoutMembersInput!
-  onboarding: OnboardingCreateOneWithoutMemberInput!
+  onboarding: OnboardingCreateOneWithoutMemberInput
 }
 
 input MxMemberCreateManyWithoutUserInput {
@@ -1541,7 +1541,7 @@ input MxMemberCreateWithoutOnboardingInput {
 input MxMemberCreateWithoutUserInput {
   mxGuid: String!
   institutionCode: String!
-  onboarding: OnboardingCreateOneWithoutMemberInput!
+  onboarding: OnboardingCreateOneWithoutMemberInput
 }
 
 """An edge in a connection."""
@@ -2162,6 +2162,7 @@ input OnboardingUpdateInput {
 input OnboardingUpdateOneWithoutMemberInput {
   create: OnboardingCreateWithoutMemberInput
   connect: OnboardingWhereUniqueInput
+  disconnect: Boolean
   delete: Boolean
   update: OnboardingUpdateWithoutMemberDataInput
   upsert: OnboardingUpsertWithoutMemberInput
@@ -6673,7 +6674,7 @@ export interface AccountUpsertWithoutPeersInput {
 export interface MxMemberCreateWithoutUserInput {
   mxGuid: String
   institutionCode: String
-  onboarding: OnboardingCreateOneWithoutMemberInput
+  onboarding?: OnboardingCreateOneWithoutMemberInput
 }
 
 export interface PeerUpsertWithoutPaymentsInput {
@@ -6711,7 +6712,7 @@ export interface MxMemberCreateInput {
   mxGuid: String
   institutionCode: String
   user: MxUserCreateOneWithoutMembersInput
-  onboarding: OnboardingCreateOneWithoutMemberInput
+  onboarding?: OnboardingCreateOneWithoutMemberInput
 }
 
 export interface CategoryUpdateWithoutPeersDataInput {
@@ -7973,6 +7974,7 @@ export interface AccountUpsertWithoutStoriesInput {
 export interface OnboardingUpdateOneWithoutMemberInput {
   create?: OnboardingCreateWithoutMemberInput
   connect?: OnboardingWhereUniqueInput
+  disconnect?: Boolean
   delete?: Boolean
   update?: OnboardingUpdateWithoutMemberDataInput
   upsert?: OnboardingUpsertWithoutMemberInput
@@ -8311,7 +8313,7 @@ export interface MxMember extends Node {
   mxGuid: String
   institutionCode: String
   user: MxUser
-  onboarding: Onboarding
+  onboarding?: Onboarding
 }
 
 export interface AggregateCategory {

@@ -1,5 +1,5 @@
 # source: http://prisma.frank-dev1.frank.ly
-# timestamp: Wed Sep 19 2018 00:49:46 GMT+0500 (Yekaterinburg Standard Time)
+# timestamp: Wed Sep 19 2018 16:23:26 GMT+0500 (Yekaterinburg Standard Time)
 
 type Account implements Node {
   id: ID!
@@ -1311,7 +1311,7 @@ type MxMember implements Node {
   mxGuid: String!
   institutionCode: String!
   user(where: MxUserWhereInput): MxUser!
-  onboarding(where: OnboardingWhereInput): Onboarding!
+  onboarding(where: OnboardingWhereInput): Onboarding
 }
 
 """A connection to a list of items."""
@@ -1328,7 +1328,7 @@ input MxMemberCreateInput {
   mxGuid: String!
   institutionCode: String!
   user: MxUserCreateOneWithoutMembersInput!
-  onboarding: OnboardingCreateOneWithoutMemberInput!
+  onboarding: OnboardingCreateOneWithoutMemberInput
 }
 
 input MxMemberCreateManyWithoutUserInput {
@@ -1350,7 +1350,7 @@ input MxMemberCreateWithoutOnboardingInput {
 input MxMemberCreateWithoutUserInput {
   mxGuid: String!
   institutionCode: String!
-  onboarding: OnboardingCreateOneWithoutMemberInput!
+  onboarding: OnboardingCreateOneWithoutMemberInput
 }
 
 """An edge in a connection."""
@@ -1971,6 +1971,7 @@ input OnboardingUpdateInput {
 input OnboardingUpdateOneWithoutMemberInput {
   create: OnboardingCreateWithoutMemberInput
   connect: OnboardingWhereUniqueInput
+  disconnect: Boolean
   delete: Boolean
   update: OnboardingUpdateWithoutMemberDataInput
   upsert: OnboardingUpsertWithoutMemberInput
