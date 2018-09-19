@@ -1,5 +1,6 @@
 import sendInvite from 'app/mail/sendInvite'
 import createPrivateResolver from 'utils/createPrivateResolver'
+import mapTeamMemberRoleFromPrisma from 'utils/mapTeamMemberRoleFromPrisma'
 import mapTeamMemberRoleToPrisma from 'utils/mapTeamMemberRoleToPrisma'
 
 const teamInviteSend = createPrivateResolver(
@@ -32,7 +33,12 @@ const teamInviteSend = createPrivateResolver(
       note: args.note,
     })
 
-    return invite
+    return {
+      id: invite.id,
+      email: invite.email,
+      role: mapTeamMemberRoleFromPrisma(invite.role),
+      note: invite.note,
+    }
   }
 )
 
