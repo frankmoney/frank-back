@@ -8,5 +8,6 @@ export default Type('Onboarding', type =>
     accounts: field.ofJson().nullable(),
     account: field.ofJson().nullable(),
     categories: field.ofJson().nullable(),
+    mfa: field.ofJson().nullable(),
   }))
 )

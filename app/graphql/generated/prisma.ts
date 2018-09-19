@@ -2030,6 +2030,7 @@ type Onboarding implements Node {
   accounts: Json
   account: Json
   categories: Json
+  mfa: Json
   member(where: MxMemberWhereInput): MxMember
 }
 
@@ -2050,6 +2051,7 @@ input OnboardingCreateInput {
   accounts: Json
   account: Json
   categories: Json
+  mfa: Json
   user: UserCreateOneInput!
   member: MxMemberCreateOneWithoutOnboardingInput
 }
@@ -2066,6 +2068,7 @@ input OnboardingCreateWithoutMemberInput {
   accounts: Json
   account: Json
   categories: Json
+  mfa: Json
   user: UserCreateOneInput!
 }
 
@@ -2093,6 +2096,8 @@ enum OnboardingOrderByInput {
   account_DESC
   categories_ASC
   categories_DESC
+  mfa_ASC
+  mfa_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -2107,6 +2112,7 @@ type OnboardingPreviousValues {
   accounts: Json
   account: Json
   categories: Json
+  mfa: Json
 }
 
 type OnboardingSubscriptionPayload {
@@ -2155,6 +2161,7 @@ input OnboardingUpdateInput {
   accounts: Json
   account: Json
   categories: Json
+  mfa: Json
   user: UserUpdateOneInput
   member: MxMemberUpdateOneWithoutOnboardingInput
 }
@@ -2175,6 +2182,7 @@ input OnboardingUpdateWithoutMemberDataInput {
   accounts: Json
   account: Json
   categories: Json
+  mfa: Json
   user: UserUpdateOneInput
 }
 
@@ -5667,6 +5675,8 @@ export type OnboardingOrderByInput =   'id_ASC' |
   'account_DESC' |
   'categories_ASC' |
   'categories_DESC' |
+  'mfa_ASC' |
+  'mfa_DESC' |
   'updatedAt_ASC' |
   'updatedAt_DESC' |
   'createdAt_ASC' |
@@ -6455,6 +6465,7 @@ export interface OnboardingUpdateWithoutMemberDataInput {
   accounts?: Json
   account?: Json
   categories?: Json
+  mfa?: Json
   user?: UserUpdateOneInput
 }
 
@@ -6550,6 +6561,7 @@ export interface OnboardingUpdateInput {
   accounts?: Json
   account?: Json
   categories?: Json
+  mfa?: Json
   user?: UserUpdateOneInput
   member?: MxMemberUpdateOneWithoutOnboardingInput
 }
@@ -6577,6 +6589,7 @@ export interface OnboardingCreateInput {
   accounts?: Json
   account?: Json
   categories?: Json
+  mfa?: Json
   user: UserCreateOneInput
   member?: MxMemberCreateOneWithoutOnboardingInput
 }
@@ -6699,6 +6712,7 @@ export interface OnboardingCreateWithoutMemberInput {
   accounts?: Json
   account?: Json
   categories?: Json
+  mfa?: Json
   user: UserCreateOneInput
 }
 
@@ -8410,6 +8424,7 @@ export interface Onboarding extends Node {
   accounts?: Json
   account?: Json
   categories?: Json
+  mfa?: Json
   member?: MxMember
 }
 
@@ -8885,6 +8900,7 @@ export interface OnboardingPreviousValues {
   accounts?: Json
   account?: Json
   categories?: Json
+  mfa?: Json
 }
 
 /*

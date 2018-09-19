@@ -132,6 +132,7 @@ type Onboarding {
   accounts: Json
   account: Json
   categories: Json
+  mfa: Json
   member: MxMember
 }
 

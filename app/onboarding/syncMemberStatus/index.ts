@@ -6,13 +6,15 @@ import {
   CONNECTED_MXSTATUS,
   CREDENTIALS_STEP,
   DENIED_MXSTATUS,
-  MFA_STEP,
+  MFA_STEP, UPDATED_MXSTATUS, EXPIRED_MXSTATUS,
 } from 'app/onboarding/constants'
 import { StatusHandler, HandlerArg } from 'app/onboarding/syncMemberStatus/StatusHandler'
+import createLogger from 'utils/createLogger'
 import deniedHandler from './deniedHandler'
 import connectedHandler from './connectedHandler'
 import failedHandler from './failedHandler'
-import createLogger from 'utils/createLogger'
+import challengedHandler from './challengedHandler'
+import updatedHandler from './updatedHandler'
 
 const log = createLogger(`app:onboarding:syncMemberStatus`)
 
@@ -20,6 +22,9 @@ const handlers: { [status: string]: StatusHandler } = {
   [CONNECTED_MXSTATUS]: connectedHandler,
   [DENIED_MXSTATUS]: deniedHandler,
   [FAILED_MXSTATUS]: failedHandler,
+  [CHALLENGED_MXSTATUS]: challengedHandler,
+  [EXPIRED_MXSTATUS]: challengedHandler,
+  [UPDATED_MXSTATUS]: updatedHandler,
 }
 
 export default async (
