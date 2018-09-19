@@ -12,7 +12,7 @@ import {
 } from 'app/onboarding/constants'
 import {
   StatusHandler,
-  HandlerArg,
+  StatusHandlerArg,
 } from 'app/onboarding/syncMemberStatus/StatusHandler'
 import createLogger from 'utils/createLogger'
 import deniedHandler from './deniedHandler'
@@ -65,7 +65,7 @@ export default async (
       },
     })
 
-    const args: HandlerArg = {
+    const args: StatusHandlerArg = {
       onboarding,
       userGuid: mxUserGuid,
       memberGuid: mxMember.mxGuid,

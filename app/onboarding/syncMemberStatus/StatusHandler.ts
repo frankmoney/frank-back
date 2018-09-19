@@ -1,6 +1,6 @@
 import { Onboarding, Prisma } from 'app/graphql/generated/prisma'
 
-export type HandlerArg = {
+export type StatusHandlerArg = {
   onboarding: Onboarding
   member: any
   memberGuid: string
@@ -8,4 +8,4 @@ export type HandlerArg = {
   prisma: Prisma
 }
 
-export type StatusHandler = (arg: HandlerArg) => Promise<Onboarding>
+export type StatusHandler = (arg: StatusHandlerArg) => Promise<Onboarding>
