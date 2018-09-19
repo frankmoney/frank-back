@@ -4,14 +4,17 @@ import {
   ACCOUNTS_STEP,
   SUCCESS_STATUS,
 } from 'app/onboarding/constants'
-import { HandlerInterface } from 'app/onboarding/syncMemberStatus/HandlerInterface'
+import { StatusHandler } from 'app/onboarding/syncMemberStatus/StatusHandler'
 import humps from 'humps'
 
-export default async (args: HandlerInterface): Promise<Onboarding> => {
+const handler: StatusHandler = async ({
+                                        onboarding,
+                                        userGuid,
+                                        memberGuid,
+                                        prisma,
+                                      }) => {
 
   console.log('connectedHandler')
-
-  const { onboarding, userGuid, memberGuid, prisma } = args
 
   if (
     !onboarding.accounts
@@ -28,7 +31,7 @@ export default async (args: HandlerInterface): Promise<Onboarding> => {
       },
     })
 
-    return await prisma.mutation.updateOnboarding<Onboarding>({
+    onboarding = await prisma.mutation.updateOnboarding<Onboarding>({
       where: { id: onboarding.id },
       data: {
         step: ACCOUNTS_STEP,
@@ -40,8 +43,9 @@ export default async (args: HandlerInterface): Promise<Onboarding> => {
       },
     })
 
-  } else {
-
-    return onboarding
   }
+
+  return onboarding
 }
+
+export default handler

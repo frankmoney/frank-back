@@ -1,10 +1,14 @@
 import { Onboarding, Prisma } from 'app/graphql/generated/prisma'
 import AtriumClient from 'app/onboarding/atriumClient'
-import { CONNECTED_MXSTATUS, CREDENTIALS_STEP, DENIED_MXSTATUS } from 'app/onboarding/constants'
-import { HandlerInterface } from 'app/onboarding/syncMemberStatus/HandlerInterface'
+import { CHALLENGED_MXSTATUS, CONNECTED_MXSTATUS, CREDENTIALS_STEP, DENIED_MXSTATUS } from 'app/onboarding/constants'
+import { StatusHandler, HandlerArg } from 'app/onboarding/syncMemberStatus/StatusHandler'
 import deniedHandler from './deniedHandler'
 import connectedHandler from './connectedHandler'
 
+const handlers: { [status: string]: StatusHandler } = {
+  [CONNECTED_MXSTATUS]: connectedHandler,
+  [DENIED_MXSTATUS]: deniedHandler,
+}
 
 export default async (
   onboarding: Onboarding,
@@ -36,7 +40,7 @@ export default async (
         },
       })
 
-      const args: HandlerInterface = {
+      const args: HandlerArg = {
         onboarding,
         userGuid: mxUserGuid,
         memberGuid: mxMember.mxGuid,
@@ -44,13 +48,10 @@ export default async (
         prisma,
       }
 
-      if (member.connection_status === CONNECTED_MXSTATUS) {
+      const handler = handlers[member.connection_status]
 
-        onboarding = await connectedHandler(args)
-
-      } else if (member.connection_status === DENIED_MXSTATUS) {
-
-        onboarding = await deniedHandler(args)
+      if (handler) {
+        onboarding = await handler(args)
 
       } else {
 

@@ -1,5 +1,6 @@
 // steps
 export const CREDENTIALS_STEP = 'credentials'
+export const MFA_STEP = 'mfa'
 export const ACCOUNTS_STEP = 'accounts'
 export const ACCOUNT_STEP = 'account'
 export const CATEGORIES_STEP = 'categories'
@@ -15,3 +16,4 @@ export const DENIED_STATUS = 'denied'
 // MX statuses
 export const CONNECTED_MXSTATUS = 'CONNECTED'
 export const DENIED_MXSTATUS = 'DENIED'
+export const CHALLENGED_MXSTATUS = 'CHALLENGED'
