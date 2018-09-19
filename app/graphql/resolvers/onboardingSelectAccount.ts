@@ -18,10 +18,12 @@ const onboardingSelectAccount = createPrivateResolver(
 
     const mxAccount = R.find(
       R.propEq('guid', accountGuid),
-      existingOnboarding.accounts,
+      existingOnboarding.accounts
     )
 
-    const updatedOnboarding = await prisma.mutation.updateOnboarding<Onboarding>({
+    const updatedOnboarding = await prisma.mutation.updateOnboarding<
+      Onboarding
+    >({
       where: { id: existingOnboarding.id },
       data: {
         step: ACCOUNT_STEP,
@@ -34,7 +36,7 @@ const onboardingSelectAccount = createPrivateResolver(
     })
 
     return updatedOnboarding
-  },
+  }
 )
 
 export default createMutations(field => ({

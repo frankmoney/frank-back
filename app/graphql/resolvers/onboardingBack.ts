@@ -3,9 +3,11 @@ import { OnboardingUpdateInput } from 'app/graphql/generated/prisma'
 import OnboardingType from 'app/graphql/schema/OnboardingType/OnboardingType'
 import {
   ACCOUNT_STEP,
-  ACCOUNTS_STEP, AWAITING_INPUT_STATUS,
+  ACCOUNTS_STEP,
+  AWAITING_INPUT_STATUS,
   CATEGORIES_STEP,
-  CREDENTIALS_STEP, MFA_STEP,
+  CREDENTIALS_STEP,
+  MFA_STEP,
 } from 'app/onboarding/constants'
 import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
 import createMutations from 'utils/createMutations'
@@ -14,7 +16,6 @@ import createPrivateResolver from 'utils/createPrivateResolver'
 const onboardingBack = createPrivateResolver(
   'Mutation:onboarding:finish',
   async ({ user, prisma }) => {
-
     const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
     if (!existingOnboarding) {
@@ -22,7 +23,6 @@ const onboardingBack = createPrivateResolver(
     }
 
     if (existingOnboarding.step === CREDENTIALS_STEP) {
-
       return existingOnboarding
     }
 
@@ -55,7 +55,7 @@ const onboardingBack = createPrivateResolver(
       where: { id: existingOnboarding.id },
       data,
     })
-  },
+  }
 )
 
 export default createMutations(field => ({

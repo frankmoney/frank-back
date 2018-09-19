@@ -11,14 +11,15 @@ import createPrivateResolver from 'utils/createPrivateResolver'
 const onboardingEnterCredentials = createPrivateResolver(
   'Mutation:onboarding:enterCredentials',
   async ({ user, args: { credentials }, prisma }) => {
-
     const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
     if (!existingOnboarding) {
       return throwArgumentError()
     }
 
-    const updatedOnboarding = await prisma.mutation.updateOnboarding<Onboarding>({
+    const updatedOnboarding = await prisma.mutation.updateOnboarding<
+      Onboarding
+    >({
       where: { id: existingOnboarding.id },
       data: {
         step: CREDENTIALS_STEP,
@@ -33,7 +34,7 @@ const onboardingEnterCredentials = createPrivateResolver(
     enterCredentials(updatedOnboarding, prisma, credentials)
 
     return updatedOnboarding
-  },
+  }
 )
 
 export default createMutations(field => ({
