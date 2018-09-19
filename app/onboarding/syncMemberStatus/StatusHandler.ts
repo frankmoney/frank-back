@@ -3,7 +3,7 @@ import { Onboarding, Prisma } from 'app/graphql/generated/prisma'
 export type HandlerArg = {
   onboarding: Onboarding
   member: any
-  memberGuid: string,
+  memberGuid: string
   userGuid: string
   prisma: Prisma
 }

@@ -10,7 +10,6 @@ import normalizeString from 'utils/normalizeString'
 const onboardingFinish = createPrivateResolver(
   'Mutation:onboarding:finish',
   async ({ user, prisma }) => {
-
     const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
     if (!existingOnboarding) {
@@ -46,7 +45,7 @@ const onboardingFinish = createPrivateResolver(
     })
 
     return account
-  },
+  }
 )
 
 export default createMutations(field => ({

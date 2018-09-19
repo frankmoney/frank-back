@@ -1,7 +1,10 @@
 import { Onboarding } from 'app/graphql/generated/prisma'
 import AtriumClient from 'app/onboarding/atriumClient'
 import {
-  ACCOUNTS_STEP, AWAITING_INPUT_STATUS, EXPIRED_MXSTATUS, MFA_STEP,
+  ACCOUNTS_STEP,
+  AWAITING_INPUT_STATUS,
+  EXPIRED_MXSTATUS,
+  MFA_STEP,
   SUCCESS_STATUS,
 } from 'app/onboarding/constants'
 import { StatusHandler } from 'app/onboarding/syncMemberStatus/StatusHandler'
@@ -11,22 +14,20 @@ import createLogger from 'utils/createLogger'
 const log = createLogger('app:onboarding:syncMemberStatus:challengedHandler')
 
 const handler: StatusHandler = async ({
-                                        onboarding,
-                                        userGuid,
-                                        memberGuid,
-                                        member,
-                                        prisma,
-                                      }) => {
-
+  onboarding,
+  userGuid,
+  memberGuid,
+  member,
+  prisma,
+}) => {
   log.debug('start')
 
   if (
-    !onboarding.mfa
-    || onboarding.step !== MFA_STEP
-    || onboarding.credentials.status !== SUCCESS_STATUS
-    || member.connection_status === EXPIRED_MXSTATUS  // 204 - not content
+    !onboarding.mfa ||
+    onboarding.step !== MFA_STEP ||
+    onboarding.credentials.status !== SUCCESS_STATUS ||
+    member.connection_status === EXPIRED_MXSTATUS // 204 - not content
   ) {
-
     log.debug('updating data')
 
     const { challenges } = await AtriumClient.listMemberChallenges({
@@ -50,7 +51,6 @@ const handler: StatusHandler = async ({
         },
       },
     })
-
   }
 
   return onboarding

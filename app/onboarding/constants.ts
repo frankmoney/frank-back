@@ -14,7 +14,6 @@ export const SUCCESS_STATUS = 'success'
 export const DENIED_STATUS = 'denied'
 export const FAILED_STATUS = 'failed'
 
-
 // MX statuses
 export const CONNECTED_MXSTATUS = 'CONNECTED'
 export const DENIED_MXSTATUS = 'DENIED'

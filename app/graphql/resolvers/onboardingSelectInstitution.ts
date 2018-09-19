@@ -13,7 +13,6 @@ import { throwArgumentError } from 'app/errors/ArgumentError'
 const onboardingSelectInstitution = createPrivateResolver(
   'Mutation:onboarding:selectInstitution',
   async ({ user, args: { institutionCode }, prisma }) => {
-
     const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
     if (existingOnboarding) {
@@ -45,7 +44,7 @@ const onboardingSelectInstitution = createPrivateResolver(
     })
 
     return onboarding
-  },
+  }
 )
 
 export default createMutations(field => ({

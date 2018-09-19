@@ -16,7 +16,9 @@ const onboardingUpdateCategories = createPrivateResolver(
       return throwArgumentError()
     }
 
-    const updatedOnboarding = await prisma.mutation.updateOnboarding<Onboarding>({
+    const updatedOnboarding = await prisma.mutation.updateOnboarding<
+      Onboarding
+    >({
       where: { id: existingOnboarding.id },
       data: {
         step: CATEGORIES_STEP,
@@ -25,7 +27,7 @@ const onboardingUpdateCategories = createPrivateResolver(
     })
 
     return updatedOnboarding
-  },
+  }
 )
 
 export default createMutations(field => ({

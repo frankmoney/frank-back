@@ -6,9 +6,14 @@ import {
   CONNECTED_MXSTATUS,
   CREDENTIALS_STEP,
   DENIED_MXSTATUS,
-  MFA_STEP, UPDATED_MXSTATUS, EXPIRED_MXSTATUS,
+  MFA_STEP,
+  UPDATED_MXSTATUS,
+  EXPIRED_MXSTATUS,
 } from 'app/onboarding/constants'
-import { StatusHandler, HandlerArg } from 'app/onboarding/syncMemberStatus/StatusHandler'
+import {
+  StatusHandler,
+  HandlerArg,
+} from 'app/onboarding/syncMemberStatus/StatusHandler'
 import createLogger from 'utils/createLogger'
 import deniedHandler from './deniedHandler'
 import connectedHandler from './connectedHandler'
@@ -29,24 +34,24 @@ const handlers: { [status: string]: StatusHandler } = {
 
 export default async (
   onboarding: Onboarding,
-  prisma: Prisma,
+  prisma: Prisma
 ): Promise<Onboarding> => {
-
   log.debug('start')
 
   if ([CREDENTIALS_STEP, MFA_STEP].includes(onboarding.step)) {
-
     log.debug(`step = ${onboarding.step}`)
 
-    const mxMember = (await prisma.query.mxMembers({
-      where: {
-        onboarding: { id: onboarding.id },
+    const mxMember = (await prisma.query.mxMembers(
+      {
+        where: {
+          onboarding: { id: onboarding.id },
+        },
       },
-    }, '{id, mxGuid, institutionCode, user {id, mxGuid}}'))[0]
+      '{id, mxGuid, institutionCode, user {id, mxGuid}}'
+    ))[0]
 
     if (!mxMember) {
-
-      log.debug('don\'t have mxMember')
+      log.debug("don't have mxMember")
 
       return onboarding
     }

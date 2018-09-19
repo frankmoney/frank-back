@@ -1,9 +1,6 @@
 import { Onboarding } from 'app/graphql/generated/prisma'
 import AtriumClient from 'app/onboarding/atriumClient'
-import {
-  ACCOUNTS_STEP,
-  SUCCESS_STATUS,
-} from 'app/onboarding/constants'
+import { ACCOUNTS_STEP, SUCCESS_STATUS } from 'app/onboarding/constants'
 import { StatusHandler } from 'app/onboarding/syncMemberStatus/StatusHandler'
 import humps from 'humps'
 import createLogger from 'utils/createLogger'
@@ -11,20 +8,18 @@ import createLogger from 'utils/createLogger'
 const log = createLogger('app:onboarding:syncMemberStatus:connectedHandler')
 
 const handler: StatusHandler = async ({
-                                        onboarding,
-                                        userGuid,
-                                        memberGuid,
-                                        prisma,
-                                      }) => {
-
+  onboarding,
+  userGuid,
+  memberGuid,
+  prisma,
+}) => {
   log.debug('start')
 
   if (
-    !onboarding.accounts
-    || onboarding.step !== ACCOUNTS_STEP
-    || onboarding.credentials.status !== SUCCESS_STATUS
+    !onboarding.accounts ||
+    onboarding.step !== ACCOUNTS_STEP ||
+    onboarding.credentials.status !== SUCCESS_STATUS
   ) {
-
     log.debug('updating data')
 
     const { accounts } = await AtriumClient.listMemberAccounts({
@@ -45,7 +40,6 @@ const handler: StatusHandler = async ({
         accounts: humps.camelizeKeys(accounts),
       },
     })
-
   }
 
   return onboarding
