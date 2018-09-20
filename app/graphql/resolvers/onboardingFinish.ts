@@ -1,7 +1,7 @@
 import { throwArgumentError } from 'app/errors/ArgumentError'
 import { Onboarding } from 'app/graphql/generated/prisma'
 import AccountType from 'app/graphql/schema/AccountType/AccountType'
-import { COMPLETED_STEP } from 'app/onboarding/constants'
+import { COMPLETED_STEP, TEAM_STEP } from 'app/onboarding/constants'
 import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
 import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'utils/createPrivateResolver'
@@ -12,7 +12,7 @@ const onboardingFinish = createPrivateResolver(
   async ({ user, prisma }) => {
     const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
-    if (!existingOnboarding) {
+    if (!existingOnboarding || existingOnboarding.step !== TEAM_STEP) {
       return throwArgumentError()
     }
 

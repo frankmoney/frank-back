@@ -4,6 +4,7 @@ export const MFA_STEP = 'mfa'
 export const ACCOUNTS_STEP = 'accounts'
 export const ACCOUNT_STEP = 'account'
 export const CATEGORIES_STEP = 'categories'
+export const TEAM_STEP = 'team'
 export const COMPLETED_STEP = 'completed'
 export const CANCELED_STEP = 'canceled'
 
