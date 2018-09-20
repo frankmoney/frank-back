@@ -1,5 +1,9 @@
 import { Onboarding } from 'app/graphql/generated/prisma'
-import { CREDENTIALS_STEP, DENIED_STATUS, MFA_EXPIRED_STATUS } from 'app/onboarding/constants'
+import {
+  CREDENTIALS_STEP,
+  DENIED_STATUS,
+  MFA_EXPIRED_STATUS,
+} from 'app/onboarding/constants'
 import { StatusHandler } from 'app/onboarding/syncMemberStatus/StatusHandler'
 import createLogger from 'utils/createLogger'
 

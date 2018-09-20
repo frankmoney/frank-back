@@ -7,7 +7,8 @@ import {
   AWAITING_INPUT_STATUS,
   CATEGORIES_STEP,
   CREDENTIALS_STEP,
-  MFA_STEP, TEAM_STEP,
+  MFA_STEP,
+  TEAM_STEP,
 } from 'app/onboarding/constants'
 import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
 import createMutations from 'utils/createMutations'
@@ -59,7 +60,7 @@ const onboardingBack = createPrivateResolver(
       where: { id: existingOnboarding.id },
       data,
     })
-  },
+  }
 )
 
 export default createMutations(field => ({

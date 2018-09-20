@@ -16,7 +16,9 @@ const onboardingUpdateTeam = createPrivateResolver(
       return throwArgumentError()
     }
 
-    const updatedOnboarding = await prisma.mutation.updateOnboarding<Onboarding>({
+    const updatedOnboarding = await prisma.mutation.updateOnboarding<
+      Onboarding
+    >({
       where: { id: existingOnboarding.id },
       data: {
         team: {
@@ -26,7 +28,7 @@ const onboardingUpdateTeam = createPrivateResolver(
     })
 
     return updatedOnboarding
-  },
+  }
 )
 
 export default createMutations(field => ({

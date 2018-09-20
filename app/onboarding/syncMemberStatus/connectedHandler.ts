@@ -8,11 +8,11 @@ import createLogger from 'utils/createLogger'
 const log = createLogger('app:onboarding:syncMemberStatus:connectedHandler')
 
 const handler: StatusHandler = async ({
-                                        onboarding,
-                                        userGuid,
-                                        memberGuid,
-                                        prisma,
-                                      }) => {
+  onboarding,
+  userGuid,
+  memberGuid,
+  prisma,
+}) => {
   log.debug('start')
 
   if (

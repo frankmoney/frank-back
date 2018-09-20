@@ -15,13 +15,12 @@ import R from 'ramda'
 const log = createLogger('app:onboarding:syncMemberStatus:challengedHandler')
 
 const handler: StatusHandler = async ({
-                                        onboarding,
-                                        userGuid,
-                                        memberGuid,
-                                        prisma,
-                                      }) => {
+  onboarding,
+  userGuid,
+  memberGuid,
+  prisma,
+}) => {
   log.debug('start')
-
 
   const atriumResponse = await AtriumClient.listMemberChallenges({
     params: {
@@ -40,7 +39,6 @@ const handler: StatusHandler = async ({
     !R.equals(challenges, onboarding.mfa.challenges) ||
     onboarding.credentials.status !== SUCCESS_STATUS
   ) {
-
     log.debug('updating data')
 
     onboarding = await prisma.mutation.updateOnboarding<Onboarding>({

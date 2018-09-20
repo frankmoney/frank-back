@@ -10,7 +10,8 @@ import {
   UPDATED_MXSTATUS,
   EXPIRED_MXSTATUS,
   RESUMED_MXSTATUS,
-  CREATED_MXSTATUS, REJECTED_MXSTATUS,
+  CREATED_MXSTATUS,
+  REJECTED_MXSTATUS,
 } from 'app/onboarding/constants'
 import {
   StatusHandler,
@@ -41,7 +42,7 @@ const handlers: { [status: string]: StatusHandler } = {
 
 export default async (
   onboarding: Onboarding,
-  prisma: Prisma,
+  prisma: Prisma
 ): Promise<Onboarding> => {
   log.debug('start')
 
@@ -54,11 +55,11 @@ export default async (
           onboarding: { id: onboarding.id },
         },
       },
-      '{id, mxGuid, institutionCode, user {id, mxGuid}}',
+      '{id, mxGuid, institutionCode, user {id, mxGuid}}'
     ))[0]
 
     if (!mxMember) {
-      log.debug('don\'t have mxMember')
+      log.debug("don't have mxMember")
 
       return onboarding
     }

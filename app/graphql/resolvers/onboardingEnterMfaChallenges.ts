@@ -14,9 +14,9 @@ const onboardingEnterMfaChallenges = createPrivateResolver(
     const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
     if (
-      !existingOnboarding
-      || existingOnboarding.step !== MFA_STEP
-      || existingOnboarding.mfa.status === CHECKING_STATUS
+      !existingOnboarding ||
+      existingOnboarding.step !== MFA_STEP ||
+      existingOnboarding.mfa.status === CHECKING_STATUS
     ) {
       return throwArgumentError()
     }

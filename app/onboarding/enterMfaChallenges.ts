@@ -7,7 +7,7 @@ const LOGGER_PREFIX = 'app:onboarding:enterMfaChallenges'
 export default async (
   onboarding: Onboarding,
   prisma: Prisma,
-  challenges: any,
+  challenges: any
 ) => {
   const log = createLogger(LOGGER_PREFIX)
 
@@ -21,7 +21,7 @@ export default async (
         onboarding: { id: onboarding.id },
       },
     },
-    '{id, mxGuid, institutionCode, user {id, mxGuid}}',
+    '{id, mxGuid, institutionCode, user {id, mxGuid}}'
   ))[0]
 
   const r = await AtriumClient.resumeMemberAggregation({

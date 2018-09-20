@@ -1,7 +1,11 @@
 import { throwArgumentError } from 'app/errors/ArgumentError'
 import { Onboarding } from 'app/graphql/generated/prisma'
 import OnboardingType from 'app/graphql/schema/OnboardingType'
-import { ACCOUNT_STEP, CATEGORIES_STEP, TEAM_STEP } from 'app/onboarding/constants'
+import {
+  ACCOUNT_STEP,
+  CATEGORIES_STEP,
+  TEAM_STEP,
+} from 'app/onboarding/constants'
 import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
 import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'utils/createPrivateResolver'
@@ -15,7 +19,9 @@ const onboardingCompleteCategories = createPrivateResolver(
       return throwArgumentError()
     }
 
-    const updatedOnboarding = await prisma.mutation.updateOnboarding<Onboarding>({
+    const updatedOnboarding = await prisma.mutation.updateOnboarding<
+      Onboarding
+    >({
       where: { id: existingOnboarding.id },
       data: {
         step: TEAM_STEP,
@@ -23,7 +29,7 @@ const onboardingCompleteCategories = createPrivateResolver(
     })
 
     return updatedOnboarding
-  },
+  }
 )
 
 export default createMutations(field => ({
