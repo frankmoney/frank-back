@@ -8,7 +8,9 @@ import {
   DENIED_MXSTATUS,
   MFA_STEP,
   UPDATED_MXSTATUS,
-  EXPIRED_MXSTATUS, RESUMED_MXSTATUS,
+  EXPIRED_MXSTATUS,
+  RESUMED_MXSTATUS,
+  CREATED_MXSTATUS,
 } from 'app/onboarding/constants'
 import {
   StatusHandler,
@@ -29,6 +31,7 @@ const handlers: { [status: string]: StatusHandler } = {
   [FAILED_MXSTATUS]: failedHandler,
   [CHALLENGED_MXSTATUS]: challengedHandler,
   // [EXPIRED_MXSTATUS]: challengedHandler, // 204 - not content
+  [CREATED_MXSTATUS]: virtualCheckingHandler,
   [UPDATED_MXSTATUS]: virtualCheckingHandler,
   [RESUMED_MXSTATUS]: virtualCheckingHandler,
 }

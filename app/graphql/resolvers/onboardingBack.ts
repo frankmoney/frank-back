@@ -49,6 +49,7 @@ const onboardingBack = createPrivateResolver(
         ...existingOnboarding.credentials,
         status: AWAITING_INPUT_STATUS,
       }
+      data.mfa = null
     }
 
     return await prisma.mutation.updateOnboarding({
