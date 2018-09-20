@@ -3,14 +3,14 @@ import { Onboarding } from 'app/graphql/generated/prisma'
 import OnboardingType from 'app/graphql/schema/OnboardingType'
 import { CHECKING_STATUS, MFA_STEP } from 'app/onboarding/constants'
 import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
-import enterMfaCredentials from 'app/onboarding/enterMfaCredentials'
+import enterMfaChallenges from 'app/onboarding/enterMfaChallenges'
 import { Json } from 'gql'
 import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'utils/createPrivateResolver'
 
-const onboardingEnterMfaCredentials = createPrivateResolver(
-  'Mutation:onboarding:enterMfaCredentials',
-  async ({ user, args: { credentials }, prisma }) => {
+const onboardingEnterMfaChallenges = createPrivateResolver(
+  'Mutation:onboarding:enterMfaChallenges',
+  async ({ user, args: { challenges }, prisma }) => {
     const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
     if (
@@ -34,17 +34,17 @@ const onboardingEnterMfaCredentials = createPrivateResolver(
     })
 
     // background
-    enterMfaCredentials(updatedOnboarding, prisma, credentials)
+    enterMfaChallenges(updatedOnboarding, prisma, challenges)
 
     return updatedOnboarding
   }
 )
 
 export default createMutations(field => ({
-  onboardingEnterMfaCredentials: field
+  onboardingEnterMfaChallenges: field
     .ofType(OnboardingType)
     .args(arg => ({
-      credentials: arg.listOf(Json),
+      challenges: arg.listOf(Json),
     }))
-    .resolve(onboardingEnterMfaCredentials),
+    .resolve(onboardingEnterMfaChallenges),
 }))

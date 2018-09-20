@@ -13,6 +13,8 @@ export const AWAITING_INPUT_STATUS = 'awaiting_input'
 export const CHECKING_STATUS = 'checking'
 export const SUCCESS_STATUS = 'success'
 export const DENIED_STATUS = 'denied'
+export const MFA_EXPIRED_STATUS = 'mfa_expired'
+export const MFA_REJECTED_STATUS = 'mfa_rejected'
 export const FAILED_STATUS = 'failed'
 
 // MX statuses
@@ -24,3 +26,4 @@ export const UPDATED_MXSTATUS = 'UPDATED'
 export const EXPIRED_MXSTATUS = 'EXPIRED'
 export const RESUMED_MXSTATUS = 'RESUMED'
 export const CREATED_MXSTATUS = 'CREATED'
+export const REJECTED_MXSTATUS = 'REJECTED'
