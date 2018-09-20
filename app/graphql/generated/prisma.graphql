@@ -1,5 +1,5 @@
 # source: http://prisma.frank-dev1.frank.ly
-# timestamp: Wed Sep 19 2018 17:42:30 GMT+0500 (Yekaterinburg Standard Time)
+# timestamp: Thu Sep 20 2018 15:32:22 GMT+0500 (Yekaterinburg Standard Time)
 
 type Account implements Node {
   id: ID!
@@ -1840,6 +1840,7 @@ type Onboarding implements Node {
   account: Json
   categories: Json
   mfa: Json
+  team: Json
   member(where: MxMemberWhereInput): MxMember
 }
 
@@ -1861,6 +1862,7 @@ input OnboardingCreateInput {
   account: Json
   categories: Json
   mfa: Json
+  team: Json
   user: UserCreateOneInput!
   member: MxMemberCreateOneWithoutOnboardingInput
 }
@@ -1878,6 +1880,7 @@ input OnboardingCreateWithoutMemberInput {
   account: Json
   categories: Json
   mfa: Json
+  team: Json
   user: UserCreateOneInput!
 }
 
@@ -1907,6 +1910,8 @@ enum OnboardingOrderByInput {
   categories_DESC
   mfa_ASC
   mfa_DESC
+  team_ASC
+  team_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -1922,6 +1927,7 @@ type OnboardingPreviousValues {
   account: Json
   categories: Json
   mfa: Json
+  team: Json
 }
 
 type OnboardingSubscriptionPayload {
@@ -1971,6 +1977,7 @@ input OnboardingUpdateInput {
   account: Json
   categories: Json
   mfa: Json
+  team: Json
   user: UserUpdateOneInput
   member: MxMemberUpdateOneWithoutOnboardingInput
 }
@@ -1992,6 +1999,7 @@ input OnboardingUpdateWithoutMemberDataInput {
   account: Json
   categories: Json
   mfa: Json
+  team: Json
   user: UserUpdateOneInput
 }
 

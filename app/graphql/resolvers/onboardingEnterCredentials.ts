@@ -14,9 +14,9 @@ const onboardingEnterCredentials = createPrivateResolver(
     const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
     if (
-      !existingOnboarding
-      || existingOnboarding.step !== CREDENTIALS_STEP
-      || existingOnboarding.credentials.status === CHECKING_STATUS
+      !existingOnboarding ||
+      existingOnboarding.step !== CREDENTIALS_STEP ||
+      existingOnboarding.credentials.status === CHECKING_STATUS
     ) {
       return throwArgumentError()
     }

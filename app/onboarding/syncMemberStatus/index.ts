@@ -8,7 +8,10 @@ import {
   DENIED_MXSTATUS,
   MFA_STEP,
   UPDATED_MXSTATUS,
-  EXPIRED_MXSTATUS, RESUMED_MXSTATUS,
+  EXPIRED_MXSTATUS,
+  RESUMED_MXSTATUS,
+  CREATED_MXSTATUS,
+  REJECTED_MXSTATUS,
 } from 'app/onboarding/constants'
 import {
   StatusHandler,
@@ -20,6 +23,8 @@ import connectedHandler from './connectedHandler'
 import failedHandler from './failedHandler'
 import challengedHandler from './challengedHandler'
 import virtualCheckingHandler from './virtualCheckingHandler'
+import expiredHandler from './expiredHandler'
+import rejectedHandler from './rejectedHandler'
 
 const log = createLogger(`app:onboarding:syncMemberStatus`)
 
@@ -28,14 +33,16 @@ const handlers: { [status: string]: StatusHandler } = {
   [DENIED_MXSTATUS]: deniedHandler,
   [FAILED_MXSTATUS]: failedHandler,
   [CHALLENGED_MXSTATUS]: challengedHandler,
-  // [EXPIRED_MXSTATUS]: challengedHandler, // 204 - not content
+  [EXPIRED_MXSTATUS]: expiredHandler,
+  [REJECTED_MXSTATUS]: rejectedHandler,
+  [CREATED_MXSTATUS]: virtualCheckingHandler,
   [UPDATED_MXSTATUS]: virtualCheckingHandler,
   [RESUMED_MXSTATUS]: virtualCheckingHandler,
 }
 
 export default async (
   onboarding: Onboarding,
-  prisma: Prisma,
+  prisma: Prisma
 ): Promise<Onboarding> => {
   log.debug('start')
 
@@ -48,11 +55,11 @@ export default async (
           onboarding: { id: onboarding.id },
         },
       },
-      '{id, mxGuid, institutionCode, user {id, mxGuid}}',
+      '{id, mxGuid, institutionCode, user {id, mxGuid}}'
     ))[0]
 
     if (!mxMember) {
-      log.debug('don\'t have mxMember')
+      log.debug("don't have mxMember")
 
       return onboarding
     }

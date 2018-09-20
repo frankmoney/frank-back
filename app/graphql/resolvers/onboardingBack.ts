@@ -8,6 +8,7 @@ import {
   CATEGORIES_STEP,
   CREDENTIALS_STEP,
   MFA_STEP,
+  TEAM_STEP,
 } from 'app/onboarding/constants'
 import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
 import createMutations from 'utils/createMutations'
@@ -29,6 +30,9 @@ const onboardingBack = createPrivateResolver(
     let newStep = CREDENTIALS_STEP
 
     switch (existingOnboarding.step) {
+      case TEAM_STEP:
+        newStep = CATEGORIES_STEP
+        break
       case CATEGORIES_STEP:
         newStep = ACCOUNT_STEP
         break
@@ -49,6 +53,7 @@ const onboardingBack = createPrivateResolver(
         ...existingOnboarding.credentials,
         status: AWAITING_INPUT_STATUS,
       }
+      data.mfa = null
     }
 
     return await prisma.mutation.updateOnboarding({

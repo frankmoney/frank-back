@@ -133,6 +133,7 @@ type Onboarding {
   account: Json
   categories: Json
   mfa: Json
+  team: Json
   member: MxMember
 }
 

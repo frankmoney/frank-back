@@ -1,23 +1,18 @@
 import { throwArgumentError } from 'app/errors/ArgumentError'
 import { Onboarding } from 'app/graphql/generated/prisma'
 import OnboardingType from 'app/graphql/schema/OnboardingType'
-import { CHECKING_STATUS, MFA_STEP } from 'app/onboarding/constants'
+import { TEAM_STEP } from 'app/onboarding/constants'
 import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
-import enterMfaCredentials from 'app/onboarding/enterMfaCredentials'
 import { Json } from 'gql'
 import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'utils/createPrivateResolver'
 
-const onboardingEnterMfaCredentials = createPrivateResolver(
-  'Mutation:onboarding:enterMfaCredentials',
-  async ({ user, args: { credentials }, prisma }) => {
+const onboardingUpdateTeam = createPrivateResolver(
+  'Mutation:onboarding:updateTeam',
+  async ({ user, args: { members }, prisma }) => {
     const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
-    if (
-      !existingOnboarding
-      || existingOnboarding.step !== MFA_STEP
-      || existingOnboarding.mfa.status === CHECKING_STATUS
-    ) {
+    if (!existingOnboarding || existingOnboarding.step !== TEAM_STEP) {
       return throwArgumentError()
     }
 
@@ -26,25 +21,21 @@ const onboardingEnterMfaCredentials = createPrivateResolver(
     >({
       where: { id: existingOnboarding.id },
       data: {
-        mfa: {
-          ...existingOnboarding.mfa,
-          status: CHECKING_STATUS,
+        team: {
+          members: members.map((x: string) => JSON.parse(x)),
         },
       },
     })
-
-    // background
-    enterMfaCredentials(updatedOnboarding, prisma, credentials)
 
     return updatedOnboarding
   }
 )
 
 export default createMutations(field => ({
-  onboardingEnterMfaCredentials: field
+  onboardingUpdateTeam: field
     .ofType(OnboardingType)
     .args(arg => ({
-      credentials: arg.listOf(Json),
+      members: arg.listOf(Json),
     }))
-    .resolve(onboardingEnterMfaCredentials),
+    .resolve(onboardingUpdateTeam),
 }))

@@ -1,4 +1,6 @@
 import onboardingBack from 'app/graphql/resolvers/onboardingBack'
+import onboardingCompleteCategories from 'app/graphql/resolvers/onboardingCompleteCategories'
+import onboardingUpdateTeam from 'app/graphql/resolvers/onboardingUpdateTeam'
 import createMutations from 'utils/createMutations'
 import onboardingEnterCredentials from 'app/graphql/resolvers/onboardingEnterCredentials'
 import onboardingCancel from 'app/graphql/resolvers/onboardingCancel'
@@ -8,17 +10,19 @@ import onboardingUpdateAccountInfo from 'app/graphql/resolvers/onboardingUpdateA
 import onboardingFinish from 'app/graphql/resolvers/onboardingFinish'
 import onboardingUpdateCategories from 'app/graphql/resolvers/onboardingUpdateCategories'
 import onboardingCompleteAccountInfo from 'app/graphql/resolvers/onboardingCompleteAccountInfo'
-import onboardingEnterMfaCredentials from 'app/graphql/resolvers/onboardingEnterMfaCredentials'
+import onboardingEnterMfaChallenges from 'app/graphql/resolvers/onboardingEnterMfaChallenges'
 
 export default createMutations(field => ({
-  ...onboardingCancel(field),
-  ...onboardingEnterCredentials(field),
-  ...onboardingEnterMfaCredentials(field),
   ...onboardingSelectInstitution(field),
+  ...onboardingEnterCredentials(field),
+  ...onboardingEnterMfaChallenges(field),
   ...onboardingSelectAccount(field),
   ...onboardingUpdateAccountInfo(field),
   ...onboardingCompleteAccountInfo(field),
   ...onboardingUpdateCategories(field),
+  ...onboardingCompleteCategories(field),
+  ...onboardingUpdateTeam(field),
   ...onboardingFinish(field),
   ...onboardingBack(field),
+  ...onboardingCancel(field),
 }))

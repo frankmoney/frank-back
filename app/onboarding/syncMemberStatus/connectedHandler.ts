@@ -1,4 +1,4 @@
-import { Onboarding } from 'app/graphql/generated/prisma'
+import { Onboarding, OnboardingUpdateInput } from 'app/graphql/generated/prisma'
 import AtriumClient from 'app/onboarding/atriumClient'
 import { ACCOUNTS_STEP, SUCCESS_STATUS } from 'app/onboarding/constants'
 import { StatusHandler } from 'app/onboarding/syncMemberStatus/StatusHandler'
@@ -18,7 +18,8 @@ const handler: StatusHandler = async ({
   if (
     !onboarding.accounts ||
     onboarding.step !== ACCOUNTS_STEP ||
-    onboarding.credentials.status !== SUCCESS_STATUS
+    onboarding.credentials.status !== SUCCESS_STATUS ||
+    (onboarding.mfa && onboarding.mfa.status !== SUCCESS_STATUS)
   ) {
     log.debug('updating data')
 
@@ -29,16 +30,25 @@ const handler: StatusHandler = async ({
       },
     })
 
+    const data: OnboardingUpdateInput = {
+      step: ACCOUNTS_STEP,
+      credentials: {
+        ...onboarding.credentials,
+        status: SUCCESS_STATUS,
+      },
+      accounts: humps.camelizeKeys(accounts),
+    }
+
+    if (onboarding.mfa) {
+      data.mfa = {
+        ...onboarding.mfa,
+        status: SUCCESS_STATUS,
+      }
+    }
+
     onboarding = await prisma.mutation.updateOnboarding<Onboarding>({
       where: { id: onboarding.id },
-      data: {
-        step: ACCOUNTS_STEP,
-        credentials: {
-          ...onboarding.credentials,
-          status: SUCCESS_STATUS,
-        },
-        accounts: humps.camelizeKeys(accounts),
-      },
+      data,
     })
   }
 
