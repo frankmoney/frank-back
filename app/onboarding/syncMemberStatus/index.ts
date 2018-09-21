@@ -12,6 +12,7 @@ import {
   RESUMED_MXSTATUS,
   CREATED_MXSTATUS,
   REJECTED_MXSTATUS,
+  LOCKED_MXSTATUS,
 } from 'app/onboarding/constants'
 import {
   StatusHandler,
@@ -25,6 +26,7 @@ import challengedHandler from './challengedHandler'
 import virtualCheckingHandler from './virtualCheckingHandler'
 import expiredHandler from './expiredHandler'
 import rejectedHandler from './rejectedHandler'
+import lockedHandler from './lockedHandler'
 
 const log = createLogger(`app:onboarding:syncMemberStatus`)
 
@@ -35,6 +37,7 @@ const handlers: { [status: string]: StatusHandler } = {
   [CHALLENGED_MXSTATUS]: challengedHandler,
   [EXPIRED_MXSTATUS]: expiredHandler,
   [REJECTED_MXSTATUS]: rejectedHandler,
+  [LOCKED_MXSTATUS]: lockedHandler,
   [CREATED_MXSTATUS]: virtualCheckingHandler,
   [UPDATED_MXSTATUS]: virtualCheckingHandler,
   [RESUMED_MXSTATUS]: virtualCheckingHandler,
