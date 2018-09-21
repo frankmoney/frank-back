@@ -4,7 +4,7 @@ export default createCountCategoriesResolver(
   'Peer:countCategories',
   ({ parent }) => ({
     peers_some: {
-      id: parent.id,
+      peer: { id: parent.id },
     },
-  })
+  }),
 )
