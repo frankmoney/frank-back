@@ -16,6 +16,7 @@ export const DENIED_STATUS = 'denied'
 export const MFA_EXPIRED_STATUS = 'mfa_expired'
 export const MFA_REJECTED_STATUS = 'mfa_rejected'
 export const FAILED_STATUS = 'failed'
+export const LOCKED_STATUS = 'locked'
 
 // MX statuses
 export const CONNECTED_MXSTATUS = 'CONNECTED'
@@ -27,3 +28,4 @@ export const EXPIRED_MXSTATUS = 'EXPIRED'
 export const RESUMED_MXSTATUS = 'RESUMED'
 export const CREATED_MXSTATUS = 'CREATED'
 export const REJECTED_MXSTATUS = 'REJECTED'
+export const LOCKED_MXSTATUS = 'LOCKED'
