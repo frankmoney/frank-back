@@ -1,5 +1,5 @@
 # source: http://prisma.frank-dev1.frank.ly
-# timestamp: Thu Sep 20 2018 15:32:22 GMT+0500 (Yekaterinburg Standard Time)
+# timestamp: Fri Sep 21 2018 20:07:41 GMT+0500 (Yekaterinburg Standard Time)
 
 type Account implements Node {
   id: ID!
@@ -2125,6 +2125,7 @@ type Payment implements Node {
   account(where: AccountWhereInput): Account!
   postedOn: DateTime!
   amount: Float!
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   peer(where: PeerWhereInput): Peer
@@ -2149,6 +2150,7 @@ type PaymentConnection {
 input PaymentCreateInput {
   postedOn: DateTime!
   amount: Float!
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2184,6 +2186,7 @@ input PaymentCreateOneWithoutCommentsInput {
 input PaymentCreateWithoutAccountInput {
   postedOn: DateTime!
   amount: Float!
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2198,6 +2201,7 @@ input PaymentCreateWithoutAccountInput {
 input PaymentCreateWithoutCommentsInput {
   postedOn: DateTime!
   amount: Float!
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2212,6 +2216,7 @@ input PaymentCreateWithoutCommentsInput {
 input PaymentCreateWithoutPeerInput {
   postedOn: DateTime!
   amount: Float!
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2226,6 +2231,7 @@ input PaymentCreateWithoutPeerInput {
 input PaymentCreateWithoutStoryDataInput {
   postedOn: DateTime!
   amount: Float!
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2253,6 +2259,8 @@ enum PaymentOrderByInput {
   postedOn_DESC
   amount_ASC
   amount_DESC
+  amountAbs_ASC
+  amountAbs_DESC
   peerName_ASC
   peerName_DESC
   peerNameNormalized_ASC
@@ -2273,6 +2281,7 @@ type PaymentPreviousValues {
   id: ID!
   postedOn: DateTime!
   amount: Float!
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2322,6 +2331,7 @@ input PaymentSubscriptionWhereInput {
 input PaymentUpdateInput {
   postedOn: DateTime
   amount: Float
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2372,6 +2382,7 @@ input PaymentUpdateOneWithoutCommentsInput {
 input PaymentUpdateWithoutAccountDataInput {
   postedOn: DateTime
   amount: Float
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2386,6 +2397,7 @@ input PaymentUpdateWithoutAccountDataInput {
 input PaymentUpdateWithoutCommentsDataInput {
   postedOn: DateTime
   amount: Float
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2400,6 +2412,7 @@ input PaymentUpdateWithoutCommentsDataInput {
 input PaymentUpdateWithoutPeerDataInput {
   postedOn: DateTime
   amount: Float
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2414,6 +2427,7 @@ input PaymentUpdateWithoutPeerDataInput {
 input PaymentUpdateWithoutStoryDataDataInput {
   postedOn: DateTime
   amount: Float
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2556,6 +2570,28 @@ input PaymentWhereInput {
 
   """All values greater than or equal the given value."""
   amount_gte: Float
+  amountAbs: Float
+
+  """All values that are not equal to given value."""
+  amountAbs_not: Float
+
+  """All values that are contained in given list."""
+  amountAbs_in: [Float!]
+
+  """All values that are not contained in given list."""
+  amountAbs_not_in: [Float!]
+
+  """All values less than the given value."""
+  amountAbs_lt: Float
+
+  """All values less than or equal the given value."""
+  amountAbs_lte: Float
+
+  """All values greater than the given value."""
+  amountAbs_gt: Float
+
+  """All values greater than or equal the given value."""
+  amountAbs_gte: Float
   peerName: String
 
   """All values that are not equal to given value."""
