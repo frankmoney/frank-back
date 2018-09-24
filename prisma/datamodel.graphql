@@ -159,4 +159,5 @@ type TeamInvite {
   role: TeamMemberRole!
   note: String
   team: Team!
+  inviter: User!
 }

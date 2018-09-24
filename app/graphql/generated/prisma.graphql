@@ -1,5 +1,5 @@
 # source: http://prisma.frank-dev1.frank.ly
-# timestamp: Mon Sep 24 2018 14:29:26 GMT+0300 (Russia TZ 2 Standard Time)
+# timestamp: Mon Sep 24 2018 16:44:34 GMT+0300 (Russia TZ 2 Standard Time)
 
 type Account implements Node {
   id: ID!
@@ -4456,6 +4456,7 @@ type TeamInvite implements Node {
   role: TeamMemberRole!
   note: String
   team(where: TeamWhereInput): Team!
+  inviter(where: UserWhereInput): User!
 }
 
 """A connection to a list of items."""
@@ -4473,6 +4474,7 @@ input TeamInviteCreateInput {
   role: TeamMemberRole!
   note: String
   team: TeamCreateOneWithoutInvitesInput!
+  inviter: UserCreateOneInput!
 }
 
 input TeamInviteCreateManyWithoutTeamInput {
@@ -4484,6 +4486,7 @@ input TeamInviteCreateWithoutTeamInput {
   email: String!
   role: TeamMemberRole!
   note: String
+  inviter: UserCreateOneInput!
 }
 
 """An edge in a connection."""
@@ -4561,6 +4564,7 @@ input TeamInviteUpdateInput {
   role: TeamMemberRole
   note: String
   team: TeamUpdateOneWithoutInvitesInput
+  inviter: UserUpdateOneInput
 }
 
 input TeamInviteUpdateManyWithoutTeamInput {
@@ -4576,6 +4580,7 @@ input TeamInviteUpdateWithoutTeamDataInput {
   email: String
   role: TeamMemberRole
   note: String
+  inviter: UserUpdateOneInput
 }
 
 input TeamInviteUpdateWithWhereUniqueWithoutTeamInput {
@@ -4729,6 +4734,7 @@ input TeamInviteWhereInput {
   """All values not ending with the given string."""
   note_not_ends_with: String
   team: TeamWhereInput
+  inviter: UserWhereInput
 }
 
 input TeamInviteWhereUniqueInput {
@@ -5385,7 +5391,6 @@ input UserUpdateInput {
 input UserUpdateOneInput {
   create: UserCreateInput
   connect: UserWhereUniqueInput
-  disconnect: Boolean
   delete: Boolean
   update: UserUpdateDataInput
   upsert: UserUpsertNestedInput

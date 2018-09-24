@@ -5,7 +5,7 @@ import mapTeamMemberRoleToPrisma from 'utils/mapTeamMemberRoleToPrisma'
 
 const teamInviteSend = createPrivateResolver(
   'TeamInvite:send',
-  async ({ assert, args, prisma: { mutation } }) => {
+  async ({ assert, user, args, prisma: { mutation } }) => {
     const { teamId } = await assert.canInviteTeamMember()
 
     await mutation.deleteManyTeamInvites({
@@ -15,25 +15,34 @@ const teamInviteSend = createPrivateResolver(
     const invite = await mutation.createTeamInvite(
       {
         data: {
+          email: args.email,
+          role: mapTeamMemberRoleToPrisma(args.role),
+          note: args.note,
           team: {
             connect: {
               id: teamId,
             },
           },
-          email: args.email,
-          role: mapTeamMemberRoleToPrisma(args.role),
-          note: args.note,
+          inviter: {
+            connect: {
+              id: user.id,
+            },
+          },
         },
       },
-      `{ id, email, role, note }`
+      `{ id, email, role, note, team { name }, inviter { lastName, firstName } }`
     )
 
     const link = `/onboarding/accept-invitation/${invite.id}`
 
     await sendInvite({
-      email: args.email,
+      inviter: invite.inviter,
+      team: invite.team,
+      invitee: {
+        email: invite.email,
+      },
+      note: invite.note,
       link,
-      note: args.note,
     })
 
     return {

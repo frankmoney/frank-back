@@ -2,7 +2,6 @@
   "name": "@frankmoney/frank-back",
   "version": "1.0.0",
   "main": "app",
-  "license": "MIT",
   "private": true,
   "scripts": {
     "deploy": "node scripts deploy",
@@ -28,6 +27,7 @@
     }
   },
   "dependencies": {
+    "@frankmoney/frank-mail": "^1.0.7",
     "@types/debug": "^0.0.30",
     "@types/graphql-type-json": "^0.1.2",
     "@types/humps": "^1.1.2",
