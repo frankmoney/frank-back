@@ -3,6 +3,7 @@ import onboarding from './onboarding'
 import payment from './payment'
 import peer from './peer'
 import story from './story'
+import teamInviteSend from './teamInviteSend'
 import teamMemberUpdateRole from './teamMemberUpdateRole'
 
 const MutationType = Type('Mutation', type =>
@@ -11,6 +12,7 @@ const MutationType = Type('Mutation', type =>
     ...payment(field),
     ...peer(field),
     ...story(field),
+    ...teamInviteSend(field),
     ...teamMemberUpdateRole(field),
   }))
 )

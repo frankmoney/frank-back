@@ -2,7 +2,6 @@
   "name": "@frankmoney/frank-back",
   "version": "1.0.0",
   "main": "app",
-  "license": "MIT",
   "private": true,
   "scripts": {
     "deploy": "node scripts deploy",
@@ -28,9 +27,11 @@
     }
   },
   "dependencies": {
+    "@frankmoney/frank-mail": "^1.0.7",
     "@types/debug": "^0.0.30",
     "@types/graphql-type-json": "^0.1.2",
     "@types/humps": "^1.1.2",
+    "@types/mailgun-js": "^0.16.0",
     "@types/ramda": "^0.25.36",
     "apollo-server": "^2.0.0",
     "date-fns": "^1.29.0",
@@ -40,6 +41,7 @@
     "graphql-tools": "^3.0.5",
     "graphql-type-json": "^0.2.1",
     "humps": "^2.0.1",
+    "mailgun-js": "^0.20.0",
     "mx-atrium": "^0.0.10",
     "prisma-binding": "^2.1.1",
     "ramda": "^0.25.0",

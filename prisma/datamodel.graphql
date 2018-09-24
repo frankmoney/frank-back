@@ -4,6 +4,7 @@ type Team {
   nameNormalized: String
   accounts: [Account!]!
   members: [TeamMember!]!
+  invites: [TeamInvite!]!
 }
 
 type User {
@@ -150,4 +151,13 @@ type MxMember {
   institutionCode: String!
   user: MxUser!
   onboarding: Onboarding
+}
+
+type TeamInvite {
+  id: ID! @unique
+  email: String!
+  role: TeamMemberRole!
+  note: String
+  team: Team!
+  inviter: User!
 }

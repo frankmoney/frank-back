@@ -33,19 +33,12 @@ const teamMemberUpdateRole = createPrivateResolver(
       },
       `{
         role
-        canInvite
       
         user {
           id
           email
           lastName
           firstName
-        }
-        
-        accounts {
-          account {
-            id
-          }
         }
       }`
     )
