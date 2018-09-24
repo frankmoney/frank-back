@@ -49,6 +49,7 @@ type Payment {
   account: Account!
   postedOn: DateTime!
   amount: Float!
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   peer: Peer

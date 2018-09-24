@@ -69,7 +69,7 @@ const createPaymentsResolver = <TArgs = any>(
         orderBy = 'postedOn_DESC'
         break
       case PaymentsOrder.values.amount_DESC:
-        orderBy = 'amount_DESC'
+        orderBy = 'amountAbs_DESC'
         break
     }
 

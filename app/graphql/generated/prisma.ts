@@ -2316,6 +2316,7 @@ type Payment implements Node {
   account(where: AccountWhereInput): Account!
   postedOn: DateTime!
   amount: Float!
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   peer(where: PeerWhereInput): Peer
@@ -2340,6 +2341,7 @@ type PaymentConnection {
 input PaymentCreateInput {
   postedOn: DateTime!
   amount: Float!
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2375,6 +2377,7 @@ input PaymentCreateOneWithoutCommentsInput {
 input PaymentCreateWithoutAccountInput {
   postedOn: DateTime!
   amount: Float!
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2389,6 +2392,7 @@ input PaymentCreateWithoutAccountInput {
 input PaymentCreateWithoutCommentsInput {
   postedOn: DateTime!
   amount: Float!
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2403,6 +2407,7 @@ input PaymentCreateWithoutCommentsInput {
 input PaymentCreateWithoutPeerInput {
   postedOn: DateTime!
   amount: Float!
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2417,6 +2422,7 @@ input PaymentCreateWithoutPeerInput {
 input PaymentCreateWithoutStoryDataInput {
   postedOn: DateTime!
   amount: Float!
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2444,6 +2450,8 @@ enum PaymentOrderByInput {
   postedOn_DESC
   amount_ASC
   amount_DESC
+  amountAbs_ASC
+  amountAbs_DESC
   peerName_ASC
   peerName_DESC
   peerNameNormalized_ASC
@@ -2464,6 +2472,7 @@ type PaymentPreviousValues {
   id: ID!
   postedOn: DateTime!
   amount: Float!
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2513,6 +2522,7 @@ input PaymentSubscriptionWhereInput {
 input PaymentUpdateInput {
   postedOn: DateTime
   amount: Float
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2563,6 +2573,7 @@ input PaymentUpdateOneWithoutCommentsInput {
 input PaymentUpdateWithoutAccountDataInput {
   postedOn: DateTime
   amount: Float
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2577,6 +2588,7 @@ input PaymentUpdateWithoutAccountDataInput {
 input PaymentUpdateWithoutCommentsDataInput {
   postedOn: DateTime
   amount: Float
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2591,6 +2603,7 @@ input PaymentUpdateWithoutCommentsDataInput {
 input PaymentUpdateWithoutPeerDataInput {
   postedOn: DateTime
   amount: Float
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2605,6 +2618,7 @@ input PaymentUpdateWithoutPeerDataInput {
 input PaymentUpdateWithoutStoryDataDataInput {
   postedOn: DateTime
   amount: Float
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   description: String
@@ -2747,6 +2761,28 @@ input PaymentWhereInput {
 
   """All values greater than or equal the given value."""
   amount_gte: Float
+  amountAbs: Float
+
+  """All values that are not equal to given value."""
+  amountAbs_not: Float
+
+  """All values that are contained in given list."""
+  amountAbs_in: [Float!]
+
+  """All values that are not contained in given list."""
+  amountAbs_not_in: [Float!]
+
+  """All values less than the given value."""
+  amountAbs_lt: Float
+
+  """All values less than or equal the given value."""
+  amountAbs_lte: Float
+
+  """All values greater than the given value."""
+  amountAbs_gt: Float
+
+  """All values greater than or equal the given value."""
+  amountAbs_gte: Float
   peerName: String
 
   """All values that are not equal to given value."""
@@ -5581,6 +5617,8 @@ export type PaymentOrderByInput =   'id_ASC' |
   'postedOn_DESC' |
   'amount_ASC' |
   'amount_DESC' |
+  'amountAbs_ASC' |
+  'amountAbs_DESC' |
   'peerName_ASC' |
   'peerName_DESC' |
   'peerNameNormalized_ASC' |
@@ -5766,6 +5804,7 @@ export interface TeamWhereInput {
 export interface PaymentCreateWithoutStoryDataInput {
   postedOn: DateTime
   amount: Float
+  amountAbs?: Float
   peerName?: String
   peerNameNormalized?: String
   description?: String
@@ -6024,6 +6063,14 @@ export interface PaymentWhereInput {
   amount_lte?: Float
   amount_gt?: Float
   amount_gte?: Float
+  amountAbs?: Float
+  amountAbs_not?: Float
+  amountAbs_in?: Float[] | Float
+  amountAbs_not_in?: Float[] | Float
+  amountAbs_lt?: Float
+  amountAbs_lte?: Float
+  amountAbs_gt?: Float
+  amountAbs_gte?: Float
   peerName?: String
   peerName_not?: String
   peerName_in?: String[] | String
@@ -6456,6 +6503,7 @@ export interface MxMemberUpsertWithWhereUniqueWithoutUserInput {
 export interface PaymentCreateInput {
   postedOn: DateTime
   amount: Float
+  amountAbs?: Float
   peerName?: String
   peerNameNormalized?: String
   description?: String
@@ -6528,6 +6576,7 @@ export interface MxMemberUpsertWithoutOnboardingInput {
 export interface PaymentCreateWithoutCommentsInput {
   postedOn: DateTime
   amount: Float
+  amountAbs?: Float
   peerName?: String
   peerNameNormalized?: String
   description?: String
@@ -6973,6 +7022,7 @@ export interface PaymentCreateManyWithoutPeerInput {
 export interface PaymentUpdateWithoutAccountDataInput {
   postedOn?: DateTime
   amount?: Float
+  amountAbs?: Float
   peerName?: String
   peerNameNormalized?: String
   description?: String
@@ -7439,6 +7489,7 @@ export interface TeamMemberUpdateInput {
 export interface PaymentUpdateWithoutPeerDataInput {
   postedOn?: DateTime
   amount?: Float
+  amountAbs?: Float
   peerName?: String
   peerNameNormalized?: String
   description?: String
@@ -7609,6 +7660,7 @@ export interface TeamMemberCreateWithoutTeamInput {
 export interface PaymentUpdateWithoutStoryDataDataInput {
   postedOn?: DateTime
   amount?: Float
+  amountAbs?: Float
   peerName?: String
   peerNameNormalized?: String
   description?: String
@@ -7853,6 +7905,7 @@ export interface TeamUpsertWithoutMembersInput {
 export interface PaymentUpdateInput {
   postedOn?: DateTime
   amount?: Float
+  amountAbs?: Float
   peerName?: String
   peerNameNormalized?: String
   description?: String
@@ -7912,6 +7965,7 @@ export interface PaymentUpsertWithWhereUniqueWithoutStoryDataInput {
 export interface PaymentCreateWithoutAccountInput {
   postedOn: DateTime
   amount: Float
+  amountAbs?: Float
   peerName?: String
   peerNameNormalized?: String
   description?: String
@@ -7947,6 +8001,7 @@ export interface StoryUpdateWithoutPublicDataDataInput {
 export interface PaymentCreateWithoutPeerInput {
   postedOn: DateTime
   amount: Float
+  amountAbs?: Float
   peerName?: String
   peerNameNormalized?: String
   description?: String
@@ -8016,6 +8071,7 @@ export interface StoryUpsertWithoutPublicDataInput {
 export interface PaymentUpdateWithoutCommentsDataInput {
   postedOn?: DateTime
   amount?: Float
+  amountAbs?: Float
   peerName?: String
   peerNameNormalized?: String
   description?: String
@@ -8623,6 +8679,7 @@ export interface PaymentPreviousValues {
   id: ID_Output
   postedOn: DateTime
   amount: Float
+  amountAbs?: Float
   peerName?: String
   peerNameNormalized?: String
   description?: String
@@ -8876,6 +8933,7 @@ export interface Payment extends Node {
   account: Account
   postedOn: DateTime
   amount: Float
+  amountAbs?: Float
   peerName?: String
   peerNameNormalized?: String
   peer?: Peer
