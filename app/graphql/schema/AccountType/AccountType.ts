@@ -48,7 +48,7 @@ const AccountType = Type('Account', type =>
       .resolve(accountCategories),
 
     countCategories: field
-      .listOf(CategoryType)
+      .ofType(IntValue)
       .args(arg => ({
         search: arg.ofString().nullable(),
       }))

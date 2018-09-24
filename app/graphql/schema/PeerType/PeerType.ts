@@ -43,7 +43,7 @@ const PeerType = Type('Peer', type =>
       .resolve(peerCategories),
 
     countCategories: field
-      .listOf(CategoryType)
+      .ofType(IntValue)
       .args(arg => ({
         search: arg.ofString().nullable(),
       }))

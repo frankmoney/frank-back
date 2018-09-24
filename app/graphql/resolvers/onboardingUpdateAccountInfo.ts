@@ -11,7 +11,7 @@ const onboardingUpdateAccountInfo = createPrivateResolver(
   async ({ user, args: { title, description }, prisma }) => {
     const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
-    if (!existingOnboarding) {
+    if (!existingOnboarding || existingOnboarding.step !== ACCOUNT_STEP) {
       return throwArgumentError()
     }
 
@@ -20,7 +20,6 @@ const onboardingUpdateAccountInfo = createPrivateResolver(
     >({
       where: { id: existingOnboarding.id },
       data: {
-        step: ACCOUNT_STEP,
         account: {
           ...existingOnboarding.account,
           frankTitle: title || existingOnboarding.account.frankTitle,

@@ -3,7 +3,7 @@ import StoryType from './StoryType'
 export default StoryType
 
 const paymentScheme = `{ id, postedOn, amount, peerName, description }`
-const storyDateScheme = `{ title, body, coverImage, updatedAt, payments ${paymentScheme} }`
+const storyDateScheme = `{ id, title, body, coverImage, updatedAt, payments ${paymentScheme} }`
 
 export const FULL_STORY_QUERY = `{
   id

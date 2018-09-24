@@ -1,18 +1,23 @@
 import { throwArgumentError } from 'app/errors/ArgumentError'
 import { Onboarding } from 'app/graphql/generated/prisma'
 import OnboardingType from 'app/graphql/schema/OnboardingType'
-import { CATEGORIES_STEP } from 'app/onboarding/constants'
+import { CHECKING_STATUS, MFA_STEP } from 'app/onboarding/constants'
 import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
+import enterMfaChallenges from 'app/onboarding/enterMfaChallenges'
 import { Json } from 'gql'
 import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'utils/createPrivateResolver'
 
-const onboardingUpdateCategories = createPrivateResolver(
-  'Mutation:onboarding:updateCategories',
-  async ({ user, args: { categories }, prisma }) => {
+const onboardingEnterMfaChallenges = createPrivateResolver(
+  'Mutation:onboarding:enterMfaChallenges',
+  async ({ user, args: { challenges }, prisma }) => {
     const existingOnboarding = await findExistingOnboarding(user.id, prisma)
 
-    if (!existingOnboarding || existingOnboarding.step !== CATEGORIES_STEP) {
+    if (
+      !existingOnboarding ||
+      existingOnboarding.step !== MFA_STEP ||
+      existingOnboarding.mfa.status === CHECKING_STATUS
+    ) {
       return throwArgumentError()
     }
 
@@ -21,19 +26,25 @@ const onboardingUpdateCategories = createPrivateResolver(
     >({
       where: { id: existingOnboarding.id },
       data: {
-        categories: categories.map((x: string) => JSON.parse(x)),
+        mfa: {
+          ...existingOnboarding.mfa,
+          status: CHECKING_STATUS,
+        },
       },
     })
+
+    // background
+    enterMfaChallenges(updatedOnboarding, prisma, challenges)
 
     return updatedOnboarding
   }
 )
 
 export default createMutations(field => ({
-  onboardingUpdateCategories: field
+  onboardingEnterMfaChallenges: field
     .ofType(OnboardingType)
     .args(arg => ({
-      categories: arg.listOf(Json),
+      challenges: arg.listOf(Json),
     }))
-    .resolve(onboardingUpdateCategories),
+    .resolve(onboardingEnterMfaChallenges),
 }))

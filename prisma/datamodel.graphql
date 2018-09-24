@@ -50,6 +50,7 @@ type Payment {
   account: Account!
   postedOn: DateTime!
   amount: Float!
+  amountAbs: Float
   peerName: String
   peerNameNormalized: String
   peer: Peer
@@ -133,8 +134,23 @@ type Onboarding {
   accounts: Json
   account: Json
   categories: Json
-  mxMemberGuid: String
-  mxUserGuid: String
+  mfa: Json
+  team: Json
+  member: MxMember
+}
+
+type MxUser {
+  id: ID! @unique
+  mxGuid: String!
+  members: [MxMember!]!
+}
+
+type MxMember {
+  id: ID! @unique
+  mxGuid: String!
+  institutionCode: String!
+  user: MxUser!
+  onboarding: Onboarding
 }
 
 type TeamInvite {
