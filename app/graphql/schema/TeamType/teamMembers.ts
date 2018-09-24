@@ -16,27 +16,15 @@ const teamMembers = createPrivateResolver(
       `{
       id
       name
-      
-      accounts {
-        id
-        name
-      }
-      
+
       members {
         role
-        canInvite
-      
+
         user {
           id
           email
           lastName
           firstName
-        }
-        
-        accounts {
-          account {
-            id
-          }
         }
       }
     }`

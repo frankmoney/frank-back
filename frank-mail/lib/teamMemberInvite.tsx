@@ -25,7 +25,7 @@ export default createTemplate<TeamMemberInviteData>(
       body: (
         <div>
           <div>
-            {inviterFullName}
+            {inviterFullName}{' '}
             has invited you to join team {team.name} at Frank
           </div>
           {note && (
