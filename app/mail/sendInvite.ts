@@ -6,7 +6,11 @@ export type SendInviteArgs = {
   note?: string
 }
 
-const sendInvite = async ({ email, link, note }: SendInviteArgs): Promise<void> => {
+const sendInvite = async ({
+  email,
+  link,
+  note,
+}: SendInviteArgs): Promise<void> => {
   const client = createClient()
 
   try {
@@ -22,7 +26,9 @@ const sendInvite = async ({ email, link, note }: SendInviteArgs): Promise<void> 
     client.log.info(`Sent invite mail to ${email} with link ${link}`)
     client.log.trace('mailgun response:', result)
   } catch (exc) {
-    client.log.error(`Failed to send invite mail to ${email} with link ${link}:\r\n${exc}`)
+    client.log.error(
+      `Failed to send invite mail to ${email} with link ${link}:\r\n${exc}`
+    )
     throw exc
   }
 }

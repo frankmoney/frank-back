@@ -11,7 +11,7 @@ const teamInviteSend = createMutations(field => ({
       role: arg.ofType(TeamMemberRoleEnum),
       note: arg.ofString().nullable(),
     }))
-    .resolve(teamInviteSendResolver)
+    .resolve(teamInviteSendResolver),
 }))
 
 export default teamInviteSend

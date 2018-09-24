@@ -18,10 +18,7 @@ const createTeamResolver = <TArgs = any>(
 
     const first = 1
 
-    const teams = await query.teams<Team[]>(
-      { where, first },
-      `{ id, name }`
-    )
+    const teams = await query.teams<Team[]>({ where, first }, `{ id, name }`)
 
     const team = (teams && teams[0]) || undefined
 

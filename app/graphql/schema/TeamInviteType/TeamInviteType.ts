@@ -3,8 +3,8 @@ import TeamMemberRoleEnum from '../TeamMemberRoleEnum'
 import TeamType from '../TeamType'
 import teamInviteTeam from './teamInviteTeam'
 
-const TeamInviteType = Type('TeamInvite', type => type
-  .fields(field => ({
+const TeamInviteType = Type('TeamInvite', type =>
+  type.fields(field => ({
     id: field.ofID(),
     email: field.ofString(),
     role: field.ofType(TeamMemberRoleEnum),

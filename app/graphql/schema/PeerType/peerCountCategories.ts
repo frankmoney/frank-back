@@ -6,5 +6,5 @@ export default createCountCategoriesResolver(
     peers_some: {
       peer: { id: parent.id },
     },
-  }),
+  })
 )

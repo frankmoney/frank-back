@@ -7,16 +7,19 @@ const assertCanInviteTeamMember = async (
   userId: string,
   { query }: { query: Query }
 ) => {
-  const entries = await query.teamMembers({
-    where: {
-      user: {
-        id: userId,
+  const entries = await query.teamMembers(
+    {
+      where: {
+        user: {
+          id: userId,
+        },
+        role: mapTeamMemberRoleToPrisma(
+          TeamMemberRoleEnum.values.administrator
+        ),
       },
-      role: mapTeamMemberRoleToPrisma(
-        TeamMemberRoleEnum.values.administrator
-      ),
     },
-  }, `{ team { id } }`)
+    `{ team { id } }`
+  )
 
   if (!entries || !entries[0]) {
     throwForbidden()

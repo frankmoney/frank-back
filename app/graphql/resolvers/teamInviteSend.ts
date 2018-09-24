@@ -9,21 +9,24 @@ const teamInviteSend = createPrivateResolver(
     const { teamId } = await assert.canInviteTeamMember()
 
     await mutation.deleteManyTeamInvites({
-      where: { team: { id: teamId }, email: args.email }
+      where: { team: { id: teamId }, email: args.email },
     })
 
-    const invite = await mutation.createTeamInvite({
-      data: {
-        team: {
-          connect: {
-            id: teamId,
+    const invite = await mutation.createTeamInvite(
+      {
+        data: {
+          team: {
+            connect: {
+              id: teamId,
+            },
           },
+          email: args.email,
+          role: mapTeamMemberRoleToPrisma(args.role),
+          note: args.note,
         },
-        email: args.email,
-        role: mapTeamMemberRoleToPrisma(args.role),
-        note: args.note,
       },
-    }, `{ id, email, role, note }`)
+      `{ id, email, role, note }`
+    )
 
     const link = `/onboarding/accept-invitation/${invite.id}`
 
