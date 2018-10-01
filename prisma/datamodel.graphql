@@ -59,6 +59,7 @@ type Payment {
   comments: [Comment!]!
   category: Category
   rawData: Json!
+  mxGuid: String @unique
   storyData: StoryData
 }
 

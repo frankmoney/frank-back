@@ -11,7 +11,8 @@
     "lint-fix": "node node_modules/tslint/bin/tslint -p . --fix && echo \"no lint errors\"",
     "prettier": "node node_modules/prettier/bin-prettier.js -l **/*.js **/*.ts **/*.json",
     "prettier-fix": "node node_modules/prettier/bin-prettier.js --write **/*.js **/*.ts **/*.json",
-    "start": "node scripts start"
+    "start": "node scripts start",
+    "start-import": "node scripts import"
   },
   "lint-staged": {
     "*.js": [

@@ -2346,6 +2346,7 @@ type Payment implements Node {
   comments(where: CommentWhereInput, orderBy: CommentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Comment!]
   category(where: CategoryWhereInput): Category
   rawData: Json!
+  mxGuid: String
   storyData(where: StoryDataWhereInput): StoryData
 }
 
@@ -2368,6 +2369,7 @@ input PaymentCreateInput {
   description: String
   descriptionNormalized: String
   rawData: Json!
+  mxGuid: String
   account: AccountCreateOneWithoutPaymentsInput!
   peer: PeerCreateOneWithoutPaymentsInput
   comments: CommentCreateManyWithoutPaymentInput
@@ -2404,6 +2406,7 @@ input PaymentCreateWithoutAccountInput {
   description: String
   descriptionNormalized: String
   rawData: Json!
+  mxGuid: String
   peer: PeerCreateOneWithoutPaymentsInput
   comments: CommentCreateManyWithoutPaymentInput
   category: CategoryCreateOneInput
@@ -2419,6 +2422,7 @@ input PaymentCreateWithoutCommentsInput {
   description: String
   descriptionNormalized: String
   rawData: Json!
+  mxGuid: String
   account: AccountCreateOneWithoutPaymentsInput!
   peer: PeerCreateOneWithoutPaymentsInput
   category: CategoryCreateOneInput
@@ -2434,6 +2438,7 @@ input PaymentCreateWithoutPeerInput {
   description: String
   descriptionNormalized: String
   rawData: Json!
+  mxGuid: String
   account: AccountCreateOneWithoutPaymentsInput!
   comments: CommentCreateManyWithoutPaymentInput
   category: CategoryCreateOneInput
@@ -2449,6 +2454,7 @@ input PaymentCreateWithoutStoryDataInput {
   description: String
   descriptionNormalized: String
   rawData: Json!
+  mxGuid: String
   account: AccountCreateOneWithoutPaymentsInput!
   peer: PeerCreateOneWithoutPaymentsInput
   comments: CommentCreateManyWithoutPaymentInput
@@ -2483,6 +2489,8 @@ enum PaymentOrderByInput {
   descriptionNormalized_DESC
   rawData_ASC
   rawData_DESC
+  mxGuid_ASC
+  mxGuid_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -2499,6 +2507,7 @@ type PaymentPreviousValues {
   description: String
   descriptionNormalized: String
   rawData: Json!
+  mxGuid: String
 }
 
 type PaymentSubscriptionPayload {
@@ -2549,6 +2558,7 @@ input PaymentUpdateInput {
   description: String
   descriptionNormalized: String
   rawData: Json
+  mxGuid: String
   account: AccountUpdateOneWithoutPaymentsInput
   peer: PeerUpdateOneWithoutPaymentsInput
   comments: CommentUpdateManyWithoutPaymentInput
@@ -2600,6 +2610,7 @@ input PaymentUpdateWithoutAccountDataInput {
   description: String
   descriptionNormalized: String
   rawData: Json
+  mxGuid: String
   peer: PeerUpdateOneWithoutPaymentsInput
   comments: CommentUpdateManyWithoutPaymentInput
   category: CategoryUpdateOneInput
@@ -2615,6 +2626,7 @@ input PaymentUpdateWithoutCommentsDataInput {
   description: String
   descriptionNormalized: String
   rawData: Json
+  mxGuid: String
   account: AccountUpdateOneWithoutPaymentsInput
   peer: PeerUpdateOneWithoutPaymentsInput
   category: CategoryUpdateOneInput
@@ -2630,6 +2642,7 @@ input PaymentUpdateWithoutPeerDataInput {
   description: String
   descriptionNormalized: String
   rawData: Json
+  mxGuid: String
   account: AccountUpdateOneWithoutPaymentsInput
   comments: CommentUpdateManyWithoutPaymentInput
   category: CategoryUpdateOneInput
@@ -2645,6 +2658,7 @@ input PaymentUpdateWithoutStoryDataDataInput {
   description: String
   descriptionNormalized: String
   rawData: Json
+  mxGuid: String
   account: AccountUpdateOneWithoutPaymentsInput
   peer: PeerUpdateOneWithoutPaymentsInput
   comments: CommentUpdateManyWithoutPaymentInput
@@ -2964,6 +2978,46 @@ input PaymentWhereInput {
 
   """All values not ending with the given string."""
   descriptionNormalized_not_ends_with: String
+  mxGuid: String
+
+  """All values that are not equal to given value."""
+  mxGuid_not: String
+
+  """All values that are contained in given list."""
+  mxGuid_in: [String!]
+
+  """All values that are not contained in given list."""
+  mxGuid_not_in: [String!]
+
+  """All values less than the given value."""
+  mxGuid_lt: String
+
+  """All values less than or equal the given value."""
+  mxGuid_lte: String
+
+  """All values greater than the given value."""
+  mxGuid_gt: String
+
+  """All values greater than or equal the given value."""
+  mxGuid_gte: String
+
+  """All values containing the given string."""
+  mxGuid_contains: String
+
+  """All values not containing the given string."""
+  mxGuid_not_contains: String
+
+  """All values starting with the given string."""
+  mxGuid_starts_with: String
+
+  """All values not starting with the given string."""
+  mxGuid_not_starts_with: String
+
+  """All values ending with the given string."""
+  mxGuid_ends_with: String
+
+  """All values not ending with the given string."""
+  mxGuid_not_ends_with: String
   account: AccountWhereInput
   peer: PeerWhereInput
   comments_every: CommentWhereInput
@@ -2975,6 +3029,7 @@ input PaymentWhereInput {
 
 input PaymentWhereUniqueInput {
   id: ID
+  mxGuid: String
 }
 
 type Peer implements Node {
@@ -5986,6 +6041,8 @@ export type PaymentOrderByInput =   'id_ASC' |
   'descriptionNormalized_DESC' |
   'rawData_ASC' |
   'rawData_DESC' |
+  'mxGuid_ASC' |
+  'mxGuid_DESC' |
   'updatedAt_ASC' |
   'updatedAt_DESC' |
   'createdAt_ASC' |
@@ -6424,6 +6481,7 @@ export interface PaymentCreateWithoutStoryDataInput {
   description?: String
   descriptionNormalized?: String
   rawData: Json
+  mxGuid?: String
   account: AccountCreateOneWithoutPaymentsInput
   peer?: PeerCreateOneWithoutPaymentsInput
   comments?: CommentCreateManyWithoutPaymentInput
@@ -6767,6 +6825,7 @@ export interface PaymentCreateInput {
   description?: String
   descriptionNormalized?: String
   rawData: Json
+  mxGuid?: String
   account: AccountCreateOneWithoutPaymentsInput
   peer?: PeerCreateOneWithoutPaymentsInput
   comments?: CommentCreateManyWithoutPaymentInput
@@ -6837,6 +6896,7 @@ export interface PaymentCreateWithoutCommentsInput {
   description?: String
   descriptionNormalized?: String
   rawData: Json
+  mxGuid?: String
   account: AccountCreateOneWithoutPaymentsInput
   peer?: PeerCreateOneWithoutPaymentsInput
   category?: CategoryCreateOneInput
@@ -6956,6 +7016,7 @@ export interface PaymentUpdateWithoutCommentsDataInput {
   description?: String
   descriptionNormalized?: String
   rawData?: Json
+  mxGuid?: String
   account?: AccountUpdateOneWithoutPaymentsInput
   peer?: PeerUpdateOneWithoutPaymentsInput
   category?: CategoryUpdateOneInput
@@ -6986,6 +7047,7 @@ export interface PaymentUpdateInput {
   description?: String
   descriptionNormalized?: String
   rawData?: Json
+  mxGuid?: String
   account?: AccountUpdateOneWithoutPaymentsInput
   peer?: PeerUpdateOneWithoutPaymentsInput
   comments?: CommentUpdateManyWithoutPaymentInput
@@ -7315,6 +7377,7 @@ export interface PaymentUpdateWithoutAccountDataInput {
   description?: String
   descriptionNormalized?: String
   rawData?: Json
+  mxGuid?: String
   peer?: PeerUpdateOneWithoutPaymentsInput
   comments?: CommentUpdateManyWithoutPaymentInput
   category?: CategoryUpdateOneInput
@@ -7743,6 +7806,7 @@ export interface UserUpdateOneWithoutTeamsInput {
 
 export interface PaymentWhereUniqueInput {
   id?: ID_Input
+  mxGuid?: String
 }
 
 export interface UserUpdateWithoutTeamsDataInput {
@@ -8095,6 +8159,7 @@ export interface PaymentUpdateWithoutPeerDataInput {
   description?: String
   descriptionNormalized?: String
   rawData?: Json
+  mxGuid?: String
   account?: AccountUpdateOneWithoutPaymentsInput
   comments?: CommentUpdateManyWithoutPaymentInput
   category?: CategoryUpdateOneInput
@@ -8324,6 +8389,20 @@ export interface PaymentWhereInput {
   descriptionNormalized_not_starts_with?: String
   descriptionNormalized_ends_with?: String
   descriptionNormalized_not_ends_with?: String
+  mxGuid?: String
+  mxGuid_not?: String
+  mxGuid_in?: String[] | String
+  mxGuid_not_in?: String[] | String
+  mxGuid_lt?: String
+  mxGuid_lte?: String
+  mxGuid_gt?: String
+  mxGuid_gte?: String
+  mxGuid_contains?: String
+  mxGuid_not_contains?: String
+  mxGuid_starts_with?: String
+  mxGuid_not_starts_with?: String
+  mxGuid_ends_with?: String
+  mxGuid_not_ends_with?: String
   account?: AccountWhereInput
   peer?: PeerWhereInput
   comments_every?: CommentWhereInput
@@ -8498,6 +8577,7 @@ export interface PaymentUpdateWithoutStoryDataDataInput {
   description?: String
   descriptionNormalized?: String
   rawData?: Json
+  mxGuid?: String
   account?: AccountUpdateOneWithoutPaymentsInput
   peer?: PeerUpdateOneWithoutPaymentsInput
   comments?: CommentUpdateManyWithoutPaymentInput
@@ -8551,6 +8631,7 @@ export interface PaymentCreateWithoutAccountInput {
   description?: String
   descriptionNormalized?: String
   rawData: Json
+  mxGuid?: String
   peer?: PeerCreateOneWithoutPaymentsInput
   comments?: CommentCreateManyWithoutPaymentInput
   category?: CategoryCreateOneInput
@@ -8603,6 +8684,7 @@ export interface PaymentCreateWithoutPeerInput {
   description?: String
   descriptionNormalized?: String
   rawData: Json
+  mxGuid?: String
   account: AccountCreateOneWithoutPaymentsInput
   comments?: CommentCreateManyWithoutPaymentInput
   category?: CategoryCreateOneInput
@@ -9214,6 +9296,7 @@ export interface PaymentPreviousValues {
   description?: String
   descriptionNormalized?: String
   rawData: Json
+  mxGuid?: String
 }
 
 /*
@@ -9525,6 +9608,7 @@ export interface Payment extends Node {
   comments?: Comment[]
   category?: Category
   rawData: Json
+  mxGuid?: String
   storyData?: StoryData
 }
 
