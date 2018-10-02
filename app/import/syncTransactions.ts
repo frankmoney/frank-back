@@ -1,4 +1,4 @@
-import { Account } from 'app/graphql/generated/prisma'
+import { Account, Payment } from 'app/graphql/generated/prisma'
 import { Prisma } from 'prisma-binding'
 import createLogger from 'utils/createLogger'
 import R from 'ramda'
@@ -8,19 +8,17 @@ const log = createLogger('import:syncTransactions')
 
 export default async (account: Account, mxPayments: any[], prisma: Prisma) => {
 
-  log.debug('start')
-
-  const { payments } = await prisma.query.payments({ where: { account: { id: account.id } } })
+  const payments = await prisma.query.payments({ where: { account: { id: account.id } } })
 
   for (const mxPayment of mxPayments) {
 
     const { guid } = mxPayment
 
-    const existingPayment = R.find(R.propEq('mxGuid', guid))(payments)
+    const existingPayment = R.find(R.propEq('mxGuid', guid), payments)
 
-    if (existingPayment === null) {
+    if (R.isNil(existingPayment)) {
 
-      log.debug('not found payment - create new')
+      log.debug('new payment - create')
 
       await prisma.mutation.createPayment({
         data: handleNewPayment(mxPayment, account, payments),
@@ -28,7 +26,7 @@ export default async (account: Account, mxPayments: any[], prisma: Prisma) => {
 
     } else {
 
-      log.debug('payment found - do nothing')
+      log.debug('payment already in system - do nothing')
     }
   }
 }

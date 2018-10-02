@@ -12,7 +12,7 @@ const main = async () => {
 
   for (const account of accounts) {
 
-    await handleAccount(account, prisma)
+    await handleAccount(account, prisma, 60)
 
   }
 }

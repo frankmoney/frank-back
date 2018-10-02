@@ -1,17 +1,22 @@
 import { Account } from 'app/graphql/generated/prisma'
 import { Prisma } from 'prisma-binding'
 import humps from 'humps'
+import { format, subDays } from 'date-fns'
 import createLogger from 'utils/createLogger'
 import syncTransactions from './syncTransactions'
 import AtriumClient from './atriumClient'
 
 const log = createLogger('import:handleAccount')
 
-export default async (account: Account, prisma: Prisma) => {
+const DATE_FORMAT = 'YYYY-MM-DD'
+
+export default async (account: Account, prisma: Prisma, daysAgo = 3) => {
 
   log.debug(`start - ${account.name}`)
 
   const { rawData } = account
+
+  const fromDate = subDays(new Date(), daysAgo)
 
   if (rawData && rawData.userGuid && rawData.guid) {
 
@@ -19,16 +24,15 @@ export default async (account: Account, prisma: Prisma) => {
       params: {
         userGuid: rawData.userGuid,
         accountGuid: rawData.guid,
-        from_date: '2018-01-01',
-        to_date: '2018-11-11',
+        from_date: format(fromDate, DATE_FORMAT),
       },
     })
 
-    const mxTransactions = <any[]>humps.camelizeKeys(mxResponse.transactions)
+    const mxPayments = <any[]>humps.camelizeKeys(mxResponse.transactions)
 
-    log.debug(`account have ${mxTransactions.length} transactions`)
+    log.debug(`processing ${mxPayments.length} payments`)
 
-    await syncTransactions(account, mxTransactions, prisma)
+    await syncTransactions(account, mxPayments, prisma)
 
   } else {
 

@@ -1,15 +1,29 @@
 import { Account, Payment, PaymentCreateInput } from 'app/graphql/generated/prisma'
+import createLogger from 'utils/createLogger'
 import normalizeString from 'utils/normalizeString'
+import R from 'ramda'
 
-export default async (
+const log = createLogger('import:handleNewPayment')
+
+export default (
   mxPayment: any,
   account: Account,
   existingPayments: Payment[],
-): Promise<PaymentCreateInput> => {
+): PaymentCreateInput => {
+
+  log.debug('start')
 
   const { guid, amount, type, date, description } = mxPayment
 
   const newAmount = type === 'CREDIT' ? amount : amount * -1
+
+  const condition = R.whereEq({
+    description: description,
+    amount: amount,
+    type: type,
+  })
+
+  const similarPayment = R.find((p: Payment) => condition(p.rawData))(existingPayments)
 
   return {
     postedOn: date,
