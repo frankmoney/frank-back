@@ -1,5 +1,4 @@
-import { Account, Payment } from 'app/graphql/generated/prisma'
-import { Prisma } from 'prisma-binding'
+import { Account, Prisma } from 'app/graphql/generated/prisma'
 import createLogger from 'utils/createLogger'
 import R from 'ramda'
 import handleNewPayment from './handleNewPayment'
@@ -20,8 +19,10 @@ export default async (account: Account, mxPayments: any[], prisma: Prisma) => {
 
       log.debug('new payment - create')
 
+      const data = await handleNewPayment(mxPayment, account, payments, prisma)
+
       await prisma.mutation.createPayment({
-        data: handleNewPayment(mxPayment, account, payments),
+        data,
       })
 
     } else {

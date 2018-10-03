@@ -1,5 +1,4 @@
-import { Account } from 'app/graphql/generated/prisma'
-import { Prisma } from 'prisma-binding'
+import { Account, Prisma } from 'app/graphql/generated/prisma'
 import humps from 'humps'
 import { format, subDays } from 'date-fns'
 import createLogger from 'utils/createLogger'
