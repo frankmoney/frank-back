@@ -1,0 +1,7 @@
+%%IMPORTS%%
+
+export const up = async ({ ddl }: MigrationContext) => {
+}
+
+export const down = async ({ ddl }: MigrationContext) => {
+}

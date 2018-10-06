@@ -5,7 +5,6 @@ logs
 *.log
 npm-debug.log*
 .tmp
-!src/components/admin/Logs*
 
 # Runtime data
 pids
@@ -62,4 +61,4 @@ jspm_packages
 !.idea/modules.xml
 
 /.eslintcache
-/image-uploader/google_keys.json
+/packages/frank-back-api-images/google_keys.json

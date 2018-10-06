@@ -3,4 +3,8 @@
   <component name="JavaScriptSettings">
     <option name="languageLevel" value="JSX" />
   </component>
+  <component name="ProjectPlainTextFileTypeManager">
+    <file url="file://$PROJECT_DIR$/packages/frank-back-api-gql/src/migrator/templates/main.ts.template" />
+    <file url="file://$PROJECT_DIR$/packages/frank-back-api-gql/src/migrator/templates/migration.ts.template" />
+  </component>
 </project>

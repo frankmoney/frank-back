@@ -1,3 +1,5 @@
+## frank-api-gql
+
 #### Scripts
 - `yarn start` - starts the server (runs `gen schema` first)
 - `yarn deploy prisma` - deploys data model to prisma server (::= `prisma deploy` with proper env)
