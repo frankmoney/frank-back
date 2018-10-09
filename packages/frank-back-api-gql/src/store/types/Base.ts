@@ -1,10 +1,3 @@
-type Base = {
-  id: number
-  pid: number
-  createdAt: string
-  creatorId: string
-  updatedAt: string
-  updaterId: number
-}
+type Base = {}
 
 export default Base

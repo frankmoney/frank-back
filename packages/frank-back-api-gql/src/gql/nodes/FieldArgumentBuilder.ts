@@ -41,7 +41,7 @@ export default class FieldArgumentBuilder {
     return this.ofType(Float)
   }
 
-  public ofID(): FieldArgumentBuilderType {
+  public ofId(): FieldArgumentBuilderType {
     return this.ofType(Id)
   }
 

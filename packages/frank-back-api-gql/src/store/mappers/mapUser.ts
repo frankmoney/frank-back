@@ -5,9 +5,11 @@ import map from './map'
 
 const mapUser: Mapper<User> = map<User>()
   .from(user)
-  .for('id', x => x.id)
-  .for('pid', x => x.pid)
+  .extend()
+  .for('email', x => x.email)
   .for('lastName', x => x.lastName)
+  .for('firstName', x => x.firstName)
+  .for('avatar', x => x.avatar)
   .build()
 
 export default mapUser

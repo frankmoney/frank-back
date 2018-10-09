@@ -1,6 +1,6 @@
-import Base from './Base'
+import ExtendedBase from './ExtendedBase'
 
-type User = Base & {
+type User = ExtendedBase & {
   email: string
   lastName: string
   firstName: string

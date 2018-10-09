@@ -12,7 +12,7 @@ const parseJsString = <T>(str: string) => {
 const config = {
   DEBUG: env.DEBUG,
   PORT: Number(env.PORT),
-  DATABASE: parseJsString<PoolConfig>(env.DATABASE),
+  DATABASE: parseJsString<PoolConfig & { setRole?: string }>(env.DATABASE),
   MX_API_KEY: env.MX_API_KEY,
   MX_CLIENT_ID: env.MX_CLIENT_ID,
   MAILGUN_DOMAIN: env.MAILGUN_DOMAIN,

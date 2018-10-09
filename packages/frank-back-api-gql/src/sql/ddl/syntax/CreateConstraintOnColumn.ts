@@ -1,18 +1,19 @@
-import { Sql } from '../../ast'
+import { SqlLiteral } from '../../ast'
+import CreateForeignKeyOnColumn from './CreateForeignKeyOnColumn'
 import CreatePrimaryKeyOnColumn from './CreatePrimaryKeyOnColumn'
 
 export type CreateConstraintOnColumnConfig<
-  TConstraintName extends string | Sql,
-  TTargetName extends string | Sql
+  TConstraintName extends string | SqlLiteral,
+  TTargetName extends string | SqlLiteral
 > = {
   name: null | TConstraintName
   target: TTargetName
-  columns: (string | Sql)[]
+  columns: (string | SqlLiteral)[]
 }
 
 export default class CreateConstraintOnColumn<
-  TConstraintName extends string | Sql,
-  TTargetName extends string | Sql
+  TConstraintName extends string | SqlLiteral,
+  TTargetName extends string | SqlLiteral
 > {
   public constructor(
     config: CreateConstraintOnColumnConfig<TConstraintName, TTargetName>
@@ -20,7 +21,9 @@ export default class CreateConstraintOnColumn<
     this.config = config
   }
 
-  public column(name: string | Sql | ((target: TTargetName) => string | Sql)) {
+  public column(
+    name: string | SqlLiteral | ((target: TTargetName) => string | SqlLiteral)
+  ) {
     if (typeof name === 'function') {
       name = name(this.config.target)
     }
@@ -32,6 +35,14 @@ export default class CreateConstraintOnColumn<
 
   public primaryKey() {
     return new CreatePrimaryKeyOnColumn(this.config)
+  }
+
+  public foreignKey() {
+    return new CreateForeignKeyOnColumn<TConstraintName, TTargetName>({
+      name: this.config.name,
+      source: this.config.target,
+      sourceColumns: this.config.columns,
+    })
   }
 
   protected readonly config: CreateConstraintOnColumnConfig<

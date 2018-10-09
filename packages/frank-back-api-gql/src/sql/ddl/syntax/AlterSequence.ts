@@ -26,5 +26,5 @@ export default class AlterSequence<TSequenceName extends string | Sql> {
     })
   }
 
-  private readonly config: AlterSequenceConfig<TSequenceName>
+  protected readonly config: AlterSequenceConfig<TSequenceName>
 }

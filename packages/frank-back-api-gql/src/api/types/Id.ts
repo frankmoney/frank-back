@@ -1,3 +1,3 @@
-type Id = number
+type Id = string
 
 export default Id

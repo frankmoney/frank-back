@@ -47,6 +47,15 @@ class MapToFrom<TTarget, TSource extends string | SqlLiteral> {
     return mapper
   }
 
+  public extend() {
+    return this.for(<keyof TTarget>'id', (x: any) => x.id)
+      .for(<keyof TTarget>'pid', (x: any) => x.pid)
+      .for(<keyof TTarget>'createdAt', (x: any) => x.createdAt)
+      .for(<keyof TTarget>'creatorId', (x: any) => x.creatorId)
+      .for(<keyof TTarget>'updatedAt', (x: any) => x.updatedAt)
+      .for(<keyof TTarget>'updaterId', (x: any) => x.updaterId)
+  }
+
   private readonly config: MapToFromConfig<TTarget, TSource>
 }
 
@@ -65,7 +74,9 @@ class MapToFromFor<TTarget, TSource extends string | SqlLiteral> {
     source: any
   ): TTarget {
     if (source) {
-      const target = mapper.config.Target ? new mapper.config.Target() : <TTarget>{}
+      const target = mapper.config.Target
+        ? new mapper.config.Target()
+        : <TTarget>{}
 
       for (const member of mapper.config.members) {
         target[member.targetKey] = source[member.sourceKey.toString()]

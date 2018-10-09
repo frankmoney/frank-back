@@ -1,18 +1,26 @@
-import Team from 'store/models/Team'
-import createQuery from 'api/dal/createAction'
 import { sql } from 'sql'
-import { t_team, t_user } from 'store/names'
+import mapTeam from 'store/mappers/mapTeam'
+import { team, teamMember } from 'store/names'
+import Team from 'store/types/Team'
+import createQuery from '../createQuery'
 
 export type Args = {
   userId: number
 }
 
 export default createQuery<Args, Team>('getTeamByUserId', (args, { db }) =>
-  db.first(sql`
-    select t.${t_team.id}, t.${t_team.pid}, t.${t_team.name}
-    from ${t_team} t
-    join ${t_user} u
-    on t.${t_team.id} = u.${t_user.team_id}
-    where u.${t_user.id} = ${args.userId};
-  `)
+  db.first(
+    sql`
+      select
+        ${team}.${team.id},
+        ${team}.${team.pid},
+        ${team}.${team.name}
+      from ${team}
+      join ${teamMember}
+      on ${team}.${team.id} = ${teamMember}.${teamMember.id}
+      where ${teamMember}.${teamMember.userId} = ${args.userId}
+      limit 1
+    `,
+    mapTeam
+  )
 )

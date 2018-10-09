@@ -27,10 +27,38 @@ class MapToFrom<TTarget, TSource extends {}> {
     this.config = config
   }
 
-  public for(member: keyof TTarget, use: keyof TSource) {
+  public for<TTargetKey extends keyof TTarget>(
+    member: TTargetKey,
+    use: keyof TSource | MapMember<TTarget, TSource, TTargetKey>
+  ) {
+    if (typeof use !== 'function') {
+      const sourceKey = use
+      use = m => m.mapFrom(sourceKey)
+    }
+
+    let sourceAccessor: (source: TSource) => TTarget[TTargetKey]
+
+    const useBuilder: MemberMapBuilder<TTarget, TSource, TTargetKey> = {
+      mapFrom<TSourceKey extends keyof TSource>(key: TSourceKey) {
+        sourceAccessor = source => <any>source[key]
+        return true
+      },
+      use(accessor: (source: TSource) => TTarget[TTargetKey]) {
+        sourceAccessor = accessor
+        return true
+      },
+    }
+
+    use(useBuilder)
+
     const mapper = new MapToFromFor<TTarget, TSource>({
       ...this.config,
-      members: [{ targetKey: member, sourceKey: use }],
+      members: [
+        {
+          targetKey: member,
+          sourceMember: sourceAccessor!,
+        },
+      ],
     })
 
     return mapper
@@ -43,7 +71,7 @@ type MapToFromForConfig<TTarget, TSource> = {
   Target?: { new (): TTarget }
   members: {
     targetKey: keyof TTarget
-    sourceKey: keyof TSource
+    sourceMember: (source: TSource) => any
   }[]
 }
 
@@ -53,10 +81,12 @@ class MapToFromFor<TTarget, TSource> {
     source: TSource
   ): Mapped<TSource> & TTarget {
     if (source) {
-      const target = mapper.config.Target ? new mapper.config.Target() : <TTarget>{}
+      const target = mapper.config.Target
+        ? new mapper.config.Target()
+        : <TTarget>{}
 
       for (const member of mapper.config.members) {
-        target[member.targetKey] = <any>source[member.sourceKey]
+        target[member.targetKey] = member.sourceMember(source)
       }
 
       return Object.assign({ $source: source }, target)
@@ -68,20 +98,74 @@ class MapToFromFor<TTarget, TSource> {
     this.config = config
   }
 
-  public for(member: keyof TTarget, use: keyof TSource) {
+  public for<TTargetKey extends keyof TTarget>(
+    member: TTargetKey,
+    use: keyof TSource | MapMember<TTarget, TSource, TTargetKey>
+  ) {
+    if (typeof use !== 'function') {
+      const sourceKey = use
+      use = m => m.mapFrom(sourceKey)
+    }
+
+    let sourceAccessor: (source: TSource) => TTarget[TTargetKey]
+
+    const useBuilder: MemberMapBuilder<TTarget, TSource, TTargetKey> = {
+      mapFrom<TSourceKey extends keyof TSource>(key: TSourceKey) {
+        sourceAccessor = source => <any>source[key]
+        return true
+      },
+      use(accessor: (source: TSource) => TTarget[TTargetKey]) {
+        sourceAccessor = accessor
+        return true
+      },
+    }
+
+    use(useBuilder)
+
     const mapper = new MapToFromFor<TTarget, TSource>({
       ...this.config,
-      members: [...this.config.members, { targetKey: member, sourceKey: use }],
+      members: [
+        ...this.config.members,
+        {
+          targetKey: member,
+          sourceMember: sourceAccessor!,
+        },
+      ],
     })
 
     return mapper
   }
 
   public build(): Mapper<TTarget, TSource> {
-    return (source: TSource) => MapToFromFor.exec<TTarget, TSource>(this, source)
+    return <T extends TSource | TSource[]>(
+      source: T
+    ): T extends TSource
+      ? (TTarget & Mapped<TSource>)
+      : (TTarget & Mapped<TSource>)[] => {
+      if (Array.isArray(source)) {
+        const array: TSource[] = source
+        return <any>array.map(x => MapToFromFor.exec<TTarget, TSource>(this, x))
+      } else {
+        const single = <TSource>source
+        return <any>MapToFromFor.exec<TTarget, TSource>(this, single)
+      }
+    }
   }
 
   private readonly config: MapToFromForConfig<TTarget, TSource>
+}
+
+export type MapMember<TTarget, TSource, TTargetKey extends keyof TTarget> = (
+  m: MemberMapBuilder<TTarget, TSource, TTargetKey>
+) => true
+
+export type MemberMapBuilder<
+  TTarget,
+  TSource,
+  TTargetKey extends keyof TTarget
+> = {
+  mapFrom: <TSourceKey extends keyof TSource>(key: TSourceKey) => true
+  use: (accessor: (source: TSource) => TTarget[TTargetKey]) => true
 }
 
 const map = <TTarget>(Target?: { new (): TTarget }) => {

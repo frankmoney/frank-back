@@ -20,6 +20,20 @@ export default class CreateTableColumn<TTableName extends string | Sql>
     this.config = config
   }
 
+  public before(exec: Exec) {
+    return new CreateTableColumn<TTableName>({
+      ...this.config,
+      before: [...this.config.before, exec],
+    })
+  }
+
+  public after(exec: Exec) {
+    return new CreateTableColumn<TTableName>({
+      ...this.config,
+      after: [...this.config.after, exec],
+    })
+  }
+
   public column(
     name: string | Sql | ((table: TTableName) => string | Sql),
     def: string | Sql

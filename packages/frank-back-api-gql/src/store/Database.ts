@@ -1,8 +1,26 @@
-import { Pool, PoolClient, QueryArrayConfig, QueryConfig } from 'pg'
+import { Pool, PoolClient, QueryArrayConfig, QueryConfig, types } from 'pg'
 import { SqlFragment, build, raw, sql as SQL } from 'sql'
 import Log from 'log/Log'
 import createLog from 'log/create'
 import Mapper from './mappers/Mapper'
+
+types.setTypeParser(16, x => {
+  console.warn('OID: 16', x)
+  return !!x
+})
+
+types.setTypeParser(20, x => Number(x))
+types.setTypeParser(21, x => Number(x))
+types.setTypeParser(23, x => Number(x))
+types.setTypeParser(700, x => Number(x))
+types.setTypeParser(701, x => Number(x))
+types.setTypeParser(1005, x => Number(x))
+types.setTypeParser(1007, x => Number(x))
+types.setTypeParser(1016, x => Number(x))
+types.setTypeParser(1021, x => Number(x))
+types.setTypeParser(1022, x => Number(x))
+types.setTypeParser(1231, x => Number(x))
+types.setTypeParser(1700, x => Number(x))
 
 type TxStatus = 'delayed' | 'active'
 
