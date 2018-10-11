@@ -24,7 +24,7 @@ const PaymentType = Type('Payment', type =>
 
     category: field.ofType(CategoryType).resolve(paymentCategory),
 
-    peer: field.ofType(PeerType).resolve(paymentPeer),
+    peer: field.ofType(PeerType).nullable().resolve(paymentPeer),
   }))
 )
 
