@@ -22,7 +22,7 @@ const PaymentType = Type('Payment', type =>
 
     account: field.ofType(AccountType).resolve(paymentAccount),
 
-    category: field.ofType(CategoryType).resolve(paymentCategory),
+    category: field.ofType(CategoryType).nullable().resolve(paymentCategory),
 
     peer: field.ofType(PeerType).nullable().resolve(paymentPeer),
   }))
