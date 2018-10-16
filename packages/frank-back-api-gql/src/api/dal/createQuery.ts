@@ -1,17 +1,6 @@
-import Scope from 'api/Scope'
-import UnitOfWork from 'api/UnitOfWork'
 import Logger from 'log/Log'
-import Database from 'store/Database'
-
-type ActionScope = { [K in keyof Scope]?: any } & {
-  logFor: typeof Scope.prototype.logFor
-}
-
-type DefaultActionScope = {
-  logFor: typeof Scope.prototype.logFor
-  uow: UnitOfWork
-  db: Database
-}
+import ActionScope from './ActionScope'
+import DefaultActionScope from './DefaultActionScope'
 
 export default function createQuery<
   TArgs,

@@ -57,7 +57,7 @@ koaApp.use(async (ctx, next) => {
     context.requestId
   )
 
-  const userId = 1
+  const userId = 3
   // const userId = Number(req.headers['x-authenticated-user-id'])
 
   context.scope = new Scope({

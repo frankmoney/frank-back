@@ -4,9 +4,10 @@ import { SqlLiteral, literal } from 'sql'
 export const account = tableEx('t_account', {
   data: 'c_data',
   name: 'c_name',
+  teamId: 'c_team_id',
 })
 
-export const Category = tableEx('t_category', {
+export const category = tableEx('t_category', {
   name: 'c_name',
   color: 'c_color',
   accountId: 'c_account_id',
@@ -72,9 +73,7 @@ export const teamMemberInvite = tableEx('t_team_member_invite', {
   teamId: 'c_team_id',
 })
 
-export const teamMemberRole = table('t_team_member_role', {
-  id: 'c_id',
-  createdAt: 'c_created_at',
+export const teamMemberRole = tableEx('t_team_member_role', {
   name: 'c_name',
 })
 
@@ -96,7 +95,8 @@ function tableEx<TColumns extends { [column: string]: string }>(
     pid: 'c_pid'
     createdAt: 'c_created_at'
     creatorId: 'c_creator_id'
-    updatedAt: 'c_updater_id'
+    updatedAt: 'c_updated_at'
+    updaterId: 'c_updater_id'
   } & TColumns
 > {
   const columnsEx = {

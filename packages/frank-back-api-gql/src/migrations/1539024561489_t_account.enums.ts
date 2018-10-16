@@ -1,5 +1,5 @@
 export enum TeamMemberRole {
-  observer,
-  manager,
-  administrator,
+  observer = 1,
+  manager = 2,
+  administrator = 3,
 }
