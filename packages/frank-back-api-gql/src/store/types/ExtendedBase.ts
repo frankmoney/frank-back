@@ -1,12 +1,15 @@
 import Base from './Base'
+import DateTime from './DateTime'
+import Id from './Id'
+import Pid from './Pid'
 
 type ExtendedBase = Base & {
-  id: number
-  pid: number
-  createdAt: string
-  creatorId: string
-  updatedAt: string
-  updaterId: number
+  id: Id
+  pid: Pid
+  createdAt: DateTime
+  creatorId: Id
+  updatedAt: DateTime
+  updaterId: Id
 }
 
 export default ExtendedBase

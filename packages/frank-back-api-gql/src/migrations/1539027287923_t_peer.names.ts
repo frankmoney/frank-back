@@ -95,7 +95,8 @@ function tableEx<TColumns extends { [column: string]: string }>(
     pid: 'c_pid'
     createdAt: 'c_created_at'
     creatorId: 'c_creator_id'
-    updatedAt: 'c_updater_id'
+    updatedAt: 'c_updated_at'
+    updaterId: 'c_updater_id'
   } & TColumns
 > {
   const columnsEx = {

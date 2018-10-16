@@ -1,11 +1,15 @@
 import { Type, Json } from 'gql'
+import getAccountByPidAndUserId from 'api/dal/Account/getAccountByPidAndUserId'
+import listAccountsByUserId from 'api/dal/Account/listAccountsByUserId'
 import getTeamByUserId from 'api/dal/Team/getTeamByUserId'
 import getUserById from 'api/dal/User/getUserById'
+import mapAccount from 'api/mappers/mapAccount'
 import mapTeam from 'api/mappers/mapTeam'
 import mapUser from 'api/mappers/mapUser'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import onboardingInstitutions from './onboardingInstitutions'
 import OnboardingType from './OnboardingType'
+import AccountType from './AccountType'
 import TeamType from './TeamType'
 import UserType from './UserType'
 import onboarding from './onboarding'
@@ -41,6 +45,36 @@ const QueryType = Type('Query', type =>
         name: arg.ofString().nullable(),
       }))
       .resolve(onboardingInstitutions),
+    account: field
+      .ofType(AccountType)
+      .args(arg => ({
+        pid: arg.ofId(),
+      }))
+      .resolve(
+        createPrivateResolver('account', async ({ args, scope }) =>
+          mapAccount(
+            await getAccountByPidAndUserId(
+              { pid: args.pid, userId: scope.user.id },
+              scope,
+            ),
+          ),
+        ),
+      ),
+    accounts: field
+      .listOf(AccountType)
+      .args(arg => ({
+        search: arg.ofString().nullable(),
+      }))
+      .resolve(
+        createPrivateResolver('accounts', async ({ args, scope }) =>
+          mapAccount(
+            await listAccountsByUserId(
+              { userId: scope.user.id, search: args.search },
+              scope,
+            ),
+          ),
+        ),
+      ),
   })),
 )
 

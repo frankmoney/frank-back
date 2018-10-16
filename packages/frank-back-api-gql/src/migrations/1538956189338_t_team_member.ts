@@ -34,7 +34,13 @@ export const up = async ({ ddl }: MigrationContext) => {
         .addForeignKey()
         .column(t => t.roleId)
         .to(teamMemberRole)
-        .column(t => t.id)
+        .column(t => t.id),
+    x =>
+      x.alter
+        .table(teamMember)
+        .addUniqueConstraint()
+        .column(t => t.teamId)
+        .column(t => t.userId)
   )
 }
 
