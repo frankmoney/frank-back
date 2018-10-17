@@ -7,12 +7,12 @@ import mapAccount from 'api/mappers/mapAccount'
 import mapTeam from 'api/mappers/mapTeam'
 import mapUser from 'api/mappers/mapUser'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
-import onboardingInstitutions from './onboardingInstitutions'
+import onboardingInstitutions from 'api/resolvers/onboardingInstitutions'
+import onboarding from 'api/resolvers/onboarding'
 import OnboardingType from './OnboardingType'
 import AccountType from './AccountType'
 import TeamType from './TeamType'
 import UserType from './UserType'
-import onboarding from './onboarding'
 
 const QueryType = Type('Query', type =>
   type.fields(field => ({

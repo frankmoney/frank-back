@@ -5,9 +5,11 @@ import mapTeamMember from 'api/mappers/mapTeamMember'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import TeamMemberRoleType from './TeamMemberRoleType'
 import TeamMemberType from './TeamMemberType'
+import onboarding from './onboarding'
 
 const MutationType = Type('Mutation', type =>
   type.fields(field => ({
+    ...onboarding(field),
     teamMemberUpdateRole: field
       .ofType(TeamMemberType)
       .args(arg => ({
@@ -20,7 +22,7 @@ const MutationType = Type('Mutation', type =>
           async ({ args, scope }) => {
             const member = await updateTeamMemberByPidAndUserId(
               { userId: scope.user.id, pid: args.pid, role: args.role },
-              scope
+              scope,
             )
 
             if (!member) {
@@ -30,10 +32,10 @@ const MutationType = Type('Mutation', type =>
             const user = await getUserById({ id: member.userId }, scope)
 
             return mapTeamMember({ member, user, currentUserId: scope.user.id })
-          }
-        )
+          },
+        ),
       ),
-  }))
+  })),
 )
 
 export default MutationType
