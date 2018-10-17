@@ -22,18 +22,8 @@ export const onboarding = tableEx('t_onboarding', {
   categories: 'c_categories',
   mfa: 'c_mfa',
   team: 'c_team',
+  member: 'c_member',
   userId: 'c_user_id',
-  mxMemberId: 'c_mx_member_id',
-})
-
-export const mxMember = tableEx('t_mx_member', {
-  mxGuid: 'c_mx_guid',
-  institutionCode: 'c_institution_code',
-  mxUserId: 'c_mx_user_id',
-})
-
-export const mxUser = tableEx('t_mx_user', {
-  mxGuid: 'c_mx_guid',
 })
 
 export const payment = tableEx('t_payment', {
@@ -98,15 +88,17 @@ export const user = tableEx('t_user', {
 
 function tableEx<TColumns extends { [column: string]: string }>(
   name: string,
-  columns: TColumns,
-): TableName<{
-  id: 'c_id'
-  pid: 'c_pid'
-  createdAt: 'c_created_at'
-  creatorId: 'c_creator_id'
-  updatedAt: 'c_updated_at'
-  updaterId: 'c_updater_id'
-} & TColumns> {
+  columns: TColumns
+): TableName<
+  {
+    id: 'c_id'
+    pid: 'c_pid'
+    createdAt: 'c_created_at'
+    creatorId: 'c_creator_id'
+    updatedAt: 'c_updated_at'
+    updaterId: 'c_updater_id'
+  } & TColumns
+> {
   const columnsEx = {
     id: 'c_id',
     pid: 'c_pid',
@@ -119,14 +111,14 @@ function tableEx<TColumns extends { [column: string]: string }>(
   return table(name, Object.assign(columnsEx, columns))
 }
 
-type TableName<TColumns extends { readonly [column: string]: string }> =
-  SqlLiteral
-  & { readonly [K in keyof TColumns]: ColumnName }
+type TableName<
+  TColumns extends { readonly [column: string]: string }
+> = SqlLiteral & { readonly [K in keyof TColumns]: ColumnName }
 type ColumnName = SqlLiteral
 
 function table<TColumns extends { readonly [column: string]: string }>(
   name: string,
-  columns: TColumns,
+  columns: TColumns
 ): TableName<TColumns> {
   const tableName = literal(name)
   const columnNames = <{ [K in keyof TColumns]: ColumnName }>{}
