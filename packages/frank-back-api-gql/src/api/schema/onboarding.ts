@@ -13,16 +13,16 @@ import onboardingCompleteAccountInfo from 'api/resolvers/mutations/onboardingCom
 import onboardingEnterMfaChallenges from 'api/resolvers/mutations/onboardingEnterMfaChallenges'
 
 export default createMutations(field => ({
-  ...onboardingSelectInstitution(field),
-  ...onboardingEnterCredentials(field),
-  ...onboardingEnterMfaChallenges(field),
-  ...onboardingSelectAccount(field),
-  ...onboardingUpdateAccountInfo(field),
-  ...onboardingCompleteAccountInfo(field),
-  ...onboardingUpdateCategories(field),
-  ...onboardingCompleteCategories(field),
-  ...onboardingUpdateTeam(field),
-  ...onboardingFinish(field),
+  // ...onboardingSelectInstitution(field),
+  // ...onboardingEnterCredentials(field),
+  // ...onboardingEnterMfaChallenges(field),
+  // ...onboardingSelectAccount(field),
+  // ...onboardingUpdateAccountInfo(field),
+  // ...onboardingCompleteAccountInfo(field),
+  // ...onboardingUpdateCategories(field),
+  // ...onboardingCompleteCategories(field),
+  // ...onboardingUpdateTeam(field),
+  // ...onboardingFinish(field),
   ...onboardingBack(field),
-  ...onboardingCancel(field),
+  // ...onboardingCancel(field),
 }))

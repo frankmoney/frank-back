@@ -39,7 +39,6 @@ export const up = async ({ ddl }: MigrationContext) => {
         .column(t => t.categories, 'jsonb')
         .column(t => t.mfa, 'jsonb')
         .column(t => t.team, 'jsonb')
-        .column(t => t.userId, 'bigint not null')
         .column(t => t.mxMemberId, 'bigint'),
     x =>
       x.alter

@@ -9,22 +9,25 @@ import {
   MFA_STEP,
   TEAM_STEP,
 } from 'api/onboarding/constants'
-import findExistingOnboarding from 'api/onboarding/findExistingOnboarding'
 import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import getOnboardingByUserId from 'api/dal/Onboarding/getOnboardingByUserId'
+import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
+import mapOnboarding from 'api/mappers/mapOnboarding'
 
 const onboardingBack = createPrivateResolver(
-  'Mutation:onboarding:finish',
+  'Mutation:onboarding:back',
   async ({ scope }) => {
-    const existingOnboarding = await findExistingOnboarding(scope.user.id, prisma)
+
+    const existingOnboarding = await getOnboardingByUserId({ userId: scope.user.id }, scope)
 
     if (!existingOnboarding) {
       return throwArgumentError()
     }
 
-    if (existingOnboarding.step === CREDENTIALS_STEP) {
-      return existingOnboarding
-    }
+    // if (existingOnboarding.step === CREDENTIALS_STEP) {
+    //   return mapOnboarding(existingOnboarding)
+    // }
 
     let newStep = CREDENTIALS_STEP
 
@@ -44,22 +47,29 @@ const onboardingBack = createPrivateResolver(
         break
     }
 
-    const data = { step: newStep }
+    const data = {
+      pid: existingOnboarding.pid,
+      step: newStep,
+      clearMember: false,
+      clearMfa: false,
+      credentials: undefined,
+    }
 
     if (newStep === CREDENTIALS_STEP) {
-      data.member = { disconnect: true }
+
+      data.clearMember = true
+      data.clearMfa = true
+
       data.credentials = {
         ...existingOnboarding.credentials,
         status: AWAITING_INPUT_STATUS,
       }
-      data.mfa = null
     }
 
-    return await prisma.mutation.updateOnboarding({
-      where: { id: existingOnboarding.id },
-      data,
-    })
-  }
+    const updatedOnboarding = await updateOnboardingByPid(data, scope)
+
+    return mapOnboarding(updatedOnboarding)
+  },
 )
 
 export default createMutations(field => ({
