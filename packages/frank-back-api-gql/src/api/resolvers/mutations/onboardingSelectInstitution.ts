@@ -1,19 +1,22 @@
-import OnboardingType from 'app/graphql/schema/OnboardingType/OnboardingType'
-import AtriumClient from 'app/onboarding/atriumClient'
-import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
+import { throwArgumentError } from 'api/errors/ArgumentError'
+import OnboardingType from 'api/schema/OnboardingType'
+import AtriumClient from 'api/onboarding/atriumClient'
 import createMutations from 'utils/createMutations'
-import createPrivateResolver from 'utils/createPrivateResolver'
+import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import humps from 'humps'
 import {
   CREDENTIALS_STEP,
   AWAITING_INPUT_STATUS,
-} from 'app/onboarding/constants'
-import { throwArgumentError } from 'app/errors/ArgumentError'
+} from 'api/onboarding/constants'
+import createOnboarding from 'api/dal/Onboarding/createOnboarding'
+import getOnboardingByUserId from 'api/dal/Onboarding/getOnboardingByUserId'
+import mapOnboarding from 'api/mappers/mapOnboarding'
 
 const onboardingSelectInstitution = createPrivateResolver(
   'Mutation:onboarding:selectInstitution',
-  async ({ user, args: { institutionCode }, prisma }) => {
-    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
+  async ({ scope, args: { institutionCode } }) => {
+
+    const existingOnboarding = await getOnboardingByUserId({ userId: scope.user.id }, scope)
 
     if (existingOnboarding) {
       return throwArgumentError()
@@ -29,22 +32,17 @@ const onboardingSelectInstitution = createPrivateResolver(
       params: { institutionCode },
     })
 
-    const onboarding = await prisma.mutation.createOnboarding({
-      data: {
-        step: CREDENTIALS_STEP,
-        institution: humps.camelizeKeys(institution),
-        credentials: {
-          status: AWAITING_INPUT_STATUS,
-          fields: humps.camelizeKeys(credentials),
-        },
-        user: {
-          connect: { id: user.id },
-        },
-      },
-    })
 
-    return onboarding
-  }
+    return mapOnboarding(await createOnboarding({
+      step: CREDENTIALS_STEP,
+      institution: humps.camelizeKeys(institution),
+      credentials: {
+        status: AWAITING_INPUT_STATUS,
+        fields: humps.camelizeKeys(credentials),
+      },
+      userId: scope.user.id
+    }, scope))
+  },
 )
 
 export default createMutations(field => ({

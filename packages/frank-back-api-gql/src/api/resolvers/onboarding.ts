@@ -6,13 +6,12 @@ import mapOnboarding from 'api/mappers/mapOnboarding'
 
 export default createPrivateResolver('onboarding', async ({ scope }) => {
 
-  const existingOnboarding = mapOnboarding(await getOnboardingByUserId({ userId: scope.user.id }, scope))
+  const existingOnboarding = await getOnboardingByUserId({ userId: scope.user.id }, scope)
 
-  // if (existingOnboarding) {
-  // return await syncOnboardingState(existingOnboarding, prisma)
-  // } else {
-  //   return null
-  // }
-
-  return existingOnboarding
+  if (existingOnboarding) {
+    return mapOnboarding(existingOnboarding)
+    // return await syncOnboardingState(existingOnboarding, prisma)
+  } else {
+    return null
+  }
 })

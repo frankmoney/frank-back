@@ -25,9 +25,9 @@ const onboardingBack = createPrivateResolver(
       return throwArgumentError()
     }
 
-    // if (existingOnboarding.step === CREDENTIALS_STEP) {
-    //   return mapOnboarding(existingOnboarding)
-    // }
+    if (existingOnboarding.step === CREDENTIALS_STEP) {
+      return mapOnboarding(existingOnboarding)
+    }
 
     let newStep = CREDENTIALS_STEP
 
