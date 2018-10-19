@@ -1,32 +1,28 @@
-import { throwArgumentError } from 'app/errors/ArgumentError'
-import { Onboarding } from 'app/graphql/generated/prisma'
-import OnboardingType from 'app/graphql/schema/OnboardingType'
-import { CATEGORIES_STEP } from 'app/onboarding/constants'
-import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
+import { throwArgumentError } from 'api/errors/ArgumentError'
 import { Json } from 'gql/index'
+import { CATEGORIES_STEP } from 'api/onboarding/constants'
 import createMutations from 'utils/createMutations'
-import createPrivateResolver from 'utils/createPrivateResolver'
+import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import getOnboardingByUserId from 'api/dal/Onboarding/getOnboardingByUserId'
+import mapOnboarding from 'api/mappers/mapOnboarding'
+import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
+import OnboardingType from 'api/schema/OnboardingType'
 
 const onboardingUpdateCategories = createPrivateResolver(
   'Mutation:onboarding:updateCategories',
-  async ({ user, args: { categories }, prisma }) => {
-    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
+  async ({ scope, args: { categories } }) => {
+
+    const existingOnboarding = await getOnboardingByUserId({ userId: scope.user.id }, scope)
 
     if (!existingOnboarding || existingOnboarding.step !== CATEGORIES_STEP) {
       return throwArgumentError()
     }
 
-    const updatedOnboarding = await prisma.mutation.updateOnboarding<
-      Onboarding
-    >({
-      where: { id: existingOnboarding.id },
-      data: {
-        categories: categories.map((x: string) => JSON.parse(x)),
-      },
-    })
-
-    return updatedOnboarding
-  }
+    return mapOnboarding(await updateOnboardingByPid({
+      pid: existingOnboarding.pid,
+      categories: categories.map((x: string) => JSON.parse(x)),
+    }, scope))
+  },
 )
 
 export default createMutations(field => ({

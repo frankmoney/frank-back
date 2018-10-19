@@ -18,6 +18,7 @@ type Args = {
   mfa?: Json
   accounts?: Json
   account?: Json
+  categories?: Json
   mxMemberId?: Id
 }
 
@@ -69,6 +70,12 @@ export default createMutation<Args, Onboarding>(
     if (!R.isNil(args.account)) {
       updateSqlParts.push(
         sql`${onboarding.account} = ${JSON.stringify(args.account)}`,
+      )
+    }
+
+    if (!R.isNil(args.categories)) {
+      updateSqlParts.push(
+        sql`${onboarding.categories} = ${JSON.stringify(args.categories)}`,
       )
     }
 

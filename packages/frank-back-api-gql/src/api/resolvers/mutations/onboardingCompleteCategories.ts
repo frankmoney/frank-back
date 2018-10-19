@@ -1,35 +1,27 @@
-import { throwArgumentError } from 'app/errors/ArgumentError'
-import { Onboarding } from 'app/graphql/generated/prisma'
-import OnboardingType from 'app/graphql/schema/OnboardingType'
-import {
-  ACCOUNT_STEP,
-  CATEGORIES_STEP,
-  TEAM_STEP,
-} from 'app/onboarding/constants'
-import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
+import { throwArgumentError } from 'api/errors/ArgumentError'
+import { CATEGORIES_STEP, TEAM_STEP } from 'api/onboarding/constants'
 import createMutations from 'utils/createMutations'
-import createPrivateResolver from 'utils/createPrivateResolver'
+import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import getOnboardingByUserId from 'api/dal/Onboarding/getOnboardingByUserId'
+import mapOnboarding from 'api/mappers/mapOnboarding'
+import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
+import OnboardingType from 'api/schema/OnboardingType'
 
 const onboardingCompleteCategories = createPrivateResolver(
   'Mutation:onboarding:completeCategories',
-  async ({ user, args: { accountGuid }, prisma }) => {
-    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
+  async ({ scope }) => {
+
+    const existingOnboarding = await getOnboardingByUserId({ userId: scope.user.id }, scope)
 
     if (!existingOnboarding || existingOnboarding.step !== CATEGORIES_STEP) {
       return throwArgumentError()
     }
 
-    const updatedOnboarding = await prisma.mutation.updateOnboarding<
-      Onboarding
-    >({
-      where: { id: existingOnboarding.id },
-      data: {
-        step: TEAM_STEP,
-      },
-    })
-
-    return updatedOnboarding
-  }
+    return mapOnboarding(await updateOnboardingByPid({
+      pid: existingOnboarding.pid,
+      step: TEAM_STEP,
+    }, scope))
+  },
 )
 
 export default createMutations(field => ({
