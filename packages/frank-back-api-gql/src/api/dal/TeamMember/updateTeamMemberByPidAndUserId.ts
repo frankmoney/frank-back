@@ -25,36 +25,51 @@ export default createMutation<Args, undefined | TeamMember>(
       )
     }
 
-    if (updateSqlParts.length === 0) {
-      return undefined
-    }
-
-    const updateSql = join(updateSqlParts, '\n,          ')
-
-    const result = await db.first(
-      sql`
-        update ${teamMember}
-        set ${updateSql}
+    const whereSql = sql`
+      where exists (
+        select 1
         from ${teamMember} self
         join ${team}
         on self.${teamMember.teamId} = ${team}.${team.id}
-        where ${team}.${team.id} = ${teamMember}.${teamMember.teamId}
-        and self.${teamMember.roleId} = ${TeamMemberRole.administrator}
+        where self.${teamMember.roleId} = ${TeamMemberRole.administrator}
         and self.${teamMember.userId} = ${args.userId}
-        and ${teamMember}.${teamMember.pid} = ${args.pid}
-        returning
-          ${teamMember}.${teamMember.id},
-          ${teamMember}.${teamMember.pid},
-          ${teamMember}.${teamMember.createdAt},
-          ${teamMember}.${teamMember.creatorId},
-          ${teamMember}.${teamMember.updatedAt},
-          ${teamMember}.${teamMember.updaterId},
-          ${teamMember}.${teamMember.teamId},
-          ${teamMember}.${teamMember.userId},
-          ${teamMember}.${teamMember.roleId};
-      `,
-      mapTeamMember
-    )
+        and ${team}.${team.id} = ${teamMember}.${teamMember.teamId}
+      )
+      and ${teamMember}.${teamMember.pid} = ${args.pid}
+    `
+
+    const selectSql = sql`
+      select
+        ${teamMember}.${teamMember.id},
+        ${teamMember}.${teamMember.pid},
+        ${teamMember}.${teamMember.createdAt},
+        ${teamMember}.${teamMember.creatorId},
+        ${teamMember}.${teamMember.updatedAt},
+        ${teamMember}.${teamMember.updaterId},
+        ${teamMember}.${teamMember.teamId},
+        ${teamMember}.${teamMember.userId},
+        ${teamMember}.${teamMember.roleId}
+      from ${teamMember}
+      ${whereSql}
+      limit 1
+    `
+
+    if (updateSqlParts.length > 0) {
+      const updateSql = join(updateSqlParts, '\n,          ')
+
+      await db.command(
+        sql`
+          update ${teamMember}
+          set
+            ${teamMember.updatedAt} = now() at time zone 'utc',
+            ${teamMember.updaterId} = ${args.userId},
+            ${updateSql}
+          ${whereSql};
+        `
+      )
+    }
+
+    const result = await db.first(selectSql, mapTeamMember)
 
     return result
   }
