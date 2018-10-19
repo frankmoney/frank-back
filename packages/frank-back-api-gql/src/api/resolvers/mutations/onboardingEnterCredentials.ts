@@ -25,7 +25,6 @@ const onboardingEnterCredentials = createPrivateResolver(
 
     const updatedOnboarding = await updateOnboardingByPid({
       pid: existingOnboarding.pid,
-      step: CREDENTIALS_STEP,
       credentials: {
         ...existingOnboarding.credentials,
         status: CHECKING_STATUS,

@@ -1,24 +1,25 @@
-import { CANCELED_STEP } from 'app/onboarding/constants'
-import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
+import { CANCELED_STEP } from 'api/onboarding/constants'
 import createMutations from 'utils/createMutations'
-import createPrivateResolver from 'utils/createPrivateResolver'
+import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import getOnboardingByUserId from 'api/dal/Onboarding/getOnboardingByUserId'
+import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
 
 const onboardingCancel = createPrivateResolver(
   'Mutation:onboarding:cancel',
-  async ({ user, args: { institutionCode }, prisma }) => {
-    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
+  async ({ scope }) => {
+
+    const existingOnboarding = await getOnboardingByUserId({ userId: scope.user.id }, scope)
 
     if (existingOnboarding) {
-      await prisma.mutation.updateOnboarding({
-        where: { id: existingOnboarding.id },
-        data: {
-          step: CANCELED_STEP,
-        },
-      })
+
+      await updateOnboardingByPid({
+        pid: existingOnboarding.pid,
+        step: CANCELED_STEP,
+      }, scope)
     }
 
     return true
-  }
+  },
 )
 
 export default createMutations(field => ({

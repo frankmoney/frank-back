@@ -1,17 +1,19 @@
-import { throwArgumentError } from 'app/errors/ArgumentError'
-import { Onboarding } from 'app/graphql/generated/prisma'
-import OnboardingType from 'app/graphql/schema/OnboardingType'
-import { CHECKING_STATUS, MFA_STEP } from 'app/onboarding/constants'
-import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
-import enterMfaChallenges from 'app/onboarding/enterMfaChallenges'
+import { throwArgumentError } from 'api/errors/ArgumentError'
+import OnboardingType from 'api/schema/OnboardingType'
+import { CHECKING_STATUS, CREDENTIALS_STEP, MFA_STEP } from 'api/onboarding/constants'
+import enterCredentials from 'api/onboarding/enterCredentials'
 import { Json } from 'gql/index'
 import createMutations from 'utils/createMutations'
-import createPrivateResolver from 'utils/createPrivateResolver'
+import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import getOnboardingByUserId from 'api/dal/Onboarding/getOnboardingByUserId'
+import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
+import mapOnboarding from 'api/mappers/mapOnboarding'
 
 const onboardingEnterMfaChallenges = createPrivateResolver(
   'Mutation:onboarding:enterMfaChallenges',
-  async ({ user, args: { challenges }, prisma }) => {
-    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
+  async ({ scope, args: { challenges } }) => {
+
+    const existingOnboarding = await getOnboardingByUserId({ userId: scope.user.id }, scope)
 
     if (
       !existingOnboarding ||
@@ -21,23 +23,19 @@ const onboardingEnterMfaChallenges = createPrivateResolver(
       return throwArgumentError()
     }
 
-    const updatedOnboarding = await prisma.mutation.updateOnboarding<
-      Onboarding
-    >({
-      where: { id: existingOnboarding.id },
-      data: {
-        mfa: {
-          ...existingOnboarding.mfa,
-          status: CHECKING_STATUS,
-        },
+    const updatedOnboarding = await updateOnboardingByPid({
+      pid: existingOnboarding.pid,
+      mfa: {
+        ...existingOnboarding.mfa,
+        status: CHECKING_STATUS,
       },
-    })
+    }, scope)
 
     // background
-    enterMfaChallenges(updatedOnboarding, prisma, challenges)
+    // enterMfaChallenges(updatedOnboarding, prisma, challenges)
 
-    return updatedOnboarding
-  }
+    return mapOnboarding(updatedOnboarding)
+  },
 )
 
 export default createMutations(field => ({
