@@ -1,28 +1,19 @@
-import { MxUser, Onboarding, Prisma } from 'app/graphql/generated/prisma'
+import getMemberById from 'api/dal/mx/getMemberById'
+import createUser from 'api/dal/mx/createUser'
+import createMember from 'api/dal/mx/createMember'
+import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
 import AtriumClient from './atriumClient'
-import createLogger from 'utils/createLogger'
+import DefaultActionScope from 'api/dal/DefaultActionScope'
+import Onboarding from 'store/types/Onboarding'
+import MxUser from 'store/types/MxUser'
+
+const createLogger = (s1: any) => ({
+  debug: (s2: any) => console.log(s1 + ':' + s2),
+})
 
 const LOGGER_PREFIX = 'app:onboarding:enterCredentials'
 
-const findFreeMxUser = async (institutionCode: string, prisma: Prisma) => {
-  const log = createLogger(`${LOGGER_PREFIX}:findFreeMxUser`)
-
-  log.debug('start')
-
-  const users = await prisma.query.mxUsers({
-    where: {
-      NOT: {
-        members_some: {
-          institutionCode,
-        },
-      },
-    },
-  })
-
-  return users[0]
-}
-
-const createNewMxUser = async (prisma: Prisma) => {
+const createNewMxUser = async (scope: DefaultActionScope) => {
   const log = createLogger(`${LOGGER_PREFIX}:createNewMxUser`)
 
   log.debug('start')
@@ -30,36 +21,33 @@ const createNewMxUser = async (prisma: Prisma) => {
   const { user } = await AtriumClient.createUser({
     body: {
       user: {
-        metadata: '{"first_name": "auth_generated_user"}',
+        metadata: '{"first_name": "auto_generated_user"}',
       },
     },
   })
 
-  return await prisma.mutation.createMxUser({
-    data: {
-      mxGuid: user.guid,
-    },
-  })
+  return await createUser({ guid: user.guid }, scope)
 }
 
 const mxUserForInstitution = async (
   institutionCode: string,
-  prisma: Prisma
+  scope: DefaultActionScope,
 ) => {
   const log = createLogger(`${LOGGER_PREFIX}:mxUserForInstitution`)
 
   log.debug('start')
 
-  const user = await findFreeMxUser(institutionCode, prisma)
+  // const mxUser = await findFreeUser({institutionCode}, scope)
+  const mxUser = null
 
-  if (user) {
+  if (mxUser) {
     log.debug('have free mxUser')
 
-    return user
+    return mxUser
   } else {
-    log.debug("don't have free mxUser")
+    log.debug('don\'t have free mxUser')
 
-    return await createNewMxUser(prisma)
+    return await createNewMxUser(scope)
   }
 }
 
@@ -67,7 +55,7 @@ const createMxMember = async (
   mxUser: MxUser,
   onboarding: Onboarding,
   credentials: any,
-  prisma: Prisma
+  scope: DefaultActionScope,
 ) => {
   const log = createLogger(`${LOGGER_PREFIX}:createMxMember`)
 
@@ -85,20 +73,24 @@ const createMxMember = async (
     },
   })
 
-  return await prisma.mutation.createMxMember({
-    data: {
-      mxGuid: member.guid,
-      institutionCode,
-      user: { connect: { id: mxUser.id } },
-      onboarding: { connect: { id: onboarding.id } },
-    },
-  })
+  const mxMember = await createMember({
+    guid: member.guid,
+    mxUserId: mxUser.id,
+    institutionCode,
+  }, scope)
+
+  await updateOnboardingByPid({
+    pid: onboarding.pid,
+    mxMemberId: mxMember.id,
+  }, scope)
+
+  return mxMember
 }
 
 export default async (
   onboarding: Onboarding,
-  prisma: Prisma,
-  credentials: any
+  scope: DefaultActionScope,
+  credentials: any,
 ) => {
   const log = createLogger(LOGGER_PREFIX)
 
@@ -107,31 +99,24 @@ export default async (
   const institutionCode = onboarding.institution.code
   credentials = credentials.map((x: string) => JSON.parse(x))
 
-  const existingMember = (await prisma.query.mxMembers(
-    {
-      where: {
-        onboarding: { id: onboarding.id },
-      },
-    },
-    '{id, mxGuid, institutionCode, user {id, mxGuid}}'
-  ))[0]
+  const existingMxMember = await getMemberById({ id: onboarding.mxMemberId }, scope)
 
-  if (existingMember) {
+  if (existingMxMember) {
     log.debug('have member - update credentials')
 
     await AtriumClient.updateMember({
       params: {
-        userGuid: existingMember.user.mxGuid,
-        memberGuid: existingMember.mxGuid,
+        userGuid: existingMxMember.mxUser.mxGuid,
+        memberGuid: existingMxMember.mxGuid,
       },
       body: { member: { credentials } },
     })
   } else {
-    log.debug("don't have member - create new")
+    log.debug('don\'t have member - create new')
 
-    const mxUser = await mxUserForInstitution(institutionCode, prisma)
+    const mxUser = await mxUserForInstitution(institutionCode, scope)
 
-    await createMxMember(mxUser, onboarding, credentials, prisma)
+    await createMxMember(mxUser, onboarding, credentials, scope)
   }
 
   log.debug('end')

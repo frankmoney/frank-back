@@ -3,7 +3,7 @@ import Onboarding from '../types/Onboarding'
 import Mapper from './Mapper'
 import map from './map'
 
-const mapUser: Mapper<Onboarding> = map<Onboarding>()
+const mapOnboarding: Mapper<Onboarding> = map<Onboarding>()
   .from(onboarding)
   .extend()
   .for('step', x => x.step)
@@ -11,4 +11,4 @@ const mapUser: Mapper<Onboarding> = map<Onboarding>()
   .for('credentials', x => x.credentials)
   .build()
 
-export default mapUser
+export default mapOnboarding

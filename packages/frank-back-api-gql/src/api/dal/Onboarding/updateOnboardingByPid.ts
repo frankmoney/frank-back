@@ -1,5 +1,6 @@
 import { Sql, join, sql } from 'sql'
 import Pid from 'store/types/Pid'
+import Id from 'store/types/Id'
 import mapOnboarding from 'store/mappers/mapOnboarding'
 import Onboarding from 'store/types/Onboarding'
 import { onboarding } from 'store/names'
@@ -10,10 +11,11 @@ import R from 'ramda'
 
 type Args = {
   pid: Pid
-  step: string
-  clearMember: boolean
-  clearMfa: boolean
-  credentials: Json
+  step?: string
+  clearMember?: boolean
+  clearMfa?: boolean
+  credentials?: Json
+  mxMemberId?: Id
 }
 
 export default createMutation<Args, Onboarding>(
@@ -21,7 +23,7 @@ export default createMutation<Args, Onboarding>(
   async (args, { db }) => {
     const updateSqlParts: Sql[] = []
 
-    if(R.isNil(args.pid)) {
+    if (R.isNil(args.pid)) {
       throwArgumentError()
     }
 
@@ -49,6 +51,12 @@ export default createMutation<Args, Onboarding>(
       )
     }
 
+    if (!R.isNil(args.mxMemberId)) {
+      updateSqlParts.push(
+        sql`${onboarding.mxMemberId} = ${args.mxMemberId}`,
+      )
+    }
+
     const updateSql = join(updateSqlParts, ', ')
 
     const result = await db.first(
@@ -65,7 +73,8 @@ export default createMutation<Args, Onboarding>(
           ${onboarding.updaterId},
           ${onboarding.step},
           ${onboarding.institution},
-          ${onboarding.credentials}
+          ${onboarding.credentials},
+          ${onboarding.mxMemberId}
       `,
       mapOnboarding,
     )

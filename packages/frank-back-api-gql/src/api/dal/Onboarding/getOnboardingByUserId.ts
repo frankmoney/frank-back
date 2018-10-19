@@ -21,7 +21,8 @@ export default createQuery<Args, Onboarding>('getOnboardingByUserId', (args, { d
         ${onboarding.updaterId},
         ${onboarding.step},
         ${onboarding.institution},
-        ${onboarding.credentials}
+        ${onboarding.credentials},
+        ${onboarding.mxMemberId}
       from ${onboarding}
       where ${onboarding.creatorId} = ${args.userId}
       limit 1

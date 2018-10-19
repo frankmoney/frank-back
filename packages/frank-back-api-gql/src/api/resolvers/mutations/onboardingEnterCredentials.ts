@@ -1,44 +1,42 @@
-import { throwArgumentError } from 'app/errors/ArgumentError'
-import { Onboarding } from 'app/graphql/generated/prisma'
-import OnboardingType from 'app/graphql/schema/OnboardingType'
-import { CHECKING_STATUS, CREDENTIALS_STEP } from 'app/onboarding/constants'
-import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
-import enterCredentials from 'app/onboarding/enterCredentials'
+import { throwArgumentError } from 'api/errors/ArgumentError'
+import OnboardingType from 'api/schema/OnboardingType'
+import { CHECKING_STATUS, CREDENTIALS_STEP } from 'api/onboarding/constants'
+import enterCredentials from 'api/onboarding/enterCredentials'
 import { Json } from 'gql/index'
 import createMutations from 'utils/createMutations'
-import createPrivateResolver from 'utils/createPrivateResolver'
+import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import getOnboardingByUserId from 'api/dal/Onboarding/getOnboardingByUserId'
+import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
+import mapOnboarding from 'api/mappers/mapOnboarding'
 
 const onboardingEnterCredentials = createPrivateResolver(
   'Mutation:onboarding:enterCredentials',
-  async ({ user, args: { credentials }, prisma }) => {
-    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
+  async ({ scope, args: { credentials } }) => {
 
-    if (
-      !existingOnboarding ||
-      existingOnboarding.step !== CREDENTIALS_STEP ||
-      existingOnboarding.credentials.status === CHECKING_STATUS
-    ) {
-      return throwArgumentError()
-    }
+    const existingOnboarding = await getOnboardingByUserId({ userId: scope.user.id }, scope)
 
-    const updatedOnboarding = await prisma.mutation.updateOnboarding<
-      Onboarding
-    >({
-      where: { id: existingOnboarding.id },
-      data: {
-        step: CREDENTIALS_STEP,
-        credentials: {
-          ...existingOnboarding.credentials,
-          status: CHECKING_STATUS,
-        },
+    // if (
+    //   !existingOnboarding ||
+    //   existingOnboarding.step !== CREDENTIALS_STEP ||
+    //   existingOnboarding.credentials.status === CHECKING_STATUS
+    // ) {
+    //   return throwArgumentError()
+    // }
+
+    const updatedOnboarding = await updateOnboardingByPid({
+      pid: existingOnboarding.pid,
+      step: CREDENTIALS_STEP,
+      credentials: {
+        ...existingOnboarding.credentials,
+        status: CHECKING_STATUS,
       },
-    })
+    }, scope)
 
     // background
-    enterCredentials(updatedOnboarding, prisma, credentials)
+    await enterCredentials(updatedOnboarding, scope, credentials)
 
-    return updatedOnboarding
-  }
+    return mapOnboarding(updatedOnboarding)
+  },
 )
 
 export default createMutations(field => ({

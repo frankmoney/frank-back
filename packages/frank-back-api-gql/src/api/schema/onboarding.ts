@@ -14,7 +14,7 @@ import onboardingEnterMfaChallenges from 'api/resolvers/mutations/onboardingEnte
 
 export default createMutations(field => ({
   ...onboardingSelectInstitution(field),
-  // ...onboardingEnterCredentials(field),
+  ...onboardingEnterCredentials(field),
   // ...onboardingEnterMfaChallenges(field),
   // ...onboardingSelectAccount(field),
   // ...onboardingUpdateAccountInfo(field),
