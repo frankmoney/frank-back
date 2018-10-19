@@ -1,25 +1,27 @@
-import { Onboarding } from 'app/graphql/generated/prisma'
-import { DENIED_STATUS } from 'app/onboarding/constants'
-import { StatusHandler } from 'app/onboarding/syncMemberStatus/StatusHandler'
-import createLogger from 'utils/createLogger'
+import { DENIED_STATUS } from 'api/onboarding/constants'
+import { StatusHandler } from 'api/onboarding/syncMemberStatus/StatusHandler'
+import updateOnboardingByPid from '../../dal/Onboarding/updateOnboardingByPid'
+// import createLogger from 'utils/createLogger'
+
+const createLogger = (s1: any) => ({
+  debug: (s2: any) => console.log(s1 + ':' + s2),
+})
 
 const log = createLogger('app:onboarding:syncMemberStatus:deniedHandler')
 
-const handler: StatusHandler = async ({ onboarding, prisma }) => {
+const handler: StatusHandler = async ({ onboarding, scope }) => {
   log.debug('start')
 
   if (onboarding.credentials.status !== DENIED_STATUS) {
     log.debug('updating data')
 
-    onboarding = await prisma.mutation.updateOnboarding<Onboarding>({
-      where: { id: onboarding.id },
-      data: {
-        credentials: {
-          ...onboarding.credentials,
-          status: DENIED_STATUS,
-        },
+    onboarding = await updateOnboardingByPid({
+      pid: onboarding.pid,
+      credentials: {
+        ...onboarding.credentials,
+        status: DENIED_STATUS,
       },
-    })
+    }, scope)
   }
 
   return onboarding

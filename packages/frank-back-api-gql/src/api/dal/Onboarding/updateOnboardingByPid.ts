@@ -12,8 +12,6 @@ import R from 'ramda'
 type Args = {
   pid: Pid
   step?: string
-  clearMember?: boolean
-  clearMfa?: boolean
   credentials?: Json
   mfa?: Json
   accounts?: Json
@@ -21,6 +19,8 @@ type Args = {
   categories?: Json
   team?: Json
   mxMemberId?: Id
+  clearMember?: boolean
+  clearMfa?: boolean
 }
 
 export default createMutation<Args, Onboarding>(
@@ -35,18 +35,6 @@ export default createMutation<Args, Onboarding>(
     if (!R.isNil(args.step)) {
       updateSqlParts.push(
         sql`${onboarding.step} = ${args.step}`,
-      )
-    }
-
-    if (args.clearMember === true) {
-      updateSqlParts.push(
-        sql`${onboarding.mxMemberId} = NULL`,
-      )
-    }
-
-    if (args.clearMfa === true) {
-      updateSqlParts.push(
-        sql`${onboarding.mfa} = NULL`,
       )
     }
 
@@ -89,6 +77,18 @@ export default createMutation<Args, Onboarding>(
     if (!R.isNil(args.mxMemberId)) {
       updateSqlParts.push(
         sql`${onboarding.mxMemberId} = ${args.mxMemberId}`,
+      )
+    }
+
+    if (args.clearMember === true) {
+      updateSqlParts.push(
+        sql`${onboarding.mxMemberId} = NULL`,
+      )
+    }
+
+    if (args.clearMfa === true) {
+      updateSqlParts.push(
+        sql`${onboarding.mfa} = NULL`,
       )
     }
 

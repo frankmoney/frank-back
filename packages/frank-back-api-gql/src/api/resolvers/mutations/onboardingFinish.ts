@@ -20,10 +20,10 @@ const onboardingFinish = createPrivateResolver(
       return throwArgumentError()
     }
 
-    const categories = existingOnboarding.categories.map((category: any) => ({
-      ...category,
-      nameNormalized: normalizeString(category.name),
-    }))
+    // const categories = existingOnboarding.categories.map((category: any) => ({
+    //   ...category,
+    //   nameNormalized: normalizeString(category.name),
+    // }))
 
     const name =
       existingOnboarding.account.frankTitle || existingOnboarding.account.name

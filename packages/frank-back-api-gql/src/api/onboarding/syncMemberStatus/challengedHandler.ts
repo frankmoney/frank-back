@@ -1,25 +1,27 @@
-import { Onboarding } from 'app/graphql/generated/prisma'
-import AtriumClient from 'app/onboarding/atriumClient'
+import AtriumClient from 'api/onboarding/atriumClient'
 import {
-  ACCOUNTS_STEP,
   AWAITING_INPUT_STATUS,
-  EXPIRED_MXSTATUS,
   MFA_STEP,
   SUCCESS_STATUS,
-} from 'app/onboarding/constants'
-import { StatusHandler } from 'app/onboarding/syncMemberStatus/StatusHandler'
+} from 'api/onboarding/constants'
 import humps from 'humps'
-import createLogger from 'utils/createLogger'
 import R from 'ramda'
+import { StatusHandler } from 'api/onboarding/syncMemberStatus/StatusHandler'
+import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
+// import createLogger from 'utils/createLogger'
+
+const createLogger = (s1: any) => ({
+  debug: (s2: any) => console.log(s1 + ':' + s2),
+})
 
 const log = createLogger('app:onboarding:syncMemberStatus:challengedHandler')
 
 const handler: StatusHandler = async ({
-  onboarding,
-  userGuid,
-  memberGuid,
-  prisma,
-}) => {
+                                        onboarding,
+                                        userGuid,
+                                        memberGuid,
+                                        scope,
+                                      }) => {
   log.debug('start')
 
   const atriumResponse = await AtriumClient.listMemberChallenges({
@@ -29,7 +31,7 @@ const handler: StatusHandler = async ({
     },
   })
 
-  log.debug('atriumResponse:', atriumResponse)
+  log.debug('atriumResponse:' + atriumResponse.toString())
 
   const challenges = humps.camelizeKeys(atriumResponse.challenges)
 
@@ -41,20 +43,18 @@ const handler: StatusHandler = async ({
   ) {
     log.debug('updating data')
 
-    onboarding = await prisma.mutation.updateOnboarding<Onboarding>({
-      where: { id: onboarding.id },
-      data: {
-        step: MFA_STEP,
-        credentials: {
-          ...onboarding.credentials,
-          status: SUCCESS_STATUS,
-        },
-        mfa: {
-          status: AWAITING_INPUT_STATUS,
-          challenges,
-        },
+    onboarding = await updateOnboardingByPid({
+      pid: onboarding.pid,
+      step: MFA_STEP,
+      credentials: {
+        ...onboarding.credentials,
+        status: SUCCESS_STATUS,
       },
-    })
+      mfa: {
+        status: AWAITING_INPUT_STATUS,
+        challenges,
+      },
+    }, scope)
   }
 
   return onboarding

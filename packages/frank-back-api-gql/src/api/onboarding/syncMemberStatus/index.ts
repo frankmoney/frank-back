@@ -39,15 +39,15 @@ const log = createLogger(`app:onboarding:syncMemberStatus`)
 
 const handlers: { [status: string]: StatusHandler } = {
   [CONNECTED_MXSTATUS]: connectedHandler,
-  // [DENIED_MXSTATUS]: deniedHandler,
-  // [FAILED_MXSTATUS]: failedHandler,
-  // [CHALLENGED_MXSTATUS]: challengedHandler,
-  // [EXPIRED_MXSTATUS]: expiredHandler,
-  // [REJECTED_MXSTATUS]: rejectedHandler,
-  // [LOCKED_MXSTATUS]: lockedHandler,
-  // [CREATED_MXSTATUS]: virtualCheckingHandler,
-  // [UPDATED_MXSTATUS]: virtualCheckingHandler,
-  // [RESUMED_MXSTATUS]: virtualCheckingHandler,
+  [DENIED_MXSTATUS]: deniedHandler,
+  [FAILED_MXSTATUS]: failedHandler,
+  [CHALLENGED_MXSTATUS]: challengedHandler,
+  [EXPIRED_MXSTATUS]: expiredHandler,
+  [REJECTED_MXSTATUS]: rejectedHandler,
+  [LOCKED_MXSTATUS]: lockedHandler,
+  [CREATED_MXSTATUS]: virtualCheckingHandler,
+  [UPDATED_MXSTATUS]: virtualCheckingHandler,
+  [RESUMED_MXSTATUS]: virtualCheckingHandler,
 }
 
 export default async (

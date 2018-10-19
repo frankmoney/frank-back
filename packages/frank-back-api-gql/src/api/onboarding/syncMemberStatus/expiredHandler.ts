@@ -1,15 +1,15 @@
-import { Onboarding } from 'app/graphql/generated/prisma'
-import {
-  CREDENTIALS_STEP,
-  DENIED_STATUS,
-  MFA_EXPIRED_STATUS,
-} from 'app/onboarding/constants'
-import { StatusHandler } from 'app/onboarding/syncMemberStatus/StatusHandler'
-import createLogger from 'utils/createLogger'
+import { CREDENTIALS_STEP, MFA_EXPIRED_STATUS } from 'api/onboarding/constants'
+import { StatusHandler } from 'api/onboarding/syncMemberStatus/StatusHandler'
+import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
+// import createLogger from 'utils/createLogger'
+
+const createLogger = (s1: any) => ({
+  debug: (s2: any) => console.log(s1 + ':' + s2),
+})
 
 const log = createLogger('app:onboarding:syncMemberStatus:expiredHandler')
 
-const handler: StatusHandler = async ({ onboarding, prisma }) => {
+const handler: StatusHandler = async ({ onboarding, scope }) => {
   log.debug('start')
 
   if (
@@ -19,17 +19,15 @@ const handler: StatusHandler = async ({ onboarding, prisma }) => {
   ) {
     log.debug('updating data')
 
-    onboarding = await prisma.mutation.updateOnboarding<Onboarding>({
-      where: { id: onboarding.id },
-      data: {
-        step: CREDENTIALS_STEP,
-        credentials: {
-          ...onboarding.credentials,
-          status: MFA_EXPIRED_STATUS,
-        },
-        mfa: null,
+    onboarding = await updateOnboardingByPid({
+      pid: onboarding.pid,
+      step: CREDENTIALS_STEP,
+      clearMfa: true,
+      credentials: {
+        ...onboarding.credentials,
+        status: MFA_EXPIRED_STATUS,
       },
-    })
+    }, scope)
   }
 
   return onboarding

@@ -1,7 +1,7 @@
 import { throwArgumentError } from 'api/errors/ArgumentError'
 import OnboardingType from 'api/schema/OnboardingType'
 import { CHECKING_STATUS, CREDENTIALS_STEP, MFA_STEP } from 'api/onboarding/constants'
-import enterCredentials from 'api/onboarding/enterCredentials'
+import enterMfaChallenges from 'api/onboarding/enterMfaChallenges'
 import { Json } from 'gql/index'
 import createMutations from 'utils/createMutations'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
@@ -32,7 +32,7 @@ const onboardingEnterMfaChallenges = createPrivateResolver(
     }, scope)
 
     // background
-    // enterMfaChallenges(updatedOnboarding, prisma, challenges)
+    await enterMfaChallenges(updatedOnboarding, scope, challenges)
 
     return mapOnboarding(updatedOnboarding)
   },
