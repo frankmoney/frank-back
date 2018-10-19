@@ -1,36 +1,33 @@
-import { throwArgumentError } from 'app/errors/ArgumentError'
-import { Onboarding } from 'app/graphql/generated/prisma'
-import OnboardingType from 'app/graphql/schema/OnboardingType'
-import { ACCOUNT_STEP } from 'app/onboarding/constants'
-import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
+import { throwArgumentError } from 'api/errors/ArgumentError'
+import { ACCOUNT_STEP } from 'api/onboarding/constants'
 import createMutations from 'utils/createMutations'
-import createPrivateResolver from 'utils/createPrivateResolver'
+import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import getOnboardingByUserId from 'api/dal/Onboarding/getOnboardingByUserId'
+import mapOnboarding from 'api/mappers/mapOnboarding'
+import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
+import OnboardingType from 'api/schema/OnboardingType'
 
 const onboardingUpdateAccountInfo = createPrivateResolver(
   'Mutation:onboarding:updateAccountInfo',
-  async ({ user, args: { title, description }, prisma }) => {
-    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
+  async ({ scope, args: { title, description } }) => {
+
+    const existingOnboarding = await getOnboardingByUserId({ userId: scope.user.id }, scope)
 
     if (!existingOnboarding || existingOnboarding.step !== ACCOUNT_STEP) {
       return throwArgumentError()
     }
 
-    const updatedOnboarding = await prisma.mutation.updateOnboarding<
-      Onboarding
-    >({
-      where: { id: existingOnboarding.id },
-      data: {
-        account: {
-          ...existingOnboarding.account,
-          frankTitle: title || existingOnboarding.account.frankTitle,
-          frankDescription:
-            description || existingOnboarding.account.frankDescription,
-        },
+    return mapOnboarding(await updateOnboardingByPid({
+      pid: existingOnboarding.pid,
+      step: ACCOUNT_STEP,
+      account: {
+        ...existingOnboarding.account,
+        frankTitle: title || existingOnboarding.account.frankTitle,
+        frankDescription:
+        description || existingOnboarding.account.frankDescription,
       },
-    })
-
-    return updatedOnboarding
-  }
+    }, scope))
+  },
 )
 
 export default createMutations(field => ({

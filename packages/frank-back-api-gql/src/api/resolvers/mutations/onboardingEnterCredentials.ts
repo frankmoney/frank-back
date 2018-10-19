@@ -15,13 +15,13 @@ const onboardingEnterCredentials = createPrivateResolver(
 
     const existingOnboarding = await getOnboardingByUserId({ userId: scope.user.id }, scope)
 
-    // if (
-    //   !existingOnboarding ||
-    //   existingOnboarding.step !== CREDENTIALS_STEP ||
-    //   existingOnboarding.credentials.status === CHECKING_STATUS
-    // ) {
-    //   return throwArgumentError()
-    // }
+    if (
+      !existingOnboarding ||
+      existingOnboarding.step !== CREDENTIALS_STEP ||
+      existingOnboarding.credentials.status === CHECKING_STATUS
+    ) {
+      return throwArgumentError()
+    }
 
     const updatedOnboarding = await updateOnboardingByPid({
       pid: existingOnboarding.pid,

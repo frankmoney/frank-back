@@ -1,16 +1,18 @@
-import { throwArgumentError } from 'app/errors/ArgumentError'
-import { Onboarding } from 'app/graphql/generated/prisma'
-import OnboardingType from 'app/graphql/schema/OnboardingType'
-import { ACCOUNT_STEP, ACCOUNTS_STEP } from 'app/onboarding/constants'
-import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
+import { throwArgumentError } from 'api/errors/ArgumentError'
+import { ACCOUNT_STEP, ACCOUNTS_STEP } from 'api/onboarding/constants'
 import createMutations from 'utils/createMutations'
-import createPrivateResolver from 'utils/createPrivateResolver'
+import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import getOnboardingByUserId from 'api/dal/Onboarding/getOnboardingByUserId'
+import mapOnboarding from 'api/mappers/mapOnboarding'
+import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
+import OnboardingType from 'api/schema/OnboardingType'
 import R from 'ramda'
 
 const onboardingSelectAccount = createPrivateResolver(
   'Mutation:onboarding:selectAccount',
-  async ({ user, args: { accountGuid }, prisma }) => {
-    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
+  async ({ scope, args: { accountGuid } }) => {
+
+    const existingOnboarding = await getOnboardingByUserId({ userId: scope.user.id }, scope)
 
     if (!existingOnboarding || existingOnboarding.step !== ACCOUNTS_STEP) {
       return throwArgumentError()
@@ -18,25 +20,19 @@ const onboardingSelectAccount = createPrivateResolver(
 
     const mxAccount = R.find(
       R.propEq('guid', accountGuid),
-      existingOnboarding.accounts
+      existingOnboarding.accounts,
     )
 
-    const updatedOnboarding = await prisma.mutation.updateOnboarding<
-      Onboarding
-    >({
-      where: { id: existingOnboarding.id },
-      data: {
-        step: ACCOUNT_STEP,
-        account: {
-          ...mxAccount,
-          frankTitle: null,
-          frankDescription: null,
-        },
+    return mapOnboarding(await updateOnboardingByPid({
+      pid: existingOnboarding.pid,
+      step: ACCOUNT_STEP,
+      account: {
+        ...mxAccount,
+        frankTitle: null,
+        frankDescription: null,
       },
-    })
-
-    return updatedOnboarding
-  }
+    }, scope))
+  },
 )
 
 export default createMutations(field => ({
