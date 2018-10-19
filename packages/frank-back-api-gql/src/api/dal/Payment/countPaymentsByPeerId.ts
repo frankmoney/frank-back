@@ -1,11 +1,10 @@
 import * as R from 'ramda'
-import createQuery from 'api/dal/createQuery'
-import { and, limit, sql } from 'sql'
-import mapPayment from 'store/mappers/mapPayment'
+import { and, sql } from 'sql'
 import { payment, peer } from 'store/names'
 import Payment from 'store/types/Payment'
 import Date from 'store/types/Date'
 import Id from 'store/types/Id'
+import createQuery from '../createQuery'
 
 export type Args = {
   peerId: Id
@@ -20,7 +19,7 @@ export type Args = {
 }
 
 export default createQuery<Args, Payment[]>(
-  'listPaymentsByPeerId',
+  'countPaymentsByPeerId',
   (args, { db }) => {
     const postedOnMinSql = and(
       args.postedOnMin
@@ -67,33 +66,17 @@ export default createQuery<Args, Payment[]>(
         : undefined
     )
 
-    return db.query(
+    return db.scalar(
       sql`
-        select
-          ${payment}.${payment.id},
-          ${payment}.${payment.pid},
-          ${payment}.${payment.createdAt},
-          ${payment}.${payment.creatorId},
-          ${payment}.${payment.updatedAt},
-          ${payment}.${payment.updaterId},
-          ${payment}.${payment.data},
-          ${payment}.${payment.postedOn},
-          ${payment}.${payment.amount},
-          ${payment}.${payment.peerName},
-          ${payment}.${payment.description},
-          ${payment}.${payment.accountId},
-          ${payment}.${payment.peerId},
-          ${payment}.${payment.categoryId}
+        select count(*)
         from ${payment}
         where ${payment.peerId} = ${args.peerId}
         ${postedOnMinSql}
         ${postedOnMaxSql}
         ${amountMinSql}
         ${amountMaxSql}
-        ${searchSql}
-        ${limit({ take: args.take, skip: args.skip })};
-      `,
-      mapPayment
+        ${searchSql};
+      `
     )
   }
 )

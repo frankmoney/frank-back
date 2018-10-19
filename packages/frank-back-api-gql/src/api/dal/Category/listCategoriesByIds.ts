@@ -1,20 +1,18 @@
+import createQuery from 'api/dal/createQuery'
 import { sql } from 'sql'
 import mapCategory from 'store/mappers/mapCategory'
 import { category } from 'store/names'
 import Category from 'store/types/Category'
 import Id from 'store/types/Id'
-import Pid from 'store/types/Pid'
-import createQuery from '../createQuery'
 
 export type Args = {
-  accountId: Id
-  pid: Pid
+  ids: Id[]
 }
 
-export default createQuery<Args, Category>(
-  'getCategoryByPidAndAccountId',
-  (args, { db }) =>
-    db.first(
+export default createQuery<Args, Category[]>(
+  'listCategoriesByIds',
+  (args, { db }) => {
+    return db.query(
       sql`
         select
           ${category}.${category.id},
@@ -27,9 +25,9 @@ export default createQuery<Args, Category>(
           ${category}.${category.color},
           ${category}.${category.accountId}
         from ${category}
-        where ${category.accountId} = ${args.accountId}
-        and ${category.pid} = ${args.pid};
+        where ${category.id} in (${args.ids});
       `,
       mapCategory
     )
+  }
 )

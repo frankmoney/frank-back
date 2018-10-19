@@ -1,18 +1,18 @@
 import { sql } from 'sql'
 import mapCategory from 'store/mappers/mapCategory'
-import { category } from 'store/names'
+import { category, payment } from 'store/names'
 import Category from 'store/types/Category'
 import Id from 'store/types/Id'
 import Pid from 'store/types/Pid'
 import createQuery from '../createQuery'
 
 export type Args = {
-  accountId: Id
+  peerId: Id
   pid: Pid
 }
 
 export default createQuery<Args, Category>(
-  'getCategoryByPidAndAccountId',
+  'getCategoryByPidAndPeerId',
   (args, { db }) =>
     db.first(
       sql`
@@ -27,7 +27,12 @@ export default createQuery<Args, Category>(
           ${category}.${category.color},
           ${category}.${category.accountId}
         from ${category}
-        where ${category.accountId} = ${args.accountId}
+        where exists (
+          select 1
+          from ${payment}
+          where ${payment}.${payment.categoryId} = ${category}.${category.id}
+          and ${payment}.${payment.peerId} = ${args.peerId}
+        )
         and ${category.pid} = ${args.pid};
       `,
       mapCategory

@@ -24,7 +24,7 @@ export default createQuery<Args, User>('getUserById', (args, { db }) =>
         ${user.firstName},
         ${user.avatar}
       from ${user}
-      where ${user.id} = ${args.id}
+      where ${user.id} = ${args.id || null}
       limit 1;
     `,
     mapUser

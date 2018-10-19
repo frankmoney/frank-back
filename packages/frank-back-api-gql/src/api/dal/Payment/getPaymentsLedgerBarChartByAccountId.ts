@@ -1,7 +1,6 @@
 import * as R from 'ramda'
 import { and, sql } from 'sql'
-import { payment, peer } from 'store/names'
-import Payment from 'store/types/Payment'
+import { payment } from 'store/names'
 import Date from 'store/types/Date'
 import Id from 'store/types/Id'
 import createQuery from '../createQuery'
@@ -12,15 +11,19 @@ export type Args = {
   postedOnMax?: Date
   amountMin?: number
   amountMax?: number
-  verified?: boolean
-  search?: string
-  take?: number
-  skip?: number
 }
 
-export default createQuery<Args, Payment[]>(
-  'countPaymentsByAccountId',
-  (args, { db }) => {
+export type Result = {
+  items: {
+    date: Date
+    revenue: number
+    spending: number
+  }[]
+}
+
+export default createQuery<Args, Result>(
+  'getPaymentsLedgerBarChartByAccountId',
+  async (args, { db }) => {
     const postedOnMinSql = and(
       args.postedOnMin
         ? sql`${payment}.${payment.postedOn} >= ${args.postedOnMin}`
@@ -45,38 +48,30 @@ export default createQuery<Args, Payment[]>(
         : sql`${payment}.${payment.amount} <= ${args.amountMax}`
     )
 
-    const searchSql = and(
-      args.search
-        ? sql`
-          ${payment}.${payment.description} ilike ${`%${args.search}%`}
-          or (
-            ${payment}.${payment.peerId} is null
-            and ${payment}.${payment.peerName} ilike ${`%${args.search}%`}
-          )
-          or (
-            ${payment}.${payment.peerId} is not null
-            and exists (
-              select 1
-              from ${peer}
-              where ${peer}.${peer.id} = ${payment}.${payment.id}
-              and ${peer}.${peer.name} ilike ${`%${args.search}%`}
-            )
-          )
-        `
-        : undefined
-    )
-
-    return db.scalar(
+    const items = await db.query<{
+      date: Date
+      revenue: number
+      spending: number
+    }>(
       sql`
-        select count(*)
+        select
+          ${payment}.${payment.postedOn} "date",
+          coalesce(sum(case when ${payment}.${
+        payment.amount
+      } > 0 then ${payment}.${payment.amount} else 0 end), 0) "revenue",
+          -coalesce(sum(case when ${payment}.${
+        payment.amount
+      } < 0 then ${payment}.${payment.amount} else 0 end), 0) "spending"
         from ${payment}
-        where ${payment.accountId} = ${args.accountId}
+        where ${payment}.${payment.accountId} = ${args.accountId}
         ${postedOnMinSql}
         ${postedOnMaxSql}
         ${amountMinSql}
         ${amountMaxSql}
-        ${searchSql};
+        group by ${payment}.${payment.postedOn};
       `
     )
+
+    return { items }
   }
 )
