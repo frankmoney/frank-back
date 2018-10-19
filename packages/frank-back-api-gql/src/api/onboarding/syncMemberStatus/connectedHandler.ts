@@ -1,18 +1,23 @@
-import { Onboarding, OnboardingUpdateInput } from 'app/graphql/generated/prisma'
-import AtriumClient from 'app/onboarding/atriumClient'
-import { ACCOUNTS_STEP, SUCCESS_STATUS } from 'app/onboarding/constants'
-import { StatusHandler } from 'app/onboarding/syncMemberStatus/StatusHandler'
+import AtriumClient from 'api/onboarding/atriumClient'
+import { ACCOUNTS_STEP, SUCCESS_STATUS } from 'api/onboarding/constants'
+import { StatusHandler } from 'api/onboarding/syncMemberStatus/StatusHandler'
 import humps from 'humps'
-import createLogger from 'utils/createLogger'
+import updateOnboardingByPid from '../../dal/Onboarding/updateOnboardingByPid'
+// import createLogger from 'utils/createLogger'
+
+const createLogger = (s1: any) => ({
+  debug: (s2: any) => console.log(s1 + ':' + s2),
+  warn: (s2: any) => console.log(s1 + ':' + s2),
+})
 
 const log = createLogger('app:onboarding:syncMemberStatus:connectedHandler')
 
 const handler: StatusHandler = async ({
-  onboarding,
-  userGuid,
-  memberGuid,
-  prisma,
-}) => {
+                                        onboarding,
+                                        userGuid,
+                                        memberGuid,
+                                        scope,
+                                      }) => {
   log.debug('start')
 
   if (
@@ -30,13 +35,15 @@ const handler: StatusHandler = async ({
       },
     })
 
-    const data: OnboardingUpdateInput = {
+    const data = {
+      pid: onboarding.pid,
       step: ACCOUNTS_STEP,
       credentials: {
         ...onboarding.credentials,
         status: SUCCESS_STATUS,
       },
       accounts: humps.camelizeKeys(accounts),
+      mfa: undefined,
     }
 
     if (onboarding.mfa) {
@@ -46,10 +53,7 @@ const handler: StatusHandler = async ({
       }
     }
 
-    onboarding = await prisma.mutation.updateOnboarding<Onboarding>({
-      where: { id: onboarding.id },
-      data,
-    })
+    onboarding = await updateOnboardingByPid(data, scope)
   }
 
   return onboarding

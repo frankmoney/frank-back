@@ -15,6 +15,8 @@ type Args = {
   clearMember?: boolean
   clearMfa?: boolean
   credentials?: Json
+  mfa?: Json
+  accounts?: Json
   mxMemberId?: Id
 }
 
@@ -51,6 +53,18 @@ export default createMutation<Args, Onboarding>(
       )
     }
 
+    if (!R.isNil(args.mfa)) {
+      updateSqlParts.push(
+        sql`${onboarding.mfa} = ${JSON.stringify(args.mfa)}`,
+      )
+    }
+
+    if (!R.isNil(args.accounts)) {
+      updateSqlParts.push(
+        sql`${onboarding.accounts} = ${JSON.stringify(args.accounts)}`,
+      )
+    }
+
     if (!R.isNil(args.mxMemberId)) {
       updateSqlParts.push(
         sql`${onboarding.mxMemberId} = ${args.mxMemberId}`,
@@ -74,6 +88,11 @@ export default createMutation<Args, Onboarding>(
           ${onboarding.step},
           ${onboarding.institution},
           ${onboarding.credentials},
+          ${onboarding.mfa},
+          ${onboarding.accounts},
+          ${onboarding.account},
+          ${onboarding.categories},
+          ${onboarding.team},
           ${onboarding.mxMemberId}
       `,
       mapOnboarding,

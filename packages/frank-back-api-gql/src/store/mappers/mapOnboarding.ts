@@ -9,6 +9,12 @@ const mapOnboarding: Mapper<Onboarding> = map<Onboarding>()
   .for('step', x => x.step)
   .for('institution', x => x.institution)
   .for('credentials', x => x.credentials)
+  .for('mfa', x => x.mfa)
+  .for('accounts', x => x.accounts)
+  .for('account', x => x.account)
+  .for('categories', x => x.categories)
+  .for('team', x => x.team)
+  .for('mxMemberId', x => x.mxMemberId)
   .build()
 
 export default mapOnboarding

@@ -22,6 +22,11 @@ export default createQuery<Args, Onboarding>('getOnboardingByUserId', (args, { d
         ${onboarding.step},
         ${onboarding.institution},
         ${onboarding.credentials},
+        ${onboarding.mfa},
+        ${onboarding.accounts},
+        ${onboarding.account},
+        ${onboarding.categories},
+        ${onboarding.team},
         ${onboarding.mxMemberId}
       from ${onboarding}
       where ${onboarding.creatorId} = ${args.userId}

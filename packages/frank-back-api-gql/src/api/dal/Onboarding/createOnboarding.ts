@@ -55,6 +55,11 @@ export default createMutation<Args, Onboarding>(
           ${onboarding.step},
           ${onboarding.institution},
           ${onboarding.credentials},
+          ${onboarding.mfa},
+          ${onboarding.accounts},
+          ${onboarding.account},
+          ${onboarding.categories},
+          ${onboarding.team},
           ${onboarding.mxMemberId}
       `,
       mapOnboarding,

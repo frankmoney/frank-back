@@ -6,10 +6,10 @@ type Onboarding = ExtendedBase & {
   step: string
   institution: Json,
   credentials: Json,
+  mfa: Json,
   accounts: Json,
   account: Json,
   categories: Json,
-  mfa: Json,
   team: Json,
   mxMemberId: Id
 }
