@@ -21,8 +21,8 @@ export default createMutations(field => ({
   ...onboardingCompleteAccountInfo(field),
   ...onboardingUpdateCategories(field),
   ...onboardingCompleteCategories(field),
-  // ...onboardingUpdateTeam(field),
-  // ...onboardingFinish(field),
+  ...onboardingUpdateTeam(field),
+  ...onboardingFinish(field),
   ...onboardingBack(field),
   // ...onboardingCancel(field),
 }))

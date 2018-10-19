@@ -19,7 +19,6 @@ const onboardingUpdateAccountInfo = createPrivateResolver(
 
     return mapOnboarding(await updateOnboardingByPid({
       pid: existingOnboarding.pid,
-      step: ACCOUNT_STEP,
       account: {
         ...existingOnboarding.account,
         frankTitle: title || existingOnboarding.account.frankTitle,

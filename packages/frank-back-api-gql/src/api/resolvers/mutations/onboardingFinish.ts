@@ -1,16 +1,20 @@
-import { throwArgumentError } from 'app/errors/ArgumentError'
-import { Onboarding } from 'app/graphql/generated/prisma'
-import AccountType from 'app/graphql/schema/AccountType/AccountType'
-import { COMPLETED_STEP, TEAM_STEP } from 'app/onboarding/constants'
-import findExistingOnboarding from 'app/onboarding/findExistingOnboarding'
+import { throwArgumentError } from 'api/errors/ArgumentError'
+import { COMPLETED_STEP, TEAM_STEP } from 'api/onboarding/constants'
 import createMutations from 'utils/createMutations'
-import createPrivateResolver from 'utils/createPrivateResolver'
+import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import getOnboardingByUserId from 'api/dal/Onboarding/getOnboardingByUserId'
+import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
 import normalizeString from 'utils/normalizeString'
+import createAccount from 'api/dal/Account/createAccount'
+import getTeamByUserId from 'api/dal/Team/getTeamByUserId'
+import mapAccount from 'api/mappers/mapAccount'
+import AccountType from 'api/schema/AccountType'
 
 const onboardingFinish = createPrivateResolver(
   'Mutation:onboarding:finish',
-  async ({ user, prisma }) => {
-    const existingOnboarding = await findExistingOnboarding(user.id, prisma)
+  async ({ scope }) => {
+
+    const existingOnboarding = await getOnboardingByUserId({ userId: scope.user.id }, scope)
 
     if (!existingOnboarding || existingOnboarding.step !== TEAM_STEP) {
       return throwArgumentError()
@@ -24,28 +28,21 @@ const onboardingFinish = createPrivateResolver(
     const name =
       existingOnboarding.account.frankTitle || existingOnboarding.account.name
 
-    const team = (await prisma.query.teams({
-      where: { members_some: { user: { id: user.id } } },
-    }))[0]
+    const team = await getTeamByUserId({ userId: scope.user.id }, scope)
 
-    const account = await prisma.mutation.createAccount({
-      data: {
-        name,
-        rawData: existingOnboarding.account,
-        team: { connect: { id: team.id } },
-        categories: { create: categories },
-      },
-    })
+    const account = await createAccount({
+      teamId: team.id,
+      name,
+      data: existingOnboarding.account,
+    }, scope)
 
-    await prisma.mutation.updateOnboarding({
-      where: { id: existingOnboarding.id },
-      data: {
-        step: COMPLETED_STEP,
-      },
-    })
+    await updateOnboardingByPid({
+      pid: existingOnboarding.pid,
+      step: COMPLETED_STEP,
+    }, scope)
 
-    return account
-  }
+    return mapAccount(account)
+  },
 )
 
 export default createMutations(field => ({
