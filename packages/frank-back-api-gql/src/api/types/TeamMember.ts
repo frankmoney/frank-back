@@ -1,4 +1,5 @@
 import Json from './Json'
+import TeamMemberAcl from './TeamMemberAcl'
 
 type TeamMember = {
   pid: number
@@ -8,6 +9,7 @@ type TeamMember = {
   firstName: string
   avatar?: Json
   role: string
+  acl: TeamMemberAcl
 }
 
 export default TeamMember

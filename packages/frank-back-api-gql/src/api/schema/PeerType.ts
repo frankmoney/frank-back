@@ -1,5 +1,4 @@
 import { Type } from 'gql'
-import mapPayment from 'store/mappers/mapPayment'
 import Peer from 'store/types/Peer'
 import getAccountByPeerId from 'api/dal/Account/getAccountByPeerId'
 import countCategoriesByPeerId from 'api/dal/Category/countCategoriesByPeerId'
@@ -14,9 +13,11 @@ import getPaymentLastPostedOnByPeerId from 'api/dal/Payment/getPaymentLastPosted
 import listPaymentsByPeerId from 'api/dal/Payment/listPaymentsByPeerId'
 import mapAccount from 'api/mappers/mapAccount'
 import mapCategory from 'api/mappers/mapCategory'
+import mapPayment from 'api/mappers/mapPayment'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import AccountType from './AccountType'
 import CategoryType from './CategoryType'
+import PaymentsOrderType from './PaymentsOrderType'
 import PaymentType from './PaymentType'
 
 const PeerType = Type('Peer', type =>
@@ -117,6 +118,7 @@ const PeerType = Type('Peer', type =>
     payments: field
       .listOf(PaymentType)
       .args(arg => ({
+        sortBy: arg.ofType(PaymentsOrderType),
         postedOnMin: arg.ofDate().nullable(),
         postedOnMax: arg.ofDate().nullable(),
         amountMin: arg.ofFloat().nullable(),
@@ -143,6 +145,7 @@ const PeerType = Type('Peer', type =>
                 search: args.search,
                 take: args.take,
                 skip: args.skip,
+                orderBy: args.sortBy,
               },
               scope
             )

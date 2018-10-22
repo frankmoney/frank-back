@@ -101,8 +101,8 @@ export default createQuery<Args, Peer[]>(
         )
         ${kindSql}
         ${searchSql}
-        ${limit({ take: args.take, skip: args.skip })}
-        order by ${orderBySql};
+        order by ${orderBySql}
+        ${limit({ take: args.take, skip: args.skip })};
       `,
       mapPeer
     )
