@@ -21,3 +21,4 @@
 - make changes in `app/graphql` schema and/or resolvers
 - run `yarn gen schema` to update `app/generated/schema.graphql`
 - run/commit/push changes to repo
+
