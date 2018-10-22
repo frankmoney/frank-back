@@ -13,10 +13,12 @@ const sql = (strings: TemplateStringsArray, ...args: any[]): SqlFragment => {
 
   args.forEach((arg, index) => {
     if (arg === undefined) {
-
-      console.log(arg, index)
-
-      throw new Error(formatError('sql can not contain undefined parameters'))
+      throw new Error(
+        formatError(
+          'sql can not contain undefined parameters (#' +
+          `${index}, near '${strings[index]}' and '${strings[index + 1]}')`
+        )
+      )
     }
 
     if (isSql(arg)) {
