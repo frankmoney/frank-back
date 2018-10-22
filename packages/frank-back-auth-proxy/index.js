@@ -45,7 +45,7 @@ app.use(async (req, res, next) => {
 
     if (email) {
 
-      const dbResponse = await dbClient.query(`SELECT * FROM t_user WHERE c_email = '${email}' LIMIT 1`)
+      const dbResponse = await dbClient.query('SELECT * FROM t_user WHERE c_email = $1 LIMIT 1', [email])
 
       const user = dbResponse.rows[0]
 
