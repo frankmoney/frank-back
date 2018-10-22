@@ -1,5 +1,5 @@
-import Target from 'api/types/Account'
 import Source from 'store/types/Account'
+import Target from 'api/types/Account'
 import Mapper from './Mapper'
 import map from './map'
 

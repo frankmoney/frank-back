@@ -1,5 +1,5 @@
-import Target from 'api/types/Peer'
 import Source from 'store/types/Peer'
+import Target from 'api/types/Peer'
 import Mapper from './Mapper'
 import map from './map'
 

@@ -11,6 +11,7 @@ import PeerType from './PeerType'
 import PeerUpdateUpdateInput from './PeerUpdateUpdateInput'
 import TeamMemberRoleType from './TeamMemberRoleType'
 import TeamMemberType from './TeamMemberType'
+import onboarding from './onboarding'
 
 const MutationType = Type('Mutation', type =>
   type.fields(field => ({
@@ -62,6 +63,7 @@ const MutationType = Type('Mutation', type =>
           return peer && mapPeer(peer)
         })
       ),
+    ...onboarding(field),
   }))
 )
 

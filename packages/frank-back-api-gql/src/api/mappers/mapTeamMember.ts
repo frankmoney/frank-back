@@ -1,7 +1,7 @@
-import Target from 'api/types/TeamMember'
 import { TeamMemberRole } from 'store/enums'
 import TeamMember from 'store/types/TeamMember'
 import User from 'store/types/User'
+import Target from 'api/types/TeamMember'
 import Mapper from './Mapper'
 import map from './map'
 
