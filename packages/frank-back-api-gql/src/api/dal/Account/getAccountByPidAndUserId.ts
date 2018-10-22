@@ -28,7 +28,7 @@ export default createQuery<Args, Account>(
           ${account}.${account.teamId}
         from ${account}
         join ${teamMember}
-        on ${account}.${account.teamId} = ${teamMember}.${teamMember.id}
+        on ${account}.${account.teamId} = ${teamMember}.${teamMember.teamId}
         where ${teamMember}.${teamMember.userId} = ${args.userId}
         and ${account}.${account.pid} = ${args.pid}
         limit 1;

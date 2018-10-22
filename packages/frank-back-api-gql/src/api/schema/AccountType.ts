@@ -4,7 +4,12 @@ import countCategoriesByAccountId from 'api/dal/Category/countCategoriesByAccoun
 import getCategoryByPidAndAccountId from 'api/dal/Category/getCategoryByPidAndAccountId'
 import listCategoriesByAccountId from 'api/dal/Category/listCategoriesByAccountId'
 import countPaymentsByAccountId from 'api/dal/Payment/countPaymentsByAccountId'
+import countPaymentsRevenueByAccountId from 'api/dal/Payment/countPaymentsRevenueByAccountId'
+import countPaymentsSpendingByAccountId from 'api/dal/Payment/countPaymentsSpendingByAccountId'
+import countPaymentsTotalByAccountId from 'api/dal/Payment/countPaymentsTotalByAccountId'
 import getPaymentByPidAndAccountId from 'api/dal/Payment/getPaymentByPidAndAccountId'
+import getPaymentsLedgerBarChartByAccountId from 'api/dal/Payment/getPaymentsLedgerBarChartByAccountId'
+import getPaymentsLedgerPieChartByAccountId from 'api/dal/Payment/getPaymentsLedgerPieChartByAccountId'
 import listPaymentsByAccountId from 'api/dal/Payment/listPaymentsByAccountId'
 import countPeersByAccountId from 'api/dal/Peer/countPeersByAccountId'
 import getPeerByPidAndAccountId from 'api/dal/Peer/getPeerByPidAndAccountId'
@@ -14,6 +19,8 @@ import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import CategoryType from './CategoryType'
+import LedgerBarChartType from './LedgerBarChartType'
+import LedgerPieChartType from './LedgerPieChartType'
 import PaymentType from './PaymentType'
 import PeersOrderType from './PeersOrderType'
 import PeerType from './PeerType'
@@ -239,7 +246,7 @@ const AccountType = Type('Account', type =>
       }))
       .resolve(
         createPrivateResolver(
-          'Account:payments',
+          'Account:countPayments',
           async ({ parent, args, scope }) => {
             const account: Account = parent.$source
 
@@ -257,6 +264,95 @@ const AccountType = Type('Account', type =>
             )
 
             return count
+          }
+        )
+      ),
+    countTotal: field.ofFloat().resolve(
+      createPrivateResolver(
+        'Account:countTotal',
+        async ({ parent, args, scope }) => {
+          const account: Account = parent.$source
+
+          const count = await countPaymentsTotalByAccountId(
+            { accountId: account.id },
+            scope
+          )
+
+          return count
+        }
+      )
+    ),
+    countRevenue: field.ofFloat().resolve(
+      createPrivateResolver(
+        'Account:countRevenue',
+        async ({ parent, args, scope }) => {
+          const account: Account = parent.$source
+
+          const count = await countPaymentsRevenueByAccountId(
+            { accountId: account.id },
+            scope
+          )
+
+          return count
+        }
+      )
+    ),
+    countSpending: field.ofFloat().resolve(
+      createPrivateResolver(
+        'Account:countSpending',
+        async ({ parent, args, scope }) => {
+          const account: Account = parent.$source
+
+          const count = await countPaymentsSpendingByAccountId(
+            { accountId: account.id },
+            scope
+          )
+
+          return count
+        }
+      )
+    ),
+    ledgerBarChart: field
+      .ofType(LedgerBarChartType)
+      .args(arg => ({
+        postedOnMin: arg.ofDate().nullable(),
+        postedOnMax: arg.ofDate().nullable(),
+        amountMin: arg.ofFloat().nullable(),
+        amountMax: arg.ofFloat().nullable(),
+      }))
+      .resolve(
+        createPrivateResolver(
+          'Account:ledgerBarChart',
+          async ({ parent, args, scope }) => {
+            const account: Account = parent.$source
+
+            const result = await getPaymentsLedgerBarChartByAccountId(
+              { accountId: account.id },
+              scope
+            )
+
+            return result
+          }
+        )
+      ),
+    ledgerPieChart: field
+      .ofType(LedgerPieChartType)
+      .args(arg => ({
+        postedOnMin: arg.ofDate().nullable(),
+        postedOnMax: arg.ofDate().nullable(),
+      }))
+      .resolve(
+        createPrivateResolver(
+          'Account:ledgerPieChart',
+          async ({ parent, args, scope }) => {
+            const account: Account = parent.$source
+
+            const result = await getPaymentsLedgerPieChartByAccountId(
+              { accountId: account.id },
+              scope
+            )
+
+            return result
           }
         )
       ),

@@ -1,4 +1,12 @@
-import { Pool, PoolClient, QueryArrayConfig, QueryConfig, types } from 'pg'
+import {
+  Pool,
+  PoolClient,
+  QueryArrayConfig,
+  QueryArrayResult,
+  QueryConfig,
+  QueryResult,
+  types,
+} from 'pg'
 import { SqlFragment, build, raw, sql as SQL } from 'sql'
 import Log from 'log/Log'
 import createLog from 'log/create'
@@ -120,6 +128,28 @@ export default class Database {
     }
 
     this.log.trace('Client released')
+  }
+
+  public raw(queryConfig: QueryArrayConfig): Promise<QueryArrayResult>
+  public raw(queryConfig: QueryConfig): Promise<QueryResult>
+  public raw(
+    queryTextOrConfig: string | QueryConfig,
+    values?: any[]
+  ): Promise<QueryResult>
+  public raw(...args: any[]) {
+    if (!this._pgclient) {
+      throw new Error('Not open')
+    }
+
+    const [arg0, arg1] = args
+
+    const text = typeof arg0 === 'string' ? arg0 : arg0.text
+    const params = (typeof arg0 === 'string' ? arg1 : arg0.values) || []
+    this.log.debug(`QUERY\r\nTEXT: %s\r\nPARAMS: %O`, text, params)
+
+    return this._txstatus === 'delayed'
+      ? this.begin().then(() => this._pgclient!.query(arg0, arg1))
+      : this._pgclient.query(arg0, arg1)
   }
 
   public async command(sql: SqlFragment): Promise<void> {

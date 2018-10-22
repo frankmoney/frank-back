@@ -39,6 +39,13 @@ export default class Scope {
     this.user = user
   }
 
+  public createNew({ preserveUser }: { preserveUser?: boolean }): Scope {
+    return new Scope({
+      databaseConfig: this.databaseConfig,
+      user: preserveUser ? this.user : null,
+    })
+  }
+
   public logFor(name: string) {
     return createLog(name)
   }
