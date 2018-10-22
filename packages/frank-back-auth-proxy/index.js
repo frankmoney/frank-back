@@ -1,17 +1,15 @@
-const { Client } = require('pg')
+const { Pool } = require('pg')
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import proxy from 'http-proxy-middleware'
 
-const dbClient = new Client({
+const dbPool = new Pool({
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT || 5432,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
 })
-
-dbClient.connect()
 
 const PORT = process.env.PORT || 33200
 const APOLLO_PORT = process.env.APOLLO_PORT || 33201
@@ -45,7 +43,7 @@ app.use(async (req, res, next) => {
 
     if (email) {
 
-      const dbResponse = await dbClient.query('SELECT * FROM t_user WHERE c_email = $1 LIMIT 1', [email])
+      const dbResponse = await dbPool.query('SELECT * FROM t_user WHERE c_email = $1 LIMIT 1', [email])
 
       const user = dbResponse.rows[0]
 
@@ -76,4 +74,4 @@ app.use(
   }),
 )
 
-app.listen(PORT, () => console.log(`Auth proxy listening on port ${PORT}`))
+app.listen(PORT, () => console.log(`Auth proxy listening on port http://localhost:${PORT}`))
