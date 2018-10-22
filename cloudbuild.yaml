@@ -1,7 +1,7 @@
 steps:
 
 - name: ubuntu
-  args: ['bash', './registry_npmjs.sh', '$_NPM_TOKEN']
+  args: ['bash', './packages/frank-back-api-gql/registry_npmjs.sh', '$_NPM_TOKEN']
 
 - name: 'gcr.io/cloud-builders/docker'
   args: ['build', '-t', 'gcr.io/$PROJECT_ID/frank-back-graph:$BRANCH_NAME-$SHORT_SHA', './packages/frank-back-api-gql']
