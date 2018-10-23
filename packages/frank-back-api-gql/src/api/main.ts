@@ -43,6 +43,15 @@ const apolloServer = new ApolloServer({
 // create koa application
 const koaApp = new Koa()
 
+koaApp.use(async ({ request: { url }, response }, next) => {
+  if (url === '/.well-known/apollo/server-health') {
+    response.type = 'application/health+json'
+    response.body = { status: 'pass' }
+  } else {
+    await next()
+  }
+})
+
 koaApp.use(async (ctx, next) => {
   const context = <RequestContext>{}
   ctx.state = context
