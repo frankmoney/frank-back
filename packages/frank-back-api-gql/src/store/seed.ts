@@ -10,6 +10,7 @@ import {
   teamMember,
   user,
 } from './names'
+import seedPayments from './seeds/payments'
 
 export default async function seed({ db }: { db: Database }) {
   await seedUsers()
@@ -18,7 +19,7 @@ export default async function seed({ db }: { db: Database }) {
   await seedAccounts()
   await seedCategories()
   await seedPeers()
-  await seedPayments()
+  await seedPayments(db, updateIdSequence)
 
   async function updateIdSequence(table: string | SqlLiteral) {
     await db.command(sql.unparameterized`
@@ -296,61 +297,5 @@ export default async function seed({ db }: { db: Database }) {
     await updateIdSequence(peer)
   }
 
-  async function seedPayments() {
-    const payments = [
-      {
-        accountId: 1,
-        paymentId: 1,
-        categoryId: 1,
-        peerId: 1,
-        peerName: 'Dropbox',
-        postedOn: '2017-12-24',
-        amount: -25.2,
-        description: null,
-      },
-      {
-        accountId: 1,
-        paymentId: 2,
-        categoryId: 2,
-        peerId: null,
-        peerName: 'Parshukov Sergey Vladimirovich I',
-        postedOn: '2017-05-01',
-        amount: -230,
-        description: null,
-      },
-    ]
 
-    const data = payments.map(
-      x => sql`(
-      ${x.paymentId},
-      ${x.accountId},
-      ${x.categoryId}::bigint,
-      ${x.peerId}::bigint,
-      ${x.peerName},
-      ${x.postedOn},
-      ${x.amount},
-      ${x.description}
-    )`
-    )
-
-    await db.command(sql`
-      insert into
-        ${payment} (
-          ${payment.id},
-          ${payment.accountId},
-          ${payment.categoryId},
-          ${payment.peerId},
-          ${payment.peerName},
-          ${payment.postedOn},
-          ${payment.amount},
-          ${payment.description}
-        )
-      values
-        ${join(data, ', ')}
-      on conflict ( ${payment.id} )
-      do nothing;
-    `)
-
-    await updateIdSequence(payment)
-  }
 }
