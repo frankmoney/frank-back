@@ -7,6 +7,7 @@ import { throwArgumentError } from 'api/errors/ArgumentError'
 import mapAccount from 'api/mappers/mapAccount'
 import { COMPLETED_STEP, TEAM_STEP } from 'api/onboarding/constants'
 import AccountType from 'api/schema/AccountType'
+import createCategories from '../../dal/Category/createCategories'
 import createPrivateResolver from '../utils/createPrivateResolver'
 
 const onboardingFinish = createPrivateResolver(
@@ -14,17 +15,12 @@ const onboardingFinish = createPrivateResolver(
   async ({ scope }) => {
     const existingOnboarding = await getOnboardingByUserId(
       { userId: scope.user.id },
-      scope
+      scope,
     )
 
     if (!existingOnboarding || existingOnboarding.step !== TEAM_STEP) {
       return throwArgumentError()
     }
-
-    // const categories = existingOnboarding.categories.map((category: any) => ({
-    //   ...category,
-    //   nameNormalized: normalizeString(category.name),
-    // }))
 
     const name =
       existingOnboarding.account.frankTitle || existingOnboarding.account.name
@@ -37,19 +33,23 @@ const onboardingFinish = createPrivateResolver(
         name,
         data: existingOnboarding.account,
       },
-      scope
+      scope,
     )
+    await createCategories({
+      accountId: account.id,
+      categories: existingOnboarding.categories,
+    }, scope)
 
     await updateOnboardingByPid(
       {
         pid: existingOnboarding.pid,
         step: COMPLETED_STEP,
       },
-      scope
+      scope,
     )
 
     return mapAccount(account)
-  }
+  },
 )
 
 export default createMutations(field => ({
