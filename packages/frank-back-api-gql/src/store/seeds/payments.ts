@@ -1,4 +1,4 @@
-import { join, sql } from '../../sql'
+import { join, sql } from 'sql'
 import { payment } from '../names'
 import Database from '../Database'
 import { format, subDays } from 'date-fns'
