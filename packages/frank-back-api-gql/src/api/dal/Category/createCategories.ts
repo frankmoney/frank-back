@@ -8,32 +8,32 @@ import createMutation from '../createMutation'
 import Id from 'store/types/Id'
 
 type CategoryData = {
-  name: string,
-  color: string,
+  name: string
+  color: string
 }
 
 type Args = {
-  accountId: Id,
-  categories: CategoryData[],
+  accountId: Id
+  categories: CategoryData[]
 }
 
 export default createMutation<Args, Category[]>(
   'createCategories',
   async (args, { db }) => {
-
     if (R.isNil(args.accountId)) {
       throwArgumentError()
     }
 
     const columns = [category.accountId, category.name, category.color]
 
-    let values: any = R.map(c => `('${args.accountId}', '${c.name}', '${c.color}')`, args.categories)
-    values = join(values, ', ')
+    const values = args.categories.map(
+      x => sql`( ${args.accountId}, ${x.name}, ${x.color} )`
+    )
 
     return await db.query(
       sql`
         insert into ${category} (${join(columns, ', ')})
-        values ${values}
+        values ${join(values, ', ')}
         returning
           ${category.id},
           ${category.pid},
@@ -41,7 +41,7 @@ export default createMutation<Args, Category[]>(
           ${category.color},
           ${category.accountId}
       `,
-      mapCategory,
+      mapCategory
     )
-  },
+  }
 )

@@ -57,13 +57,17 @@ const QueryType = Type('Query', type =>
         search: arg.ofString().nullable(),
       }))
       .resolve(
-        createPrivateResolver('accounts', async ({ args, scope }) =>
-          mapAccount(
-            await listAccountsByUserId(
-              { userId: scope.user.id, search: args.search },
-              scope
-            )
-          )
+        createResolver(
+          'accounts',
+          async ({ args, scope }) =>
+            scope.user
+              ? mapAccount(
+                  await listAccountsByUserId(
+                    { userId: scope.user.id, search: args.search },
+                    scope
+                  )
+                )
+              : []
         )
       ),
     onboarding: field

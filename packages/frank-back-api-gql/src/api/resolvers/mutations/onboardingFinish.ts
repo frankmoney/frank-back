@@ -15,7 +15,7 @@ const onboardingFinish = createPrivateResolver(
   async ({ scope }) => {
     const existingOnboarding = await getOnboardingByUserId(
       { userId: scope.user.id },
-      scope,
+      scope
     )
 
     if (!existingOnboarding || existingOnboarding.step !== TEAM_STEP) {
@@ -33,23 +33,26 @@ const onboardingFinish = createPrivateResolver(
         name,
         data: existingOnboarding.account,
       },
-      scope,
+      scope
     )
-    await createCategories({
-      accountId: account.id,
-      categories: existingOnboarding.categories,
-    }, scope)
+    await createCategories(
+      {
+        accountId: account.id,
+        categories: existingOnboarding.categories,
+      },
+      scope
+    )
 
     await updateOnboardingByPid(
       {
         pid: existingOnboarding.pid,
         step: COMPLETED_STEP,
       },
-      scope,
+      scope
     )
 
     return mapAccount(account)
-  },
+  }
 )
 
 export default createMutations(field => ({
