@@ -1,3 +1,15 @@
+process.on('uncaughtException', err => {
+  // tslint:disable-next-line:no-console
+  console.error('Unhandled promise rejection:', err.message, err.stack);
+  process.exit(1)
+})
+
+process.on('unhandledRejection', err => {
+  // tslint:disable-next-line:no-console
+  console.error('Unhandled promise rejection:', err.message, err.stack);
+  process.exit(1)
+})
+
 import { ApolloServer } from 'apollo-server-koa'
 import Koa, { Context as KoaContext } from 'koa'
 import config from 'config'
