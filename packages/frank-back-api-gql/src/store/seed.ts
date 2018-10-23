@@ -296,6 +296,4 @@ export default async function seed({ db }: { db: Database }) {
 
     await updateIdSequence(peer)
   }
-
-
 }

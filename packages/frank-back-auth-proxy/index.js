@@ -1,7 +1,7 @@
+const cookieParser = require('cookie-parser')
+const express = require('express')
+const proxy = require('http-proxy-middleware')
 const { Pool } = require('pg')
-import express from 'express'
-import cookieParser from 'cookie-parser'
-import proxy from 'http-proxy-middleware'
 
 const dbPool = new Pool({
   host: process.env.DB_HOST,
