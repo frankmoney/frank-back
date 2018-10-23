@@ -9,6 +9,7 @@ import mapUser from 'api/mappers/mapUser'
 import onboarding from 'api/resolvers/onboarding'
 import onboardingInstitutions from 'api/resolvers/onboardingInstitutions'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import createResolver from 'api/resolvers/utils/createResolver'
 import OnboardingType from './OnboardingType'
 import AccountType from './AccountType'
 import TeamType from './TeamType'
@@ -20,7 +21,7 @@ const QueryType = Type('Query', type =>
       .ofType(UserType)
       .nullable()
       .resolve(
-        createPrivateResolver('me', async ({ scope }) => {
+        createResolver('me', async ({ scope }) => {
           if (scope.user) {
             const user = await getUserById({ id: scope.user.id }, scope)
             return mapUser(user)
