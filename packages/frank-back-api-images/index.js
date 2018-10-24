@@ -1,3 +1,17 @@
+// tslint:disable-next-line:no-shadowed-variable
+process.on('uncaughtException', err => {
+  // tslint:disable-next-line:no-console
+  console.error('Unhandled promise rejection:', err.message, err.stack);
+  process.exit(1)
+})
+
+// tslint:disable-next-line:no-shadowed-variable
+process.on('unhandledRejection', err => {
+  // tslint:disable-next-line:no-console
+  console.error('Unhandled promise rejection:', err.message, err.stack);
+  process.exit(1)
+})
+
 import fs from 'fs'
 import download from 'download-file'
 import gm from 'gm'

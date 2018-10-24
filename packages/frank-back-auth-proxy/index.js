@@ -1,7 +1,19 @@
+process.on('uncaughtException', err => {
+  // tslint:disable-next-line:no-console
+  console.error('Unhandled promise rejection:', err.message, err.stack);
+  process.exit(1)
+})
+
+process.on('unhandledRejection', err => {
+  // tslint:disable-next-line:no-console
+  console.error('Unhandled promise rejection:', err.message, err.stack);
+  process.exit(1)
+})
+
+const cookieParser = require('cookie-parser')
+const express = require('express')
+const proxy = require('http-proxy-middleware')
 const { Pool } = require('pg')
-import express from 'express'
-import cookieParser from 'cookie-parser'
-import proxy from 'http-proxy-middleware'
 
 const dbPool = new Pool({
   host: process.env.DB_HOST,
