@@ -1,3 +1,17 @@
+// tslint:disable-next-line:no-shadowed-variable
+process.on('uncaughtException', err => {
+  // tslint:disable-next-line:no-console
+  console.error('Unhandled promise rejection:', err.message, err.stack);
+  process.exit(1)
+})
+
+// tslint:disable-next-line:no-shadowed-variable
+process.on('unhandledRejection', err => {
+  // tslint:disable-next-line:no-console
+  console.error('Unhandled promise rejection:', err.message, err.stack);
+  process.exit(1)
+})
+
 import fs from 'fs'
 import download from 'download-file'
 import gm from 'gm'
@@ -12,11 +26,12 @@ const err = debug('app:image-uploader:error')
 
 const PORT = process.env.PORT || 33202
 const GOOGLE_KEYS_BASE64 = process.env.GOOGLE_KEYS_BASE64 || '=='
-const GOOGLE_KEYS_FILE_NAME = 'google_keys.json'
+const GOOGLE_STORAGE_DOMAIN = process.env.GOOGLE_STORAGE_DOMAIN || 'https://storage.googleapis.com'
+const GOOGLE_BUCKET_NAME = process.env.GOOGLE_BUCKET_NAME || 'frank-dev-assets'
 const GOOGLE_PROJECT_NAME = 'frank-money'
-const GOOGLE_BUCKET_NAME = 'frank-dev-assets'
-const GOOGLE_STORAGE_DOMAIN = 'https://storage.googleapis.com'
+const GOOGLE_KEYS_FILE_NAME = 'google_keys.json'
 
+const TARGET_PATH = 'frank/images'
 const DEFAULT_WITDH = 850
 const ORIG_PREFIX = 'orig_'
 
@@ -76,7 +91,7 @@ app.post('/', async (req, res, next) => {
 
       gmImage = gm(tempPath)
 
-      origFileName = `${ORIG_PREFIX}${fileName}`
+      origFileName = `${TARGET_PATH}/${ORIG_PREFIX}${fileName}`
 
       await GCBUCKET.upload(tempPath, {
         public: true,
@@ -108,7 +123,7 @@ app.post('/', async (req, res, next) => {
         .write(tempPath, err => (err ? rej(err) : res()))
     )
 
-    const sizedFileName = `${outputWidth}_${fileName}`
+    const sizedFileName = `${TARGET_PATH}/${outputWidth}_${fileName}`
 
     await GCBUCKET.upload(tempPath, {
       public: true,

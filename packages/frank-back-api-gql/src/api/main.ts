@@ -1,3 +1,15 @@
+process.on('uncaughtException', err => {
+  // tslint:disable-next-line:no-console
+  console.error('Unhandled promise rejection:', err.message, err.stack);
+  process.exit(1)
+})
+
+process.on('unhandledRejection', err => {
+  // tslint:disable-next-line:no-console
+  console.error('Unhandled promise rejection:', err.message, err.stack);
+  process.exit(1)
+})
+
 import { ApolloServer } from 'apollo-server-koa'
 import Koa, { Context as KoaContext } from 'koa'
 import config from 'config'
@@ -43,6 +55,15 @@ const apolloServer = new ApolloServer({
 // create koa application
 const koaApp = new Koa()
 
+koaApp.use(async ({ request: { url }, response }, next) => {
+  if (url === '/.well-known/apollo/server-health') {
+    response.type = 'application/health+json'
+    response.body = { status: 'pass' }
+  } else {
+    await next()
+  }
+})
+
 koaApp.use(async (ctx, next) => {
   const context = <RequestContext>{}
   ctx.state = context
@@ -57,8 +78,8 @@ koaApp.use(async (ctx, next) => {
     context.requestId
   )
 
-  const userId = 3
-  // const userId = Number(req.headers['x-authenticated-user-id'])
+  // const userId = 3
+  const userId = Number(ctx.headers['x-authenticated-user-id'])
 
   context.scope = new Scope({
     databaseConfig: config.DATABASE,

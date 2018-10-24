@@ -12,7 +12,7 @@ const limit = ({ take, skip }: { take?: number; skip?: number }) => {
     return fragment([
       literal('limit '),
       parameter(take),
-      literal('offset '),
+      literal(' offset '),
       parameter(skip),
     ])
   }

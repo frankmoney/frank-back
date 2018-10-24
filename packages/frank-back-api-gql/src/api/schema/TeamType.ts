@@ -1,12 +1,14 @@
 import * as R from 'ramda'
 import { Type } from 'gql'
+import Team from 'store/types/Team'
+import { TeamMemberRole } from 'store/enums'
 import getTeamMemberByPidAndTeamId from 'api/dal/TeamMember/getTeamMemberByPidAndTeamId'
+import getTeamMemberRoleByUserId from 'api/dal/TeamMember/getTeamMemberRoleByUserId'
 import listTeamMembersByTeamId from 'api/dal/TeamMember/listTeamMembersByTeamId'
 import getUserById from 'api/dal/User/getUserById'
 import listUsersByIds from 'api/dal/User/listUsersByIds'
 import mapTeamMember from 'api/mappers/mapTeamMember'
-import Team from 'store/types/Team'
-import createPrivateResolver from '../resolvers/utils/createPrivateResolver'
+import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import TeamMemberType from './TeamMemberType'
 
 const TeamType = Type('Team', type =>
@@ -34,7 +36,19 @@ const TeamType = Type('Team', type =>
 
             const user = await getUserById({ id: member.userId }, scope)
 
-            return mapTeamMember({ member, user, currentUserId: scope.user.id })
+            const currentUserId = scope.user.id
+            const currentUserRole = await getTeamMemberRoleByUserId(
+              { userId: currentUserId },
+              scope
+            )
+            const admin = currentUserRole === TeamMemberRole.administrator
+
+            return mapTeamMember({
+              member,
+              user,
+              currentUserId,
+              admin,
+            })
           }
         )
       ),
@@ -52,11 +66,19 @@ const TeamType = Type('Team', type =>
           scope
         )
 
+        const currentUserId = scope.user.id
+        const currentUserRole = await getTeamMemberRoleByUserId(
+          { userId: currentUserId },
+          scope
+        )
+        const admin = currentUserRole === TeamMemberRole.administrator
+
         const result = mapTeamMember(
           members.map(member => ({
             member,
             user: R.find(R.propEq('id', member.userId), users)!,
-            currentUserId: scope.user.id,
+            currentUserId,
+            admin,
           }))
         )
 

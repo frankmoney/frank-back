@@ -1,5 +1,5 @@
-import Target from 'api/types/Payment'
 import Source from 'store/types/Payment'
+import Target from 'api/types/Payment'
 import Mapper from './Mapper'
 import map from './map'
 

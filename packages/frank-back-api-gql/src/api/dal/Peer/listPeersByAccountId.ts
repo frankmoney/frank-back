@@ -96,8 +96,8 @@ export default createQuery<Args, Peer[]>(
         where ${peer}.${peer.accountId} = ${args.accountId}
         ${kindSql}
         ${searchSql}
-        ${limit({ take: args.take, skip: args.skip })}
-        order by ${orderBySql};
+        order by ${orderBySql}
+        ${limit({ take: args.take, skip: args.skip })};
       `,
       mapPeer
     )

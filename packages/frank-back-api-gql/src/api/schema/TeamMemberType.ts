@@ -1,4 +1,5 @@
 import { Type } from 'gql'
+import TeamMemberAclType from './TeamMemberAclType'
 import TeamMemberRoleType from './TeamMemberRoleType'
 
 const TeamMemberType = Type('TeamMember', type =>
@@ -10,6 +11,7 @@ const TeamMemberType = Type('TeamMember', type =>
     firstName: field.ofString(),
     avatar: field.ofJson().nullable(),
     role: field.ofType(TeamMemberRoleType),
+    acl: field.ofType(TeamMemberAclType),
   }))
 )
 

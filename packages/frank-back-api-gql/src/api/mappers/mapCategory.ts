@@ -1,5 +1,5 @@
-import Target from 'api/types/Category'
 import Source from 'store/types/Category'
+import Target from 'api/types/Category'
 import Mapper from './Mapper'
 import map from './map'
 
