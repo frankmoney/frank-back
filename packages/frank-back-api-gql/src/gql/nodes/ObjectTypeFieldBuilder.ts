@@ -62,4 +62,8 @@ export default class ObjectTypeFieldBuilder {
   public ofTime(): ObjectTypeFieldBuilderType {
     return this.ofType(Time)
   }
+
+  public listOfDateTime(): ObjectTypeFieldBuilderType {
+    return this.listOf(DateTime)
+  }
 }

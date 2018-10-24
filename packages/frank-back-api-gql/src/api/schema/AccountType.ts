@@ -14,9 +14,11 @@ import listPaymentsByAccountId from 'api/dal/Payment/listPaymentsByAccountId'
 import countPeersByAccountId from 'api/dal/Peer/countPeersByAccountId'
 import getPeerByPidAndAccountId from 'api/dal/Peer/getPeerByPidAndAccountId'
 import listPeersByAccountId from 'api/dal/Peer/listPeersByAccountId'
+import listStoriesByAccountId from 'api/dal/Story/listStoriesByAccountId'
 import mapCategory from 'api/mappers/mapCategory'
 import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
+import mapStory from 'api/mappers/mapStory'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import CategoryType from './CategoryType'
 import LedgerBarChartType from './LedgerBarChartType'
@@ -24,6 +26,7 @@ import LedgerPieChartType from './LedgerPieChartType'
 import PaymentType from './PaymentType'
 import PeersOrderType from './PeersOrderType'
 import PeerType from './PeerType'
+import StoryType from './StoryType'
 
 const AccountType = Type('Account', type =>
   type.fields(field => ({
@@ -353,6 +356,27 @@ const AccountType = Type('Account', type =>
             )
 
             return result
+          }
+        )
+      ),
+    stories: field
+      .listOf(StoryType)
+      .args(arg => ({
+        take: arg.ofInt().nullable(),
+        skip: arg.ofInt().nullable(),
+      }))
+      .resolve(
+        createPrivateResolver(
+          'Account:stories',
+          async ({ parent, args, scope }) => {
+            const account: Account = parent.$source
+
+            const stories = await listStoriesByAccountId(
+              { accountId: account.id, take: args.take, skip: args.skip },
+              scope
+            )
+
+            return mapStory(stories)
           }
         )
       ),

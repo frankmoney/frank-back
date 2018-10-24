@@ -60,4 +60,8 @@ export default class FieldArgumentBuilder {
   public ofTime(): FieldArgumentBuilderType {
     return this.ofType(Time)
   }
+
+  public listOfInt(): FieldArgumentBuilderType {
+    return this.listOf(Int)
+  }
 }
