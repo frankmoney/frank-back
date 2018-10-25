@@ -19,8 +19,26 @@ const PaymentType = Type('Payment', type =>
     amount: field.ofFloat(),
     peerName: field.ofString().nullable(),
     description: field.ofString().nullable(),
+    bankDescription: field
+      .ofString()
+      .nullable()
+      .resolve(
+        createPrivateResolver('Payment:bankDescription', ({ parent }) => {
+          return parent.data ? parent.data.originalDescription : null
+        })
+      ),
+    published: field.ofBool().resolve(
+      createPrivateResolver('Payment:published', ({ parent }) => {
+        return parent.pid % 2 === 0
+      })
+    ),
+    countSimilar: field.ofInt().resolve(
+      createPrivateResolver('Payment:countSimilar', ({ parent }) => {
+        return 10
+      })
+    ),
     account: field.ofType(AccountType).resolve(
-      createPrivateResolver('Peer:account', async ({ parent, scope }) => {
+      createPrivateResolver('Payment:account', async ({ parent, scope }) => {
         const payment: Payment = parent.$source
 
         const account = await getAccountByPaymentId(
@@ -35,7 +53,7 @@ const PaymentType = Type('Payment', type =>
       .ofType(PeerType)
       .nullable()
       .resolve(
-        createPrivateResolver('Peer:peer', async ({ parent, scope }) => {
+        createPrivateResolver('Payment:peer', async ({ parent, scope }) => {
           const payment: Payment = parent.$source
 
           const peer = await getPeerByPaymentId(
@@ -50,7 +68,7 @@ const PaymentType = Type('Payment', type =>
       .ofType(CategoryType)
       .nullable()
       .resolve(
-        createPrivateResolver('Peer:category', async ({ parent, scope }) => {
+        createPrivateResolver('Payment:category', async ({ parent, scope }) => {
           const payment: Payment = parent.$source
 
           const category = await getCategoryByPaymentId(

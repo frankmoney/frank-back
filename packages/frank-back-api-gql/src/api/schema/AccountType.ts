@@ -1,4 +1,4 @@
-import { Type } from 'gql'
+import { String, Type } from 'gql'
 import Account from 'store/types/Account'
 import countCategoriesByAccountId from 'api/dal/Category/countCategoriesByAccountId'
 import getCategoryByPidAndAccountId from 'api/dal/Category/getCategoryByPidAndAccountId'
@@ -149,6 +149,16 @@ const AccountType = Type('Account', type =>
             return mapPeer(peer)
           }
         )
+      ),
+    paymentsDescriptions: field
+      .listOf(String)
+      .args(arg => ({
+        search: arg.ofString(),
+      }))
+      .resolve(
+        createPrivateResolver('Account:paymentsDescriptions', () => {
+          return ['Description 1', 'Description 2', 'Description 3']
+        })
       ),
     countPeers: field
       .ofInt()
