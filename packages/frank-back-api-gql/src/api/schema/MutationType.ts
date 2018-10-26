@@ -71,6 +71,9 @@ const MutationType = Type('Mutation', type =>
       .args(arg => ({
         pid: arg.ofId(),
         published: arg.ofBool().nullable(),
+        description: arg.ofString().nullable(),
+        categoryPid: arg.ofId().nullable(),
+        peerPid: arg.ofId().nullable(),
       }))
       .resolve(
         createPrivateResolver('paymentUpdate', async ({ args: { pid, published }, scope }) => {
