@@ -20,6 +20,7 @@ const PaymentType = Type('Payment', type =>
     amount: field.ofFloat(),
     peerName: field.ofString().nullable(),
     description: field.ofString().nullable(),
+    published: field.ofBool(),
     bankDescription: field
       .ofString()
       .nullable()
@@ -28,11 +29,6 @@ const PaymentType = Type('Payment', type =>
           return parent.data ? parent.data.originalDescription : null
         })
       ),
-    published: field.ofBool().resolve(
-      createPrivateResolver('Payment:published', ({ parent }) => {
-        return parent.pid % 2 === 0
-      })
-    ),
     countSimilar: field.ofInt().resolve(
       createPrivateResolver('Payment:countSimilar', ({ parent, scope }) => {
         return countSimilarPaymentsByPid({ paymentPid: parent.pid }, scope)

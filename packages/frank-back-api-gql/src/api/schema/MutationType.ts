@@ -7,6 +7,9 @@ import mapTeamMember from 'api/mappers/mapTeamMember'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import PeerUpdateUpdate from 'api/types/PeerUpdateUpdate'
 import Pid from 'api/types/Pid'
+import updatePaymentByPid from 'api/dal/Payment/updatePaymentByPid'
+import mapPayment from '../mappers/mapPayment'
+import PaymentType from './PaymentType'
 import PeerType from './PeerType'
 import PeerUpdateUpdateInput from './PeerUpdateUpdateInput'
 import TeamMemberRoleType from './TeamMemberRoleType'
@@ -27,7 +30,7 @@ const MutationType = Type('Mutation', type =>
           async ({ args, scope }) => {
             const member = await updateTeamMemberByPidAndUserId(
               { userId: scope.user.id, pid: args.pid, role: args.role },
-              scope
+              scope,
             )
 
             if (!member) {
@@ -37,8 +40,8 @@ const MutationType = Type('Mutation', type =>
             const user = await getUserById({ id: member.userId }, scope)
 
             return mapTeamMember({ member, user, currentUserId: scope.user.id })
-          }
-        )
+          },
+        ),
       ),
     peerUpdate: field
       .ofType(PeerType)
@@ -57,14 +60,28 @@ const MutationType = Type('Mutation', type =>
               pid: Number(pid),
               name: update.name,
             },
-            scope
+            scope,
           )
 
           return peer && mapPeer(peer)
-        })
+        }),
+      ),
+    paymentUpdate: field
+      .ofType(PaymentType)
+      .args(arg => ({
+        pid: arg.ofId(),
+        published: arg.ofBool().nullable(),
+      }))
+      .resolve(
+        createPrivateResolver('paymentUpdate', async ({ args: { pid, published }, scope }) => {
+          return mapPayment(await updatePaymentByPid({
+            pid,
+            published,
+          }, scope))
+        }),
       ),
     ...onboarding(field),
-  }))
+  })),
 )
 
 export default MutationType

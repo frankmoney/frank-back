@@ -81,6 +81,7 @@ export default createQuery<Args, Payment[]>(
           ${payment}.${payment.amount},
           ${payment}.${payment.peerName},
           ${payment}.${payment.description},
+          ${payment}.${payment.published},
           ${payment}.${payment.accountId},
           ${payment}.${payment.peerId},
           ${payment}.${payment.categoryId}

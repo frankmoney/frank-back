@@ -13,16 +13,6 @@ export const category = tableEx('t_category', {
   accountId: 'c_account_id',
 })
 
-export const mxMember = tableEx('t_mx_member', {
-  mxGuid: 'c_mx_guid',
-  institutionCode: 'c_institution_code',
-  mxUserId: 'c_mx_user_id',
-})
-
-export const mxUser = tableEx('t_mx_user', {
-  mxGuid: 'c_mx_guid',
-})
-
 export const onboarding = tableEx('t_onboarding', {
   step: 'c_step',
   institution: 'c_institution',
@@ -36,16 +26,25 @@ export const onboarding = tableEx('t_onboarding', {
   mxMemberId: 'c_mx_member_id',
 })
 
+export const mxMember = tableEx('t_mx_member', {
+  mxGuid: 'c_mx_guid',
+  institutionCode: 'c_institution_code',
+  mxUserId: 'c_mx_user_id',
+})
+
+export const mxUser = tableEx('t_mx_user', {
+  mxGuid: 'c_mx_guid',
+})
+
 export const payment = tableEx('t_payment', {
   data: 'c_data',
   postedOn: 'c_posted_on',
   amount: 'c_amount',
   peerName: 'c_peer_name',
   description: 'c_description',
-  published: 'c_published',
   accountId: 'c_account_id',
   peerId: 'c_peer_id',
-  categoryId: 'c_category_id'
+  categoryId: 'c_category_id',
 })
 
 export const peer = tableEx('t_peer', {
