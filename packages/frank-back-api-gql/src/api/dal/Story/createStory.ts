@@ -17,8 +17,8 @@ export default createMutation<Args, null | Id>(
         select ${account}.${account.id}
         from ${account}
         join ${teamMember}
-        where ${account}.${account.teamId} = ${teamMember}.${teamMember.teamId}
-        and ${teamMember}.${teamMember.userId} = ${args.userId}
+        on ${account}.${account.teamId} = ${teamMember}.${teamMember.teamId}
+        where ${teamMember}.${teamMember.userId} = ${args.userId}
         and ${account}.${account.pid} = ${args.accountPid};
       `
     )

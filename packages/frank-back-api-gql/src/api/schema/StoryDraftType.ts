@@ -2,13 +2,16 @@ import { Type } from 'gql'
 import StoryDraft from 'store/types/StoryDraft'
 import countPaymentsByStoryDraftId from 'api/dal/Payment/countPaymentsByStoryDraftId'
 import listPaymentsByStoryDraftId from 'api/dal/Payment/listPaymentsByStoryDraftId'
+import getStoryByStoryDraftId from 'api/dal/Story/getStoryByStoryDraftId'
 import getStoryDraftPaymentDateRangeByStoryId from 'api/dal/StoryDraftPayment/getStoryDraftPaymentDateRangeByStoryId'
 import mapPayment from 'api/mappers/mapPayment'
+import mapStory from 'api/mappers/mapStory'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import DateTime from 'api/types/DateTime'
 import PaymentGql from 'api/types/Payment'
 import PaymentType from './PaymentType'
 import PaymentsOrderType from './PaymentsOrderType'
+import StoryType from './StoryType'
 
 const StoryDraftType = Type('StoryDraft', type => type
   .fields(field => ({
@@ -20,6 +23,23 @@ const StoryDraftType = Type('StoryDraft', type => type
     cover: field.ofJson().nullable(),
     body: field.ofJson().nullable(),
     published: field.ofBool(),
+    story: field
+      .ofType(StoryType)
+      .resolve(
+        createPrivateResolver(
+          'StoryDraft:story',
+          async ({ parent, args, scope }) => {
+            const draft: StoryDraft = parent.$source
+
+            const story = await getStoryByStoryDraftId(
+              { draftId: draft.id },
+              scope
+            )
+
+            return mapStory(story)
+          }
+        )
+      ),
     payments: field
       .listOf(PaymentType)
       .args(arg => ({

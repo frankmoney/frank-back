@@ -1,9 +1,9 @@
 import { Sql, limit, sql } from 'sql'
 import mapPayment from 'store/mappers/mapPayment'
 import { payment, storyDraftPayment } from 'store/names'
-import Payment from 'store/types/Payment'
 import Id from 'store/types/Id'
-import PaymentsOrder from 'api/types/PaymentsOrder'
+import Payment from 'store/types/Payment'
+import PaymentsOrder from 'store/types/PaymentsOrder'
 import createQuery from '../createQuery'
 
 export type Args = {

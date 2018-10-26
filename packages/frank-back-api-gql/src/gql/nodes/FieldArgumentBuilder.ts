@@ -64,4 +64,8 @@ export default class FieldArgumentBuilder {
   public listOfInt(): FieldArgumentBuilderType {
     return this.listOf(Int)
   }
+
+  public listOfId(): FieldArgumentBuilderType {
+    return this.listOf(Id)
+  }
 }

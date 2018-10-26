@@ -1,11 +1,12 @@
 import * as R from 'ramda'
-import createQuery from 'api/dal/createQuery'
-import { and, limit, sql } from 'sql'
+import { Sql, and, limit, sql } from 'sql'
 import mapPayment from 'store/mappers/mapPayment'
 import { payment, peer } from 'store/names'
-import Payment from 'store/types/Payment'
 import Date from 'store/types/Date'
 import Id from 'store/types/Id'
+import Payment from 'store/types/Payment'
+import PaymentsOrder from 'store/types/PaymentsOrder'
+import createQuery from '../createQuery'
 
 export type Args = {
   accountId: Id
@@ -17,6 +18,7 @@ export type Args = {
   search?: string
   take?: number
   skip?: number
+  orderBy: PaymentsOrder
 }
 
 export default createQuery<Args, Payment[]>(
@@ -67,6 +69,19 @@ export default createQuery<Args, Payment[]>(
         : undefined
     )
 
+    let orderBySql: Sql
+
+    switch (args.orderBy) {
+      case 'postedOn_DESC':
+        orderBySql = sql`${payment}.${payment.postedOn} desc`
+        break
+      case 'amount_DESC':
+        orderBySql = sql`${payment}.${payment.amount} desc`
+        break
+      default:
+        throw new Error(`Unknown peer order: ${args.orderBy}`)
+    }
+
     return db.query(
       sql`
         select
@@ -91,6 +106,7 @@ export default createQuery<Args, Payment[]>(
         ${amountMinSql}
         ${amountMaxSql}
         ${searchSql}
+        order by ${orderBySql}
         ${limit({ take: args.take, skip: args.skip })};
       `,
       mapPayment

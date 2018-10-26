@@ -4,7 +4,7 @@ import { story, storyDraft } from './1540300942180_t_story_draft.names'
 export const up = async ({ ddl }: MigrationContext) => {
   await ddl(
     x => x.create
-      .table(storyDraft)
+      .table(storyDraft, true)
       .column(t => t.publishedAt, 'timestamp')
       .column(t => t.title, 'varchar(256)')
       .column(t => t.cover, 'jsonb')
