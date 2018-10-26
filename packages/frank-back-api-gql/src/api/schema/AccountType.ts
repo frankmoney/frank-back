@@ -10,6 +10,7 @@ import countPaymentsTotalByAccountId from 'api/dal/Payment/countPaymentsTotalByA
 import getPaymentByPidAndAccountId from 'api/dal/Payment/getPaymentByPidAndAccountId'
 import getPaymentsLedgerBarChartByAccountId from 'api/dal/Payment/getPaymentsLedgerBarChartByAccountId'
 import getPaymentsLedgerPieChartByAccountId from 'api/dal/Payment/getPaymentsLedgerPieChartByAccountId'
+import paymentsDescriptionsByAccountPid from 'api/dal/Payment/paymentsDescriptionsByAccountPid'
 import listPaymentsByAccountId from 'api/dal/Payment/listPaymentsByAccountId'
 import countPeersByAccountId from 'api/dal/Peer/countPeersByAccountId'
 import getPeerByPidAndAccountId from 'api/dal/Peer/getPeerByPidAndAccountId'
@@ -153,12 +154,21 @@ const AccountType = Type('Account', type =>
     paymentsDescriptions: field
       .listOf(String)
       .args(arg => ({
-        search: arg.ofString(),
+        search: arg.ofString().nullable(),
       }))
       .resolve(
-        createPrivateResolver('Account:paymentsDescriptions', () => {
-          return ['Description 1', 'Description 2', 'Description 3']
-        })
+        createPrivateResolver(
+          'Account:paymentsDescriptions',
+          ({ parent, args: { search }, scope }) => {
+            return paymentsDescriptionsByAccountPid(
+              {
+                accountPid: parent.pid,
+                search,
+              },
+              scope
+            )
+          }
+        )
       ),
     countPeers: field
       .ofInt()

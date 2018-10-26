@@ -3,6 +3,7 @@ import Payment from 'store/types/Payment'
 import getAccountByPaymentId from 'api/dal/Account/getAccountByPaymentId'
 import getCategoryByPaymentId from 'api/dal/Category/getCategoryByPaymentId'
 import getPeerByPaymentId from 'api/dal/Peer/getPeerByPaymentId'
+import countSimilarPaymentsByPid from 'api/dal/Payment/countSimilarPaymentsByPid'
 import mapAccount from 'api/mappers/mapAccount'
 import mapCategory from 'api/mappers/mapCategory'
 import mapPeer from 'api/mappers/mapPeer'
@@ -33,8 +34,8 @@ const PaymentType = Type('Payment', type =>
       })
     ),
     countSimilar: field.ofInt().resolve(
-      createPrivateResolver('Payment:countSimilar', ({ parent }) => {
-        return 10
+      createPrivateResolver('Payment:countSimilar', ({ parent, scope }) => {
+        return countSimilarPaymentsByPid({ paymentPid: parent.pid }, scope)
       })
     ),
     account: field.ofType(AccountType).resolve(
