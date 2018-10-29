@@ -1,5 +1,11 @@
-import { join, nullIfEmpty, sql } from 'sql'
-import { storyDraft, storyDraftPayment } from 'store/names'
+import { nullIfEmpty, sql } from 'sql'
+import {
+  account,
+  payment,
+  storyDraft,
+  storyDraftPayment,
+  teamMember,
+} from 'store/names'
 import Id from 'store/types/Id'
 import Json from 'store/types/Json'
 import Pid from 'store/types/Pid'
@@ -17,7 +23,7 @@ export type Args = {
 export default createMutation<Args, Id>(
   'createStoryDraft',
   async (args, { db }) => {
-    const draftId = db.scalar(
+    const draftId = await db.scalar(
       sql`
         insert into
           ${storyDraft} (
@@ -41,10 +47,6 @@ export default createMutation<Args, Id>(
     )
 
     if (draftId && args.paymentPids && args.paymentPids.length > 0) {
-      const paymentSqls = args.paymentPids.map(
-        paymentId => sql`( ${draftId}, ${paymentId} )`
-      )
-
       await db.command(
         sql`
           insert into
@@ -52,8 +54,14 @@ export default createMutation<Args, Id>(
               ${storyDraftPayment.storyDraftId},
               ${storyDraftPayment.paymentId}
             )
-          values
-            ${join(paymentSqls, ',\n            ')};
+          select ${draftId}, ${payment}.${payment.id}
+          from ${payment}
+          join ${account}
+          on ${payment}.${payment.accountId} = ${account}.${account.id}
+          join ${teamMember}
+          on ${account}.${account.teamId} = ${teamMember}.${teamMember.teamId}
+          where ${teamMember}.${teamMember.userId} = ${args.userId}
+          and ${payment}.${payment.pid} in ( ${args.paymentPids} );
         `
       )
     }

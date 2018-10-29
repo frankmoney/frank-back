@@ -14,8 +14,8 @@ export default createQuery<Args, null | DateTime[]>(
     db.first(
       sql`
         select
-          min(${payment}.${payment.postedOn}) postedOnMin,
-          max(${payment}.${payment.postedOn}) postedOnMax
+          min(${payment}.${payment.postedOn}) "postedOnMin",
+          max(${payment}.${payment.postedOn}) "postedOnMax"
         from ${storyPayment}
         join ${payment}
         on ${storyPayment}.${storyPayment.paymentId} = ${payment}.${payment.id}
