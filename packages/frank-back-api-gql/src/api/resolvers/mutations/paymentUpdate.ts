@@ -13,10 +13,10 @@ const paymentUpdate = createPrivateResolver(
           pid,
           published,
         },
-        scope
-      )
+        scope,
+      ),
     )
-  }
+  },
 )
 
 export default createMutations(field => ({
@@ -28,6 +28,7 @@ export default createMutations(field => ({
       description: arg.ofString().nullable(),
       categoryPid: arg.ofId().nullable(),
       peerPid: arg.ofId().nullable(),
+      newPeerName: arg.ofString().nullable(),
     }))
     .resolve(paymentUpdate),
 }))
