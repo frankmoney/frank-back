@@ -1,7 +1,6 @@
 import * as R from 'ramda'
 import { and, sql } from 'sql'
 import { payment, peer } from 'store/names'
-import Payment from 'store/types/Payment'
 import Date from 'store/types/Date'
 import Id from 'store/types/Id'
 import createQuery from '../createQuery'
@@ -14,11 +13,9 @@ export type Args = {
   amountMax?: number
   verified?: boolean
   search?: string
-  take?: number
-  skip?: number
 }
 
-export default createQuery<Args, Payment[]>(
+export default createQuery<Args, number>(
   'countPaymentsByCategoryId',
   (args, { db }) => {
     const postedOnMinSql = and(

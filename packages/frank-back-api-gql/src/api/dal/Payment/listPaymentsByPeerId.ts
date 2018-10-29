@@ -2,10 +2,10 @@ import * as R from 'ramda'
 import { Sql, and, limit, sql } from 'sql'
 import mapPayment from 'store/mappers/mapPayment'
 import { payment, peer } from 'store/names'
-import Payment from 'store/types/Payment'
 import Date from 'store/types/Date'
 import Id from 'store/types/Id'
-import PaymentsOrder from 'api/types/PaymentsOrder'
+import Payment from 'store/types/Payment'
+import PaymentsOrder from 'store/types/PaymentsOrder'
 import createQuery from '../createQuery'
 
 export type Args = {
@@ -79,7 +79,7 @@ export default createQuery<Args, Payment[]>(
         orderBySql = sql`${payment}.${payment.amount} desc`
         break
       default:
-        throw new Error(`Unknown peer order: ${args.orderBy}`)
+        throw new Error(`Unknown payment order: ${args.orderBy}`)
     }
 
     return db.query(

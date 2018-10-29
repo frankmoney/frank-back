@@ -12,11 +12,7 @@ import Log from 'log/Log'
 import createLog from 'log/create'
 import Mapper from './mappers/Mapper'
 
-types.setTypeParser(16, x => {
-  console.warn('OID: 16', x)
-  return !!x
-})
-
+types.setTypeParser(16, x => x === 't') // boolean
 types.setTypeParser(20, x => Number(x))
 types.setTypeParser(21, x => Number(x))
 types.setTypeParser(23, x => Number(x))
