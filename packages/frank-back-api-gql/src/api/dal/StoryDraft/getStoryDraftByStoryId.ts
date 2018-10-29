@@ -9,31 +9,36 @@ export type Args = {
   storyId: Id
 }
 
-export default createQuery<Args, StoryDraft>(
+export default createQuery<Args, undefined | null | StoryDraft>(
   'getStoryDraftByStoryId',
-  (args, { db }) => db.first(
+  (args, { db }) =>
+    db.first(
       sql`
-        select
-          ${storyDraft}.${storyDraft.id},
-          ${storyDraft}.${storyDraft.pid},
-          ${storyDraft}.${storyDraft.createdAt},
-          ${storyDraft}.${storyDraft.creatorId},
-          ${storyDraft}.${storyDraft.updatedAt},
-          ${storyDraft}.${storyDraft.updaterId},
-          ${storyDraft}.${storyDraft.publishedAt},
-          ${storyDraft}.${storyDraft.title},
-          ${storyDraft}.${storyDraft.cover},
-          ${storyDraft}.${storyDraft.body},
-          case
-            when ${storyDraft}.${storyDraft.updatedAt} > ${storyDraft}.${storyDraft.publishedAt}
-            then false
-            else true
-          end ${storyDraft}.${storyDraft.published},
-          ${storyDraft}.${storyDraft.storyId}
-        from ${storyDraft}
-        where ${storyDraft}.${storyDraft.storyId} = ${args.storyId}
-        limit 1;
-      `,
+      select
+        ${storyDraft}.${storyDraft.id},
+        ${storyDraft}.${storyDraft.pid},
+        ${storyDraft}.${storyDraft.createdAt},
+        ${storyDraft}.${storyDraft.creatorId},
+        ${storyDraft}.${storyDraft.updatedAt},
+        ${storyDraft}.${storyDraft.updaterId},
+        ${storyDraft}.${storyDraft.publishedAt},
+        ${storyDraft}.${storyDraft.title},
+        ${storyDraft}.${storyDraft.cover},
+        ${storyDraft}.${storyDraft.body},
+        case
+          when ${storyDraft}.${storyDraft.updatedAt} is null
+          or ${storyDraft}.${storyDraft.publishedAt} is null
+          or ${storyDraft}.${storyDraft.updatedAt} > ${storyDraft}.${
+        storyDraft.publishedAt
+      }
+          then false
+          else true
+        end ${storyDraft.published},
+        ${storyDraft}.${storyDraft.storyId}
+      from ${storyDraft}
+      where ${storyDraft}.${storyDraft.storyId} = ${args.storyId}
+      limit 1;
+    `,
       mapStoryDraft
     )
 )

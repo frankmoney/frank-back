@@ -9,7 +9,8 @@ export type Args = {
 
 export default createQuery<Args, number>(
   'countPaymentsByStoryDraftId',
-  (args, { db }) => db.scalar(
+  (args, { db }) =>
+    db.scalar(
       sql`
         select count(*)
         from ${storyDraftPayment}

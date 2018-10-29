@@ -8,9 +8,8 @@ export type Args = {
   id: Id
 }
 
-export default createQuery<Args>(
-  'getStoryById',
-  (args, { db }) => db.first(
+export default createQuery<Args>('getStoryById', (args, { db }) =>
+  db.first(
     sql`
       select
         ${story}.${story.id},

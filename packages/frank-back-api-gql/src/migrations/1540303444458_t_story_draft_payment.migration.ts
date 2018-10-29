@@ -14,53 +14,157 @@ import Database from 'store/Database'
 import { up, down } from './1540303444458_t_story_draft_payment'
 
 export type CreateExTableOptions<TTableName extends string | SqlLiteral> = {
-  columns?: boolean | {
-    id?: boolean | string | ((builder: CreateTableColumn<TTableName>, name: TTableName) => CreateTableColumn<TTableName>)
-    pid?: boolean | string | ((builder: CreateTableColumn<TTableName>, name: TTableName) => CreateTableColumn<TTableName>)
-    createdAt?: boolean | string | ((builder: CreateTableColumn<TTableName>, name: TTableName) => CreateTableColumn<TTableName>)
-    creatorId?: boolean | string | ((builder: CreateTableColumn<TTableName>, name: TTableName) => CreateTableColumn<TTableName>)
-    updatedAt?: boolean | string | ((builder: CreateTableColumn<TTableName>, name: TTableName) => CreateTableColumn<TTableName>)
-    updaterId?: boolean | string | ((builder: CreateTableColumn<TTableName>, name: TTableName) => CreateTableColumn<TTableName>)
-  }
-  constraints?: boolean | {
-    id?: boolean | ((builder: CreateTableColumn<TTableName>, name: TTableName) => CreateTableColumn<TTableName>)
-  }
-  indexes?: boolean | {
-    pid?: boolean | ((builder: CreateTableColumn<TTableName>, name: TTableName) => CreateTableColumn<TTableName>)
-  }
-  sequences?: boolean | {
-    id?: boolean | ((builder: CreateTableColumn<TTableName>, name: TTableName) => CreateTableColumn<TTableName>)
-    pid?: boolean | ((builder: CreateTableColumn<TTableName>, name: TTableName) => CreateTableColumn<TTableName>)
-  }
+  columns?:
+    | boolean
+    | {
+        id?:
+          | boolean
+          | string
+          | ((
+              builder: CreateTableColumn<TTableName>,
+              name: TTableName
+            ) => CreateTableColumn<TTableName>)
+        pid?:
+          | boolean
+          | string
+          | ((
+              builder: CreateTableColumn<TTableName>,
+              name: TTableName
+            ) => CreateTableColumn<TTableName>)
+        createdAt?:
+          | boolean
+          | string
+          | ((
+              builder: CreateTableColumn<TTableName>,
+              name: TTableName
+            ) => CreateTableColumn<TTableName>)
+        creatorId?:
+          | boolean
+          | string
+          | ((
+              builder: CreateTableColumn<TTableName>,
+              name: TTableName
+            ) => CreateTableColumn<TTableName>)
+        updatedAt?:
+          | boolean
+          | string
+          | ((
+              builder: CreateTableColumn<TTableName>,
+              name: TTableName
+            ) => CreateTableColumn<TTableName>)
+        updaterId?:
+          | boolean
+          | string
+          | ((
+              builder: CreateTableColumn<TTableName>,
+              name: TTableName
+            ) => CreateTableColumn<TTableName>)
+      }
+  constraints?:
+    | boolean
+    | {
+        id?:
+          | boolean
+          | ((
+              builder: CreateTableColumn<TTableName>,
+              name: TTableName
+            ) => CreateTableColumn<TTableName>)
+      }
+  indexes?:
+    | boolean
+    | {
+        pid?:
+          | boolean
+          | ((
+              builder: CreateTableColumn<TTableName>,
+              name: TTableName
+            ) => CreateTableColumn<TTableName>)
+      }
+  sequences?:
+    | boolean
+    | {
+        id?:
+          | boolean
+          | ((
+              builder: CreateTableColumn<TTableName>,
+              name: TTableName
+            ) => CreateTableColumn<TTableName>)
+        pid?:
+          | boolean
+          | ((
+              builder: CreateTableColumn<TTableName>,
+              name: TTableName
+            ) => CreateTableColumn<TTableName>)
+      }
 }
 
-export type FinalCreateExTableOptions<TTableName extends string | SqlLiteral> = {
+export type FinalCreateExTableOptions<
+  TTableName extends string | SqlLiteral
+> = {
   columns: FinalCreateExTableOptionsColumns<TTableName>
   constraints: FinalCreateExTableOptionsConstraints<TTableName>
   indexes: FinalCreateExTableOptionsIndexes<TTableName>
   sequences: FinalCreateExTableOptionsSequences<TTableName>
 }
 
-export type FinalCreateExTableOptionsColumns<TTableName extends string | SqlLiteral> = {
-  id?: (builder: CreateTableColumn<TTableName>, table: TTableName) => CreateTableColumn<TTableName>
-  pid?: (builder: CreateTableColumn<TTableName>, table: TTableName) => CreateTableColumn<TTableName>
-  createdAt?: (builder: CreateTableColumn<TTableName>, table: TTableName) => CreateTableColumn<TTableName>
-  creatorId?: (builder: CreateTableColumn<TTableName>, table: TTableName) => CreateTableColumn<TTableName>
-  updatedAt?: (builder: CreateTableColumn<TTableName>, table: TTableName) => CreateTableColumn<TTableName>
-  updaterId?: (builder: CreateTableColumn<TTableName>, table: TTableName) => CreateTableColumn<TTableName>
+export type FinalCreateExTableOptionsColumns<
+  TTableName extends string | SqlLiteral
+> = {
+  id?: (
+    builder: CreateTableColumn<TTableName>,
+    table: TTableName
+  ) => CreateTableColumn<TTableName>
+  pid?: (
+    builder: CreateTableColumn<TTableName>,
+    table: TTableName
+  ) => CreateTableColumn<TTableName>
+  createdAt?: (
+    builder: CreateTableColumn<TTableName>,
+    table: TTableName
+  ) => CreateTableColumn<TTableName>
+  creatorId?: (
+    builder: CreateTableColumn<TTableName>,
+    table: TTableName
+  ) => CreateTableColumn<TTableName>
+  updatedAt?: (
+    builder: CreateTableColumn<TTableName>,
+    table: TTableName
+  ) => CreateTableColumn<TTableName>
+  updaterId?: (
+    builder: CreateTableColumn<TTableName>,
+    table: TTableName
+  ) => CreateTableColumn<TTableName>
 }
 
-export type FinalCreateExTableOptionsConstraints<TTableName extends string | SqlLiteral> = {
-  id?: (builder: CreateTableColumn<TTableName>, table: TTableName) => CreateTableColumn<TTableName>
+export type FinalCreateExTableOptionsConstraints<
+  TTableName extends string | SqlLiteral
+> = {
+  id?: (
+    builder: CreateTableColumn<TTableName>,
+    table: TTableName
+  ) => CreateTableColumn<TTableName>
 }
 
-export type FinalCreateExTableOptionsIndexes<TTableName extends string | SqlLiteral> = {
-  pid?: (builder: CreateTableColumn<TTableName>, table: TTableName) => CreateTableColumn<TTableName>
+export type FinalCreateExTableOptionsIndexes<
+  TTableName extends string | SqlLiteral
+> = {
+  pid?: (
+    builder: CreateTableColumn<TTableName>,
+    table: TTableName
+  ) => CreateTableColumn<TTableName>
 }
 
-export type FinalCreateExTableOptionsSequences<TTableName extends string | SqlLiteral> = {
-  id?: (builder: CreateTableColumn<TTableName>, table: TTableName) => CreateTableColumn<TTableName>
-  pid?: (builder: CreateTableColumn<TTableName>, table: TTableName) => CreateTableColumn<TTableName>
+export type FinalCreateExTableOptionsSequences<
+  TTableName extends string | SqlLiteral
+> = {
+  id?: (
+    builder: CreateTableColumn<TTableName>,
+    table: TTableName
+  ) => CreateTableColumn<TTableName>
+  pid?: (
+    builder: CreateTableColumn<TTableName>,
+    table: TTableName
+  ) => CreateTableColumn<TTableName>
 }
 
 export class CreateEx extends Create {
@@ -87,26 +191,70 @@ export class CreateEx extends Create {
 
       const defaultOptions: FinalCreateExTableOptions<TTableName> = {
         columns: {
-          id: x => x.column(columns.id, `bigint not null default nextval('sq:${name}(c_id)')`),
-          pid: x => x.column(columns.pid, `bigint not null default nextval('sq:${name}(c_pid)')`),
-          createdAt: x => x.column(columns.createdAt, `timestamp not null default (now() at time zone 'utc')`),
+          id: x =>
+            x.column(
+              columns.id,
+              `bigint not null default nextval('sq:${name}(c_id)')`
+            ),
+          pid: x =>
+            x.column(
+              columns.pid,
+              `bigint not null default nextval('sq:${name}(c_pid)')`
+            ),
+          createdAt: x =>
+            x.column(
+              columns.createdAt,
+              `timestamp not null default (now() at time zone 'utc')`
+            ),
           creatorId: x => x.column(columns.creatorId, `bigint`),
           updatedAt: x => x.column(columns.updatedAt, `timestamp`),
           updaterId: x => x.column(columns.updaterId, `bigint`),
         },
         constraints: {
-          id: x => x.after(db => create.constraint().on(name).column(columns.id).primaryKey().exec(db))
+          id: x =>
+            x.after(db =>
+              create
+                .constraint()
+                .on(name)
+                .column(columns.id)
+                .primaryKey()
+                .exec(db)
+            ),
         },
         indexes: {
-          pid: x => x.after(db => create.index().on(name).column(columns.pid).unique().exec(db)),
+          pid: x =>
+            x.after(db =>
+              create
+                .index()
+                .on(name)
+                .column(columns.pid)
+                .unique()
+                .exec(db)
+            ),
         },
         sequences: {
-          id: x => x
-            .before(db => create.sequence(`sq:${name}(${columns.id})`).exec(db))
-            .after(db => alter.sequence(`sq:${name}(${columns.id})`).ownedBy(name, columns.id).exec(db)),
-          pid: x => x
-            .before(db => create.sequence(`sq:${name}(${columns.pid})`).exec(db))
-            .after(db => alter.sequence(`sq:${name}(${columns.pid})`).ownedBy(name, columns.pid).exec(db)),
+          id: x =>
+            x
+              .before(db =>
+                create.sequence(`sq:${name}(${columns.id})`).exec(db)
+              )
+              .after(db =>
+                alter
+                  .sequence(`sq:${name}(${columns.id})`)
+                  .ownedBy(name, columns.id)
+                  .exec(db)
+              ),
+          pid: x =>
+            x
+              .before(db =>
+                create.sequence(`sq:${name}(${columns.pid})`).exec(db)
+              )
+              .after(db =>
+                alter
+                  .sequence(`sq:${name}(${columns.pid})`)
+                  .ownedBy(name, columns.pid)
+                  .exec(db)
+              ),
         },
       }
 
@@ -124,10 +272,20 @@ export class CreateEx extends Create {
           if (typeof options.columns === 'object') {
             effectiveOptions.columns = <any>{}
 
-            const addColumn = (key: keyof FinalCreateExTableOptionsColumns<TTableName>, value?: boolean | string | ((builder: CreateTableColumn<TTableName>, table: TTableName) => CreateTableColumn<TTableName>)) => {
+            const addColumn = (
+              key: keyof FinalCreateExTableOptionsColumns<TTableName>,
+              value?:
+                | boolean
+                | string
+                | ((
+                    builder: CreateTableColumn<TTableName>,
+                    table: TTableName
+                  ) => CreateTableColumn<TTableName>)
+            ) => {
               if (value === undefined || value) {
                 if (typeof value === 'string') {
-                  effectiveOptions.columns[key] = x => x.column(columns[key], value)
+                  effectiveOptions.columns[key] = x =>
+                    x.column(columns[key], value)
                 } else if (typeof value === 'function') {
                   effectiveOptions.columns[key] = value
                 } else {
@@ -151,7 +309,10 @@ export class CreateEx extends Create {
           if (typeof options.constraints === 'object') {
             effectiveOptions.constraints = <any>{}
 
-            if (options.constraints.id === undefined || options.constraints.id) {
+            if (
+              options.constraints.id === undefined ||
+              options.constraints.id
+            ) {
               if (typeof options.constraints.id === 'function') {
                 effectiveOptions.constraints.id = options.constraints.id
               } else {
@@ -206,9 +367,7 @@ export class CreateEx extends Create {
         effectiveOptions = defaultOptions
       }
 
-
-      let builder = <CreateTableColumn<TTableName>><any>create.table(name)
-
+      let builder = <CreateTableColumn<TTableName>>(<any>create.table(name))
 
       if (effectiveOptions.sequences.id) {
         builder = effectiveOptions.sequences.id(builder, name)
@@ -217,7 +376,6 @@ export class CreateEx extends Create {
       if (effectiveOptions.sequences.pid) {
         builder = effectiveOptions.sequences.pid(builder, name)
       }
-
 
       if (effectiveOptions.columns.id) {
         builder = effectiveOptions.columns.id(builder, name)
@@ -243,16 +401,13 @@ export class CreateEx extends Create {
         builder = effectiveOptions.columns.updaterId(builder, name)
       }
 
-
       if (effectiveOptions.constraints.id) {
         builder = effectiveOptions.constraints.id(builder, name)
       }
 
-
       if (effectiveOptions.indexes.pid) {
         builder = effectiveOptions.indexes.pid(builder, name)
       }
-
 
       return builder
     }
@@ -280,9 +435,9 @@ export type MigrationContext = {
   ddl: MigrationContextDdl
 }
 
-export const createDdl = (
-  db: Database
-): MigrationContextDdl => async (...builders) => {
+export const createDdl = (db: Database): MigrationContextDdl => async (
+  ...builders
+) => {
   for (const builder of builders) {
     await builder({
       alter,

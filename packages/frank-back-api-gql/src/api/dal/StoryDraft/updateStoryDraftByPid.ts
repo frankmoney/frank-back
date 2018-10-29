@@ -1,6 +1,12 @@
 import { join, nullIfEmpty, sql } from 'sql'
 import { TeamMemberRole } from 'store/enums'
-import { account, story, storyDraft, storyDraftPayment, teamMember } from 'store/names'
+import {
+  account,
+  story,
+  storyDraft,
+  storyDraftPayment,
+  teamMember,
+} from 'store/names'
 import Id from 'store/types/Id'
 import Json from 'store/types/Json'
 import Pid from 'store/types/Pid'
@@ -23,7 +29,7 @@ export default createMutation<Args, undefined | null | Id>(
         update ${storyDraft}
         set
           ${storyDraft.updatedAt} = now() at time zone 'utc',
-          ${storyDraft.updaterId} = ${args.userId}
+          ${storyDraft.updaterId} = ${args.userId},
           ${storyDraft.title} = ${nullIfEmpty(args.title)},
           ${storyDraft.cover} = ${args.cover},
           ${storyDraft.body} = ${args.body}
@@ -33,10 +39,14 @@ export default createMutation<Args, undefined | null | Id>(
         join ${teamMember}
         on ${account}.${account.teamId} = ${teamMember}.${teamMember.teamId}
         where ${teamMember}.${teamMember.userId} = ${args.userId}
-        and ${teamMember}.${teamMember.roleId} in (${[TeamMemberRole.administrator, TeamMemberRole.manager]})
+        and ${teamMember}.${teamMember.roleId} in (${[
+        TeamMemberRole.administrator,
+        TeamMemberRole.manager,
+      ]})
         and ${storyDraft}.${storyDraft.storyId} = ${story}.${story.id}
         and ${storyDraft}.${storyDraft.pid} = ${args.pid}
-        where ${story}.${story.id} = ${storyDraft}.${storyDraft.storyId}
+        and ${story}.${story.id} = ${storyDraft}.${storyDraft.storyId}
+        returning ${storyDraft}.${storyDraft.id};
       `
     )
 
@@ -44,7 +54,9 @@ export default createMutation<Args, undefined | null | Id>(
       await db.command(
         sql`
           delete from ${storyDraftPayment}
-          where ${storyDraftPayment}.${storyDraftPayment.storyDraftId} = ${draftId}
+          where ${storyDraftPayment}.${
+          storyDraftPayment.storyDraftId
+        } = ${draftId}
         `
       )
 

@@ -14,8 +14,8 @@ import PaymentType from './PaymentType'
 import PaymentsOrderType from './PaymentsOrderType'
 import StoryDraftType from './StoryDraftType'
 
-const StoryType = Type('Story', type => type
-  .fields(field => ({
+const StoryType = Type('Story', type =>
+  type.fields(field => ({
     pid: field.ofId(),
     createdAt: field.ofDateTime(),
     updatedAt: field.ofDateTime().nullable(),
@@ -23,23 +23,21 @@ const StoryType = Type('Story', type => type
     title: field.ofString().nullable(),
     cover: field.ofJson().nullable(),
     body: field.ofJson().nullable(),
-    draft: field
-      .ofType(StoryDraftType)
-      .resolve(
-        createPrivateResolver<StoryDraftGql>(
-          'Story:draft',
-          async ({ parent, scope }) => {
-            const story: Story = parent.$source
+    draft: field.ofType(StoryDraftType).resolve(
+      createPrivateResolver<StoryDraftGql>(
+        'Story:draft',
+        async ({ parent, scope }) => {
+          const story: Story = parent.$source
 
-            const draft = await getStoryDraftByStoryId(
-              { storyId: story.id },
-              scope
-            )
+          const draft = await getStoryDraftByStoryId(
+            { storyId: story.id },
+            scope
+          )
 
-            return mapStoryDraft(draft)
-          }
-        )
-      ),
+          return mapStoryDraft(draft!)
+        }
+      )
+    ),
     payments: field
       .listOf(PaymentType)
       .args(arg => ({
@@ -54,7 +52,12 @@ const StoryType = Type('Story', type => type
             const story: Story = parent.$source
 
             const payments = await listPaymentsByStoryId(
-              { storyId: story.id, orderBy: args.sortBy, take: args.take, skip: args.skip },
+              {
+                storyId: story.id,
+                orderBy: args.sortBy,
+                take: args.take,
+                skip: args.skip,
+              },
               scope
             )
 
@@ -62,23 +65,21 @@ const StoryType = Type('Story', type => type
           }
         )
       ),
-    countPayments: field
-      .ofInt()
-      .resolve(
-        createPrivateResolver<number>(
-          'Story:countPayments',
-          async ({ parent, scope }) => {
-            const story: Story = parent.$source
+    countPayments: field.ofInt().resolve(
+      createPrivateResolver<number>(
+        'Story:countPayments',
+        async ({ parent, scope }) => {
+          const story: Story = parent.$source
 
-            const count = await countPaymentsByStoryId(
-              { storyId: story.id },
-              scope
-            )
+          const count = await countPaymentsByStoryId(
+            { storyId: story.id },
+            scope
+          )
 
-            return count
-          }
-        )
-      ),
+          return count
+        }
+      )
+    ),
     paymentsDateRange: field
       .listOfDateTime()
       .nullable()

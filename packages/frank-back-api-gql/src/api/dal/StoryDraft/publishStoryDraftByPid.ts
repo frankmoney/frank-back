@@ -24,14 +24,18 @@ export default createMutation<Args, undefined | null | Id>(
           ${story.cover} = ${storyDraft}.${storyDraft.cover},
           ${story.body} = ${storyDraft}.${storyDraft.body}
         from ${storyDraft}
-        join ${account}
-        on ${story}.${story.accountId} = ${account}.${account.id}
+        cross join ${account}
         join ${teamMember}
         on ${account}.${account.teamId} = ${teamMember}.${teamMember.teamId}
-        where ${teamMember}.${teamMember.userId} = ${args.userId}
-        and ${teamMember}.${teamMember.roleId} in (${[TeamMemberRole.administrator, TeamMemberRole.manager]})
+        where ${story}.${story.accountId} = ${account}.${account.id}
+        and ${teamMember}.${teamMember.userId} = ${args.userId}
+        and ${teamMember}.${teamMember.roleId} in (${[
+        TeamMemberRole.administrator,
+        TeamMemberRole.manager,
+      ]})
         and ${storyDraft}.${storyDraft.storyId} = ${story}.${story.id}
-        and ${storyDraft}.${storyDraft.pid} = ${args.pid};
+        and ${storyDraft}.${storyDraft.pid} = ${args.pid}
+        returning ${story}.${story.id};
       `
     )
 
@@ -39,7 +43,10 @@ export default createMutation<Args, undefined | null | Id>(
       await db.command(
         sql`
           update ${storyDraft}
-          set ${storyDraft.publishedAt} = now() at time zone 'utc'
+          set
+            ${storyDraft.updatedAt} = now() at time zone 'utc',
+            ${storyDraft.updaterId} = ${args.userId},
+            ${storyDraft.publishedAt} = now() at time zone 'utc'
           where ${storyDraft}.${storyDraft.pid} = ${args.pid};
         `
       )

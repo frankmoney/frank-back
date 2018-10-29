@@ -10,9 +10,8 @@ export type Args = {
   accountId: Id
 }
 
-export default createQuery<Args>(
-  'getStoryByPidAndAccountId',
-  (args, { db }) => db.first(
+export default createQuery<Args>('getStoryByPidAndAccountId', (args, { db }) =>
+  db.first(
     sql`
       select
         ${story}.${story.id},

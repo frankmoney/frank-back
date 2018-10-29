@@ -10,7 +10,8 @@ export type Args = {
 
 export default createQuery<Args, null | DateTime[]>(
   'getStoryPaymentDateRangeByStoryId',
-  (args, { db }) => db.first(
+  (args, { db }) =>
+    db.first(
       sql`
         select
           min(${payment}.${payment.postedOn}) postedOnMin,
@@ -20,6 +21,9 @@ export default createQuery<Args, null | DateTime[]>(
         on ${storyPayment}.${storyPayment.paymentId} = ${payment}.${payment.id}
         where ${storyPayment}.${storyPayment.storyId} = ${args.storyId};
       `,
-      x => x ? [x.postedOnMin, x.postedOnMax] : null
+      x =>
+        x && x.postedOnMin && x.postedOnMax
+          ? [x.postedOnMin, x.postedOnMax]
+          : null
     )
 )

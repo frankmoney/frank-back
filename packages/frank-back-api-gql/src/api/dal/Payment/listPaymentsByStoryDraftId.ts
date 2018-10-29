@@ -26,7 +26,7 @@ export default createQuery<Args, Payment[]>(
         orderBySql = sql`${payment}.${payment.amount} desc`
         break
       default:
-        throw new Error(`Unknown peer order: ${args.orderBy}`)
+        throw new Error(`Unknown payment order: ${args.orderBy}`)
     }
 
     return db.query(
@@ -48,7 +48,9 @@ export default createQuery<Args, Payment[]>(
           ${payment}.${payment.categoryId}
         from ${payment}
         join ${storyDraftPayment}
-        on ${payment}.${payment.id} = ${storyDraftPayment}.${storyDraftPayment.paymentId}
+        on ${payment}.${payment.id} = ${storyDraftPayment}.${
+        storyDraftPayment.paymentId
+      }
         where ${storyDraftPayment.storyDraftId} = ${args.draftId}
         order by ${orderBySql}
         ${limit({ take: args.take, skip: args.skip })};

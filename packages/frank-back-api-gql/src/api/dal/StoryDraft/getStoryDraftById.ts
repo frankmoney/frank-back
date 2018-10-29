@@ -11,8 +11,9 @@ export type Args = {
 
 export default createQuery<Args, undefined | null | StoryDraft>(
   'getStoryDraftById',
-  (args, { db }) => db.first(
-    sql`
+  (args, { db }) =>
+    db.first(
+      sql`
       select
         ${storyDraft}.${storyDraft.id},
         ${storyDraft}.${storyDraft.pid},
@@ -25,14 +26,18 @@ export default createQuery<Args, undefined | null | StoryDraft>(
         ${storyDraft}.${storyDraft.cover},
         ${storyDraft}.${storyDraft.body},
         case
-          when ${storyDraft}.${storyDraft.updatedAt} > ${storyDraft}.${storyDraft.publishedAt}
+          when ${storyDraft}.${storyDraft.updatedAt} is null
+          or ${storyDraft}.${storyDraft.publishedAt} is null
+          or ${storyDraft}.${storyDraft.updatedAt} > ${storyDraft}.${
+        storyDraft.publishedAt
+      }
           then false
           else true
-        end ${storyDraft}.${storyDraft.published},
+        end ${storyDraft.published},
         ${storyDraft}.${storyDraft.storyId}
       from ${storyDraft}
       where ${storyDraft}.${storyDraft.id} = ${args.id}
     `,
-    mapStoryDraft
-  )
+      mapStoryDraft
+    )
 )

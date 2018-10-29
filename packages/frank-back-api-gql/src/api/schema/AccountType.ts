@@ -29,6 +29,7 @@ import PaymentsOrderType from './PaymentsOrderType'
 import PaymentType from './PaymentType'
 import PeersOrderType from './PeersOrderType'
 import PeerType from './PeerType'
+import StoriesOrderType from './StoriesOrderType'
 import StoryType from './StoryType'
 
 const AccountType = Type('Account', type =>
@@ -365,7 +366,7 @@ const AccountType = Type('Account', type =>
         )
       ),
     story: field
-      .listOf(StoryType)
+      .ofType(StoryType)
       .args(arg => ({
         pid: arg.ofId(),
       }))
@@ -391,6 +392,7 @@ const AccountType = Type('Account', type =>
     stories: field
       .listOf(StoryType)
       .args(arg => ({
+        sortBy: arg.ofType(StoriesOrderType),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
       }))
@@ -401,7 +403,12 @@ const AccountType = Type('Account', type =>
             const account: Account = parent.$source
 
             const stories = await listStoriesByAccountId(
-              { accountId: account.id, take: args.take, skip: args.skip },
+              {
+                accountId: account.id,
+                take: args.take,
+                skip: args.skip,
+                orderBy: args.sortBy,
+              },
               scope
             )
 

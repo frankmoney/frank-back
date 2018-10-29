@@ -86,48 +86,42 @@ const MutationType = Type('Mutation', type =>
         paymentPids: arg.listOfId().nullable(),
       }))
       .resolve(
-        createPrivateResolver(
-          'storyCreate',
-          async ({ args, scope }) => {
-            const userId = scope.user.id
+        createPrivateResolver('storyCreate', async ({ args, scope }) => {
+          const userId = scope.user.id
 
-            const storyId = await createStory(
-              { userId, accountPid: args.accountPid },
-              scope
-            )
+          const storyId = await createStory(
+            { userId, accountPid: args.accountPid },
+            scope
+          )
 
-            if (!storyId) {
-              throwForbidden()
-            }
-
-            const draftId = await createStoryDraft(
-              {
-                userId,
-                storyId: storyId!,
-                title: args.title,
-                cover: args.cover,
-                body: args.body,
-                paymentPids: args.paymentPids,
-              },
-              scope
-            )
-
-            if (!draftId) {
-              throwForbidden()
-            }
-
-            const story = await getStoryById(
-              { id: storyId! },
-              scope
-            )
-
-            if (!story) {
-              throwForbidden()
-            }
-
-            return mapStory(story)
+          if (!storyId) {
+            throwForbidden()
           }
-        )
+
+          const draftId = await createStoryDraft(
+            {
+              userId,
+              storyId: storyId!,
+              title: args.title,
+              cover: args.cover,
+              body: args.body,
+              paymentPids: args.paymentPids,
+            },
+            scope
+          )
+
+          if (!draftId) {
+            throwForbidden()
+          }
+
+          const story = await getStoryById({ id: storyId! }, scope)
+
+          if (!story) {
+            throwForbidden()
+          }
+
+          return mapStory(story)
+        })
       ),
     storyDraftUpdate: field
       .ofType(StoryDraftType)
@@ -139,39 +133,33 @@ const MutationType = Type('Mutation', type =>
         paymentPids: arg.listOfId().nullable(),
       }))
       .resolve(
-        createPrivateResolver(
-          'storyDraftUpdate',
-          async ({ args, scope }) => {
-            const userId = scope.user.id
+        createPrivateResolver('storyDraftUpdate', async ({ args, scope }) => {
+          const userId = scope.user.id
 
-            const draftId = await updateStoryDraftByPid(
-              {
-                userId,
-                pid: args.pid,
-                title: args.title,
-                cover: args.cover,
-                body: args.body,
-                paymentPids: args.paymentPids,
-              },
-              scope
-            )
+          const draftId = await updateStoryDraftByPid(
+            {
+              userId,
+              pid: args.pid,
+              title: args.title,
+              cover: args.cover,
+              body: args.body,
+              paymentPids: args.paymentPids,
+            },
+            scope
+          )
 
-            if (!draftId) {
-              throwNotFound()
-            }
-
-            const draft = await getStoryDraftById(
-              { id: draftId! },
-              scope
-            )
-
-            if (!draft) {
-              throwNotFound()
-            }
-
-            return mapStoryDraft(draft!)
+          if (!draftId) {
+            throwNotFound()
           }
-        )
+
+          const draft = await getStoryDraftById({ id: draftId! }, scope)
+
+          if (!draft) {
+            throwNotFound()
+          }
+
+          return mapStoryDraft(draft!)
+        })
       ),
     storyDraftPublish: field
       .ofType(StoryDraftType)
@@ -179,32 +167,26 @@ const MutationType = Type('Mutation', type =>
         pid: arg.ofId(),
       }))
       .resolve(
-        createPrivateResolver(
-          'storyDraftPublish',
-          async ({ args, scope }) => {
-            const userId = scope.user.id
+        createPrivateResolver('storyDraftPublish', async ({ args, scope }) => {
+          const userId = scope.user.id
 
-            const draftId = await publishStoryDraftByPid(
-              { userId, pid: args.pid },
-              scope
-            )
+          const draftId = await publishStoryDraftByPid(
+            { userId, pid: args.pid },
+            scope
+          )
 
-            if (!draftId) {
-              throwNotFound()
-            }
-
-            const draft = await getStoryDraftById(
-              { id: draftId! },
-              scope
-            )
-
-            if (!draft) {
-              throwNotFound()
-            }
-
-            return mapStoryDraft(draft!)
+          if (!draftId) {
+            throwNotFound()
           }
-        )
+
+          const draft = await getStoryDraftById({ id: draftId! }, scope)
+
+          if (!draft) {
+            throwNotFound()
+          }
+
+          return mapStoryDraft(draft!)
+        })
       ),
   }))
 )

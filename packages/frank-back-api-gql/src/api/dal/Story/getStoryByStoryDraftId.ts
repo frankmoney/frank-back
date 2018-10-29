@@ -11,8 +11,9 @@ export type Args = {
 
 export default createQuery<Args, Story>(
   'getStoryByStoryDraftId',
-  (args, { db }) => db.first(
-    sql`
+  (args, { db }) =>
+    db.first(
+      sql`
       select
         ${story}.${story.id},
         ${story}.${story.pid},
@@ -31,6 +32,6 @@ export default createQuery<Args, Story>(
       where ${storyDraft}.${storyDraft.id} = ${args.draftId}
       limit 1;
     `,
-    mapStory
-  )
+      mapStory
+    )
 )
