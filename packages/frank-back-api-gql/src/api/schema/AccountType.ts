@@ -382,7 +382,7 @@ const AccountType = Type('Account', type =>
             )
 
             if (story == null) {
-              throwNotFound()
+              return throwNotFound()
             }
 
             return mapStory(story)

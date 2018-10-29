@@ -11,7 +11,7 @@ export type Args = {
 }
 
 export default createMutation<Args, undefined | null | Id>(
-  'publishStoryDraftByPid',
+  'unpublishStoryByPid',
   async (args, { db }) => {
     const storyId = await db.scalar(
       sql`
@@ -19,12 +19,8 @@ export default createMutation<Args, undefined | null | Id>(
         set
           ${story.updatedAt} = now() at time zone 'utc',
           ${story.updaterId} = ${args.userId},
-          ${story.publishedAt} = now() at time zone 'utc',
-          ${story.title} = ${storyDraft}.${storyDraft.title},
-          ${story.cover} = ${storyDraft}.${storyDraft.cover},
-          ${story.body} = ${storyDraft}.${storyDraft.body}
-        from ${storyDraft}
-        cross join ${account}
+          ${story.publishedAt} = null
+        from ${account}
         join ${teamMember}
         on ${account}.${account.teamId} = ${teamMember}.${teamMember.teamId}
         where ${story}.${story.accountId} = ${account}.${account.id}
@@ -32,8 +28,7 @@ export default createMutation<Args, undefined | null | Id>(
         and ${teamMember}.${teamMember.roleId} in (
           ${TeamMemberRole.administrator}, ${TeamMemberRole.manager}
         )
-        and ${storyDraft}.${storyDraft.storyId} = ${story}.${story.id}
-        and ${storyDraft}.${storyDraft.pid} = ${args.pid}
+        and ${story}.${story.pid} = ${args.pid}
         returning ${story}.${story.id};
       `
     )
@@ -45,8 +40,8 @@ export default createMutation<Args, undefined | null | Id>(
           set
             ${storyDraft.updatedAt} = now() at time zone 'utc',
             ${storyDraft.updaterId} = ${args.userId},
-            ${storyDraft.publishedAt} = now() at time zone 'utc'
-          where ${storyDraft}.${storyDraft.pid} = ${args.pid};
+            ${storyDraft.publishedAt} = null
+          where ${storyDraft}.${storyDraft.storyId} = ${storyId};
         `
       )
     }

@@ -3,16 +3,17 @@ import { TeamMemberRole } from 'store/enums'
 import mapStory from 'store/mappers/mapStory'
 import { account, story, teamMember } from 'store/names'
 import Id from 'store/types/Id'
+import Pid from 'store/types/Pid'
 import Story from 'store/types/Story'
 import createQuery from '../createQuery'
 
 export type Args = {
   userId: Id
-  id: Id
+  pid: Pid
 }
 
 export default createQuery<Args, undefined | null | Story>(
-  'getStoryById',
+  'getStoryByPid',
   (args, { db }) =>
     db.first(
       sql`
@@ -37,7 +38,7 @@ export default createQuery<Args, undefined | null | Story>(
         and ${teamMember}.${teamMember.roleId} in (
           ${TeamMemberRole.administrator}, ${TeamMemberRole.manager}
         )
-        and ${story}.${story.pid} = ${args.id}
+        and ${story}.${story.pid} = ${args.pid}
         limit 1;
       `,
       mapStory

@@ -1,7 +1,10 @@
 import { Type } from 'gql'
 import updatePeerByPidAndUserId from 'api/dal/Peer/updatePeerByPidAndUserId'
 import createStory from 'api/dal/Story/createStory'
+import deleteStoryById from 'api/dal/Story/deleteStoryById'
 import getStoryById from 'api/dal/Story/getStoryById'
+import getStoryByPid from 'api/dal/Story/getStoryByPid'
+import unpublishStoryByPid from 'api/dal/Story/unpublishStoryByPid'
 import createStoryDraft from 'api/dal/StoryDraft/createStoryDraft'
 import getStoryDraftById from 'api/dal/StoryDraft/getStoryDraftById'
 import publishStoryDraftByPid from 'api/dal/StoryDraft/publishStoryDraftByPid'
@@ -95,13 +98,13 @@ const MutationType = Type('Mutation', type =>
           )
 
           if (!storyId) {
-            throwForbidden()
+            return throwForbidden()
           }
 
           const draftId = await createStoryDraft(
             {
               userId,
-              storyId: storyId!,
+              storyId,
               title: args.title,
               cover: args.cover,
               body: args.body,
@@ -111,14 +114,61 @@ const MutationType = Type('Mutation', type =>
           )
 
           if (!draftId) {
-            throwForbidden()
+            return throwForbidden()
           }
 
-          const story = await getStoryById({ id: storyId! }, scope)
+          const story = await getStoryById({ userId, id: storyId }, scope)
 
           if (!story) {
-            throwForbidden()
+            return throwForbidden()
           }
+
+          return mapStory(story)
+        })
+      ),
+    storyUnpublish: field
+      .ofType(StoryType)
+      .args(arg => ({
+        pid: arg.ofId(),
+      }))
+      .resolve(
+        createPrivateResolver('storyUnpublish', async ({ args, scope }) => {
+          const userId = scope.user.id
+
+          const storyId = await unpublishStoryByPid(
+            { userId, pid: args.pid },
+            scope
+          )
+
+          if (!storyId) {
+            return throwNotFound()
+          }
+
+          const story = await getStoryById({ userId, id: storyId }, scope)
+
+          if (!story) {
+            return throwNotFound()
+          }
+
+          return mapStory(story)
+        })
+      ),
+    storyDelete: field
+      .ofType(StoryType)
+      .args(arg => ({
+        pid: arg.ofId(),
+      }))
+      .resolve(
+        createPrivateResolver('storyDelete', async ({ args, scope }) => {
+          const userId = scope.user.id
+
+          const story = await getStoryByPid({ userId, pid: args.pid }, scope)
+
+          if (!story) {
+            return throwNotFound()
+          }
+
+          await deleteStoryById({ userId, id: story.id }, scope)
 
           return mapStory(story)
         })
@@ -149,16 +199,16 @@ const MutationType = Type('Mutation', type =>
           )
 
           if (!draftId) {
-            throwNotFound()
+            return throwNotFound()
           }
 
-          const draft = await getStoryDraftById({ id: draftId! }, scope)
+          const draft = await getStoryDraftById({ id: draftId }, scope)
 
           if (!draft) {
-            throwNotFound()
+            return throwNotFound()
           }
 
-          return mapStoryDraft(draft!)
+          return mapStoryDraft(draft)
         })
       ),
     storyDraftPublish: field
@@ -176,16 +226,16 @@ const MutationType = Type('Mutation', type =>
           )
 
           if (!draftId) {
-            throwNotFound()
+            return throwNotFound()
           }
 
-          const draft = await getStoryDraftById({ id: draftId! }, scope)
+          const draft = await getStoryDraftById({ id: draftId }, scope)
 
           if (!draft) {
-            throwNotFound()
+            return throwNotFound()
           }
 
-          return mapStoryDraft(draft!)
+          return mapStoryDraft(draft)
         })
       ),
   }))
