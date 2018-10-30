@@ -15,12 +15,13 @@ export default createQuery<Args, string[]>(
 
     return db.scalars<string>(
       sql`
-        select distinct ${payment}.${payment.description}
+        select ${payment}.${payment.description}
         from ${payment}
         join ${account}
         on ${account}.${account.pid} = ${args.accountPid}
         and ${payment}.${payment.accountId} = ${account}.${account.id}
         where ${payment}.${payment.description} ilike ${`%${search}%`}
+        group by ${payment}.${payment.description}
       `
     )
   }

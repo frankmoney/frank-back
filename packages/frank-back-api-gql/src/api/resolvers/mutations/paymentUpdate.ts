@@ -1,29 +1,22 @@
 import createMutations from 'utils/createMutations'
-import updatePaymentByPid from 'api/dal/Payment/updatePaymentByPid'
+import updatePaymentByPidAndAccountPid from 'api/dal/Payment/updatePaymentByPidAndAccountPid'
 import mapPayment from 'api/mappers/mapPayment'
 import PaymentType from 'api/schema/PaymentType'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 
 const paymentUpdate = createPrivateResolver(
   'Mutation:paymentUpdate',
-  async ({ args: { pid, published }, scope }) => {
-    return mapPayment(
-      await updatePaymentByPid(
-        {
-          pid,
-          published,
-        },
-        scope,
-      ),
-    )
-  },
+  async ({ args, scope }) => {
+    return mapPayment(await updatePaymentByPidAndAccountPid(args, scope))
+  }
 )
 
 export default createMutations(field => ({
   paymentUpdate: field
     .ofType(PaymentType)
     .args(arg => ({
-      pid: arg.ofId(),
+      accountPid: arg.ofId(),
+      paymentPid: arg.ofId(),
       published: arg.ofBool().nullable(),
       description: arg.ofString().nullable(),
       categoryPid: arg.ofId().nullable(),
