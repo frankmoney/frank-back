@@ -16,6 +16,7 @@ import mapPeer from 'api/mappers/mapPeer'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import AccountType from './AccountType'
 import LedgerBarChartType from './LedgerBarChartType'
+import PaymentsOrderType from './PaymentsOrderType'
 import PaymentType from './PaymentType'
 import PeersOrderType from './PeersOrderType'
 import PeerType from './PeerType'
@@ -113,6 +114,7 @@ const CategoryType = Type('Category', type =>
     payments: field
       .listOf(PaymentType)
       .args(arg => ({
+        sortBy: arg.ofType(PaymentsOrderType),
         postedOnMin: arg.ofDate().nullable(),
         postedOnMax: arg.ofDate().nullable(),
         amountMin: arg.ofFloat().nullable(),
@@ -139,6 +141,7 @@ const CategoryType = Type('Category', type =>
                 search: args.search,
                 take: args.take,
                 skip: args.skip,
+                orderBy: args.sortBy,
               },
               scope
             )

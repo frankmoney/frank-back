@@ -1,5 +1,7 @@
+import Id from 'store/types/Id'
+
 type User = {
-  id: number
+  id: Id
 }
 
 export default User

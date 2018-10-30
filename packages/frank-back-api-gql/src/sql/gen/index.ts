@@ -1,5 +1,6 @@
 export { default as and } from './and'
 export { default as join } from './join'
 export { default as limit } from './limit'
+export { default as nullIfEmpty } from './nullIfEmpty'
 export { default as raw } from './raw'
 export { default as sql } from './sql'

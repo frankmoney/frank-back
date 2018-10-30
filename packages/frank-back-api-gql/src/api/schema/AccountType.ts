@@ -14,16 +14,23 @@ import listPaymentsByAccountId from 'api/dal/Payment/listPaymentsByAccountId'
 import countPeersByAccountId from 'api/dal/Peer/countPeersByAccountId'
 import getPeerByPidAndAccountId from 'api/dal/Peer/getPeerByPidAndAccountId'
 import listPeersByAccountId from 'api/dal/Peer/listPeersByAccountId'
+import getStoryByPidAndAccountId from 'api/dal/Story/getStoryByPidAndAccountId'
+import listStoriesByAccountId from 'api/dal/Story/listStoriesByAccountId'
+import { throwNotFound } from 'api/errors/NotFoundError'
 import mapCategory from 'api/mappers/mapCategory'
 import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
+import mapStory from 'api/mappers/mapStory'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import CategoryType from './CategoryType'
 import LedgerBarChartType from './LedgerBarChartType'
 import LedgerPieChartType from './LedgerPieChartType'
+import PaymentsOrderType from './PaymentsOrderType'
 import PaymentType from './PaymentType'
 import PeersOrderType from './PeersOrderType'
 import PeerType from './PeerType'
+import StoriesOrderType from './StoriesOrderType'
+import StoryType from './StoryType'
 
 const AccountType = Type('Account', type =>
   type.fields(field => ({
@@ -200,6 +207,7 @@ const AccountType = Type('Account', type =>
     payments: field
       .listOf(PaymentType)
       .args(arg => ({
+        sortBy: arg.ofType(PaymentsOrderType),
         postedOnMin: arg.ofDate().nullable(),
         postedOnMax: arg.ofDate().nullable(),
         amountMin: arg.ofFloat().nullable(),
@@ -226,6 +234,7 @@ const AccountType = Type('Account', type =>
                 search: args.search,
                 take: args.take,
                 skip: args.skip,
+                orderBy: args.sortBy,
               },
               scope
             )
@@ -353,6 +362,57 @@ const AccountType = Type('Account', type =>
             )
 
             return result
+          }
+        )
+      ),
+    story: field
+      .ofType(StoryType)
+      .args(arg => ({
+        pid: arg.ofId(),
+      }))
+      .resolve(
+        createPrivateResolver(
+          'Account:story',
+          async ({ parent, args, scope }) => {
+            const account: Account = parent.$source
+
+            const story = await getStoryByPidAndAccountId(
+              { accountId: account.id, pid: args.pid },
+              scope
+            )
+
+            if (story == null) {
+              return throwNotFound()
+            }
+
+            return mapStory(story)
+          }
+        )
+      ),
+    stories: field
+      .listOf(StoryType)
+      .args(arg => ({
+        sortBy: arg.ofType(StoriesOrderType),
+        take: arg.ofInt().nullable(),
+        skip: arg.ofInt().nullable(),
+      }))
+      .resolve(
+        createPrivateResolver(
+          'Account:stories',
+          async ({ parent, args, scope }) => {
+            const account: Account = parent.$source
+
+            const stories = await listStoriesByAccountId(
+              {
+                accountId: account.id,
+                take: args.take,
+                skip: args.skip,
+                orderBy: args.sortBy,
+              },
+              scope
+            )
+
+            return mapStory(stories)
           }
         )
       ),
