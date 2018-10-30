@@ -219,7 +219,7 @@ export default class Database {
 
     const query = this.createQueryArrayConfig(sql)
     const result = await this._pgclient.query(query)
-    const scalar = <T>result.rows[0][0]
+    const scalar = result.rows[0] && <T>result.rows[0][0]
     return mapper ? mapper(scalar) : scalar
   }
 

@@ -7,7 +7,7 @@ import Pid from 'store/types/Pid'
 import getAccountByPid from '../Account/getAccountByPid'
 import getCategoryByPidAndAccountId from '../Category/getCategoryByPidAndAccountId'
 import createMutation from '../createMutation'
-import createPeer from '../Peer/createPeer'
+import findOrCreatePeer from '../Peer/findOrCreatePeer'
 import getPeerByPidAndAccountId from '../Peer/getPeerByPidAndAccountId'
 
 type Args = {
@@ -17,7 +17,7 @@ type Args = {
   description?: string
   categoryPid?: Pid
   peerPid?: Pid
-  newPeerName: string
+  peerName: string
 }
 
 export default createMutation<Args, Payment>(
@@ -51,13 +51,13 @@ export default createMutation<Args, Payment>(
       )
 
       updateSqlParts.push(sql`${payment.peerId} = ${peer.id}`)
-    } else if (!R.isNil(args.newPeerName)) {
-      const peer = await createPeer(
-        { accountId: account.id, name: args.newPeerName },
+    } else if (!R.isNil(args.peerName)) {
+      const peerId = await findOrCreatePeer(
+        { accountId: account.id, name: args.peerName },
         scope
       )
 
-      updateSqlParts.push(sql`${payment.peerId} = ${peer.id}`)
+      updateSqlParts.push(sql`${payment.peerId} = ${peerId}`)
     }
 
     const updateSql = join(updateSqlParts, ', ')
