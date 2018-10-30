@@ -40,7 +40,7 @@ export const payment = tableEx('t_payment', {
   data: 'c_data',
   postedOn: 'c_posted_on',
   amount: 'c_amount',
-  rawPeerName: 'c_raw_peer_name',
+  peerName: 'c_peer_name',
   description: 'c_description',
   published: 'c_published',
   accountId: 'c_account_id',

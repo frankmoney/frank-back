@@ -7,7 +7,7 @@ type Payment = ExtendedBase & {
   data: Json
   postedOn: Date
   amount: number
-  rawPeerName: string
+  peerName: string
   description: string
   published: boolean
   accountId: Id
