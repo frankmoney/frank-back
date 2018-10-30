@@ -1,7 +1,7 @@
 import createLogger from './createLogger'
 import R from 'ramda'
 import Payment from './model/payment'
-// import handleNewPayment from './handleNewPayment'
+import handleNewPayment from './handleNewPayment'
 
 const log = createLogger('import:syncTransactions')
 
@@ -19,17 +19,15 @@ export default async (account, mxPayments) => {
 
     const { guid } = mxPayment
 
-    const existingPayment = R.find(R.propEq('mxGuid', guid), payments)
+    const existingPayment = R.find(p => p.data.guid === guid, payments)
 
     if (R.isNil(existingPayment)) {
 
       log.trace('new payment - create')
 
-      // const data = await handleNewPayment(mxPayment, account, payments, prisma)
+      const data = await handleNewPayment(mxPayment, account, payments)
 
-      // await prisma.mutation.createPayment({
-      //   data,
-      // })
+      await Payment.create(data)
 
     } else {
 

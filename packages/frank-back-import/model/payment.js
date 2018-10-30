@@ -5,6 +5,7 @@ export default sequelize.define('t_payment', {
   id: {
     type: Sequelize.BIGINT,
     primaryKey: true,
+    autoIncrement: true,
     field: 'c_id',
   },
   accountId: {
