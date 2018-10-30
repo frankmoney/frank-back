@@ -6,7 +6,7 @@ type Payment = {
   data: Json
   postedOn: Date
   amount: number
-  peerName: string
+  rawPeerName: string
   description: string
   published: boolean
 }

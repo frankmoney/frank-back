@@ -18,7 +18,7 @@ const PaymentType = Type('Payment', type =>
     data: field.ofJson().nullable(),
     postedOn: field.ofDate(),
     amount: field.ofFloat(),
-    peerName: field.ofString().nullable(),
+    rawPeerName: field.ofString().nullable(),
     description: field.ofString().nullable(),
     published: field.ofBool(),
     bankDescription: field
