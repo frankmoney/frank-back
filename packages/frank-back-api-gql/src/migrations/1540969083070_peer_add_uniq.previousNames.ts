@@ -42,7 +42,6 @@ export const payment = tableEx('t_payment', {
   amount: 'c_amount',
   peerName: 'c_peer_name',
   description: 'c_description',
-  published: 'c_published',
   accountId: 'c_account_id',
   peerId: 'c_peer_id',
   categoryId: 'c_category_id',

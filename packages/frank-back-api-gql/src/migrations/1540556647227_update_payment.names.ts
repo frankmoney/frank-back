@@ -45,7 +45,7 @@ export const payment = tableEx('t_payment', {
   published: 'c_published',
   accountId: 'c_account_id',
   peerId: 'c_peer_id',
-  categoryId: 'c_category_id',
+  categoryId: 'c_category_id'
 })
 
 export const peer = tableEx('t_peer', {
@@ -54,30 +54,17 @@ export const peer = tableEx('t_peer', {
 })
 
 export const story = tableEx('t_story', {
-  publishedAt: 'c_published_at',
-  cover: 'c_cover',
-  title: 'c_title',
-  body: 'c_body',
+  updatedAt: 'c_updated_at',
   accountId: 'c_account_id',
+  draftId: 'c_draft_id',
+  dataId: 'c_data_id',
 })
 
-export const storyDraft = tableEx('t_story_draft', {
-  publishedAt: 'c_published_at',
+export const storyData = tableEx('t_story_data', {
+  updatedAt: 'c_updated_at',
   cover: 'c_cover',
   title: 'c_title',
   body: 'c_body',
-  published: 'c_published',
-  storyId: 'c_story_id',
-})
-
-export const storyDraftPayment = tableEx('t_story_draft_payment', {
-  storyDraftId: 'c_story_draft_id',
-  paymentId: 'c_payment_id',
-})
-
-export const storyPayment = tableEx('t_story_payment', {
-  storyId: 'c_story_id',
-  paymentId: 'c_payment_id',
 })
 
 export const team = tableEx('t_team', {

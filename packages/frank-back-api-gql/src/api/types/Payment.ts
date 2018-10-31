@@ -8,6 +8,7 @@ type Payment = {
   amount: number
   peerName: string
   description: string
+  published: boolean
 }
 
 export default Payment

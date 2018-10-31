@@ -20,6 +20,7 @@ import mapTeamMember from 'api/mappers/mapTeamMember'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import PeerUpdateUpdate from 'api/types/PeerUpdateUpdate'
 import Pid from 'api/types/Pid'
+import paymentUpdate from 'api/resolvers/mutations/paymentUpdate'
 import PeerType from './PeerType'
 import PeerUpdateUpdateInput from './PeerUpdateUpdateInput'
 import StoryType from './StoryType'
@@ -30,6 +31,8 @@ import onboarding from './onboarding'
 
 const MutationType = Type('Mutation', type =>
   type.fields(field => ({
+    ...onboarding(field),
+    ...paymentUpdate(field),
     teamMemberUpdateRole: field
       .ofType(TeamMemberType)
       .args(arg => ({
@@ -78,7 +81,6 @@ const MutationType = Type('Mutation', type =>
           return peer && mapPeer(peer)
         })
       ),
-    ...onboarding(field),
     storyCreate: field
       .ofType(StoryType)
       .args(arg => ({
