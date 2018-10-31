@@ -14,6 +14,19 @@
     "prettier": "node node_modules/prettier/bin-prettier.js -l **/*.js **/*.ts **/*.json",
     "prettier-fix": "node node_modules/prettier/bin-prettier.js --write **/*.js **/*.ts **/*.json"
   },
+  "lint-staged": {
+    "*.js": [
+      "node scripts pre-commit"
+    ],
+    "*.ts": [
+      "node scripts pre-commit"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "node node_modules/lint-staged"
+    }
+  },
   "dependencies": {
     "@frankmoney/frank-mail": "^1.0.7",
     "@types/debug": "^0.0.30",
