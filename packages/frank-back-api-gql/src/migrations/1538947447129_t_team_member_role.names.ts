@@ -73,7 +73,9 @@ export const teamMemberInvite = tableEx('t_team_member_invite', {
   teamId: 'c_team_id',
 })
 
-export const teamMemberRole = tableEx('t_team_member_role', {
+export const teamMemberRole = table('t_team_member_role', {
+  id: 'c_id',
+  createdAt: 'c_created_at',
   name: 'c_name',
 })
 

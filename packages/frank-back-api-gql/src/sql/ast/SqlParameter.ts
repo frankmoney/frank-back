@@ -5,6 +5,7 @@ type SqlParameter<TValue = any> = {
     readonly type: 'parameter'
     readonly value: TValue
   }
+  toString(): string
 }
 
 export default SqlParameter

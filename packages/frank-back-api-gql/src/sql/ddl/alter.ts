@@ -1,5 +1,6 @@
-import Alter from './syntax/Alter'
+import IAlter from './syntax/IAlter'
+import Alter from './syntax/impl/Alter'
 
-const alter = new Alter()
+const alter: IAlter = new Alter()
 
 export default alter

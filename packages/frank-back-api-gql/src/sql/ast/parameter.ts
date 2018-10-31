@@ -6,6 +6,7 @@ const parameter = <TValue = any>(value: TValue): SqlParameter<TValue> => ({
     type: 'parameter',
     value,
   },
+  toString: () => `${value}`,
 })
 
 export default parameter

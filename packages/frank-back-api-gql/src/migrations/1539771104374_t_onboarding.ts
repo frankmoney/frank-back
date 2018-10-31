@@ -15,11 +15,11 @@ export const up = async ({ ddl }: MigrationContext) => {
         .column(t => t.institutionCode, 'varchar(256) not null')
         .column(t => t.mxUserId, 'bigint not null'),
     x =>
-      x.alter
-        .table(mxMember)
-        .addForeignKey()
+      x.create
+        .foreignKey()
+        .on(mxMember)
         .column(t => t.mxUserId)
-        .to(mxUser)
+        .referencing(mxUser)
         .column(t => t.id),
     x =>
       x.create
@@ -34,11 +34,11 @@ export const up = async ({ ddl }: MigrationContext) => {
         .column(t => t.team, 'jsonb')
         .column(t => t.mxMemberId, 'bigint'),
     x =>
-      x.alter
-        .table(onboarding)
-        .addForeignKey()
+      x.create
+        .foreignKey()
+        .on(onboarding)
         .column(t => t.mxMemberId)
-        .to(mxMember)
+        .referencing(mxMember)
         .column(t => t.id)
   )
 }

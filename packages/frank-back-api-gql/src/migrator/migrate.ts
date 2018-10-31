@@ -29,7 +29,7 @@ const migrate = async ({ databaseConfig, to }: Args) => {
           "name" varchar NOT NULL
         );
 
-        create unique index if not exists "uq_name"
+        create unique index if not exists "ux:t_migration_history(name)"
         on "t_migration_history" ( "name" );
       `)
 
