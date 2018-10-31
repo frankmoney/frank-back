@@ -7,6 +7,7 @@ const fragment = (children: Sql[]): SqlFragment => ({
     type: 'fragment',
     children,
   },
+  toString: () => children.map(x => `${x}`).join(''),
 })
 
 export default fragment

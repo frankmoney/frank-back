@@ -15,32 +15,33 @@ export const up = async ({ ddl }: MigrationContext) => {
         .column(t => t.userId, 'bigint not null')
         .column(t => t.roleId, 'bigint not null'),
     x =>
-      x.alter
-        .table(teamMember)
-        .addForeignKey()
+      x.create
+        .foreignKey()
+        .on(teamMember)
         .column(t => t.teamId)
-        .to(team)
+        .referencing(team)
         .column(t => t.id),
     x =>
-      x.alter
-        .table(teamMember)
-        .addForeignKey()
+      x.create
+        .foreignKey()
+        .on(teamMember)
         .column(t => t.userId)
-        .to(user)
+        .referencing(user)
         .column(t => t.id),
     x =>
-      x.alter
-        .table(teamMember)
-        .addForeignKey()
+      x.create
+        .foreignKey()
+        .on(teamMember)
         .column(t => t.roleId)
-        .to(teamMemberRole)
+        .referencing(teamMemberRole)
         .column(t => t.id),
     x =>
-      x.alter
-        .table(teamMember)
-        .addUniqueConstraint()
+      x.create
+        .constraint()
+        .on(teamMember)
         .column(t => t.teamId)
         .column(t => t.userId)
+        .unique()
   )
 }
 

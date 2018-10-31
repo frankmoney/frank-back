@@ -12,11 +12,11 @@ export const up = async ({ ddl }: MigrationContext) => {
         .column(t => t.body, 'jsonb')
         .column(t => t.accountId, 'bigint not null'),
     x =>
-      x.alter
-        .table(story)
-        .addForeignKey()
+      x.create
+        .foreignKey()
+        .on(story)
         .column(t => t.accountId)
-        .to(account)
+        .referencing(account)
         .column(t => t.id)
   )
 }

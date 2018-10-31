@@ -4,20 +4,22 @@ import { TeamMemberRole } from './1538947447129_t_team_member_role.enums'
 import { teamMemberRole } from './1538947447129_t_team_member_role.names'
 
 export const up = async ({ db, ddl }: MigrationContext) => {
-  await ddl(x =>
-    x.create
-      .table(teamMemberRole, {
-        columns: {
-          id: 'bigint not null',
-          pid: false,
-          creatorId: false,
-          updatedAt: false,
-          updaterId: false,
-        },
-        indexes: false,
-        sequences: false,
-      })
-      .column(t => t.name, 'varchar(128)')
+  await ddl(
+    x =>
+      x.create
+        .table(teamMemberRole)
+        .column(t => t.id, 'bigint not null')
+        .column(
+          t => t.createdAt,
+          `timestamp not null default (now() at time zone 'utc')`
+        )
+        .column(t => t.name, 'varchar(128) not null'),
+    x =>
+      x.create
+        .constraint()
+        .on(teamMemberRole)
+        .column(t => t.id)
+        .primaryKey()
   )
 
   await db.command(sql`

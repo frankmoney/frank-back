@@ -10,11 +10,11 @@ export const up = async ({ ddl }: MigrationContext) => {
         .column(t => t.color, 'varchar(32) not null')
         .column(t => t.accountId, 'bigint not null'),
     x =>
-      x.alter
-        .table(category)
-        .addForeignKey()
+      x.create
+        .foreignKey()
+        .on(category)
         .column(t => t.accountId)
-        .to(account)
+        .referencing(account)
         .column(t => t.id)
   )
 }

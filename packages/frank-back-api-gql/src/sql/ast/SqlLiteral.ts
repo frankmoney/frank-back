@@ -5,6 +5,7 @@ type SqlLiteral = {
     readonly type: 'literal'
     readonly text: string
   }
+  toString(): string
 }
 
 export default SqlLiteral
