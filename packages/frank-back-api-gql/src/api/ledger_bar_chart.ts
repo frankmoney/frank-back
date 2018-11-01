@@ -4,7 +4,10 @@ import {
   startOfWeek,
   addDays,
   addWeeks,
+  format,
 } from 'date-fns'
+
+const FORMAT_TEMPLATE = 'YYYY-MM-DD'
 
 type Bar = {
   showDate: string
@@ -34,9 +37,10 @@ const calculateBarSize = (fromDate: Date, toDate: Date): string => {
     return 'week'
   }
 
-  //   return :day if 1.months.since(@from_date) >= @to_date
-  //   return :week if 8.months.since(@from_date) >= @to_date
-  //   return :month if 23.months.since(@from_date) >= @to_date
+  if (addMonths(fromDate, 23) >= toDate) {
+    return 'month'
+  }
+
   //   return :quarter if 96.months.since(@from_date) >= @to_date
   // :year
 
@@ -69,15 +73,16 @@ const generateBars = (
   while (_toDate < toDate) {
     _fromDate = _toDate
 
-    if (barSize === 'day') {
-      _toDate = addDays(_fromDate, 1)
-    }
+    _toDate = addDays(_fromDate, 1) //if (barSize === 'day')
 
     if (barSize === 'week') {
       _toDate = addWeeks(_fromDate, 1)
     }
 
-    // to_date = 1.month.since(from_date) if bas_size == :month
+    if (barSize === 'month') {
+      _toDate = addMonths(_fromDate, 1)
+    }
+
     // to_date = 3.month.since(from_date) if bar_size == :quarter
     // to_date = 1.year.since(from_date) if bar_size == :year
     //
@@ -120,11 +125,11 @@ export default (account: any, fromDate: Date, toDate: Date): BarCharResult => {
 
   return {
     barSize,
+    fromDate: format(fromDate, FORMAT_TEMPLATE),
+    toDate: format(toDate, FORMAT_TEMPLATE),
     maxIncome: meta.maxIncome,
     maxExpenses: meta.maxExpenses,
     maxSum: meta.maxSum,
-    fromDate: '',
-    toDate: '',
     totalSum: 0,
     bars,
   }
