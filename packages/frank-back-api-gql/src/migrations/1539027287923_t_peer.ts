@@ -9,11 +9,11 @@ export const up = async ({ ddl }: MigrationContext) => {
         .column(t => t.name, 'varchar(256) not null')
         .column(t => t.accountId, 'bigint not null'),
     x =>
-      x.alter
-        .table(peer)
-        .addForeignKey()
+      x.create
+        .foreignKey()
+        .on(peer)
         .column(t => t.accountId)
-        .to(account)
+        .referencing(account)
         .column(t => t.id)
   )
 }

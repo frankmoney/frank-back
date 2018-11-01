@@ -20,25 +20,25 @@ export const up = async ({ ddl }: MigrationContext) => {
         .column(t => t.categoryId, 'bigint')
         .column(t => t.peerId, 'bigint'),
     x =>
-      x.alter
-        .table(payment)
-        .addForeignKey()
+      x.create
+        .foreignKey()
+        .on(payment)
         .column(t => t.accountId)
-        .to(account)
+        .referencing(account)
         .column(t => t.id),
     x =>
-      x.alter
-        .table(payment)
-        .addForeignKey()
+      x.create
+        .foreignKey()
+        .on(payment)
         .column(t => t.categoryId)
-        .to(category)
+        .referencing(category)
         .column(t => t.id),
     x =>
-      x.alter
-        .table(payment)
-        .addForeignKey()
+      x.create
+        .foreignKey()
+        .on(payment)
         .column(t => t.peerId)
-        .to(peer)
+        .referencing(peer)
         .column(t => t.id)
   )
 }

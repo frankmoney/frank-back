@@ -11,6 +11,7 @@ const mapPayment: Mapper<Target, Source> = map<Target>()
   .for('amount', 'amount')
   .for('peerName', 'peerName')
   .for('description', 'description')
+  .for('published', 'published')
   .build()
 
 export default mapPayment

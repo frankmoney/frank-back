@@ -6,6 +6,7 @@ type SqlFragment = {
     readonly type: 'fragment'
     readonly children: Sql[]
   }
+  toString(): string
 }
 
 export default SqlFragment

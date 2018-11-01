@@ -13,18 +13,18 @@ export const up = async ({ ddl }: MigrationContext) => {
         .column(t => t.storyDraftId, 'bigint not null')
         .column(t => t.paymentId, 'bigint not null'),
     x =>
-      x.alter
-        .table(storyDraftPayment)
-        .addForeignKey()
+      x.create
+        .foreignKey()
+        .on(storyDraftPayment)
         .column(t => t.storyDraftId)
-        .to(storyDraft)
+        .referencing(storyDraft)
         .column(t => t.id),
     x =>
-      x.alter
-        .table(storyDraftPayment)
-        .addForeignKey()
+      x.create
+        .foreignKey()
+        .on(storyDraftPayment)
         .column(t => t.paymentId)
-        .to(payment)
+        .referencing(payment)
         .column(t => t.id)
   )
 }
