@@ -36,6 +36,10 @@ export default sequelize.define('t_payment', {
     type: Sequelize.TEXT,
     field: 'c_description'
   },
+  published: {
+    type: Sequelize.BOOLEAN,
+    field: 'c_published'
+  },
   data: {
     type: Sequelize.JSONB,
     field: 'c_data',

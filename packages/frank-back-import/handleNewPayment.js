@@ -1,25 +1,69 @@
 import createLogger from './createLogger'
 import R from 'ramda'
+import distance from 'damerau-levenshtein'
 
 const log = createLogger('import:handleNewPayment')
 
-export default async (
+const SIMILAR_LIMIT = 0.8
+
+const freshestPayment = (payments) => {
+
+  return R.sort((a, b) => b.postedOn >= a.postedOn, payments)[0]
+}
+
+const firstMatcher = (mxPayment, payments) => {
+
+  const { amount, type, originalDescription } = mxPayment
+
+  const condition = R.whereEq({
+    originalDescription,
+    amount,
+    type,
+  })
+
+  return freshestPayment(R.filter(p => condition(p.data), payments))
+}
+
+const secondMatcher = (mxPayment, payments) => {
+
+  const { amount, type, originalDescription } = mxPayment
+
+  const condition = (data) => {
+    return distance(data.originalDescription, originalDescription).similarity > SIMILAR_LIMIT
+      && R.whereEq({ amount, type })(data)
+  }
+
+  return freshestPayment(R.filter(p => condition(p.data), payments))
+}
+
+const thirdMatcher = (mxPayment, payments) => {
+
+  const { amount, type, originalDescription } = mxPayment
+
+  const condition = (data) => {
+    return distance(data.originalDescription, originalDescription).similarity > SIMILAR_LIMIT
+  }
+
+  return freshestPayment(R.filter(p => condition(p.data), payments))
+}
+
+const cascade = [
+  firstMatcher,
+  secondMatcher,
+  thirdMatcher
+]
+
+export default (
   mxPayment,
   account,
-  existingPayments,
+  publishedPayments,
 ) => {
 
-  log.debug('start')
+  log.trace('start')
 
   const { amount, type, date, description } = mxPayment
 
   const newAmount = type === 'CREDIT' ? amount : amount * -1
-
-  const condition = R.whereEq({
-    description,
-    amount,
-    type,
-  })
 
   const result = {
     postedOn: date,
@@ -29,14 +73,27 @@ export default async (
     accountId: account.id,
   }
 
-  const similarPayment = R.find(p => p.categoryId && p.peerId && condition(p.data))(existingPayments)
+  let similarPayment = null
+
+  for (const i in cascade) {
+
+    const matcher = cascade[i]
+
+    similarPayment = matcher(mxPayment, publishedPayments)
+
+    if (similarPayment) {
+
+      log.trace(`cascade[${i}] found similar payment`)
+
+      break
+    }
+  }
 
   if (similarPayment) {
 
-    log.debug('found similar payment')
-
     result.categoryId = similarPayment.categoryId
     result.peerId = similarPayment.peerId
+    result.description = similarPayment.description
   }
 
   return result
