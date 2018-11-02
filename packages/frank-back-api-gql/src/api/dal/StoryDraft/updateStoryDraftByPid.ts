@@ -1,7 +1,8 @@
 import { join, nullIfEmpty, sql } from 'sql'
 import { TeamMemberRole } from 'store/enums'
 import {
-  account, payment,
+  account,
+  payment,
   story,
   storyDraft,
   storyDraftPayment,
@@ -53,8 +54,8 @@ export default createMutation<Args, undefined | null | Id>(
         sql`
           delete from ${storyDraftPayment}
           where ${storyDraftPayment}.${
-            storyDraftPayment.storyDraftId
-          } = ${draftId}
+          storyDraftPayment.storyDraftId
+        } = ${draftId}
         `
       )
 

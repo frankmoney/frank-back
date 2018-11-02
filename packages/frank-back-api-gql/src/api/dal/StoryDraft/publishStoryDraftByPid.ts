@@ -1,6 +1,13 @@
 import { sql } from 'sql'
 import { TeamMemberRole } from 'store/enums'
-import { account, story, storyDraft, storyDraftPayment, storyPayment, teamMember } from 'store/names'
+import {
+  account,
+  story,
+  storyDraft,
+  storyDraftPayment,
+  storyPayment,
+  teamMember,
+} from 'store/names'
 import Id from 'store/types/Id'
 import Pid from 'store/types/Pid'
 import createMutation from '../createMutation'
