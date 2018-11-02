@@ -29,8 +29,8 @@ const secondMatcher = (mxPayment, payments) => {
   const { amount, type, originalDescription } = mxPayment
 
   const condition = (data) => {
-    return distance(data.originalDescription, originalDescription).similarity > SIMILAR_LIMIT
-      && R.whereEq({ amount, type })(data)
+    return R.whereEq({ amount, type })(data)
+      && distance(data.originalDescription, originalDescription).similarity > SIMILAR_LIMIT
   }
 
   return freshestPayment(R.filter(p => condition(p.data), payments))
@@ -38,7 +38,7 @@ const secondMatcher = (mxPayment, payments) => {
 
 const thirdMatcher = (mxPayment, payments) => {
 
-  const { amount, type, originalDescription } = mxPayment
+  const { originalDescription } = mxPayment
 
   const condition = (data) => {
     return distance(data.originalDescription, originalDescription).similarity > SIMILAR_LIMIT
@@ -50,7 +50,7 @@ const thirdMatcher = (mxPayment, payments) => {
 const cascade = [
   firstMatcher,
   secondMatcher,
-  thirdMatcher
+  thirdMatcher,
 ]
 
 export default (
