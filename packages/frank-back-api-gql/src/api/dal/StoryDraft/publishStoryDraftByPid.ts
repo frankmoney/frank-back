@@ -38,19 +38,16 @@ export default createMutation<Args, undefined | null | Id>(
       `
     )
 
-    if (storyId) {
-      await db.command(
-        sql`
-          update ${storyDraft}
-          set
-            ${storyDraft.updatedAt} = now() at time zone 'utc',
-            ${storyDraft.updaterId} = ${args.userId},
-            ${storyDraft.publishedAt} = now() at time zone 'utc'
-          where ${storyDraft}.${storyDraft.pid} = ${args.pid};
-        `
-      )
-    }
-
-    return storyId
+    return storyId && await db.scalar(
+      sql`
+        update ${storyDraft}
+        set
+          ${storyDraft.updatedAt} = now() at time zone 'utc',
+          ${storyDraft.updaterId} = ${args.userId},
+          ${storyDraft.publishedAt} = now() at time zone 'utc'
+        where ${storyDraft}.${storyDraft.pid} = ${args.pid}
+        returning ${storyDraft}.${storyDraft.id};
+      `
+    )
   }
 )
