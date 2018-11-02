@@ -1,13 +1,19 @@
 import createLogger from './createLogger'
 import R from 'ramda'
 import Payment from './model/payment'
+import User from './model/user'
 import handleNewPayment from './handleNewPayment'
 
 const log = createLogger('import:syncTransactions')
 
+const SYSTEM_USER_TYPE_ID = 1
+const IMPORT_USER_NAME = 'import'
+
 export default async (account, mxPayments) => {
 
   log.trace(`start: ${account.name}`)
+
+  const { id: importUserId } = await User.findOne({ where: { typeId: SYSTEM_USER_TYPE_ID, name: IMPORT_USER_NAME } })
 
   const payments = await Payment.findAll({ where: { accountId: account.id } })
   const publishedPayments = R.filter(p => p.published, payments)
@@ -26,7 +32,9 @@ export default async (account, mxPayments) => {
 
       log.trace('new payment - create')
 
-      const data = handleNewPayment(mxPayment, account, publishedPayments)
+      const data = handleNewPayment(mxPayment, publishedPayments, importUserId)
+
+      data.accountId = account.id
 
       await Payment.create(data)
 

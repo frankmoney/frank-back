@@ -55,8 +55,8 @@ const cascade = [
 
 export default (
   mxPayment,
-  account,
   publishedPayments,
+  importUserId,
 ) => {
 
   log.trace('start')
@@ -70,7 +70,6 @@ export default (
     amount: newAmount,
     peerName: description,
     data: mxPayment,
-    accountId: account.id,
   }
 
   let similarPayment = null
@@ -94,6 +93,10 @@ export default (
     result.categoryId = similarPayment.categoryId
     result.peerId = similarPayment.peerId
     result.description = similarPayment.description
+
+    result.descriptionUpdaterId = importUserId
+    result.peerUpdaterId = importUserId
+    result.categoryUpdaterId = importUserId
   }
 
   return result

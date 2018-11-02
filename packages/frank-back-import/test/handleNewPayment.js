@@ -2,7 +2,7 @@ import assert from 'assert'
 import handleNewPayment from '../handleNewPayment'
 import FAKE_PAYMENTS from './fakePayments'
 
-const ACCOUNT_ID = 999
+const IMPORT_USER_ID = 123
 
 describe('handleNewPayment', () => {
 
@@ -15,15 +15,17 @@ describe('handleNewPayment', () => {
         description: 'random peer name',
         date: '2018-12-01',
       },
-      { id: ACCOUNT_ID },
-      FAKE_PAYMENTS)
+      FAKE_PAYMENTS,
+      IMPORT_USER_ID,
+    )
 
+    assert.strictEqual(result.descriptionUpdaterId, undefined)
+    assert.strictEqual(result.peerUpdaterId, undefined)
+    assert.strictEqual(result.categoryUpdaterId, undefined)
 
-    assert.strictEqual(result.accountId, ACCOUNT_ID)
     assert.strictEqual(result.postedOn, '2018-12-01')
     assert.strictEqual(result.peerName, 'random peer name')
     assert.strictEqual(result.amount, -30.10)
-
 
     assert.strictEqual(result.peerId, undefined)
     assert.strictEqual(result.categoryId, undefined)
@@ -39,11 +41,15 @@ describe('handleNewPayment', () => {
         description: 'peer name',
         date: '2018-01-01',
       },
-      { id: ACCOUNT_ID },
-      FAKE_PAYMENTS)
+      FAKE_PAYMENTS,
+      IMPORT_USER_ID,
+    )
 
 
-    assert.strictEqual(result.accountId, ACCOUNT_ID)
+    assert.strictEqual(result.descriptionUpdaterId, IMPORT_USER_ID)
+    assert.strictEqual(result.peerUpdaterId, IMPORT_USER_ID)
+    assert.strictEqual(result.categoryUpdaterId, IMPORT_USER_ID)
+
     assert.strictEqual(result.postedOn, '2018-01-01')
     assert.strictEqual(result.peerName, 'peer name')
     assert.strictEqual(result.amount, 20.2)
@@ -61,12 +67,13 @@ describe('handleNewPayment', () => {
         amount: 50.5,
         type: 'CREDIT',
       },
-      { id: ACCOUNT_ID },
-      FAKE_PAYMENTS)
+      FAKE_PAYMENTS,
+      IMPORT_USER_ID,
+    )
 
-
-    assert.strictEqual(result.accountId, ACCOUNT_ID)
-
+    assert.strictEqual(result.descriptionUpdaterId, IMPORT_USER_ID)
+    assert.strictEqual(result.peerUpdaterId, IMPORT_USER_ID)
+    assert.strictEqual(result.categoryUpdaterId, IMPORT_USER_ID)
 
     assert.strictEqual(result.peerId, 7)
     assert.strictEqual(result.categoryId, 77)
@@ -80,12 +87,13 @@ describe('handleNewPayment', () => {
         amount: 10000.5,
         type: 'DEBIT',
       },
-      { id: ACCOUNT_ID },
-      FAKE_PAYMENTS)
+      FAKE_PAYMENTS,
+      IMPORT_USER_ID,
+    )
 
-
-    assert.strictEqual(result.accountId, ACCOUNT_ID)
-
+    assert.strictEqual(result.descriptionUpdaterId, IMPORT_USER_ID)
+    assert.strictEqual(result.peerUpdaterId, IMPORT_USER_ID)
+    assert.strictEqual(result.categoryUpdaterId, IMPORT_USER_ID)
 
     assert.strictEqual(result.peerId, 12)
     assert.strictEqual(result.categoryId, 1212)
