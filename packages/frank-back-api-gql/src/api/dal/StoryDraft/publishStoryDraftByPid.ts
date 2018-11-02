@@ -1,6 +1,13 @@
 import { sql } from 'sql'
 import { TeamMemberRole } from 'store/enums'
-import { account, story, storyDraft, teamMember } from 'store/names'
+import {
+  account,
+  story,
+  storyDraft,
+  storyDraftPayment,
+  storyPayment,
+  teamMember,
+} from 'store/names'
 import Id from 'store/types/Id'
 import Pid from 'store/types/Pid'
 import createMutation from '../createMutation'
@@ -41,16 +48,46 @@ export default createMutation<Args, undefined | null | Id>(
     if (storyId) {
       await db.command(
         sql`
+          delete from ${storyPayment}
+          where ${storyPayment.storyId} = ${storyId};
+        `
+      )
+
+      await db.command(
+        sql`
+          insert into
+            ${storyPayment} (
+              ${storyPayment.creatorId},
+              ${storyPayment.storyId},
+              ${storyPayment.paymentId}
+            )
+          select
+            ${args.userId},
+            ${storyId},
+            "${storyDraftPayment}"."${storyDraftPayment.paymentId}"
+          from "${storyDraftPayment}"
+          join "${storyDraft}"
+          on "${storyDraftPayment}"."${storyDraftPayment.storyDraftId}"
+            = "${storyDraft}"."${storyDraft.pid}"
+          where "${storyDraft}"."${storyDraft.pid}" = ${args.pid};
+        `
+      )
+
+      const draftId = await db.scalar(
+        sql`
           update ${storyDraft}
           set
             ${storyDraft.updatedAt} = now() at time zone 'utc',
             ${storyDraft.updaterId} = ${args.userId},
             ${storyDraft.publishedAt} = now() at time zone 'utc'
-          where ${storyDraft}.${storyDraft.pid} = ${args.pid};
+          where ${storyDraft}.${storyDraft.pid} = ${args.pid}
+          returning ${storyDraft}.${storyDraft.id};
         `
       )
+
+      return draftId
     }
 
-    return storyId
+    return null
   }
 )
