@@ -1,7 +1,7 @@
 import { join, nullIfEmpty, sql } from 'sql'
 import { TeamMemberRole } from 'store/enums'
 import {
-  account,
+  account, payment,
   story,
   storyDraft,
   storyDraftPayment,
@@ -39,10 +39,8 @@ export default createMutation<Args, undefined | null | Id>(
         join ${teamMember}
         on ${account}.${account.teamId} = ${teamMember}.${teamMember.teamId}
         where ${teamMember}.${teamMember.userId} = ${args.userId}
-        and ${teamMember}.${teamMember.roleId} in (${[
-        TeamMemberRole.administrator,
-        TeamMemberRole.manager,
-      ]})
+        and ${teamMember}.${teamMember.roleId}
+          in (${TeamMemberRole.administrator}, ${TeamMemberRole.manager})
         and ${storyDraft}.${storyDraft.storyId} = ${story}.${story.id}
         and ${storyDraft}.${storyDraft.pid} = ${args.pid}
         and ${story}.${story.id} = ${storyDraft}.${storyDraft.storyId}
@@ -55,16 +53,12 @@ export default createMutation<Args, undefined | null | Id>(
         sql`
           delete from ${storyDraftPayment}
           where ${storyDraftPayment}.${
-          storyDraftPayment.storyDraftId
-        } = ${draftId}
+            storyDraftPayment.storyDraftId
+          } = ${draftId}
         `
       )
 
       if (args.paymentPids && args.paymentPids.length > 0) {
-        const values = args.paymentPids.map(
-          paymentId => sql`( ${args.userId}, ${draftId}, ${paymentId} )`
-        )
-
         await db.command(
           sql`
             insert into
@@ -73,8 +67,12 @@ export default createMutation<Args, undefined | null | Id>(
                 ${storyDraftPayment.storyDraftId},
                 ${storyDraftPayment.paymentId}
               )
-            values
-              ${join(values, ',\n            ')};
+            select
+              ${args.userId},
+              ${draftId},
+              "${payment}"."${payment.id}"
+            from ${payment}
+            where ${payment}.${payment.pid} in (${args.paymentPids});
           `
         )
       }
