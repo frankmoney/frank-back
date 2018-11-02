@@ -32,7 +32,7 @@ export default createMutation<Args, void>(
     await db.command(
       sql`
         delete from ${storyPayment}
-        where ${story.id} = ${args.id};
+        where ${storyPayment.storyId} = ${args.id};
       `
     )
 
