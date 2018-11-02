@@ -1,5 +1,5 @@
 import { sql } from 'sql'
-import { story, storyDraft } from 'store/names'
+import { story, storyDraft, storyDraftPayment, storyPayment } from 'store/names'
 import Id from 'store/types/Id'
 import createMutation from '../createMutation'
 
@@ -13,8 +13,26 @@ export default createMutation<Args, void>(
   async (args, { db }) => {
     await db.command(
       sql`
+        delete from ${storyDraftPayment}
+        where ${storyDraftPayment.storyDraftId} in (
+          select ${storyDraft.id}
+          from ${storyDraft}
+          where ${storyDraft.storyId} = ${args.id}
+        );
+      `
+    )
+
+    await db.command(
+      sql`
         delete from ${storyDraft}
         where ${storyDraft.storyId} = ${args.id};
+      `
+    )
+
+    await db.command(
+      sql`
+        delete from ${storyPayment}
+        where ${story.id} = ${args.id};
       `
     )
 
