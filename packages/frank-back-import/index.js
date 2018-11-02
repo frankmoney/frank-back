@@ -3,7 +3,8 @@ import handleAccount from './handleAccount'
 
 const main = async () => {
 
-  const accounts = await Account.findAll({where: {id: 3}})
+  const accounts = await Account.findAll()
+  // const accounts = await Account.findAll({where: {id: 3}})
 
   for (const account of accounts) {
 
