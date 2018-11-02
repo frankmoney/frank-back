@@ -34,15 +34,27 @@ export default sequelize.define('t_payment', {
   },
   description: {
     type: Sequelize.TEXT,
-    field: 'c_description'
+    field: 'c_description',
   },
   published: {
     type: Sequelize.BOOLEAN,
-    field: 'c_published'
+    field: 'c_published',
   },
   data: {
     type: Sequelize.JSONB,
     field: 'c_data',
+  },
+  descriptionUpdaterId: {
+    type: Sequelize.BIGINT,
+    field: 'c_description_updater_id',
+  },
+  peerUpdaterId: {
+    type: Sequelize.BIGINT,
+    field: 'c_peer_updater_id',
+  },
+  categoryUpdaterId: {
+    type: Sequelize.BIGINT,
+    field: 'c_category_updater_id',
   },
 }, {
   freezeTableName: true,

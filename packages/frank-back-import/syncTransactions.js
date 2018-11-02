@@ -16,7 +16,10 @@ export default async (account, mxPayments) => {
   const { id: importUserId } = await User.findOne({ where: { typeId: SYSTEM_USER_TYPE_ID, name: IMPORT_USER_NAME } })
 
   const payments = await Payment.findAll({ where: { accountId: account.id } })
-  const publishedPayments = R.filter(p => p.published, payments)
+  const filledPayments = R.filter(
+    p => p.published && p.peerId && p.categoryId && p.description,
+    payments
+  )
 
   log.trace(`existing payments: ${payments.length}`)
 
@@ -32,7 +35,7 @@ export default async (account, mxPayments) => {
 
       log.trace('new payment - create')
 
-      const data = handleNewPayment(mxPayment, publishedPayments, importUserId)
+      const data = handleNewPayment(mxPayment, filledPayments, importUserId)
 
       data.accountId = account.id
 

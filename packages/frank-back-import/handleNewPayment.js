@@ -55,7 +55,7 @@ const cascade = [
 
 export default (
   mxPayment,
-  publishedPayments,
+  filledPayments,
   importUserId,
 ) => {
 
@@ -78,7 +78,7 @@ export default (
 
     const matcher = cascade[i]
 
-    similarPayment = matcher(mxPayment, publishedPayments)
+    similarPayment = matcher(mxPayment, filledPayments)
 
     if (similarPayment) {
 
