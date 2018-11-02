@@ -14,9 +14,3 @@ export enum SystemUserName {
   system = 'system',
   import = 'import',
 }
-
-export const SystemUserId = {
-  migration: 0,
-  system: 0,
-  import: 0,
-}
