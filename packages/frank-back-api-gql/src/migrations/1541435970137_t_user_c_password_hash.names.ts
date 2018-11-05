@@ -116,7 +116,6 @@ export const user = tableEx('t_user', {
   firstName: 'c_first_name',
   avatar: 'c_avatar',
   color: 'c_color',
-  passwordSalt: 'c_password_salt',
   passwordHash: 'c_password_hash',
 })
 

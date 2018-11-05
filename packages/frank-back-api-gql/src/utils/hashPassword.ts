@@ -1,12 +1,5 @@
-import bcrypt from 'bcrypt'
+import hash from 'password-hash'
 
-const hashPassword = (password: string, salt: string) =>
-  new Promise<string>((resolve, reject) => {
-    bcrypt.hash(
-      password,
-      salt,
-      (err, hash) => (err ? reject(err) : resolve(hash))
-    )
-  })
+const hashPassword = (password: string) => hash.generate(password)
 
 export default hashPassword

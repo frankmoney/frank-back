@@ -51,10 +51,9 @@ const MutationType = Type('Mutation', type =>
             throw notFoundError()
           }
 
-          const salt = await createPasswordSalt()
-          const hash = await hashPassword(args.password, salt)
+          const hash = await hashPassword(args.password)
 
-          await updateUserPasswordById({ id: scope.user.id, salt, hash }, scope)
+          await updateUserPasswordById({ id: scope.user.id, hash }, scope)
 
           return mapUser(user)
         })

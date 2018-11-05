@@ -5,7 +5,6 @@ import createMutation from '../createMutation'
 
 export type Args = {
   id: Id
-  salt: string
   hash: string
 }
 
@@ -16,7 +15,8 @@ export default createMutation<Args, Id>(
       sql`
         update "${user}"
         set
-          "${user.passwordSalt}" = ${args.salt},
+          "${user.updatedAt}" = now() at time zone 'utc',
+          "${user.updaterId}" = ${args.id},
           "${user.passwordHash}" = ${args.hash}
         where "${user.id}" = ${args.id}
         returning "${user.id}";
