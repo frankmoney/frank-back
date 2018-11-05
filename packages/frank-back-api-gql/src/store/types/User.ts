@@ -6,6 +6,7 @@ type User = ExtendedBase & {
   firstName: string
   avatar: any
   name: string
+  color: number
 }
 
 export default User

@@ -5,7 +5,7 @@ import { currency } from './1541428656621_t_currency.names'
 
 export const up = async ({ db, ddl }: MigrationContext) => {
   await ddl(
-    x => x.create.table(currency).column(t => t.code, 'char(4) not null'),
+    x => x.create.table(currency).column(t => t.code, 'varchar(4) not null'),
     x =>
       x.create
         .constraint()
