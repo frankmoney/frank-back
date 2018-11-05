@@ -112,7 +112,7 @@ const AccountType = Type('Account', type =>
         const account: Account = parent.$source
 
         return {
-          count: account.accountCode,
+          code: account.currencyCode,
         }
       })
     ),
