@@ -15,6 +15,7 @@ import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import AccountType from './AccountType'
+import LedgerBarChartPeriodType from './LedgerBarChartPeriodType'
 import LedgerBarChartType from './LedgerBarChartType'
 import PaymentsOrderType from './PaymentsOrderType'
 import PaymentType from './PaymentType'
@@ -235,6 +236,7 @@ const CategoryType = Type('Category', type =>
         postedOnMax: arg.ofDate().nullable(),
         amountMin: arg.ofFloat().nullable(),
         amountMax: arg.ofFloat().nullable(),
+        period: arg.ofType(LedgerBarChartPeriodType).nullable(),
       }))
       .resolve(
         createPrivateResolver(
@@ -243,7 +245,14 @@ const CategoryType = Type('Category', type =>
             const category: Category = parent.$source
 
             const result = await getPaymentsLedgerBarChartByCategoryId(
-              { categoryId: category.id },
+              {
+                categoryId: category.id,
+                postedOnMin: args.postedOnMin,
+                postedOnMax: args.postedOnMax,
+                amountMin: args.amountMin,
+                amountMax: args.amountMax,
+                period: args.period || 'day',
+              },
               scope
             )
 
