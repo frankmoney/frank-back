@@ -10,28 +10,34 @@ export type Args = {
   amount?: number
   peerId?: Id | null
   categoryId?: Id | null
+  description?: Id | null
 }
 
 export default createQuery<Args, Payment | undefined>(
   'lastPublishedPaymentByAccountId',
   (args, { db }) => {
-
     const byAmountSql = and(
       args.amount
         ? sql`${payment}.${payment.amount} = ${args.amount}`
-        : undefined,
+        : undefined
     )
 
     const byPeerSql = and(
       args.peerId
         ? sql`${payment}.${payment.peerId} = ${args.peerId}`
-        : undefined,
+        : undefined
     )
 
     const byCategorySql = and(
       args.categoryId
         ? sql`${payment}.${payment.categoryId} = ${args.categoryId}`
-        : undefined,
+        : undefined
+    )
+
+    const byDescriptionSql = and(
+      args.description
+        ? sql`${payment}.${payment.description} = ${args.description}`
+        : undefined
     )
 
     const orderBySql = sql`${payment}.${payment.postedOn} desc`
@@ -52,17 +58,21 @@ export default createQuery<Args, Payment | undefined>(
           ${payment}.${payment.description},
           ${payment}.${payment.accountId},
           ${payment}.${payment.peerId},
-          ${payment}.${payment.categoryId}
+          ${payment}.${payment.categoryId},
+          ${payment}.${payment.peerUpdaterId},
+          ${payment}.${payment.categoryUpdaterId},
+          ${payment}.${payment.descriptionUpdaterId}
         from ${payment}
         where ${payment}.${payment.accountId} = ${args.accountId} 
         and ${payment}.${payment.published} = TRUE
         ${byAmountSql}
         ${byPeerSql}
         ${byCategorySql}
+        ${byDescriptionSql}
         order by ${orderBySql}
         ${limit({ take: 1 })};
       `,
-      mapPayment,
+      mapPayment
     )
-  },
+  }
 )
