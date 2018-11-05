@@ -1,4 +1,5 @@
 import { Sql, SqlFragment, fragment, isSql, literal, parameter } from '../ast'
+import and from './and'
 import raw from './raw'
 
 const sql = (strings: TemplateStringsArray, ...args: any[]): SqlFragment => {
@@ -79,5 +80,7 @@ sql.unparameterized = (
 
   return fragment(children)
 }
+
+sql.and = and
 
 export default sql

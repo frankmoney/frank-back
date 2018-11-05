@@ -421,9 +421,10 @@ const AccountType = Type('Account', type =>
     stories: field
       .listOf(StoryType)
       .args(arg => ({
-        sortBy: arg.ofType(StoriesOrderType),
+        published: arg.ofBool().nullable(),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
+        sortBy: arg.ofType(StoriesOrderType),
       }))
       .resolve(
         createPrivateResolver(
@@ -434,6 +435,7 @@ const AccountType = Type('Account', type =>
             const stories = await listStoriesByAccountId(
               {
                 accountId: account.id,
+                published: args.published,
                 take: args.take,
                 skip: args.skip,
                 orderBy: args.sortBy,

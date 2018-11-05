@@ -11,12 +11,8 @@ const build = (sql: SqlFragment): Query => {
       this.text.push(text)
     },
     appendParameter(value: any) {
-      let index = this.parameters.indexOf(value)
-      if (index < 0) {
-        index = this.parameters.length
-        this.parameters.push(value)
-      }
-      return index + 1
+      this.parameters.push(value)
+      return this.parameters.length
     },
   }
 
