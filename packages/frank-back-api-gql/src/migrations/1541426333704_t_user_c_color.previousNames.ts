@@ -110,7 +110,6 @@ export const user = tableEx('t_user', {
   lastName: 'c_last_name',
   firstName: 'c_first_name',
   avatar: 'c_avatar',
-  color: 'c_color',
 })
 
 export const userType = table('t_user_type', {

@@ -6,6 +6,7 @@ const env = {
   MX_CLIENT_ID: process.env.MX_CLIENT_ID!,
   MAILGUN_DOMAIN: process.env.MAILGUN_DOMAIN!,
   MAILGUN_API_KEY: process.env.MAILGUN_API_KEY!,
+  USER_COLORS: process.env.USER_COLORS,
 }
 
 export default env
