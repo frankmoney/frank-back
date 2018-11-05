@@ -107,20 +107,15 @@ const AccountType = Type('Account', type =>
           }
         )
       ),
-    currency: field
-      .ofType(CurrencyType)
-      .resolve(
-        createPrivateResolver(
-          'Account:currency',
-          async ({ parent }) => {
-            const account: Account = parent.$source
+    currency: field.ofType(CurrencyType).resolve(
+      createPrivateResolver('Account:currency', async ({ parent }) => {
+        const account: Account = parent.$source
 
-            return {
-              count: account.accountCode,
-            }
-          }
-        )
-      ),
+        return {
+          count: account.accountCode,
+        }
+      })
+    ),
     peer: field
       .ofType(PeerType)
       .args(arg => ({

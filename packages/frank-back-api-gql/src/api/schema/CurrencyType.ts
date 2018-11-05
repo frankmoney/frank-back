@@ -1,7 +1,7 @@
 import { Type } from 'gql'
 
-const CurrencyType = Type('CurrencyType', type => type
-  .fields(field => ({
+const CurrencyType = Type('CurrencyType', type =>
+  type.fields(field => ({
     code: field.ofString(),
   }))
 )
