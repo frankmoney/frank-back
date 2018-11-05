@@ -24,6 +24,7 @@ import mapPeer from 'api/mappers/mapPeer'
 import mapStory from 'api/mappers/mapStory'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import CategoryType from './CategoryType'
+import CurrencyType from './CurrencyType'
 import LedgerBarChartPeriodType from './LedgerBarChartPeriodType'
 import LedgerBarChartType from './LedgerBarChartType'
 import LedgerPieChartType from './LedgerPieChartType'
@@ -103,6 +104,20 @@ const AccountType = Type('Account', type =>
             )
 
             return count
+          }
+        )
+      ),
+    currency: field
+      .ofType(CurrencyType)
+      .resolve(
+        createPrivateResolver(
+          'Account:currency',
+          async ({ parent }) => {
+            const account: Account = parent.$source
+
+            return {
+              count: account.accountCode,
+            }
           }
         )
       ),
