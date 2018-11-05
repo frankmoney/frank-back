@@ -21,7 +21,8 @@ export default createQuery<Args, Account>('getAccountByPid', (args, { db }) =>
           ${account}.${account.updaterId},
           ${account}.${account.data},
           ${account}.${account.name},
-          ${account}.${account.teamId}
+          ${account}.${account.teamId},
+          ${account}.${account.currencyCode}
         from ${account}
         where ${account}.${account.pid} = ${args.pid}
         limit 1;

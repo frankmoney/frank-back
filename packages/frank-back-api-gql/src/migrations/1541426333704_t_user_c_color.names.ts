@@ -5,17 +5,12 @@ export const account = tableEx('t_account', {
   data: 'c_data',
   name: 'c_name',
   teamId: 'c_team_id',
-  currencyCode: 'c_currency_code',
 })
 
 export const category = tableEx('t_category', {
   name: 'c_name',
   color: 'c_color',
   accountId: 'c_account_id',
-})
-
-export const currency = table('t_currency', {
-  code: 'c_code',
 })
 
 export const mxMember = tableEx('t_mx_member', {
@@ -51,9 +46,6 @@ export const payment = tableEx('t_payment', {
   accountId: 'c_account_id',
   peerId: 'c_peer_id',
   categoryId: 'c_category_id',
-  descriptionUpdaterId: 'c_description_updater_id',
-  peerUpdaterId: 'c_peer_updater_id',
-  categoryUpdaterId: 'c_category_updater_id',
 })
 
 export const peer = tableEx('t_peer', {

@@ -20,9 +20,3 @@ export const SystemUserId = {
   system: 0,
   import: 0,
 }
-
-export enum CurrencyCode {
-  usd = 'USD',
-  eur = 'EUR',
-  rub = 'RUB',
-}
