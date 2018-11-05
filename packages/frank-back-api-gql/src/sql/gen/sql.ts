@@ -14,32 +14,32 @@ const sql = (strings: TemplateStringsArray, ...args: any[]): SqlFragment => {
 
   args.forEach((arg, index) => {
     if (arg === undefined) {
-      throw new Error(
-        formatError(
-          'sql can not contain undefined parameters (#' +
-            `${index}, near '${strings[index]}' and '${strings[index + 1]}')`
-        )
-      )
-    }
-
-    if (isSql(arg)) {
-      children.push(arg)
-    } else if (Array.isArray(arg)) {
-      if (arg.length === 0) {
-        throw new Error(formatError('list parameters can not be empty'))
-      }
-
-      for (const item of arg) {
-        if (isSql(item)) {
-          children.push(item)
-        } else {
-          children.push(parameter(item))
-        }
-        children.push(literal(', '))
-      }
-      children.pop()
+      // throw new Error(
+      //   formatError(
+      //     'sql can not contain undefined parameters (#' +
+      //       `${index}, near '${strings[index]}' and '${strings[index + 1]}')`
+      //   )
+      // )
     } else {
-      children.push(parameter(arg))
+      if (isSql(arg)) {
+        children.push(arg)
+      } else if (Array.isArray(arg)) {
+        if (arg.length === 0) {
+          throw new Error(formatError('list parameters can not be empty'))
+        }
+
+        for (const item of arg) {
+          if (isSql(item)) {
+            children.push(item)
+          } else {
+            children.push(parameter(item))
+          }
+          children.push(literal(', '))
+        }
+        children.pop()
+      } else {
+        children.push(parameter(arg))
+      }
     }
 
     children.push(literal(strings[index + 1]))

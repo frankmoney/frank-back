@@ -1,13 +1,12 @@
 import { Sql, fragment, literal } from '../ast'
 
-const and = (...predicates: (undefined | Sql | (undefined | Sql)[])[]): undefined | Sql => {
+const and = (
+  ...predicates: (undefined | Sql | (undefined | Sql)[])[]
+): undefined | Sql => {
   const flat: Sql[] = []
 
-  const add = (predicate: Sql) => fragment([
-    literal(' and ('),
-    predicate,
-    literal(') ')
-  ])
+  const add = (predicate: Sql) =>
+    fragment([literal(' and ('), predicate, literal(') ')])
 
   for (const x of predicates) {
     if (x !== undefined) {

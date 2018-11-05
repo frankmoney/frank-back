@@ -25,7 +25,6 @@ export default createQuery<Args, Story[]>(
         : sql`"${story}"."${story.publishedAt}" is null`
     }
 
-
     const orderBySqls: Sql[] = []
 
     switch (args.orderBy) {
