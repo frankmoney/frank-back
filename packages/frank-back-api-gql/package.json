@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@frankmoney/frank-mail": "^1.0.7",
+    "@types/bcrypt": "^3.0.0",
     "@types/debug": "^0.0.30",
     "@types/escape-string-regexp": "^1.0.0",
     "@types/graphql-type-json": "^0.1.2",
@@ -38,6 +39,7 @@
     "@types/ramda": "^0.25.36",
     "apollo-server": "^2.0.0",
     "apollo-server-koa": "^2.1.0",
+    "bcrypt": "^3.0.2",
     "date-fns": "^1.29.0",
     "debug": "^3.1.0",
     "escape-string-regexp": "^1.0.5",
