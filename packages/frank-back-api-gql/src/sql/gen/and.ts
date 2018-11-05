@@ -6,7 +6,7 @@ const and = (
   const flat: Sql[] = []
 
   const add = (predicate: Sql) =>
-    fragment([literal(' and ('), predicate, literal(') ')])
+    flat.push(fragment([literal(' and ('), predicate, literal(') ')]))
 
   for (const x of predicates) {
     if (x !== undefined) {
