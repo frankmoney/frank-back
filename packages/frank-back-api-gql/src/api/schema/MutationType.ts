@@ -13,8 +13,9 @@ import publishStoryDraftByPid from 'api/dal/StoryDraft/publishStoryDraftByPid'
 import updateStoryDraftByPid from 'api/dal/StoryDraft/updateStoryDraftByPid'
 import updateTeamMemberByPidAndUserId from 'api/dal/TeamMember/updateTeamMemberByPidAndUserId'
 import getUserById from 'api/dal/User/getUserById'
+import updateUserAvatarById from 'api/dal/User/updateUserAvatarById'
 import updateUserPasswordById from 'api/dal/User/updateUserPasswordById'
-import { throwForbidden } from 'api/errors/ForbiddenError'
+import { forbiddenError, throwForbidden } from 'api/errors/ForbiddenError'
 import { notFoundError, throwNotFound } from 'api/errors/NotFoundError'
 import mapPeer from 'api/mappers/mapPeer'
 import mapStory from 'api/mappers/mapStory'
@@ -40,6 +41,27 @@ const MutationType = Type('Mutation', type =>
     ...onboarding(field),
     ...paymentUpdate(field),
     ...paymentPublish(field),
+    meChangeAvatar: field
+      .ofType(UserType)
+      .args(arg => ({
+        avatar: arg.ofJson().nullable(),
+      }))
+      .resolve(
+        createPrivateResolver('meChangeAvatar', async ({ args, scope }) => {
+          const userId = await updateUserAvatarById(
+            { id: scope.user.id, avatar: args.avatar },
+            scope
+          )
+
+          if (!userId) {
+            throw forbiddenError()
+          }
+
+          const user = await getUserById({ id: userId }, scope)
+
+          return mapUser(user)
+        })
+      ),
     meChangePassword: field
       .ofType(UserType)
       .args(arg => ({

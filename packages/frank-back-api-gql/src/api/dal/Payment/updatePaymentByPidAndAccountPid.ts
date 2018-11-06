@@ -51,7 +51,7 @@ export default createMutation<Args, Payment>(
     // updaters
     if (args.descriptionUpdaterId !== undefined) {
       updateSqlParts.push(
-        sql`${payment.descriptionUpdaterId} = ${args.descriptionUpdaterId}`,
+        sql`${payment.descriptionUpdaterId} = ${args.descriptionUpdaterId}`
       )
     }
 
@@ -61,7 +61,7 @@ export default createMutation<Args, Payment>(
 
     if (args.categoryUpdaterId !== undefined) {
       updateSqlParts.push(
-        sql`${payment.categoryUpdaterId} = ${args.categoryUpdaterId}`,
+        sql`${payment.categoryUpdaterId} = ${args.categoryUpdaterId}`
       )
     }
 
@@ -92,9 +92,9 @@ export default createMutation<Args, Payment>(
           ${payment}.${payment.peerUpdaterId},
           ${payment}.${payment.categoryUpdaterId}
       `,
-      mapPayment,
+      mapPayment
     )
 
     return result
-  },
+  }
 )
