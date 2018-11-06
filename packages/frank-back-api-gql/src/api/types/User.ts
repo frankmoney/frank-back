@@ -8,6 +8,7 @@ type User = {
   firstName: string
   avatar?: Json
   color: number
+  name: string
 }
 
 export default User

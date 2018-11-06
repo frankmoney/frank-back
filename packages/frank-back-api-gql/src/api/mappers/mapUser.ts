@@ -10,6 +10,7 @@ const mapUser: Mapper<Target, Source> = map<Target>()
   .for('lastName', 'lastName')
   .for('firstName', 'firstName')
   .for('avatar', 'avatar')
+  .for('name', 'name')
   .build()
 
 export default mapUser
