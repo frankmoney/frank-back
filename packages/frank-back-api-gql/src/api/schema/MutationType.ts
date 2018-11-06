@@ -1,5 +1,4 @@
 import { Type } from 'gql'
-import createPasswordSalt from 'utils/createPasswordSalt'
 import hashPassword from 'utils/hashPassword'
 import updatePeerByPidAndUserId from 'api/dal/Peer/updatePeerByPidAndUserId'
 import createStory from 'api/dal/Story/createStory'
