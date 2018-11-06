@@ -70,7 +70,7 @@ export default createQuery<Args, Payment | undefined>(
         ${byCategorySql}
         ${byDescriptionSql}
         order by ${orderBySql}
-        ${limit({ take: 1 })};
+        limit 1;
       `,
       mapPayment
     )
