@@ -1,5 +1,5 @@
 {
-  "name": "@frankmoney/frank-back-api-images",
+  "name": "@frankmoney/frank-back-import",
   "version": "1.0.0",
   "main": "index.js",
   "private": true,
