@@ -44,6 +44,7 @@ const promise = scope.uow.start().then(async () => {
   SystemUserId.migration = findSystemUserId(SystemUserName.migration)
   SystemUserId.system = findSystemUserId(SystemUserName.system)
   SystemUserId.import = findSystemUserId(SystemUserName.import)
+  SystemUserId.suggestion = findSystemUserId(SystemUserName.suggestion)
 
   await scope.uow.commit()
   await scope.uow.dispose()
