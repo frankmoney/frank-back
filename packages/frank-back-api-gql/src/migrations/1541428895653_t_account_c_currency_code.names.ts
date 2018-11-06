@@ -51,9 +51,6 @@ export const payment = tableEx('t_payment', {
   accountId: 'c_account_id',
   peerId: 'c_peer_id',
   categoryId: 'c_category_id',
-  descriptionUpdaterId: 'c_description_updater_id',
-  peerUpdaterId: 'c_peer_updater_id',
-  categoryUpdaterId: 'c_category_updater_id',
 })
 
 export const peer = tableEx('t_peer', {
@@ -119,7 +116,6 @@ export const user = tableEx('t_user', {
   firstName: 'c_first_name',
   avatar: 'c_avatar',
   color: 'c_color',
-  passwordHash: 'c_password_hash',
 })
 
 export const userType = table('t_user_type', {

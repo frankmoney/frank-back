@@ -1,4 +1,6 @@
 import { Type } from 'gql'
+import createPasswordSalt from 'utils/createPasswordSalt'
+import hashPassword from 'utils/hashPassword'
 import updatePeerByPidAndUserId from 'api/dal/Peer/updatePeerByPidAndUserId'
 import createStory from 'api/dal/Story/createStory'
 import deleteStoryById from 'api/dal/Story/deleteStoryById'
@@ -11,12 +13,14 @@ import publishStoryDraftByPid from 'api/dal/StoryDraft/publishStoryDraftByPid'
 import updateStoryDraftByPid from 'api/dal/StoryDraft/updateStoryDraftByPid'
 import updateTeamMemberByPidAndUserId from 'api/dal/TeamMember/updateTeamMemberByPidAndUserId'
 import getUserById from 'api/dal/User/getUserById'
+import updateUserPasswordById from 'api/dal/User/updateUserPasswordById'
 import { throwForbidden } from 'api/errors/ForbiddenError'
-import { throwNotFound } from 'api/errors/NotFoundError'
+import { notFoundError, throwNotFound } from 'api/errors/NotFoundError'
 import mapPeer from 'api/mappers/mapPeer'
 import mapStory from 'api/mappers/mapStory'
 import mapStoryDraft from 'api/mappers/mapStoryDraft'
 import mapTeamMember from 'api/mappers/mapTeamMember'
+import mapUser from 'api/mappers/mapUser'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import PeerUpdateUpdate from 'api/types/PeerUpdateUpdate'
 import Pid from 'api/types/Pid'
@@ -28,11 +32,32 @@ import StoryDraftType from './StoryDraftType'
 import TeamMemberRoleType from './TeamMemberRoleType'
 import TeamMemberType from './TeamMemberType'
 import onboarding from './onboarding'
+import UserType from './UserType'
 
 const MutationType = Type('Mutation', type =>
   type.fields(field => ({
     ...onboarding(field),
     ...paymentUpdate(field),
+    meChangePassword: field
+      .ofType(UserType)
+      .args(arg => ({
+        password: arg.ofString(),
+      }))
+      .resolve(
+        createPrivateResolver('meChangePassword', async ({ args, scope }) => {
+          const user = await getUserById({ id: scope.user.id }, scope)
+
+          if (!user) {
+            throw notFoundError()
+          }
+
+          const hash = await hashPassword(args.password)
+
+          await updateUserPasswordById({ id: scope.user.id, hash }, scope)
+
+          return mapUser(user)
+        })
+      ),
     teamMemberUpdateRole: field
       .ofType(TeamMemberType)
       .args(arg => ({

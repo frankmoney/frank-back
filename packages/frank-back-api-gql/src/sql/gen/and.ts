@@ -1,8 +1,28 @@
-import SqlFragment from '../ast/SqlFragment'
-import fragment from '../ast/fragment'
-import literal from '../ast/literal'
+import { Sql, fragment, literal } from '../ast'
 
-const and = (body?: SqlFragment) =>
-  body === undefined ? fragment([]) : fragment([literal('and '), body])
+const and = (
+  ...predicates: (undefined | Sql | (undefined | Sql)[])[]
+): undefined | Sql => {
+  const flat: Sql[] = []
+
+  const add = (predicate: Sql) =>
+    flat.push(fragment([literal(' and ('), predicate, literal(') ')]))
+
+  for (const x of predicates) {
+    if (x !== undefined) {
+      if (Array.isArray(x)) {
+        for (const y of x) {
+          if (y !== undefined) {
+            add(y)
+          }
+        }
+      } else {
+        add(x)
+      }
+    }
+  }
+
+  return flat.length === 0 ? undefined : fragment(flat)
+}
 
 export default and
