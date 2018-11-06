@@ -15,6 +15,9 @@ const mapPayment: Mapper<Payment> = map<Payment>()
   .for('accountId', x => x.accountId)
   .for('peerId', x => x.peerId)
   .for('categoryId', x => x.categoryId)
+  .for('descriptionUpdaterId', x => x.descriptionUpdaterId)
+  .for('peerUpdaterId', x => x.peerUpdaterId)
+  .for('categoryUpdaterId', x => x.categoryUpdaterId)
   .build()
 
 export default mapPayment

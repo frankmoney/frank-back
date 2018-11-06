@@ -5,17 +5,12 @@ export const account = tableEx('t_account', {
   data: 'c_data',
   name: 'c_name',
   teamId: 'c_team_id',
-  currencyCode: 'c_currency_code',
 })
 
 export const category = tableEx('t_category', {
   name: 'c_name',
   color: 'c_color',
   accountId: 'c_account_id',
-})
-
-export const currency = table('t_currency', {
-  code: 'c_code',
 })
 
 export const mxMember = tableEx('t_mx_member', {
@@ -118,8 +113,6 @@ export const user = tableEx('t_user', {
   lastName: 'c_last_name',
   firstName: 'c_first_name',
   avatar: 'c_avatar',
-  color: 'c_color',
-  passwordHash: 'c_password_hash',
 })
 
 export const userType = table('t_user_type', {
