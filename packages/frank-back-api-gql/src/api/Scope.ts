@@ -1,7 +1,7 @@
 import { Pool, PoolConfig } from 'pg'
 import Database from 'store/Database'
 import DatabaseConfig from 'store/DatabaseConfig'
-import createLog from 'log/create'
+import { Log, logFor } from 'log'
 import UnitOfWork from './UnitOfWork'
 import User from './User'
 import Assert from './assert/Assert'
@@ -37,6 +37,7 @@ export default class Scope {
   public constructor({ databaseConfig, user }: ScopeArgs) {
     this.databaseConfig = databaseConfig
     this.user = user
+    this._logs = {}
   }
 
   public createNew({ preserveUser }: { preserveUser?: boolean }): Scope {
@@ -47,11 +48,12 @@ export default class Scope {
   }
 
   public logFor(name: string) {
-    return createLog(name)
+    return this._logs[name] || (this._logs[name] = logFor(name))
   }
 
   private _pgpool?: Pool
   private _db?: Database
   private _uow?: UnitOfWork
   private _assert?: Assert
+  private _logs: { [name: string]: Log }
 }
