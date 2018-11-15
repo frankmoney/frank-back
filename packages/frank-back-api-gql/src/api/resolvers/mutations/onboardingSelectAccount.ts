@@ -32,6 +32,7 @@ const onboardingSelectAccount = createPrivateResolver(
           step: ACCOUNT_STEP,
           account: {
             ...mxAccount,
+            currencyCode: mxAccount.currencyCode || 'USD',
             frankTitle: null,
             frankDescription: null,
           },

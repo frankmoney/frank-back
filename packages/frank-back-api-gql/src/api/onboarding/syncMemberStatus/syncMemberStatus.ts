@@ -65,12 +65,20 @@ const syncMemberStatus = async (
 
     const mxUserGuid = mxMember.mxUser.mxGuid
 
-    const { member } = await AtriumClient.readMember({
+    const memberRes = await AtriumClient.readMember({
       params: {
         userGuid: mxUserGuid,
         memberGuid: mxMember.mxGuid,
       },
     })
+
+    const member = memberRes && memberRes.member
+
+    if (!member) {
+      log.debug('no mx member')
+
+      return onboarding
+    }
 
     const args: StatusHandlerArg = {
       onboarding,
