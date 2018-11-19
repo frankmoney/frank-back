@@ -2,8 +2,11 @@ import {
   addMonths,
   startOfMonth,
   startOfWeek,
+  startOfQuarter,
+  startOfYear,
   addDays,
   addWeeks,
+  addYears,
   format,
 } from 'date-fns'
 
@@ -41,8 +44,10 @@ const calculateBarSize = (fromDate: Date, toDate: Date): string => {
     return 'month'
   }
 
-  //   return :quarter if 96.months.since(@from_date) >= @to_date
-  // :year
+  if (addMonths(fromDate, 96) >= toDate) {
+
+    return 'quarter'
+  }
 
   return 'year'
 }
@@ -50,7 +55,7 @@ const calculateBarSize = (fromDate: Date, toDate: Date): string => {
 const generateBars = (
   barSize: string,
   fromDate: Date,
-  toDate: Date
+  toDate: Date,
 ): {
   meta: {
     maxIncome: number
@@ -67,13 +72,20 @@ const generateBars = (
   if (barSize === 'week') {
     _toDate = startOfWeek(fromDate)
   }
-  // to_date = @from_date.beginning_of_quarter if self.bar_size == :quarter
-  // to_date = @from_date.beginning_of_year if self.bar_size == :year
+
+  if (barSize === 'quarter') {
+    _toDate = startOfQuarter(fromDate)
+  }
+
+  if (barSize === 'year') {
+    _toDate = startOfYear(fromDate)
+  }
+
 
   while (_toDate < toDate) {
     _fromDate = _toDate
 
-    _toDate = addDays(_fromDate, 1) //if (barSize === 'day')
+    _toDate = addDays(_fromDate, 1)
 
     if (barSize === 'week') {
       _toDate = addWeeks(_fromDate, 1)
@@ -83,23 +95,41 @@ const generateBars = (
       _toDate = addMonths(_fromDate, 1)
     }
 
-    // to_date = 3.month.since(from_date) if bar_size == :quarter
-    // to_date = 1.year.since(from_date) if bar_size == :year
-    //
-    // start_select = from_date
-    // start_select = @from_date if start_select < @from_date
-    //   end_select = to_date
-    // end_select = @to_date if end_select > @to_date
-    //
-    //   start_date = start_select.beginning_of_month
-    // start_date = from_date if [:quarter, :year].include?(bar_size)
-    //   end_date = to_date.beginning_of_month
-    // end_date = 1.month.since(end_date) if end_date == start_date
+    if (barSize === 'quarter') {
+      _toDate = addMonths(_fromDate, 3)
+    }
+
+    if (barSize === 'year') {
+      _toDate = addYears(_fromDate, 1)
+    }
+
+    let startSelect = _fromDate
+
+    if (startSelect < fromDate) {
+      startSelect = fromDate
+    }
+
+    let endSelect = _toDate
+    if (endSelect > toDate) {
+      endSelect = toDate
+    }
+
+    let startDate = startOfMonth(startSelect)
+
+    if (barSize === 'quarter' || barSize === 'year') {
+      startDate = _fromDate
+    }
+
+    let endDate = startOfMonth(_toDate)
+
+    if (format(endDate, FORMAT_TEMPLATE) === format(startDate, FORMAT_TEMPLATE)) {
+      endDate = addMonths(endDate, 1)
+    }
 
     bars.push({
-      showDate: '',
-      startDate: '',
-      endDate: '',
+      showDate: format(_fromDate, FORMAT_TEMPLATE),
+      startDate: format(startDate, FORMAT_TEMPLATE),
+      endDate: format(endDate, FORMAT_TEMPLATE),
       income: 0,
       expenses: 0,
     })
