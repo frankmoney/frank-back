@@ -14,11 +14,11 @@ const NormalDate = (y: number, m: number, d: number): Date => {
 
 describe('LedgerBarChart', () => {
   describe('1 month (days)', () => {
-    it('1.1-2.1', () => {
-      const result = ledgerBarChart(
+    it('1.1-2.1', async () => {
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2017, 1, 1),
-        NormalDate(2017, 2, 1)
+        NormalDate(2017, 2, 1),
       )
 
       assert.strictEqual(result.barSize, 'day')
@@ -27,11 +27,11 @@ describe('LedgerBarChart', () => {
       assert.strictEqual(result.toDate, '2017-02-01')
     })
 
-    it('1.30-2.1', () => {
-      const result = ledgerBarChart(
+    it('1.30-2.1', async () => {
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2017, 1, 30),
-        NormalDate(2017, 2, 1)
+        NormalDate(2017, 2, 1),
       )
 
       assert.strictEqual(result.barSize, 'day')
@@ -42,11 +42,11 @@ describe('LedgerBarChart', () => {
   })
 
   describe('2 month (week)', () => {
-    it('1.1-3.1', () => {
-      const result = ledgerBarChart(
+    it('1.1-3.1', async () => {
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2017, 1, 1),
-        NormalDate(2017, 3, 1)
+        NormalDate(2017, 3, 1),
       )
 
       assert.strictEqual(result.barSize, 'week')
@@ -55,11 +55,11 @@ describe('LedgerBarChart', () => {
       assert.strictEqual(result.toDate, '2017-03-01')
     })
 
-    it('12.1-2.1', () => {
-      const result = ledgerBarChart(
+    it('12.1-2.1', async () => {
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2016, 12, 1),
-        NormalDate(2017, 2, 1)
+        NormalDate(2017, 2, 1),
       )
 
       assert.strictEqual(result.barSize, 'week')
@@ -70,11 +70,11 @@ describe('LedgerBarChart', () => {
   })
 
   describe('3 months (week)', () => {
-    it('1.1-4.1', () => {
-      const result = ledgerBarChart(
+    it('1.1-4.1', async () => {
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2017, 1, 1),
-        NormalDate(2017, 4, 1)
+        NormalDate(2017, 4, 1),
       )
 
       assert.strictEqual(result.barSize, 'week')
@@ -83,11 +83,11 @@ describe('LedgerBarChart', () => {
       assert.strictEqual(result.toDate, '2017-04-01')
     })
 
-    it('12.1-3.1', () => {
-      const result = ledgerBarChart(
+    it('12.1-3.1', async () => {
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2016, 12, 1),
-        NormalDate(2017, 3, 1)
+        NormalDate(2017, 3, 1),
       )
 
       assert.strictEqual(result.barSize, 'week')
@@ -99,11 +99,11 @@ describe('LedgerBarChart', () => {
 
   describe('4 months (week)', () => {
 
-    it('1.1-5.1', () => {
-      const result = ledgerBarChart(
+    it('1.1-5.1', async () => {
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2017, 1, 1),
-        NormalDate(2017, 5, 1)
+        NormalDate(2017, 5, 1),
       )
 
       assert.strictEqual(result.barSize, 'week')
@@ -112,11 +112,11 @@ describe('LedgerBarChart', () => {
       assert.strictEqual(result.toDate, '2017-05-01')
     })
 
-    it('1.30-5.1', () => {
-      const result = ledgerBarChart(
+    it('1.30-5.1', async () => {
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2017, 1, 30),
-        NormalDate(2017, 5, 1)
+        NormalDate(2017, 5, 1),
       )
 
       assert.strictEqual(result.barSize, 'week')
@@ -129,11 +129,11 @@ describe('LedgerBarChart', () => {
 
   describe('5 months (week)', () => {
 
-    it('2.1-7.1', () => {
-      const result = ledgerBarChart(
+    it('2.1-7.1', async () => {
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2017, 2, 1),
-        NormalDate(2017, 7, 1)
+        NormalDate(2017, 7, 1),
       )
 
       assert.strictEqual(result.barSize, 'week')
@@ -142,11 +142,11 @@ describe('LedgerBarChart', () => {
       assert.strictEqual(result.toDate, '2017-07-01')
     })
 
-    it('1.30-6.1', () => {
-      const result = ledgerBarChart(
+    it('1.30-6.1', async () => {
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2017, 1, 30),
-        NormalDate(2017, 6, 1)
+        NormalDate(2017, 6, 1),
       )
 
       assert.strictEqual(result.barSize, 'week')
@@ -159,11 +159,11 @@ describe('LedgerBarChart', () => {
 
   describe('6 months (week)', () => {
 
-    it('1.1-7.1', () => {
-      const result = ledgerBarChart(
+    it('1.1-7.1', async () => {
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2017, 1, 1),
-        NormalDate(2017, 7, 1)
+        NormalDate(2017, 7, 1),
       )
 
       assert.strictEqual(result.barSize, 'week')
@@ -172,11 +172,11 @@ describe('LedgerBarChart', () => {
       assert.strictEqual(result.toDate, '2017-07-01')
     })
 
-    it('11.1-5.1', () => {
-      const result = ledgerBarChart(
+    it('11.1-5.1', async () => {
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2016, 11, 1),
-        NormalDate(2017, 5, 1)
+        NormalDate(2017, 5, 1),
       )
 
       assert.strictEqual(result.barSize, 'week')
@@ -189,11 +189,11 @@ describe('LedgerBarChart', () => {
 
   describe('8 months (week)', () => {
 
-    it('1.1-9.1', () => {
-      const result = ledgerBarChart(
+    it('1.1-9.1', async () => {
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2017, 1, 1),
-        NormalDate(2017, 9, 1)
+        NormalDate(2017, 9, 1),
       )
 
       assert.strictEqual(result.barSize, 'week')
@@ -202,11 +202,11 @@ describe('LedgerBarChart', () => {
       assert.strictEqual(result.toDate, '2017-09-01')
     })
 
-    it('11.1-7.1', () => {
-      const result = ledgerBarChart(
+    it('11.1-7.1', async () => {
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2016, 11, 1),
-        NormalDate(2017, 7, 1)
+        NormalDate(2017, 7, 1),
       )
 
       assert.strictEqual(result.barSize, 'week')
@@ -216,11 +216,11 @@ describe('LedgerBarChart', () => {
     })
 
 
-    it('2016-04-01  2016-09-01', () => {
-      const result = ledgerBarChart(
+    it('2016-04-01  2016-09-01', async () => {
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2016, 4, 1),
-        NormalDate(2016, 9, 1)
+        NormalDate(2016, 9, 1),
       )
 
       assert.strictEqual(result.barSize, 'week')
@@ -245,11 +245,11 @@ describe('LedgerBarChart', () => {
   })
 
   describe('15 months (months)', () => {
-    it('16.1.1-17.4.1', () => {
-      const result = ledgerBarChart(
+    it('16.1.1-17.4.1', async () => {
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2016, 1, 1),
-        NormalDate(2017, 4, 1)
+        NormalDate(2017, 4, 1),
       )
 
       assert.strictEqual(result.barSize, 'month')
@@ -274,12 +274,12 @@ describe('LedgerBarChart', () => {
 
   describe('23 months (months)', () => {
 
-    it('(2016, 1, 1) - (2017, 12, 1)', () => {
+    it('(2016, 1, 1) - (2017, 12, 1)', async () => {
 
-      const result = ledgerBarChart(
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2016, 1, 1),
-        NormalDate(2017, 12, 1)
+        NormalDate(2017, 12, 1),
       )
 
       assert.strictEqual(result.barSize, 'month')
@@ -294,12 +294,12 @@ describe('LedgerBarChart', () => {
 
   describe('2 years (quarters)', () => {
 
-    it('(2016, 1, 1) - (2018, 1, 1)', () => {
+    it('(2016, 1, 1) - (2018, 1, 1)', async () => {
 
-      const result = ledgerBarChart(
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2016, 1, 1),
-        NormalDate(2018, 1, 1)
+        NormalDate(2018, 1, 1),
       )
 
       assert.strictEqual(result.barSize, 'quarter')
@@ -322,12 +322,12 @@ describe('LedgerBarChart', () => {
 
     })
 
-    it('(2016, 2, 1) - (2018, 2, 1)', () => {
+    it('(2016, 2, 1) - (2018, 2, 1)', async () => {
 
-      const result = ledgerBarChart(
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2016, 2, 1),
-        NormalDate(2018, 2, 1)
+        NormalDate(2018, 2, 1),
       )
 
       assert.strictEqual(result.barSize, 'quarter')
@@ -357,12 +357,12 @@ describe('LedgerBarChart', () => {
 
   describe('5 years (quarters)', () => {
 
-    it('(2013, 1, 1) - (2018, 1, 1)', () => {
+    it('(2013, 1, 1) - (2018, 1, 1)', async () => {
 
-      const result = ledgerBarChart(
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2013, 1, 1),
-        NormalDate(2018, 1, 1)
+        NormalDate(2018, 1, 1),
       )
 
       assert.strictEqual(result.barSize, 'quarter')
@@ -372,12 +372,12 @@ describe('LedgerBarChart', () => {
 
     })
 
-    it('(2013, 2, 1) - (2018, 2, 1)', () => {
+    it('(2013, 2, 1) - (2018, 2, 1)', async () => {
 
-      const result = ledgerBarChart(
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2013, 2, 1),
-        NormalDate(2018, 2, 1)
+        NormalDate(2018, 2, 1),
       )
 
       assert.strictEqual(result.barSize, 'quarter')
@@ -388,12 +388,12 @@ describe('LedgerBarChart', () => {
     })
 
 
-    it('(2012, 12, 1) - (2018, 1, 1)', () => {
+    it('(2012, 12, 1) - (2018, 1, 1)', async () => {
 
-      const result = ledgerBarChart(
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2012, 12, 1),
-        NormalDate(2018, 1, 1)
+        NormalDate(2018, 1, 1),
       )
 
       assert.strictEqual(result.barSize, 'quarter')
@@ -428,12 +428,12 @@ describe('LedgerBarChart', () => {
 
   describe('8 years (quarters)', () => {
 
-    it('(2011, 1, 1) - (2019, 1, 1)', () => {
+    it('(2011, 1, 1) - (2019, 1, 1)', async () => {
 
-      const result = ledgerBarChart(
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2011, 1, 1),
-        NormalDate(2019, 1, 1)
+        NormalDate(2019, 1, 1),
       )
 
       assert.strictEqual(result.barSize, 'quarter')
@@ -447,12 +447,12 @@ describe('LedgerBarChart', () => {
 
   describe('8 years + 1 month (years)', () => {
 
-    it('(2011, 1, 1) - (2019, 2, 1)', () => {
+    it('(2011, 1, 1) - (2019, 2, 1)', async () => {
 
-      const result = ledgerBarChart(
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2011, 1, 1),
-        NormalDate(2019, 2, 1)
+        NormalDate(2019, 2, 1),
       )
 
       assert.strictEqual(result.barSize, 'year')
@@ -475,15 +475,14 @@ describe('LedgerBarChart', () => {
   })
 
 
-
   describe('9 years (years)', () => {
 
-    it('(2013, 1, 1) - (2022, 1, 1)', () => {
+    it('(2013, 1, 1) - (2022, 1, 1)', async () => {
 
-      const result = ledgerBarChart(
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2013, 1, 1),
-        NormalDate(2022, 1, 1)
+        NormalDate(2022, 1, 1),
       )
 
       assert.strictEqual(result.barSize, 'year')
@@ -493,12 +492,12 @@ describe('LedgerBarChart', () => {
 
     })
 
-    it('+1 month', () => {
+    it('+1 month', async () => {
 
-      const result = ledgerBarChart(
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2013, 1, 1),
-        NormalDate(2022, 2, 1)
+        NormalDate(2022, 2, 1),
       )
 
       assert.strictEqual(result.barSize, 'year')
@@ -508,12 +507,12 @@ describe('LedgerBarChart', () => {
 
     })
 
-    it('+1 month (2)', () => {
+    it('+1 month (2)', async () => {
 
-      const result = ledgerBarChart(
+      const result = await ledgerBarChart(null,
         null,
         NormalDate(2012, 12, 1),
-        NormalDate(2022, 1, 1)
+        NormalDate(2022, 1, 1),
       )
 
       assert.strictEqual(result.barSize, 'year')
