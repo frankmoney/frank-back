@@ -1,5 +1,6 @@
 import { Type } from 'gql'
 import Peer from 'store/types/Peer'
+import undefinedIfNull from 'utils/undefinedIfNull'
 import getAccountByPeerId from 'api/dal/Account/getAccountByPeerId'
 import countCategoriesByPeerId from 'api/dal/Category/countCategoriesByPeerId'
 import getCategoryByPidAndPeerId from 'api/dal/Category/getCategoryByPidAndPeerId'
@@ -124,6 +125,7 @@ const PeerType = Type('Peer', type =>
         amountMin: arg.ofFloat().nullable(),
         amountMax: arg.ofFloat().nullable(),
         verified: arg.ofBool().nullable(),
+        published: arg.ofBool().nullable(),
         search: arg.ofString().nullable(),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
@@ -141,7 +143,8 @@ const PeerType = Type('Peer', type =>
                 postedOnMax: args.postedOnMax,
                 amountMin: args.amountMin,
                 amountMax: args.amountMax,
-                verified: args.verified,
+                verified: undefinedIfNull(args.verified),
+                published: undefinedIfNull(args.published),
                 search: args.search,
                 take: args.take,
                 skip: args.skip,
@@ -162,6 +165,7 @@ const PeerType = Type('Peer', type =>
         amountMin: arg.ofFloat().nullable(),
         amountMax: arg.ofFloat().nullable(),
         verified: arg.ofBool().nullable(),
+        published: arg.ofBool().nullable(),
         search: arg.ofString().nullable(),
       }))
       .resolve(
@@ -177,7 +181,8 @@ const PeerType = Type('Peer', type =>
                 postedOnMax: args.postedOnMax,
                 amountMin: args.amountMin,
                 amountMax: args.amountMax,
-                verified: args.verified,
+                verified: undefinedIfNull(args.verified),
+                published: undefinedIfNull(args.published),
                 search: args.search,
               },
               scope

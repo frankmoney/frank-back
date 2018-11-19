@@ -1,3 +1,3 @@
-type PeersOrder = 'postedOn_DESC' | 'amount_DESC'
+type PeersOrder = 'postedOn_ASC' | 'postedOn_DESC' | 'amount_DESC'
 
 export default PeersOrder

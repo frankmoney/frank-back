@@ -1,18 +1,22 @@
 import { Type } from 'gql'
 import ObjectTypeFieldBuilder from 'gql/nodes/ObjectTypeFieldBuilder'
 import Payment from 'store/types/Payment'
+import undefinedIfNull from 'utils/undefinedIfNull'
 import getAccountByPaymentId from 'api/dal/Account/getAccountByPaymentId'
 import getCategoryByPaymentId from 'api/dal/Category/getCategoryByPaymentId'
+import listSimilarPaymentsById from 'api/dal/Payment/listSimilarPaymentsById'
 import getPeerByPaymentId from 'api/dal/Peer/getPeerByPaymentId'
 import getUserById from 'api/dal/User/getUserById'
 import countSimilarPaymentsByPid from 'api/dal/Payment/countSimilarPaymentsByPid'
 import mapAccount from 'api/mappers/mapAccount'
 import mapCategory from 'api/mappers/mapCategory'
+import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
 import mapUser from 'api/mappers/mapUser'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import AccountType from './AccountType'
 import CategoryType from './CategoryType'
+import PaymentsOrderType from './PaymentsOrderType'
 import UserType from './UserType'
 import PeerType from './PeerType'
 
@@ -47,6 +51,7 @@ const PaymentType = Type('Payment', type =>
     amount: field.ofFloat(),
     peerName: field.ofString().nullable(),
     description: field.ofString().nullable(),
+    verified: field.ofBool(),
     published: field.ofBool(),
     bankDescription: field
       .ofString()
@@ -55,6 +60,47 @@ const PaymentType = Type('Payment', type =>
         createPrivateResolver('Payment:bankDescription', ({ parent }) => {
           return parent.data ? parent.data.originalDescription : null
         })
+      ),
+    similar: field
+      .listOf(PaymentType)
+      .args(arg => ({
+        sortBy: arg.ofType(PaymentsOrderType),
+        postedOnMin: arg.ofDate().nullable(),
+        postedOnMax: arg.ofDate().nullable(),
+        amountMin: arg.ofFloat().nullable(),
+        amountMax: arg.ofFloat().nullable(),
+        verified: arg.ofBool().nullable(),
+        published: arg.ofBool().nullable(),
+        search: arg.ofString().nullable(),
+        take: arg.ofInt().nullable(),
+        skip: arg.ofInt().nullable(),
+      }))
+      .resolve(
+        createPrivateResolver(
+          'Payment:similar',
+          async ({ parent, args, scope }) => {
+            const payment: Payment = parent.$source
+
+            const payments = await listSimilarPaymentsById(
+              {
+                id: payment.id,
+                postedOnMin: args.postedOnMin,
+                postedOnMax: args.postedOnMax,
+                amountMin: args.amountMin,
+                amountMax: args.amountMax,
+                verified: undefinedIfNull(args.verified),
+                published: undefinedIfNull(args.published),
+                search: args.search,
+                take: args.take,
+                skip: args.skip,
+                orderBy: args.sortBy,
+              },
+              scope
+            )
+
+            return mapPayment(payments)
+          }
+        )
       ),
     countSimilar: field.ofInt().resolve(
       createPrivateResolver('Payment:countSimilar', ({ parent, scope }) => {

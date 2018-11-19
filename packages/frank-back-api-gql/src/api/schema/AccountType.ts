@@ -1,5 +1,6 @@
 import { String, Type } from 'gql'
 import Account from 'store/types/Account'
+import undefinedIfNull from 'utils/undefinedIfNull'
 import countCategoriesByAccountId from 'api/dal/Category/countCategoriesByAccountId'
 import getCategoryByPidAndAccountId from 'api/dal/Category/getCategoryByPidAndAccountId'
 import listCategoriesByAccountId from 'api/dal/Category/listCategoriesByAccountId'
@@ -244,6 +245,7 @@ const AccountType = Type('Account', type =>
         amountMin: arg.ofFloat().nullable(),
         amountMax: arg.ofFloat().nullable(),
         verified: arg.ofBool().nullable(),
+        published: arg.ofBool().nullable(),
         search: arg.ofString().nullable(),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
@@ -261,7 +263,8 @@ const AccountType = Type('Account', type =>
                 postedOnMax: args.postedOnMax,
                 amountMin: args.amountMin,
                 amountMax: args.amountMax,
-                verified: args.verified,
+                verified: undefinedIfNull(args.verified),
+                published: undefinedIfNull(args.published),
                 search: args.search,
                 take: args.take,
                 skip: args.skip,
@@ -282,6 +285,7 @@ const AccountType = Type('Account', type =>
         amountMin: arg.ofFloat().nullable(),
         amountMax: arg.ofFloat().nullable(),
         verified: arg.ofBool().nullable(),
+        published: arg.ofBool().nullable(),
         search: arg.ofString().nullable(),
       }))
       .resolve(
@@ -297,7 +301,8 @@ const AccountType = Type('Account', type =>
                 postedOnMax: args.postedOnMax,
                 amountMin: args.amountMin,
                 amountMax: args.amountMax,
-                verified: args.verified,
+                verified: undefinedIfNull(args.verified),
+                published: undefinedIfNull(args.published),
                 search: args.search,
               },
               scope

@@ -3,14 +3,12 @@ import { Sql, join, sql } from 'sql'
 import mapPayment from 'store/mappers/mapPayment'
 import { payment } from 'store/names'
 import Payment from 'store/types/Payment'
-import Pid from 'store/types/Pid'
 import Id from 'store/types/Id'
-import getCategoryByPidAndAccountId from '../Category/getCategoryByPidAndAccountId'
 import createMutation from '../createMutation'
-import getPeerByPidAndAccountId from '../Peer/getPeerByPidAndAccountId'
 
 type Args = {
   paymentId: Id
+  verified?: boolean
   published?: boolean
   description?: string
   peerName?: string
@@ -26,7 +24,11 @@ export default createMutation<Args, Payment>(
   async (args, scope) => {
     const updateSqlParts: Sql[] = []
 
-    if (!R.isNil(args.published)) {
+    if (args.verified !== undefined) {
+      updateSqlParts.push(sql`${payment.verified} = ${args.verified}`)
+    }
+
+    if (args.published !== undefined) {
       updateSqlParts.push(sql`${payment.published} = ${args.published}`)
     }
 
