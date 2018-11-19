@@ -56,6 +56,8 @@ export default createQuery<Args, Payment | undefined>(
           ${payment}.${payment.amount},
           ${payment}.${payment.peerName},
           ${payment}.${payment.description},
+          ${payment}.${payment.verified},
+          ${payment}.${payment.published},
           ${payment}.${payment.accountId},
           ${payment}.${payment.peerId},
           ${payment}.${payment.categoryId},

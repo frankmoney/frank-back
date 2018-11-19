@@ -12,6 +12,7 @@ export type Args = {
   amountMin?: number
   amountMax?: number
   verified?: boolean
+  published?: boolean
   search?: string
 }
 
@@ -40,6 +41,18 @@ export default createQuery<Args, number>(
       R.isNil(args.amountMax) || isNaN(args.amountMax)
         ? undefined
         : sql`${payment}.${payment.amount} <= ${args.amountMax}`
+    )
+
+    const verifiedSql = and(
+      args.verified === undefined
+        ? undefined
+        : sql`${payment}.${payment.verified} = ${args.verified}`
+    )
+
+    const publishedSql = and(
+      args.published === undefined
+        ? undefined
+        : sql`${payment}.${payment.published} = ${args.published}`
     )
 
     const searchSql = and(
@@ -72,6 +85,8 @@ export default createQuery<Args, number>(
         ${postedOnMaxSql}
         ${amountMinSql}
         ${amountMaxSql}
+        ${verifiedSql}
+        ${publishedSql}
         ${searchSql};
       `
     )
