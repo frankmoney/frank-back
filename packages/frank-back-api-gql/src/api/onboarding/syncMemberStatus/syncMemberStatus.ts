@@ -1,7 +1,6 @@
 import Onboarding from 'store/types/Onboarding'
-import DefaultActionScope from 'api/dal/DefaultActionScope'
 import getMemberById from 'api/dal/mx/getMemberById'
-import AtriumClient from '../atriumClient'
+import OnboardingScope from '../OnboardingScope'
 import {
   CHALLENGED_MXSTATUS,
   FAILED_MXSTATUS,
@@ -26,13 +25,6 @@ import lockedHandler from './lockedHandler'
 import rejectedHandler from './rejectedHandler'
 import virtualCheckingHandler from './virtualCheckingHandler'
 
-const createLogger = (s1: any) => ({
-  debug: (s2: any) => console.log(s1 + ':' + s2),
-  warn: (s2: any) => console.log(s1 + ':' + s2),
-})
-
-const log = createLogger(`app:onboarding:syncMemberStatus`)
-
 const handlers: { [status: string]: StatusHandler } = {
   [CONNECTED_MXSTATUS]: connectedHandler,
   [DENIED_MXSTATUS]: deniedHandler,
@@ -48,9 +40,9 @@ const handlers: { [status: string]: StatusHandler } = {
 
 const syncMemberStatus = async (
   onboarding: Onboarding,
-  scope: DefaultActionScope
+  scope: OnboardingScope
 ): Promise<Onboarding> => {
-  log.debug('start')
+  const log = scope.logFor('api:onboarding:syncMemberStatus')
 
   if ([CREDENTIALS_STEP, MFA_STEP].includes(onboarding.step)) {
     log.debug(`step = ${onboarding.step}`)
@@ -65,14 +57,10 @@ const syncMemberStatus = async (
 
     const mxUserGuid = mxMember.mxUser.mxGuid
 
-    const memberRes = await AtriumClient.readMember({
-      params: {
-        userGuid: mxUserGuid,
-        memberGuid: mxMember.mxGuid,
-      },
+    const { member } = await scope.mx.readMember({
+      userGuid: mxUserGuid,
+      memberGuid: mxMember.mxGuid,
     })
-
-    const member = memberRes && memberRes.member
 
     if (!member) {
       log.debug('no mx member')

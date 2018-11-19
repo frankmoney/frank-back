@@ -1,16 +1,7 @@
 import humps from 'humps'
 import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
-import AtriumClient from '../atriumClient'
 import { ACCOUNTS_STEP, SUCCESS_STATUS } from '../constants'
 import { StatusHandler } from './StatusHandler'
-// import createLogger from 'utils/createLogger'
-
-const createLogger = (s1: any) => ({
-  debug: (s2: any) => console.log(s1 + ':' + s2),
-  warn: (s2: any) => console.log(s1 + ':' + s2),
-})
-
-const log = createLogger('app:onboarding:syncMemberStatus:connectedHandler')
 
 const handler: StatusHandler = async ({
   onboarding,
@@ -18,6 +9,8 @@ const handler: StatusHandler = async ({
   memberGuid,
   scope,
 }) => {
+  const log = scope.logFor('api:onboarding:syncMemberStatus:connectedHandler')
+
   log.debug('start')
 
   if (
@@ -28,11 +21,9 @@ const handler: StatusHandler = async ({
   ) {
     log.debug('updating data')
 
-    const { accounts } = await AtriumClient.listMemberAccounts({
-      params: {
-        userGuid,
-        memberGuid,
-      },
+    const { accounts } = await scope.mx.listMemberAccounts({
+      userGuid,
+      memberGuid,
     })
 
     const data = {
