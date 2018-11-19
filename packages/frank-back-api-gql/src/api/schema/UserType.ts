@@ -7,7 +7,9 @@ const UserType = Type('User', type =>
     email: field.ofString(),
     lastName: field.ofString().nullable(),
     firstName: field.ofString(),
+    name: field.ofString(),
     avatar: field.ofJson().nullable(),
+    color: field.ofInt(),
     // team: field
     //   .ofType(TeamType)
     //   .resolve(

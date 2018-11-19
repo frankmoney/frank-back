@@ -82,33 +82,62 @@ export default createMutation<Args, Onboarding>(
       updateSqlParts.push(sql`${onboarding.mfa} = NULL`)
     }
 
-    const updateSql = join(updateSqlParts, ', ')
+    if (updateSqlParts.length) {
+      const updateSql = join(updateSqlParts, ', ')
 
-    const result = await db.first(
-      sql`
-        update ${onboarding}
-        set ${updateSql}
-        where ${onboarding.pid} = ${args.pid}
-        returning
-          ${onboarding.id},
-          ${onboarding.pid},
-          ${onboarding.createdAt},
-          ${onboarding.creatorId},
-          ${onboarding.updatedAt},
-          ${onboarding.updaterId},
-          ${onboarding.step},
-          ${onboarding.institution},
-          ${onboarding.credentials},
-          ${onboarding.mfa},
-          ${onboarding.accounts},
-          ${onboarding.account},
-          ${onboarding.categories},
-          ${onboarding.team},
-          ${onboarding.mxMemberId}
-      `,
-      mapOnboarding
-    )
+      const result = await db.first(
+        sql`
+          update ${onboarding}
+          set ${updateSql}
+          where ${onboarding.pid} = ${args.pid}
+          returning
+            ${onboarding.id},
+            ${onboarding.pid},
+            ${onboarding.createdAt},
+            ${onboarding.creatorId},
+            ${onboarding.updatedAt},
+            ${onboarding.updaterId},
+            ${onboarding.step},
+            ${onboarding.institution},
+            ${onboarding.credentials},
+            ${onboarding.mfa},
+            ${onboarding.accounts},
+            ${onboarding.account},
+            ${onboarding.categories},
+            ${onboarding.team},
+            ${onboarding.mxMemberId}
+        `,
+        mapOnboarding
+      )
 
-    return result
+      return result
+    } else {
+      const result = await db.first(
+        sql`
+          select
+            ${onboarding.id},
+            ${onboarding.pid},
+            ${onboarding.createdAt},
+            ${onboarding.creatorId},
+            ${onboarding.updatedAt},
+            ${onboarding.updaterId},
+            ${onboarding.step},
+            ${onboarding.institution},
+            ${onboarding.credentials},
+            ${onboarding.mfa},
+            ${onboarding.accounts},
+            ${onboarding.account},
+            ${onboarding.categories},
+            ${onboarding.team},
+            ${onboarding.mxMemberId}
+          from ${onboarding}
+          where ${onboarding.pid} = ${args.pid}
+          limit 1
+        `,
+        mapOnboarding
+      )
+
+      return result
+    }
   }
 )

@@ -22,7 +22,8 @@ export default createQuery<Args, User[]>('listUsersByIds', (args, { db }) =>
         ${user.email},
         ${user.lastName},
         ${user.firstName},
-        ${user.avatar}
+        ${user.avatar},
+        ${user.color}
       from ${user}
       where ${user.id} in (${args.ids});
     `,

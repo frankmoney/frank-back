@@ -1,6 +1,7 @@
 import debug from 'debug'
+import Log from './Log'
 
-const createLog = (name: string) => ({
+const createLog = (name: string): Log => ({
   trace: debug(`${name}:trace`),
   debug: debug(`${name}:debug`),
   info: debug(`${name}:info`),

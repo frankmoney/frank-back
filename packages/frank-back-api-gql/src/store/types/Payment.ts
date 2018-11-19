@@ -13,6 +13,9 @@ type Payment = ExtendedBase & {
   accountId: Id
   peerId: Id
   categoryId: Id
+  descriptionUpdaterId: Id
+  peerUpdaterId: Id
+  categoryUpdaterId: Id
 }
 
 export default Payment

@@ -5,6 +5,7 @@ type Account = {
   pid: Id
   data: Json
   name: string
+  currencyCode: string
 }
 
 export default Account

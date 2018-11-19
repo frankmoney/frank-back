@@ -4,60 +4,65 @@ import mapPayment from 'store/mappers/mapPayment'
 import { payment } from 'store/names'
 import Payment from 'store/types/Payment'
 import Pid from 'store/types/Pid'
-import getAccountByPid from '../Account/getAccountByPid'
+import Id from 'store/types/Id'
 import getCategoryByPidAndAccountId from '../Category/getCategoryByPidAndAccountId'
 import createMutation from '../createMutation'
-import findOrCreatePeer from '../Peer/findOrCreatePeer'
 import getPeerByPidAndAccountId from '../Peer/getPeerByPidAndAccountId'
 
 type Args = {
-  accountPid: Pid
-  paymentPid: Pid
+  paymentId: Id
   published?: boolean
   description?: string
-  categoryPid?: Pid
-  peerPid?: Pid
-  peerName: string
+  peerName?: string
+  categoryId?: Id | null
+  peerId?: Id | null
+  descriptionUpdaterId?: Id
+  peerUpdaterId?: Id
+  categoryUpdaterId?: Id
 }
 
 export default createMutation<Args, Payment>(
   'updatePaymentByPidAndAccountPid',
   async (args, scope) => {
-    const account = await getAccountByPid({ pid: args.accountPid }, scope)
-
     const updateSqlParts: Sql[] = []
 
     if (!R.isNil(args.published)) {
       updateSqlParts.push(sql`${payment.published} = ${args.published}`)
     }
 
-    if (!R.isNil(args.description)) {
+    if (args.description !== undefined) {
       updateSqlParts.push(sql`${payment.description} = ${args.description}`)
     }
 
-    if (!R.isNil(args.categoryPid)) {
-      const category = await getCategoryByPidAndAccountId(
-        { pid: args.categoryPid, accountId: account.id },
-        scope
-      )
-
-      updateSqlParts.push(sql`${payment.categoryId} = ${category.id}`)
+    if (args.peerName !== undefined) {
+      updateSqlParts.push(sql`${payment.peerName} = ${args.peerName}`)
     }
 
-    if (!R.isNil(args.peerPid)) {
-      const peer = await getPeerByPidAndAccountId(
-        { pid: args.peerPid, accountId: account.id },
-        scope
-      )
+    // category
+    if (args.categoryId !== undefined) {
+      updateSqlParts.push(sql`${payment.categoryId} = ${args.categoryId}`)
+    }
 
-      updateSqlParts.push(sql`${payment.peerId} = ${peer.id}`)
-    } else if (!R.isNil(args.peerName)) {
-      const peerId = await findOrCreatePeer(
-        { accountId: account.id, name: args.peerName },
-        scope
-      )
+    // peer
+    if (args.peerId !== undefined) {
+      updateSqlParts.push(sql`${payment.peerId} = ${args.peerId}`)
+    }
 
-      updateSqlParts.push(sql`${payment.peerId} = ${peerId}`)
+    // updaters
+    if (args.descriptionUpdaterId !== undefined) {
+      updateSqlParts.push(
+        sql`${payment.descriptionUpdaterId} = ${args.descriptionUpdaterId}`
+      )
+    }
+
+    if (args.peerUpdaterId !== undefined) {
+      updateSqlParts.push(sql`${payment.peerUpdaterId} = ${args.peerUpdaterId}`)
+    }
+
+    if (args.categoryUpdaterId !== undefined) {
+      updateSqlParts.push(
+        sql`${payment.categoryUpdaterId} = ${args.categoryUpdaterId}`
+      )
     }
 
     const updateSql = join(updateSqlParts, ', ')
@@ -66,8 +71,7 @@ export default createMutation<Args, Payment>(
       sql`
         update ${payment}
         set ${updateSql}
-        where ${payment.pid} = ${args.paymentPid}
-        and ${payment.accountId} = ${account.id}
+        where ${payment.id} = ${args.paymentId}
         returning
           ${payment}.${payment.id},
           ${payment}.${payment.pid},
@@ -83,7 +87,10 @@ export default createMutation<Args, Payment>(
           ${payment}.${payment.published},
           ${payment}.${payment.accountId},
           ${payment}.${payment.peerId},
-          ${payment}.${payment.categoryId}
+          ${payment}.${payment.categoryId},
+          ${payment}.${payment.descriptionUpdaterId},
+          ${payment}.${payment.peerUpdaterId},
+          ${payment}.${payment.categoryUpdaterId}
       `,
       mapPayment
     )

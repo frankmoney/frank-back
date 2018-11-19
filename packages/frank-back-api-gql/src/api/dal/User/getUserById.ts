@@ -22,7 +22,10 @@ export default createQuery<Args, User>('getUserById', (args, { db }) =>
         ${user.email},
         ${user.lastName},
         ${user.firstName},
-        ${user.avatar}
+        ${user.avatar},
+        ${user.color},
+        ${user.name},
+        ${user.typeId}
       from ${user}
       where ${user.id} = ${args.id || null}
       limit 1;

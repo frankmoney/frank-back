@@ -21,9 +21,19 @@ export default createMutation<Args, Account>(
       throwArgumentError()
     }
 
-    const columns = [account.teamId, account.name, account.data]
+    const columns = [
+      account.teamId,
+      account.name,
+      account.data,
+      account.currencyCode,
+    ]
 
-    const values = [args.teamId, args.name, JSON.stringify(args.data)]
+    const values = [
+      args.teamId,
+      args.name,
+      JSON.stringify(args.data),
+      args.data.currencyCode,
+    ]
 
     return await db.first(
       sql`

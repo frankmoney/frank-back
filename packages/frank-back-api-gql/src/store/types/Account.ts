@@ -6,6 +6,7 @@ type Account = ExtendedBase & {
   data: Json
   name: string
   teamId: Id
+  currencyCode: string
 }
 
 export default Account

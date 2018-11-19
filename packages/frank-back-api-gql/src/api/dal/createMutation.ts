@@ -1,4 +1,4 @@
-import Logger from 'log/Log'
+import { Log } from 'log'
 import ActionScope from './ActionScope'
 import DefaultActionScope from './DefaultActionScope'
 
@@ -8,7 +8,7 @@ export default function createMutation<
   TScope extends ActionScope = DefaultActionScope
 >(
   name: string,
-  command: (args: TArgs, scope: TScope & { log: Logger }) => Promise<TResult>
+  command: (args: TArgs, scope: TScope & { log: Log }) => Promise<TResult>
 ) {
   return async (args: TArgs, scope: TScope) => {
     const log = scope.logFor(`app:dal:${name}`)

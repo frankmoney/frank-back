@@ -8,6 +8,7 @@ import createQuery from '../createQuery'
 
 export type Args = {
   accountId: Id
+  published?: boolean
   take?: number
   skip?: number
   orderBy: StoriesOrder
@@ -16,6 +17,14 @@ export type Args = {
 export default createQuery<Args, Story[]>(
   'listStoriesByAccountId',
   (args, { db }) => {
+    let publishedSql: undefined | Sql
+
+    if (args.published !== undefined) {
+      publishedSql = args.published
+        ? sql`"${story}"."${story.publishedAt}" is not null`
+        : sql`"${story}"."${story.publishedAt}" is null`
+    }
+
     const orderBySqls: Sql[] = []
 
     switch (args.orderBy) {
@@ -54,6 +63,7 @@ export default createQuery<Args, Story[]>(
           ${story}.${story.accountId}
         from ${story}
         where ${story}.${story.accountId} = ${args.accountId}
+        ${sql.and(publishedSql)}
         order by ${orderBySql}
         ${limit({ take: args.take, skip: args.skip })};
       `,

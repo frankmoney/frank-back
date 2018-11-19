@@ -24,6 +24,8 @@ import mapPeer from 'api/mappers/mapPeer'
 import mapStory from 'api/mappers/mapStory'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import CategoryType from './CategoryType'
+import CurrencyType from './CurrencyType'
+import LedgerBarChartPeriodType from './LedgerBarChartPeriodType'
 import LedgerBarChartType from './LedgerBarChartType'
 import LedgerPieChartType from './LedgerPieChartType'
 import PaymentsOrderType from './PaymentsOrderType'
@@ -105,6 +107,15 @@ const AccountType = Type('Account', type =>
           }
         )
       ),
+    currency: field.ofType(CurrencyType).resolve(
+      createPrivateResolver('Account:currency', async ({ parent }) => {
+        const account: Account = parent.$source
+
+        return {
+          code: account.currencyCode,
+        }
+      })
+    ),
     peer: field
       .ofType(PeerType)
       .args(arg => ({
@@ -348,6 +359,7 @@ const AccountType = Type('Account', type =>
         postedOnMax: arg.ofDate().nullable(),
         amountMin: arg.ofFloat().nullable(),
         amountMax: arg.ofFloat().nullable(),
+        period: arg.ofType(LedgerBarChartPeriodType).nullable(),
       }))
       .resolve(
         createPrivateResolver(
@@ -356,7 +368,14 @@ const AccountType = Type('Account', type =>
             const account: Account = parent.$source
 
             const result = await getPaymentsLedgerBarChartByAccountId(
-              { accountId: account.id },
+              {
+                accountId: account.id,
+                postedOnMin: args.postedOnMin,
+                postedOnMax: args.postedOnMax,
+                amountMin: args.amountMin,
+                amountMax: args.amountMax,
+                period: args.period || 'day',
+              },
               scope
             )
 
@@ -412,9 +431,10 @@ const AccountType = Type('Account', type =>
     stories: field
       .listOf(StoryType)
       .args(arg => ({
-        sortBy: arg.ofType(StoriesOrderType),
+        published: arg.ofBool().nullable(),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
+        sortBy: arg.ofType(StoriesOrderType),
       }))
       .resolve(
         createPrivateResolver(
@@ -425,6 +445,7 @@ const AccountType = Type('Account', type =>
             const stories = await listStoriesByAccountId(
               {
                 accountId: account.id,
+                published: args.published,
                 take: args.take,
                 skip: args.skip,
                 orderBy: args.sortBy,

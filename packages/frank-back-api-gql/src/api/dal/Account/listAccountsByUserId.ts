@@ -28,7 +28,8 @@ export default createQuery<Args, Account[]>(
           ${account}.${account.updaterId},
           ${account}.${account.data},
           ${account}.${account.name},
-          ${account}.${account.teamId}
+          ${account}.${account.teamId},
+          ${account}.${account.currencyCode}
         from ${account}
         join ${teamMember}
         on ${account}.${account.teamId} = ${teamMember}.${teamMember.teamId}

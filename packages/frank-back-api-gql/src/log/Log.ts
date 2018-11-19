@@ -1,4 +1,4 @@
-type Logger = {
+type Log = {
   trace(formatter: any, ...args: any[]): void
   debug(formatter: any, ...args: any[]): void
   info(formatter: any, ...args: any[]): void
@@ -7,4 +7,4 @@ type Logger = {
   fatal(formatter: any, ...args: any[]): void
 }
 
-export default Logger
+export default Log
