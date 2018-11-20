@@ -15,7 +15,6 @@ export type Args = {
   amountMin?: number
   amountMax?: number
   verified?: boolean
-  published?: boolean
   search?: string
   take?: number
   skip?: number
@@ -53,12 +52,6 @@ export default createQuery<Args, Payment[]>(
       args.verified === undefined
         ? undefined
         : sql`${payment}.${payment.verified} = ${args.verified}`
-    )
-
-    const publishedSql = and(
-      args.published === undefined
-        ? undefined
-        : sql`${payment}.${payment.published} = ${args.published}`
     )
 
     let orderBySql: Sql
@@ -113,7 +106,6 @@ export default createQuery<Args, Payment[]>(
           ${payment}.${payment.peerName},
           ${payment}.${payment.description},
           ${payment}.${payment.verified},
-          ${payment}.${payment.published},
           ${payment}.${payment.accountId},
           ${payment}.${payment.peerId},
           ${payment}.${payment.categoryId}
@@ -124,7 +116,6 @@ export default createQuery<Args, Payment[]>(
         ${amountMinSql}
         ${amountMaxSql}
         ${verifiedSql}
-        ${publishedSql}
         ${searchSql}
         order by ${orderBySql}
         ${limit({ take: args.take, skip: args.skip })};

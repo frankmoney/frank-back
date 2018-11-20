@@ -17,7 +17,7 @@ export default async (account, mxPayments) => {
 
   const payments = await Payment.findAll({ where: { accountId: account.id } })
   const filledPayments = R.filter(
-    p => p.published && p.peerId && p.categoryId && p.description,
+    p => p.verified && p.peerId && p.categoryId && p.description,
     payments
   )
 

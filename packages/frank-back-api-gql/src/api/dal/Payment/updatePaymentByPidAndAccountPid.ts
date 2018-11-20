@@ -1,4 +1,3 @@
-import R from 'ramda'
 import { Sql, join, sql } from 'sql'
 import mapPayment from 'store/mappers/mapPayment'
 import { payment } from 'store/names'
@@ -9,7 +8,6 @@ import createMutation from '../createMutation'
 type Args = {
   paymentId: Id
   verified?: boolean
-  published?: boolean
   description?: string
   peerName?: string
   categoryId?: Id | null
@@ -26,10 +24,6 @@ export default createMutation<Args, Payment>(
 
     if (args.verified !== undefined) {
       updateSqlParts.push(sql`${payment.verified} = ${args.verified}`)
-    }
-
-    if (args.published !== undefined) {
-      updateSqlParts.push(sql`${payment.published} = ${args.published}`)
     }
 
     if (args.description !== undefined) {
@@ -86,7 +80,7 @@ export default createMutation<Args, Payment>(
           ${payment}.${payment.amount},
           ${payment}.${payment.peerName},
           ${payment}.${payment.description},
-          ${payment}.${payment.published},
+          ${payment}.${payment.verified},
           ${payment}.${payment.accountId},
           ${payment}.${payment.peerId},
           ${payment}.${payment.categoryId},

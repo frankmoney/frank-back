@@ -245,7 +245,6 @@ const AccountType = Type('Account', type =>
         amountMin: arg.ofFloat().nullable(),
         amountMax: arg.ofFloat().nullable(),
         verified: arg.ofBool().nullable(),
-        published: arg.ofBool().nullable(),
         search: arg.ofString().nullable(),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
@@ -264,7 +263,6 @@ const AccountType = Type('Account', type =>
                 amountMin: args.amountMin,
                 amountMax: args.amountMax,
                 verified: undefinedIfNull(args.verified),
-                published: undefinedIfNull(args.published),
                 search: args.search,
                 take: args.take,
                 skip: args.skip,
@@ -285,7 +283,6 @@ const AccountType = Type('Account', type =>
         amountMin: arg.ofFloat().nullable(),
         amountMax: arg.ofFloat().nullable(),
         verified: arg.ofBool().nullable(),
-        published: arg.ofBool().nullable(),
         search: arg.ofString().nullable(),
       }))
       .resolve(
@@ -302,7 +299,6 @@ const AccountType = Type('Account', type =>
                 amountMin: args.amountMin,
                 amountMax: args.amountMax,
                 verified: undefinedIfNull(args.verified),
-                published: undefinedIfNull(args.published),
                 search: args.search,
               },
               scope

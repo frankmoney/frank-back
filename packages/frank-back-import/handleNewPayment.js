@@ -71,7 +71,6 @@ export default (
     peerName: description,
     data: mxPayment,
     verified: false,
-    published: false,
   }
 
   let similarPayment

@@ -25,7 +25,6 @@ import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import PeerUpdateUpdate from 'api/types/PeerUpdateUpdate'
 import Pid from 'api/types/Pid'
 import paymentUpdate from 'api/resolvers/mutations/paymentUpdate'
-import paymentPublish from 'api/resolvers/mutations/paymentPublish'
 import PeerType from './PeerType'
 import PeerUpdateUpdateInput from './PeerUpdateUpdateInput'
 import StoryType from './StoryType'
@@ -39,7 +38,6 @@ const MutationType = Type('Mutation', type =>
   type.fields(field => ({
     ...onboarding(field),
     ...paymentUpdate(field),
-    ...paymentPublish(field),
     meChangeAvatar: field
       .ofType(UserType)
       .args(arg => ({

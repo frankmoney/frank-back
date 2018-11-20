@@ -52,7 +52,6 @@ const PaymentType = Type('Payment', type =>
     peerName: field.ofString().nullable(),
     description: field.ofString().nullable(),
     verified: field.ofBool(),
-    published: field.ofBool(),
     bankDescription: field
       .ofString()
       .nullable()
@@ -70,7 +69,6 @@ const PaymentType = Type('Payment', type =>
         amountMin: arg.ofFloat().nullable(),
         amountMax: arg.ofFloat().nullable(),
         verified: arg.ofBool().nullable(),
-        published: arg.ofBool().nullable(),
         search: arg.ofString().nullable(),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
@@ -89,7 +87,6 @@ const PaymentType = Type('Payment', type =>
                 amountMin: args.amountMin,
                 amountMax: args.amountMax,
                 verified: undefinedIfNull(args.verified),
-                published: undefinedIfNull(args.published),
                 search: args.search,
                 take: args.take,
                 skip: args.skip,

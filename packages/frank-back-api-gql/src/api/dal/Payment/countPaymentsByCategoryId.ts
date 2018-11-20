@@ -12,7 +12,6 @@ export type Args = {
   amountMin?: number
   amountMax?: number
   verified?: boolean
-  published?: boolean
   search?: string
 }
 
@@ -49,12 +48,6 @@ export default createQuery<Args, number>(
         : sql`${payment}.${payment.verified} = ${args.verified}`
     )
 
-    const publishedSql = and(
-      args.published === undefined
-        ? undefined
-        : sql`${payment}.${payment.published} = ${args.published}`
-    )
-
     const searchSql = and(
       args.search
         ? sql`
@@ -86,7 +79,6 @@ export default createQuery<Args, number>(
         ${amountMinSql}
         ${amountMaxSql}
         ${verifiedSql}
-        ${publishedSql}
         ${searchSql};
       `
     )
