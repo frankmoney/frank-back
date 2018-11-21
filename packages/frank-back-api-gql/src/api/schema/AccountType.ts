@@ -1,6 +1,5 @@
 import { String, Type } from 'gql'
 import Account from 'store/types/Account'
-import undefinedIfNull from 'utils/undefinedIfNull'
 import countCategoriesByAccountId from 'api/dal/Category/countCategoriesByAccountId'
 import getCategoryByPidAndAccountId from 'api/dal/Category/getCategoryByPidAndAccountId'
 import listCategoriesByAccountId from 'api/dal/Category/listCategoriesByAccountId'
@@ -10,7 +9,7 @@ import countPaymentsSpending from 'api/dal/Payment/countPaymentsSpending'
 import countPaymentsTotal from 'api/dal/Payment/countPaymentsTotal'
 import getPaymentByPidAndAccountId from 'api/dal/Payment/getPaymentByPidAndAccountId'
 import getPaymentsLedgerBarChartByAccountId from 'api/dal/Payment/getPaymentsLedgerBarChartByAccountId'
-import getPaymentsLedgerPieChartByAccountId from 'api/dal/Payment/getPaymentsLedgerPieChartByAccountId'
+import getPaymentsLedgerPieChart from 'api/dal/Payment/getPaymentsLedgerPieChart'
 import listPayments from 'api/dal/Payment/listPayments'
 import paymentsDescriptionsByAccountPid from 'api/dal/Payment/paymentsDescriptionsByAccountPid'
 import countPeersByAccountId from 'api/dal/Peer/countPeersByAccountId'
@@ -394,6 +393,10 @@ const AccountType = Type('Account', type =>
       .args(arg => ({
         postedOnMin: arg.ofDate().nullable(),
         postedOnMax: arg.ofDate().nullable(),
+        amountMin: arg.ofFloat().nullable(),
+        amountMax: arg.ofFloat().nullable(),
+        verified: arg.ofBool().nullable(),
+        search: arg.ofString().nullable(),
       }))
       .resolve(
         createPrivateResolver(
@@ -401,8 +404,12 @@ const AccountType = Type('Account', type =>
           async ({ parent, args, scope }) => {
             const account: Account = parent.$source
 
-            const result = await getPaymentsLedgerPieChartByAccountId(
-              { accountId: account.id },
+            const result = await getPaymentsLedgerPieChart(
+              {
+                wherePayment: createPaymentWhere(args, {
+                  accountId: { eq: account.id },
+                }),
+              },
               scope
             )
 
