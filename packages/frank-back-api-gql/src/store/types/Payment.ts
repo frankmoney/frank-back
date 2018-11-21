@@ -9,7 +9,7 @@ type Payment = ExtendedBase & {
   amount: number
   peerName: string
   description: string
-  published: boolean
+  verified: boolean
   accountId: Id
   peerId: Id
   categoryId: Id

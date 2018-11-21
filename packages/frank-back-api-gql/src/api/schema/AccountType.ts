@@ -1,5 +1,6 @@
 import { String, Type } from 'gql'
 import Account from 'store/types/Account'
+import undefinedIfNull from 'utils/undefinedIfNull'
 import countCategoriesByAccountId from 'api/dal/Category/countCategoriesByAccountId'
 import getCategoryByPidAndAccountId from 'api/dal/Category/getCategoryByPidAndAccountId'
 import listCategoriesByAccountId from 'api/dal/Category/listCategoriesByAccountId'
@@ -259,7 +260,7 @@ const AccountType = Type('Account', type =>
                 postedOnMax: args.postedOnMax,
                 amountMin: args.amountMin,
                 amountMax: args.amountMax,
-                verified: args.verified,
+                verified: undefinedIfNull(args.verified),
                 search: args.search,
                 take: args.take,
                 skip: args.skip,
@@ -295,7 +296,7 @@ const AccountType = Type('Account', type =>
                 postedOnMax: args.postedOnMax,
                 amountMin: args.amountMin,
                 amountMax: args.amountMax,
-                verified: args.verified,
+                verified: undefinedIfNull(args.verified),
                 search: args.search,
               },
               scope

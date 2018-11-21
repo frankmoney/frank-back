@@ -1,17 +1,13 @@
-import R from 'ramda'
 import { Sql, join, sql } from 'sql'
 import mapPayment from 'store/mappers/mapPayment'
 import { payment } from 'store/names'
 import Payment from 'store/types/Payment'
-import Pid from 'store/types/Pid'
 import Id from 'store/types/Id'
-import getCategoryByPidAndAccountId from '../Category/getCategoryByPidAndAccountId'
 import createMutation from '../createMutation'
-import getPeerByPidAndAccountId from '../Peer/getPeerByPidAndAccountId'
 
 type Args = {
   paymentId: Id
-  published?: boolean
+  verified?: boolean
   description?: string
   peerName?: string
   categoryId?: Id | null
@@ -26,8 +22,8 @@ export default createMutation<Args, Payment>(
   async (args, scope) => {
     const updateSqlParts: Sql[] = []
 
-    if (!R.isNil(args.published)) {
-      updateSqlParts.push(sql`${payment.published} = ${args.published}`)
+    if (args.verified !== undefined) {
+      updateSqlParts.push(sql`${payment.verified} = ${args.verified}`)
     }
 
     if (args.description !== undefined) {
@@ -84,7 +80,7 @@ export default createMutation<Args, Payment>(
           ${payment}.${payment.amount},
           ${payment}.${payment.peerName},
           ${payment}.${payment.description},
-          ${payment}.${payment.published},
+          ${payment}.${payment.verified},
           ${payment}.${payment.accountId},
           ${payment}.${payment.peerId},
           ${payment}.${payment.categoryId},

@@ -36,9 +36,9 @@ export default sequelize.define('t_payment', {
     type: Sequelize.TEXT,
     field: 'c_description',
   },
-  published: {
+  verified: {
     type: Sequelize.BOOLEAN,
-    field: 'c_published',
+    field: 'c_verified',
   },
   data: {
     type: Sequelize.JSONB,

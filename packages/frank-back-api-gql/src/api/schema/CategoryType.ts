@@ -1,5 +1,6 @@
 import { Type } from 'gql'
 import Category from 'store/types/Category'
+import undefinedIfNull from 'utils/undefinedIfNull'
 import getAccountByCategoryId from 'api/dal/Account/getAccountByCategoryId'
 import getPeerByPidAndCategoryId from 'api/dal/Peer/getPeerByPidAndCategoryId'
 import listPeersByCategoryId from 'api/dal/Peer/listPeersByCategoryId'
@@ -138,7 +139,7 @@ const CategoryType = Type('Category', type =>
                 postedOnMax: args.postedOnMax,
                 amountMin: args.amountMin,
                 amountMax: args.amountMax,
-                verified: args.verified,
+                verified: undefinedIfNull(args.verified),
                 search: args.search,
                 take: args.take,
                 skip: args.skip,
@@ -174,7 +175,7 @@ const CategoryType = Type('Category', type =>
                 postedOnMax: args.postedOnMax,
                 amountMin: args.amountMin,
                 amountMax: args.amountMax,
-                verified: args.verified,
+                verified: undefinedIfNull(args.verified),
                 search: args.search,
               },
               scope

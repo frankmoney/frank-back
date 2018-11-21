@@ -42,6 +42,12 @@ export default createQuery<Args, number>(
         : sql`${payment}.${payment.amount} <= ${args.amountMax}`
     )
 
+    const verifiedSql = and(
+      args.verified === undefined
+        ? undefined
+        : sql`${payment}.${payment.verified} = ${args.verified}`
+    )
+
     const searchSql = and(
       args.search
         ? sql`
@@ -72,6 +78,7 @@ export default createQuery<Args, number>(
         ${postedOnMaxSql}
         ${amountMinSql}
         ${amountMaxSql}
+        ${verifiedSql}
         ${searchSql};
       `
     )

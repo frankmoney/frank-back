@@ -56,6 +56,7 @@ export default createQuery<Args, Payment | undefined>(
           ${payment}.${payment.amount},
           ${payment}.${payment.peerName},
           ${payment}.${payment.description},
+          ${payment}.${payment.verified},
           ${payment}.${payment.accountId},
           ${payment}.${payment.peerId},
           ${payment}.${payment.categoryId},
@@ -64,7 +65,7 @@ export default createQuery<Args, Payment | undefined>(
           ${payment}.${payment.descriptionUpdaterId}
         from ${payment}
         where ${payment}.${payment.accountId} = ${args.accountId} 
-        and ${payment}.${payment.published} = TRUE
+        and ${payment}.${payment.verified} = TRUE
         ${byAmountSql}
         ${byPeerSql}
         ${byCategorySql}

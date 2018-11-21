@@ -70,14 +70,12 @@ export default (
     amount: newAmount,
     peerName: description,
     data: mxPayment,
+    verified: false,
   }
 
-  let similarPayment = null
+  let similarPayment
 
-  for (const i in cascade) {
-
-    const matcher = cascade[i]
-
+  for (const matcher of cascade) {
     similarPayment = matcher(mxPayment, filledPayments)
 
     if (similarPayment) {

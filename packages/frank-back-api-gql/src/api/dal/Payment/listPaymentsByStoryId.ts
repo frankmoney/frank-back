@@ -19,6 +19,9 @@ export default createQuery<Args, Payment[]>(
     let orderBySql: Sql
 
     switch (args.orderBy) {
+      case 'postedOn_ASC':
+        orderBySql = sql`${payment}.${payment.postedOn} asc`
+        break
       case 'postedOn_DESC':
         orderBySql = sql`${payment}.${payment.postedOn} desc`
         break
@@ -43,6 +46,7 @@ export default createQuery<Args, Payment[]>(
           ${payment}.${payment.amount},
           ${payment}.${payment.peerName},
           ${payment}.${payment.description},
+          ${payment}.${payment.verified},
           ${payment}.${payment.accountId},
           ${payment}.${payment.peerId},
           ${payment}.${payment.categoryId}
