@@ -5,13 +5,13 @@ import getAccountByPeerId from 'api/dal/Account/getAccountByPeerId'
 import countCategoriesByPeerId from 'api/dal/Category/countCategoriesByPeerId'
 import getCategoryByPidAndPeerId from 'api/dal/Category/getCategoryByPidAndPeerId'
 import listCategoriesByPeerId from 'api/dal/Category/listCategoriesByPeerId'
-import countPaymentsByPeerId from 'api/dal/Payment/countPaymentsByPeerId'
-import countPaymentsRevenueByPeerId from 'api/dal/Payment/countPaymentsRevenueByPeerId'
-import countPaymentsSpendingByPeerId from 'api/dal/Payment/countPaymentsSpendingByPeerId'
-import countPaymentsTotalByPeerId from 'api/dal/Payment/countPaymentsTotalByPeerId'
+import countPayments from 'api/dal/Payment/countPayments'
+import countPaymentsRevenue from 'api/dal/Payment/countPaymentsRevenue'
+import countPaymentsSpending from 'api/dal/Payment/countPaymentsSpending'
+import countPaymentsTotal from 'api/dal/Payment/countPaymentsTotal'
 import getPaymentByPidAndPeerId from 'api/dal/Payment/getPaymentByPidAndPeerId'
 import getPaymentLastPostedOnByPeerId from 'api/dal/Payment/getPaymentLastPostedOnByPeerId'
-import listPaymentsByPeerId from 'api/dal/Payment/listPaymentsByPeerId'
+import listPayments from 'api/dal/Payment/listPayments'
 import mapAccount from 'api/mappers/mapAccount'
 import mapCategory from 'api/mappers/mapCategory'
 import mapPayment from 'api/mappers/mapPayment'
@@ -20,6 +20,7 @@ import AccountType from './AccountType'
 import CategoryType from './CategoryType'
 import PaymentsOrderType from './PaymentsOrderType'
 import PaymentType from './PaymentType'
+import createPaymentWhere from './helpers/createPaymentWhere'
 
 const PeerType = Type('Peer', type =>
   type.fields(field => ({
@@ -135,15 +136,11 @@ const PeerType = Type('Peer', type =>
           async ({ parent, args, scope }) => {
             const peer: Peer = parent.$source
 
-            const payments = await listPaymentsByPeerId(
+            const payments = await listPayments(
               {
-                peerId: peer.id,
-                postedOnMin: args.postedOnMin,
-                postedOnMax: args.postedOnMax,
-                amountMin: args.amountMin,
-                amountMax: args.amountMax,
-                verified: undefinedIfNull(args.verified),
-                search: args.search,
+                where: createPaymentWhere(args, {
+                  peerId: { eq: peer.id },
+                }),
                 take: args.take,
                 skip: args.skip,
                 orderBy: args.sortBy,
@@ -171,15 +168,11 @@ const PeerType = Type('Peer', type =>
           async ({ parent, args, scope }) => {
             const peer: Peer = parent.$source
 
-            const count = countPaymentsByPeerId(
+            const count = countPayments(
               {
-                peerId: peer.id,
-                postedOnMin: args.postedOnMin,
-                postedOnMax: args.postedOnMax,
-                amountMin: args.amountMin,
-                amountMax: args.amountMax,
-                verified: undefinedIfNull(args.verified),
-                search: args.search,
+                where: createPaymentWhere(args, {
+                  peerId: { eq: peer.id },
+                }),
               },
               scope
             )
@@ -194,8 +187,12 @@ const PeerType = Type('Peer', type =>
         async ({ parent, args, scope }) => {
           const peer: Peer = parent.$source
 
-          const count = await countPaymentsTotalByPeerId(
-            { peerId: peer.id },
+          const count = await countPaymentsTotal(
+            {
+              where: createPaymentWhere(args, {
+                peerId: { eq: peer.id },
+              }),
+            },
             scope
           )
 
@@ -209,8 +206,12 @@ const PeerType = Type('Peer', type =>
         async ({ parent, args, scope }) => {
           const peer: Peer = parent.$source
 
-          const count = await countPaymentsRevenueByPeerId(
-            { peerId: peer.id },
+          const count = await countPaymentsRevenue(
+            {
+              where: createPaymentWhere(args, {
+                peerId: { eq: peer.id },
+              }),
+            },
             scope
           )
 
@@ -224,8 +225,12 @@ const PeerType = Type('Peer', type =>
         async ({ parent, args, scope }) => {
           const peer: Peer = parent.$source
 
-          const count = await countPaymentsSpendingByPeerId(
-            { peerId: peer.id },
+          const count = await countPaymentsSpending(
+            {
+              where: createPaymentWhere(args, {
+                peerId: { eq: peer.id },
+              }),
+            },
             scope
           )
 

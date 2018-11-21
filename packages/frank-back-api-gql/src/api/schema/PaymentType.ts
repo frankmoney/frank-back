@@ -19,6 +19,7 @@ import CategoryType from './CategoryType'
 import PaymentsOrderType from './PaymentsOrderType'
 import UserType from './UserType'
 import PeerType from './PeerType'
+import createPaymentWhere from './helpers/createPaymentWhere'
 
 const updaterConstructor = (
   field: ObjectTypeFieldBuilder,
@@ -63,7 +64,6 @@ const PaymentType = Type('Payment', type =>
     similar: field
       .listOf(PaymentType)
       .args(arg => ({
-        sortBy: arg.ofType(PaymentsOrderType),
         postedOnMin: arg.ofDate().nullable(),
         postedOnMax: arg.ofDate().nullable(),
         amountMin: arg.ofFloat().nullable(),
@@ -72,6 +72,7 @@ const PaymentType = Type('Payment', type =>
         search: arg.ofString().nullable(),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
+        sortBy: arg.ofType(PaymentsOrderType),
       }))
       .resolve(
         createPrivateResolver(
@@ -82,12 +83,7 @@ const PaymentType = Type('Payment', type =>
             const payments = await listSimilarPaymentsById(
               {
                 id: payment.id,
-                postedOnMin: args.postedOnMin,
-                postedOnMax: args.postedOnMax,
-                amountMin: args.amountMin,
-                amountMax: args.amountMax,
-                verified: undefinedIfNull(args.verified),
-                search: args.search,
+                where: createPaymentWhere(args),
                 take: args.take,
                 skip: args.skip,
                 orderBy: args.sortBy,
