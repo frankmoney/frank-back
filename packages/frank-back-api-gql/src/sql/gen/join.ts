@@ -22,7 +22,9 @@ const join = (list: any[], glue?: string | Sql): SqlFragment => {
       }
     }
 
-    children.pop()
+    if (glue) {
+      children.pop()
+    }
   }
 
   return fragment(children)

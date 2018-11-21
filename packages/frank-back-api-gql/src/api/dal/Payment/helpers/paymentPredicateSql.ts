@@ -1,17 +1,21 @@
 import { identity } from 'ramda'
-import { Sql, join, sql, literal } from 'sql'
+import { Sql, fragment, join, sql, literal } from 'sql'
 import { payment, peer } from 'store/names'
 import createWhereSql from '../../helpers/createWhereSql'
 import PaymentWhere from './PaymentWhere'
 
 const conjunction = (...branches: (undefined | Sql)[]) => {
   const effective = branches.filter(identity)
-  return effective.length ? join(effective, ' and ') : undefined
+  return effective.length
+    ? fragment([literal('('), join(effective, ' and '), literal(')')])
+    : undefined
 }
 
 const disjunction = (...branches: (undefined | Sql)[]) => {
   const effective = branches.filter(identity)
-  return effective.length ? join(effective, ' or ') : undefined
+  return effective.length
+    ? fragment([literal('('), join(effective, ' or '), literal(')')])
+    : undefined
 }
 
 const paymentPredicateSql = (
@@ -32,25 +36,28 @@ const paymentPredicateSql = (
               }%`}`,
               conjunction(
                 sql`"${alias$}"."${payment.peerId}" is null`,
-                sql`"${alias$}"."${payment.peerName}" ilike ${`%${
-                  where.containsText
-                }%`}`
+                join(
+                  [
+                    sql`"${alias$}"."${payment.peerName}"`,
+                    sql`ilike ${`%${where.containsText}%`}`,
+                  ],
+                  ' '
+                )
               ),
               conjunction(
-                sql`"${alias$}"."${payment.peerId} is not null"`,
+                sql`"${alias$}"."${payment.peerId}" is not null`,
                 join(
                   [
                     sql`exists (`,
-                    sql`  from "${peer}"`,
-                    sql`  where "${peer}"."${peer.id}" = "${alias$}"."${
-                      payment.peerId
-                    }"`,
-                    sql`  and "${peer}"."${peer.name}" ilike ${`%${
-                      where.containsText
-                    }%`}`,
+                    sql`select 1`,
+                    sql`from "${peer}"`,
+                    sql`where "${peer}"."${peer.id}"`,
+                    sql`= "${alias$}"."${payment.peerId}"`,
+                    sql`and "${peer}"."${peer.name}"`,
+                    sql`ilike ${`%${where.containsText}%`}`,
                     sql`)`,
                   ],
-                  '\r\n'
+                  ' '
                 )
               )
             )

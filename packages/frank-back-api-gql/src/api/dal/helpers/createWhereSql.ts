@@ -1,10 +1,25 @@
-import { Sql, join, sql } from 'sql'
+import { identity } from 'ramda'
+import { Sql, fragment, join, literal, sql } from 'sql'
 import Where from './Where'
 
 type Handler = (expression: Sql, value: any) => undefined | Sql
 
 type Handlers = { [K in keyof Where<any>]?: Handler } & {
   [key: string]: Handler
+}
+
+const conjunction = (...branches: (undefined | Sql)[]) => {
+  const effective = branches.filter(identity)
+  return effective.length
+    ? fragment([literal('('), join(effective, ' and '), literal(')')])
+    : undefined
+}
+
+const disjunction = (...branches: (undefined | Sql)[]) => {
+  const effective = branches.filter(identity)
+  return effective.length
+    ? fragment([literal('('), join(effective, ' or '), literal(')')])
+    : undefined
 }
 
 const defaultHandlers: Handlers = {
@@ -89,7 +104,9 @@ const createWhereSql = <T>(
       const handler = effectiveHandlers[predicateName]!
       if (handler) {
         const branch = handler(expression, condition)
-        branches.push(branch)
+        if (branch !== undefined) {
+          branches.push(fragment([literal('('), branch, literal(')')]))
+        }
       }
     }
   }
@@ -118,25 +135,19 @@ const createWhereSql = <T>(
     }
   }
 
-  const conjunction = join(branches, ' and ')
+  const and = conjunction(...branches)
 
   if (predicate.or) {
+    const createNext = (x: undefined | Where<T>) =>
+      createWhereSql(expression, x, handlers)
+
     if (Array.isArray(predicate.or)) {
-      return join(
-        [
-          conjunction,
-          ...predicate.or.map(x => createWhereSql(expression, x, handlers)),
-        ],
-        ' or '
-      )
+      return disjunction(and, ...predicate.or.map(createNext))
     } else {
-      return join(
-        [conjunction, createWhereSql(expression, predicate.or)],
-        ' or '
-      )
+      return disjunction(and, createNext(predicate.or))
     }
   } else {
-    return conjunction
+    return and
   }
 }
 
