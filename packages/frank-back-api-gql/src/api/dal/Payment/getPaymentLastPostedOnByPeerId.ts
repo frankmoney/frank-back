@@ -13,9 +13,9 @@ export default createQuery<Args, Date | null>(
   async (args, { db }) =>
     (await db.scalar<Date>(
       sql`
-        select max(${payment}.${payment.postedOn})
-        from ${payment}
-        where ${payment.peerId} = ${args.peerId};
+        select max(p."${payment.postedOn}")
+        from "${payment}" p
+        where p."${payment.peerId}" = ${args.peerId}
       `
     )) || null
 )

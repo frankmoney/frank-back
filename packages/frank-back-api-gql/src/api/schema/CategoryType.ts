@@ -1,16 +1,15 @@
 import { Type } from 'gql'
 import Category from 'store/types/Category'
-import undefinedIfNull from 'utils/undefinedIfNull'
 import getAccountByCategoryId from 'api/dal/Account/getAccountByCategoryId'
 import getPeerByPidAndCategoryId from 'api/dal/Peer/getPeerByPidAndCategoryId'
 import listPeersByCategoryId from 'api/dal/Peer/listPeersByCategoryId'
-import countPaymentsByCategoryId from 'api/dal/Payment/countPaymentsByCategoryId'
-import countPaymentsRevenueByCategoryId from 'api/dal/Payment/countPaymentsRevenueByCategoryId'
-import countPaymentsSpendingByCategoryId from 'api/dal/Payment/countPaymentsSpendingByCategoryId'
-import countPaymentsTotalByCategoryId from 'api/dal/Payment/countPaymentsTotalByCategoryId'
+import countPayments from 'api/dal/Payment/countPayments'
+import countPaymentsRevenue from 'api/dal/Payment/countPaymentsRevenue'
+import countPaymentsSpending from 'api/dal/Payment/countPaymentsSpending'
+import countPaymentsTotal from 'api/dal/Payment/countPaymentsTotal'
 import getPaymentByPidAndCategoryId from 'api/dal/Payment/getPaymentByPidAndCategoryId'
 import getPaymentsLedgerBarChartByCategoryId from 'api/dal/Payment/getPaymentsLedgerBarChartByCategoryId'
-import listPaymentsByCategoryId from 'api/dal/Payment/listPaymentsByCategoryId'
+import listPayments from 'api/dal/Payment/listPayments'
 import mapAccount from 'api/mappers/mapAccount'
 import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
@@ -22,6 +21,7 @@ import PaymentsOrderType from './PaymentsOrderType'
 import PaymentType from './PaymentType'
 import PeersOrderType from './PeersOrderType'
 import PeerType from './PeerType'
+import createPaymentWhere from './helpers/createPaymentWhere'
 
 const CategoryType = Type('Category', type =>
   type.fields(field => ({
@@ -132,15 +132,11 @@ const CategoryType = Type('Category', type =>
           async ({ parent, args, scope }) => {
             const category: Category = parent.$source
 
-            const payments = await listPaymentsByCategoryId(
+            const payments = await listPayments(
               {
-                categoryId: category.id,
-                postedOnMin: args.postedOnMin,
-                postedOnMax: args.postedOnMax,
-                amountMin: args.amountMin,
-                amountMax: args.amountMax,
-                verified: undefinedIfNull(args.verified),
-                search: args.search,
+                where: createPaymentWhere(args, {
+                  categoryId: { eq: category.id },
+                }),
                 take: args.take,
                 skip: args.skip,
                 orderBy: args.sortBy,
@@ -168,15 +164,11 @@ const CategoryType = Type('Category', type =>
           async ({ parent, args, scope }) => {
             const category: Category = parent.$source
 
-            const count = await countPaymentsByCategoryId(
+            const count = await countPayments(
               {
-                categoryId: category.id,
-                postedOnMin: args.postedOnMin,
-                postedOnMax: args.postedOnMax,
-                amountMin: args.amountMin,
-                amountMax: args.amountMax,
-                verified: undefinedIfNull(args.verified),
-                search: args.search,
+                where: createPaymentWhere(args, {
+                  categoryId: { eq: category.id },
+                }),
               },
               scope
             )
@@ -191,8 +183,12 @@ const CategoryType = Type('Category', type =>
         async ({ parent, args, scope }) => {
           const category: Category = parent.$source
 
-          const count = await countPaymentsTotalByCategoryId(
-            { categoryId: category.id },
+          const count = await countPaymentsTotal(
+            {
+              where: createPaymentWhere(args, {
+                categoryId: { eq: category.id },
+              }),
+            },
             scope
           )
 
@@ -206,8 +202,12 @@ const CategoryType = Type('Category', type =>
         async ({ parent, args, scope }) => {
           const category: Category = parent.$source
 
-          const count = await countPaymentsRevenueByCategoryId(
-            { categoryId: category.id },
+          const count = await countPaymentsRevenue(
+            {
+              where: createPaymentWhere(args, {
+                categoryId: { eq: category.id },
+              }),
+            },
             scope
           )
 
@@ -221,8 +221,12 @@ const CategoryType = Type('Category', type =>
         async ({ parent, args, scope }) => {
           const category: Category = parent.$source
 
-          const count = await countPaymentsSpendingByCategoryId(
-            { categoryId: category.id },
+          const count = await countPaymentsSpending(
+            {
+              where: createPaymentWhere(args, {
+                categoryId: { eq: category.id },
+              }),
+            },
             scope
           )
 
