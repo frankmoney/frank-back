@@ -1,4 +1,4 @@
-import { Sql, and, or, sql } from 'sql'
+import { Sql, join, sql } from 'sql'
 import Where from './Where'
 
 type Handler = (expression: Sql, value: any) => undefined | Sql
@@ -118,16 +118,22 @@ const createWhereSql = <T>(
     }
   }
 
-  const conjunction = and(branches)
+  const conjunction = join(branches, ' and ')
 
   if (predicate.or) {
     if (Array.isArray(predicate.or)) {
-      return or(
-        conjunction,
-        ...predicate.or.map(x => createWhereSql(expression, x, handlers))
+      return join(
+        [
+          conjunction,
+          ...predicate.or.map(x => createWhereSql(expression, x, handlers)),
+        ],
+        ' or '
       )
     } else {
-      return or(conjunction, createWhereSql(expression, predicate.or))
+      return join(
+        [conjunction, createWhereSql(expression, predicate.or)],
+        ' or '
+      )
     }
   } else {
     return conjunction
