@@ -1,5 +1,5 @@
 import { Type } from 'gql'
-import LedgerBarChartBarSizeType from '../LedgerBarChartBarSizeType'
+import LedgerBarChartBarSizeType from './LedgerBarChartBarSizeType'
 import LedgerBarChartBarType from './LedgerBarChartBarType'
 
 const LedgerBarChartType = Type('LedgerBarChart', type =>

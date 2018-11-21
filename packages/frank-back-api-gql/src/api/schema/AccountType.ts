@@ -359,8 +359,8 @@ const AccountType = Type('Account', type =>
     ledgerBarChart: field
       .ofType(LedgerBarChartType)
       .args(arg => ({
-        postedOnFrom: arg.ofDate(),
-        postedOnTo: arg.ofDate(),
+        postedOnFrom: arg.ofDate().nullable(),
+        postedOnTo: arg.ofDate().nullable(),
       }))
       .resolve(
         createPrivateResolver(
