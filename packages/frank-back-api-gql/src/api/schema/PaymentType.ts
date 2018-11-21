@@ -64,6 +64,7 @@ const PaymentType = Type('Payment', type =>
     similar: field
       .listOf(PaymentType)
       .args(arg => ({
+        includeSelf: arg.ofBool(),
         postedOnMin: arg.ofDate().nullable(),
         postedOnMax: arg.ofDate().nullable(),
         amountMin: arg.ofFloat().nullable(),
@@ -83,6 +84,7 @@ const PaymentType = Type('Payment', type =>
             const payments = await listSimilarPaymentsById(
               {
                 id: payment.id,
+                includeSelf: args.includeSelf,
                 where: createPaymentWhere(args),
                 take: args.take,
                 skip: args.skip,
@@ -95,11 +97,34 @@ const PaymentType = Type('Payment', type =>
           }
         )
       ),
-    countSimilar: field.ofInt().resolve(
-      createPrivateResolver('Payment:countSimilar', ({ parent, scope }) => {
-        return countSimilarPaymentsByPid({ paymentPid: parent.pid }, scope)
-      })
-    ),
+    countSimilar: field
+      .ofInt()
+      .args(arg => ({
+        includeSelf: arg.ofBool(),
+        postedOnMin: arg.ofDate().nullable(),
+        postedOnMax: arg.ofDate().nullable(),
+        amountMin: arg.ofFloat().nullable(),
+        amountMax: arg.ofFloat().nullable(),
+        verified: arg.ofBool().nullable(),
+        search: arg.ofString().nullable(),
+      }))
+      .resolve(
+        createPrivateResolver(
+          'Payment:countSimilar',
+          ({ parent, args, scope }) => {
+            const count = countSimilarPaymentsByPid(
+              {
+                paymentPid: parent.pid,
+                includeSelf: args.includeSelf,
+                where: createPaymentWhere(args),
+              },
+              scope
+            )
+
+            return count
+          }
+        )
+      ),
     account: field.ofType(AccountType).resolve(
       createPrivateResolver('Payment:account', async ({ parent, scope }) => {
         const payment: Payment = parent.$source

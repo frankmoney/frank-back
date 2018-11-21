@@ -7,8 +7,12 @@ import paymentPredicateSql from './helpers/paymentPredicateSql'
 
 export type Args = {
   paymentPid: Pid
+  includeSelf: boolean
   where?: PaymentWhere
 }
+
+const includeSelfSql = (includeSelf: boolean) =>
+  includeSelf ? undefined : sql`t."${payment.id}" <> o."${payment.id}"`
 
 export default createQuery<Args, number>(
   'countSimilarPaymentsByPid',
@@ -20,7 +24,7 @@ export default createQuery<Args, number>(
         join "${payment}" o
         on t."${payment.categoryId}" = o."${payment.categoryId}"
         and t."${payment.peerId}" = o."${payment.peerId}"
-        and t."${payment.id}" <> o."${payment.id}"
+        ${and(includeSelfSql(args.includeSelf))}
         where t."${payment.pid}" = ${args.paymentPid}
         ${and(paymentPredicateSql('other', args.where))}
       `

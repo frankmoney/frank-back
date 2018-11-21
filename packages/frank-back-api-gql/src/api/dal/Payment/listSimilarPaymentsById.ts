@@ -12,11 +12,15 @@ import paymentPredicateSql from './helpers/paymentPredicateSql'
 
 export type Args = {
   id: Id
+  includeSelf: boolean
   where?: PaymentWhere
   take?: number
   skip?: number
   orderBy: PaymentsOrder
 }
+
+const includeSelfSql = (includeSelf: boolean) =>
+  includeSelf ? undefined : sql`t."${payment.id}" <> o."${payment.id}"`
 
 export default createQuery<Args, Payment[]>(
   'listSimilarPaymentsById',
@@ -28,7 +32,7 @@ export default createQuery<Args, Payment[]>(
         join "${payment}" o
         on t."${payment.categoryId}" = o."${payment.categoryId}"
         and t."${payment.peerId}" = o."${payment.peerId}"
-        and t."${payment.id}" <> o."${payment.id}"
+        ${and(includeSelfSql(args.includeSelf))}
         where t."${payment.id}" = ${args.id}
         ${and(paymentPredicateSql('o', args.where))}
         order by ${paymentOrderBySql('o', args.orderBy)}
