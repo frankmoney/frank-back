@@ -19,6 +19,7 @@ import CategoryType from './CategoryType'
 import PaymentsOrderType from './PaymentsOrderType'
 import UserType from './UserType'
 import PeerType from './PeerType'
+import createPaymentWhere from './helpers/createPaymentWhere'
 
 const updaterConstructor = (
   field: ObjectTypeFieldBuilder,
@@ -63,7 +64,7 @@ const PaymentType = Type('Payment', type =>
     similar: field
       .listOf(PaymentType)
       .args(arg => ({
-        sortBy: arg.ofType(PaymentsOrderType),
+        includeSelf: arg.ofBool(),
         postedOnMin: arg.ofDate().nullable(),
         postedOnMax: arg.ofDate().nullable(),
         amountMin: arg.ofFloat().nullable(),
@@ -72,6 +73,7 @@ const PaymentType = Type('Payment', type =>
         search: arg.ofString().nullable(),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
+        sortBy: arg.ofType(PaymentsOrderType),
       }))
       .resolve(
         createPrivateResolver(
@@ -82,12 +84,8 @@ const PaymentType = Type('Payment', type =>
             const payments = await listSimilarPaymentsById(
               {
                 id: payment.id,
-                postedOnMin: args.postedOnMin,
-                postedOnMax: args.postedOnMax,
-                amountMin: args.amountMin,
-                amountMax: args.amountMax,
-                verified: undefinedIfNull(args.verified),
-                search: args.search,
+                includeSelf: args.includeSelf,
+                where: createPaymentWhere(args),
                 take: args.take,
                 skip: args.skip,
                 orderBy: args.sortBy,
@@ -99,11 +97,34 @@ const PaymentType = Type('Payment', type =>
           }
         )
       ),
-    countSimilar: field.ofInt().resolve(
-      createPrivateResolver('Payment:countSimilar', ({ parent, scope }) => {
-        return countSimilarPaymentsByPid({ paymentPid: parent.pid }, scope)
-      })
-    ),
+    countSimilar: field
+      .ofInt()
+      .args(arg => ({
+        includeSelf: arg.ofBool(),
+        postedOnMin: arg.ofDate().nullable(),
+        postedOnMax: arg.ofDate().nullable(),
+        amountMin: arg.ofFloat().nullable(),
+        amountMax: arg.ofFloat().nullable(),
+        verified: arg.ofBool().nullable(),
+        search: arg.ofString().nullable(),
+      }))
+      .resolve(
+        createPrivateResolver(
+          'Payment:countSimilar',
+          ({ parent, args, scope }) => {
+            const count = countSimilarPaymentsByPid(
+              {
+                paymentPid: parent.pid,
+                includeSelf: args.includeSelf,
+                where: createPaymentWhere(args),
+              },
+              scope
+            )
+
+            return count
+          }
+        )
+      ),
     account: field.ofType(AccountType).resolve(
       createPrivateResolver('Payment:account', async ({ parent, scope }) => {
         const payment: Payment = parent.$source

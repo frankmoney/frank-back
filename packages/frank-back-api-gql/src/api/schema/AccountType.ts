@@ -1,29 +1,28 @@
 import { String, Type } from 'gql'
 import Account from 'store/types/Account'
-import undefinedIfNull from 'utils/undefinedIfNull'
 import countCategoriesByAccountId from 'api/dal/Category/countCategoriesByAccountId'
 import getCategoryByPidAndAccountId from 'api/dal/Category/getCategoryByPidAndAccountId'
 import listCategoriesByAccountId from 'api/dal/Category/listCategoriesByAccountId'
-import countPaymentsByAccountId from 'api/dal/Payment/countPaymentsByAccountId'
-import countPaymentsRevenueByAccountId from 'api/dal/Payment/countPaymentsRevenueByAccountId'
-import countPaymentsSpendingByAccountId from 'api/dal/Payment/countPaymentsSpendingByAccountId'
-import countPaymentsTotalByAccountId from 'api/dal/Payment/countPaymentsTotalByAccountId'
+import countPayments from 'api/dal/Payment/countPayments'
+import countPaymentsRevenue from 'api/dal/Payment/countPaymentsRevenue'
+import countPaymentsSpending from 'api/dal/Payment/countPaymentsSpending'
+import countPaymentsTotal from 'api/dal/Payment/countPaymentsTotal'
 import getPaymentByPidAndAccountId from 'api/dal/Payment/getPaymentByPidAndAccountId'
-import getPaymentsLedgerPieChartByAccountId from 'api/dal/Payment/getPaymentsLedgerPieChartByAccountId'
+import getPaymentsLedgerPieChart from 'api/dal/Payment/getPaymentsLedgerPieChart'
+import listPayments from 'api/dal/Payment/listPayments'
 import paymentsDescriptionsByAccountPid from 'api/dal/Payment/paymentsDescriptionsByAccountPid'
-import listPaymentsByAccountId from 'api/dal/Payment/listPaymentsByAccountId'
 import countPeersByAccountId from 'api/dal/Peer/countPeersByAccountId'
 import getPeerByPidAndAccountId from 'api/dal/Peer/getPeerByPidAndAccountId'
 import listPeersByAccountId from 'api/dal/Peer/listPeersByAccountId'
 import getStoryByPidAndAccountId from 'api/dal/Story/getStoryByPidAndAccountId'
 import listStoriesByAccountId from 'api/dal/Story/listStoriesByAccountId'
 import { throwNotFound } from 'api/errors/NotFoundError'
+import ledgerBarChart from 'api/ledger_bar_chart'
 import mapCategory from 'api/mappers/mapCategory'
 import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
 import mapStory from 'api/mappers/mapStory'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
-import ledgerBarChart from 'api/ledger_bar_chart'
 import CategoryType from './CategoryType'
 import CurrencyType from './CurrencyType'
 import LedgerBarChartType from './LedgerBarChartType'
@@ -34,6 +33,7 @@ import PeersOrderType from './PeersOrderType'
 import PeerType from './PeerType'
 import StoriesOrderType from './StoriesOrderType'
 import StoryType from './StoryType'
+import createPaymentWhere from './helpers/createPaymentWhere'
 
 const AccountType = Type('Account', type =>
   type.fields(field => ({
@@ -238,7 +238,6 @@ const AccountType = Type('Account', type =>
     payments: field
       .listOf(PaymentType)
       .args(arg => ({
-        sortBy: arg.ofType(PaymentsOrderType),
         postedOnMin: arg.ofDate().nullable(),
         postedOnMax: arg.ofDate().nullable(),
         amountMin: arg.ofFloat().nullable(),
@@ -247,6 +246,7 @@ const AccountType = Type('Account', type =>
         search: arg.ofString().nullable(),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
+        sortBy: arg.ofType(PaymentsOrderType),
       }))
       .resolve(
         createPrivateResolver(
@@ -254,15 +254,11 @@ const AccountType = Type('Account', type =>
           async ({ parent, args, scope }) => {
             const account: Account = parent.$source
 
-            const payments = await listPaymentsByAccountId(
+            const payments = await listPayments(
               {
-                accountId: account.id,
-                postedOnMin: args.postedOnMin,
-                postedOnMax: args.postedOnMax,
-                amountMin: args.amountMin,
-                amountMax: args.amountMax,
-                verified: undefinedIfNull(args.verified),
-                search: args.search,
+                where: createPaymentWhere(args, {
+                  accountId: { eq: account.id },
+                }),
                 take: args.take,
                 skip: args.skip,
                 orderBy: args.sortBy,
@@ -290,15 +286,11 @@ const AccountType = Type('Account', type =>
           async ({ parent, args, scope }) => {
             const account: Account = parent.$source
 
-            const count = await countPaymentsByAccountId(
+            const count = await countPayments(
               {
-                accountId: account.id,
-                postedOnMin: args.postedOnMin,
-                postedOnMax: args.postedOnMax,
-                amountMin: args.amountMin,
-                amountMax: args.amountMax,
-                verified: undefinedIfNull(args.verified),
-                search: args.search,
+                where: createPaymentWhere(args, {
+                  accountId: { eq: account.id },
+                }),
               },
               scope
             )
@@ -313,8 +305,12 @@ const AccountType = Type('Account', type =>
         async ({ parent, args, scope }) => {
           const account: Account = parent.$source
 
-          const count = await countPaymentsTotalByAccountId(
-            { accountId: account.id },
+          const count = await countPaymentsTotal(
+            {
+              where: createPaymentWhere(args, {
+                accountId: { eq: account.id },
+              }),
+            },
             scope
           )
 
@@ -328,8 +324,12 @@ const AccountType = Type('Account', type =>
         async ({ parent, args, scope }) => {
           const account: Account = parent.$source
 
-          const count = await countPaymentsRevenueByAccountId(
-            { accountId: account.id },
+          const count = await countPaymentsRevenue(
+            {
+              where: createPaymentWhere(args, {
+                accountId: { eq: account.id },
+              }),
+            },
             scope
           )
 
@@ -343,8 +343,12 @@ const AccountType = Type('Account', type =>
         async ({ parent, args, scope }) => {
           const account: Account = parent.$source
 
-          const count = await countPaymentsSpendingByAccountId(
-            { accountId: account.id },
+          const count = await countPaymentsSpending(
+            {
+              where: createPaymentWhere(args, {
+                accountId: { eq: account.id },
+              }),
+            },
             scope
           )
 
@@ -355,8 +359,8 @@ const AccountType = Type('Account', type =>
     ledgerBarChart: field
       .ofType(LedgerBarChartType)
       .args(arg => ({
-        postedOnFrom: arg.ofDate().nullable(),
-        postedOnTo: arg.ofDate().nullable(),
+        postedOnFrom: arg.ofDate(),
+        postedOnTo: arg.ofDate(),
       }))
       .resolve(
         createPrivateResolver(
@@ -380,6 +384,10 @@ const AccountType = Type('Account', type =>
       .args(arg => ({
         postedOnMin: arg.ofDate().nullable(),
         postedOnMax: arg.ofDate().nullable(),
+        amountMin: arg.ofFloat().nullable(),
+        amountMax: arg.ofFloat().nullable(),
+        verified: arg.ofBool().nullable(),
+        search: arg.ofString().nullable(),
       }))
       .resolve(
         createPrivateResolver(
@@ -387,8 +395,12 @@ const AccountType = Type('Account', type =>
           async ({ parent, args, scope }) => {
             const account: Account = parent.$source
 
-            const result = await getPaymentsLedgerPieChartByAccountId(
-              { accountId: account.id },
+            const result = await getPaymentsLedgerPieChart(
+              {
+                wherePayment: createPaymentWhere(args, {
+                  accountId: { eq: account.id },
+                }),
+              },
               scope
             )
 

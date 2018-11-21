@@ -4,23 +4,23 @@
 //  кварталы 2-8 лет          8-32 квартала
 //  годы 9+ лет  ....             9+ лет
 
-import Account from 'store/types/Account'
-import Payment from 'store/types/Payment'
 import DefaultActionScope from 'api/dal/DefaultActionScope'
-import listPaymentsByAccountId from 'api/dal/Payment/listPaymentsByAccountId'
-import R from 'ramda'
+import listPayments from 'api/dal/Payment/listPayments'
+import LedgerBarChartBarSize from 'api/types/LedgerBarChartBarSize'
 import {
-  addMonths,
-  startOfMonth,
-  startOfWeek,
-  startOfQuarter,
-  startOfYear,
   addDays,
+  addMonths,
   addWeeks,
   addYears,
-  subDays,
   format,
+  startOfMonth,
+  startOfQuarter,
+  startOfWeek,
+  startOfYear,
 } from 'date-fns'
+import R from 'ramda'
+import Account from 'store/types/Account'
+import Payment from 'store/types/Payment'
 
 const FORMAT_TEMPLATE = 'YYYY-MM-DD'
 
@@ -28,61 +28,62 @@ type Bar = {
   showDate: string
   startDate: string
   endDate: string
-  income: number
-  expenses: number
+  revenue: number
+  spending: number
 }
 
 type BarCharResult = {
-  barSize: string
-  maxIncome: number
-  maxExpenses: number
-  maxSum: number
   fromDate: string
   toDate: string
-  totalSum: number
+  barSize: LedgerBarChartBarSize
+  total: number
+  maxTotal: number
+  maxRevenue: number
+  maxSpending: number
   bars: Bar[]
 }
 
-const calculateBarSize = (fromDate: Date, toDate: Date): string => {
+const calculateBarSize = (
+  fromDate: Date,
+  toDate: Date
+): LedgerBarChartBarSize => {
   if (addMonths(fromDate, 1) >= toDate) {
-    return 'day'
+    return LedgerBarChartBarSize.day
   }
 
   if (addMonths(fromDate, 8) >= toDate) {
-    return 'week'
+    return LedgerBarChartBarSize.week
   }
 
   if (addMonths(fromDate, 23) >= toDate) {
-    return 'month'
+    return LedgerBarChartBarSize.month
   }
 
   if (addMonths(fromDate, 96) >= toDate) {
-
-    return 'quarter'
+    return LedgerBarChartBarSize.quarter
   }
 
-  return 'year'
+  return LedgerBarChartBarSize.year
 }
 
 const generateBars = (
   barSize: string,
   fromDate: Date,
   toDate: Date,
-  payments: Payment[],
+  payments: Payment[]
 ): {
   meta: {
-    maxIncome: number
-    maxExpenses: number
-    maxSum: number
+    maxTotal: number
+    maxRevenue: number
+    maxSpending: number
   }
   bars: Bar[]
 } => {
-
   const bars: Bar[] = []
   const meta = {
-    maxIncome: 0,
-    maxExpenses: 0,
-    maxSum: 0,
+    maxTotal: 0,
+    maxRevenue: 0,
+    maxSpending: 0,
   }
 
   let _fromDate: Date | null = null
@@ -99,7 +100,6 @@ const generateBars = (
   if (barSize === 'year') {
     _toDate = startOfYear(fromDate)
   }
-
 
   while (_toDate < toDate) {
     _fromDate = _toDate
@@ -141,7 +141,9 @@ const generateBars = (
 
     let endDate = startOfMonth(_toDate)
 
-    if (format(endDate, FORMAT_TEMPLATE) === format(startDate, FORMAT_TEMPLATE)) {
+    if (
+      format(endDate, FORMAT_TEMPLATE) === format(startDate, FORMAT_TEMPLATE)
+    ) {
       endDate = addMonths(endDate, 1)
     }
 
@@ -149,8 +151,8 @@ const generateBars = (
       showDate: format(_fromDate, FORMAT_TEMPLATE),
       startDate: format(startDate, FORMAT_TEMPLATE),
       endDate: format(endDate, FORMAT_TEMPLATE),
-      income: 0,
-      expenses: 0,
+      revenue: 0,
+      spending: 0,
     }
 
     const paymentsForCurrentBar = R.filter(p => {
@@ -159,21 +161,19 @@ const generateBars = (
     }, payments)
 
     R.forEach(p => {
-
       if (p.amount > 0) {
-        bar.income += p.amount
+        bar.revenue += p.amount
       } else {
-        bar.expenses += Math.abs(p.amount)
+        bar.spending += Math.abs(p.amount)
       }
-
     }, paymentsForCurrentBar)
 
-    bar.income = Math.floor(bar.income)
-    bar.expenses = Math.floor(bar.expenses)
+    bar.revenue = Math.floor(bar.revenue)
+    bar.spending = Math.floor(bar.spending)
 
-    meta.maxIncome = Math.max(meta.maxIncome, bar.income)
-    meta.maxExpenses = Math.max(meta.maxExpenses, bar.expenses)
-    meta.maxSum = Math.max(meta.maxSum, (bar.income + bar.expenses))
+    meta.maxTotal = Math.max(meta.maxTotal, bar.revenue + bar.spending)
+    meta.maxRevenue = Math.max(meta.maxRevenue, bar.revenue)
+    meta.maxSpending = Math.max(meta.maxSpending, bar.spending)
 
     bars.push(bar)
   }
@@ -187,57 +187,61 @@ const generateBars = (
 export default async (
   scope: DefaultActionScope | null,
   account: Account | null,
-  fromDate: Date | undefined,
-  toDate: Date | undefined,
+  postedOnFrom?: Date,
+  postedOnTo?: Date
 ): Promise<BarCharResult> => {
-
   let payments: Payment[] = []
 
   if (scope && account) {
-
-    const postedOnMin = fromDate ? format(fromDate, FORMAT_TEMPLATE) : undefined
-    const postedOnMax = toDate ? format(subDays(toDate, 1), FORMAT_TEMPLATE) : undefined
-
-    payments = await listPaymentsByAccountId({
-      accountId: account.id,
-      orderBy: 'postedOn_DESC',
-      postedOnMin,
-      postedOnMax,
-    }, scope)
+    payments = await listPayments(
+      {
+        where: {
+          accountId: {
+            eq: account.id,
+          },
+        },
+        orderBy: 'postedOn_DESC',
+      },
+      scope
+    )
   }
 
-
-  if (R.isNil(toDate)) {
-    toDate = addMonths(new Date, 1)
+  if (R.isNil(postedOnTo)) {
+    postedOnTo = addMonths(new Date(), 1)
   }
 
-  if (R.isNil(fromDate)) {
+  if (R.isNil(postedOnFrom)) {
     const lastPayment: Payment = payments[payments.length - 1]
 
     if (lastPayment) {
-      fromDate = new Date(lastPayment.postedOn)
+      postedOnFrom = new Date(lastPayment.postedOn)
     } else {
-      fromDate = toDate
+      postedOnFrom = postedOnTo
     }
   }
 
-  fromDate = startOfMonth(fromDate)
-  toDate = startOfMonth(toDate)
+  postedOnFrom = startOfMonth(postedOnFrom)
+  postedOnTo = startOfMonth(postedOnTo)
 
-  const barSize = calculateBarSize(fromDate, toDate)
+  const barSize = calculateBarSize(postedOnFrom, postedOnTo)
 
-  const totalSum = R.sum(R.map(p => p.amount, payments))
+  const total = R.sum(R.map(p => p.amount, payments))
 
-  const { meta, bars } = generateBars(barSize, fromDate, toDate, payments)
+  const { meta, bars } = generateBars(
+    barSize,
+    postedOnFrom,
+    postedOnTo,
+    payments
+  )
 
   return {
     barSize,
-    fromDate: format(fromDate, FORMAT_TEMPLATE),
-    toDate: format(toDate, FORMAT_TEMPLATE),
-    maxIncome: meta.maxIncome,
-    maxExpenses: meta.maxExpenses,
-    maxSum: meta.maxSum,
-    totalSum: Math.floor(totalSum),
+    fromDate: format(postedOnFrom, FORMAT_TEMPLATE),
+    toDate: format(postedOnTo, FORMAT_TEMPLATE),
+    total: Math.floor(total),
+    maxRevenue: meta.maxRevenue,
+    maxSpending: meta.maxSpending,
+    maxTotal: meta.maxTotal,
     bars,
   }
 }

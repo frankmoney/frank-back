@@ -4,9 +4,9 @@ import { Type } from 'gql'
 const UserType = Type('User', type =>
   type.fields(field => ({
     pid: field.ofId(),
-    email: field.ofString(),
+    email: field.ofString().nullable(),
     lastName: field.ofString().nullable(),
-    firstName: field.ofString(),
+    firstName: field.ofString().nullable(),
     name: field.ofString(),
     avatar: field.ofJson().nullable(),
     color: field.ofInt(),

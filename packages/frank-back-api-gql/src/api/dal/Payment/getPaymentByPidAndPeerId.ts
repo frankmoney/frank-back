@@ -5,6 +5,7 @@ import Payment from 'store/types/Payment'
 import Id from 'store/types/Id'
 import Pid from 'store/types/Pid'
 import createQuery from '../createQuery'
+import paymentFieldsSql from './helpers/paymentFieldsSql'
 
 export type Args = {
   peerId: Id
@@ -16,25 +17,10 @@ export default createQuery<Args, Payment>(
   (args, { db }) =>
     db.first(
       sql`
-        select
-          ${payment}.${payment.id},
-          ${payment}.${payment.pid},
-          ${payment}.${payment.createdAt},
-          ${payment}.${payment.creatorId},
-          ${payment}.${payment.updatedAt},
-          ${payment}.${payment.updaterId},
-          ${payment}.${payment.data},
-          ${payment}.${payment.postedOn},
-          ${payment}.${payment.amount},
-          ${payment}.${payment.peerName},
-          ${payment}.${payment.description},
-          ${payment}.${payment.verified},
-          ${payment}.${payment.accountId},
-          ${payment}.${payment.peerId},
-          ${payment}.${payment.categoryId}
-        from ${payment}
-        where ${payment.peerId} = ${args.peerId}
-        and ${payment.pid} = ${args.pid};
+        select ${paymentFieldsSql('p')}
+        from "${payment}" p
+        where p."${payment.peerId}" = ${args.peerId}
+        and p."${payment.pid}" = ${args.pid};
       `,
       mapPayment
     )
