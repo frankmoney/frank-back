@@ -12,7 +12,8 @@
     "lint": "node node_modules/tslint/bin/tslint -p . && echo \"no lint errors\"",
     "lint-fix": "node node_modules/tslint/bin/tslint -p . --fix && echo \"no lint errors\"",
     "prettier": "node node_modules/prettier/bin-prettier.js -l **/*.js **/*.ts **/*.json",
-    "prettier-fix": "node node_modules/prettier/bin-prettier.js --write **/*.js **/*.ts **/*.json"
+    "prettier-fix": "node node_modules/prettier/bin-prettier.js --write **/*.js **/*.ts **/*.json",
+    "test": "./node_modules/ts-mocha/bin/ts-mocha ./test/*.ts"
   },
   "lint-staged": {
     "*.js": [
@@ -60,14 +61,17 @@
   "devDependencies": {
     "@types/fs-extra": "^5.0.4",
     "@types/koa": "^2.0.46",
+    "@types/mocha": "^5.2.5",
     "cross-spawn": "^6.0.5",
     "env-cmd": "^8.0.2",
     "fs-extra": "^7.0.0",
     "graphql-cli": "^2.16.5",
     "husky": "^1.0.0-rc.13",
     "lint-staged": "^7.2.0",
+    "mocha": "^5.2.0",
     "prettier": "1.14.0",
     "supports-color": "^5.5.0",
+    "ts-mocha": "^2.0.0",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.14.0"
   }

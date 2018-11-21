@@ -1,9 +1,17 @@
 import { Type } from 'gql'
-import LedgerBarChartItemType from './LedgerBarChartItemType'
+import LedgerBarChartBarSizeType from '../LedgerBarChartBarSizeType'
+import LedgerBarChartBarType from './LedgerBarChartBarType'
 
 const LedgerBarChartType = Type('LedgerBarChart', type =>
   type.fields(field => ({
-    items: field.listOf(LedgerBarChartItemType),
+    fromDate: field.ofDate(),
+    toDate: field.ofDate(),
+    barSize: field.ofType(LedgerBarChartBarSizeType),
+    total: field.ofFloat(),
+    maxTotal: field.ofFloat(),
+    maxRevenue: field.ofFloat(),
+    maxSpending: field.ofFloat(),
+    bars: field.listOf(LedgerBarChartBarType),
   }))
 )
 

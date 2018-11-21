@@ -8,7 +8,6 @@ import countPaymentsRevenue from 'api/dal/Payment/countPaymentsRevenue'
 import countPaymentsSpending from 'api/dal/Payment/countPaymentsSpending'
 import countPaymentsTotal from 'api/dal/Payment/countPaymentsTotal'
 import getPaymentByPidAndAccountId from 'api/dal/Payment/getPaymentByPidAndAccountId'
-import getPaymentsLedgerBarChartByAccountId from 'api/dal/Payment/getPaymentsLedgerBarChartByAccountId'
 import getPaymentsLedgerPieChart from 'api/dal/Payment/getPaymentsLedgerPieChart'
 import listPayments from 'api/dal/Payment/listPayments'
 import paymentsDescriptionsByAccountPid from 'api/dal/Payment/paymentsDescriptionsByAccountPid'
@@ -18,6 +17,7 @@ import listPeersByAccountId from 'api/dal/Peer/listPeersByAccountId'
 import getStoryByPidAndAccountId from 'api/dal/Story/getStoryByPidAndAccountId'
 import listStoriesByAccountId from 'api/dal/Story/listStoriesByAccountId'
 import { throwNotFound } from 'api/errors/NotFoundError'
+import ledgerBarChart from 'api/ledger_bar_chart'
 import mapCategory from 'api/mappers/mapCategory'
 import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
@@ -25,7 +25,6 @@ import mapStory from 'api/mappers/mapStory'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import CategoryType from './CategoryType'
 import CurrencyType from './CurrencyType'
-import LedgerBarChartPeriodType from './LedgerBarChartPeriodType'
 import LedgerBarChartType from './LedgerBarChartType'
 import LedgerPieChartType from './LedgerPieChartType'
 import PaymentsOrderType from './PaymentsOrderType'
@@ -360,11 +359,8 @@ const AccountType = Type('Account', type =>
     ledgerBarChart: field
       .ofType(LedgerBarChartType)
       .args(arg => ({
-        postedOnMin: arg.ofDate().nullable(),
-        postedOnMax: arg.ofDate().nullable(),
-        amountMin: arg.ofFloat().nullable(),
-        amountMax: arg.ofFloat().nullable(),
-        period: arg.ofType(LedgerBarChartPeriodType).nullable(),
+        postedOnFrom: arg.ofDate(),
+        postedOnTo: arg.ofDate(),
       }))
       .resolve(
         createPrivateResolver(
@@ -372,16 +368,11 @@ const AccountType = Type('Account', type =>
           async ({ parent, args, scope }) => {
             const account: Account = parent.$source
 
-            const result = await getPaymentsLedgerBarChartByAccountId(
-              {
-                accountId: account.id,
-                postedOnMin: args.postedOnMin,
-                postedOnMax: args.postedOnMax,
-                amountMin: args.amountMin,
-                amountMax: args.amountMax,
-                period: args.period || 'day',
-              },
-              scope
+            const result = await ledgerBarChart(
+              scope,
+              account,
+              args.postedOnFrom,
+              args.postedOnTo
             )
 
             return result

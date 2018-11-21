@@ -1,5 +1,5 @@
 import { Type } from 'gql'
-import LedgerPieChartItemType from './LedgerPieChartItem'
+import LedgerPieChartItemType from './LedgerPieChartItemType'
 
 const LedgerPieChartType = Type('LedgerPieChart', type =>
   type.fields(field => ({

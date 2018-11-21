@@ -1,4 +1,4 @@
-import { and, limit, sql } from 'sql'
+import { and, sql } from 'sql'
 import mapPayment from 'store/mappers/mapPayment'
 import { payment } from 'store/names'
 import Id from 'store/types/Id'
