@@ -26,6 +26,7 @@ import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import ledgerBarChart from 'api/ledger_bar_chart'
 import CategoryType from './CategoryType'
 import CurrencyType from './CurrencyType'
+import LedgerBarChartType from './LedgerBarChartType'
 import LedgerPieChartType from './LedgerPieChartType'
 import PaymentsOrderType from './PaymentsOrderType'
 import PaymentType from './PaymentType'
@@ -352,7 +353,7 @@ const AccountType = Type('Account', type =>
       )
     ),
     ledgerBarChart: field
-      .ofJson()
+      .ofType(LedgerBarChartType)
       .args(arg => ({
         fromDate: arg.ofDate().nullable(),
         toDate: arg.ofDate().nullable(),
