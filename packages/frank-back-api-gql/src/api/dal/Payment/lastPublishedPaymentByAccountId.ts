@@ -18,42 +18,36 @@ export default createQuery<Args, Payment | undefined>(
   'lastPublishedPaymentByAccountId',
   (args, { db }) => {
     const byAmountSql = and(
-      args.amount
-        ? sql`${payment}.${payment.amount} = ${args.amount}`
-        : undefined
+      args.amount ? sql`p."${payment.amount}" = ${args.amount}` : undefined
     )
 
     const byPeerSql = and(
-      args.peerId
-        ? sql`${payment}.${payment.peerId} = ${args.peerId}`
-        : undefined
+      args.peerId ? sql`p."${payment.peerId}" = ${args.peerId}` : undefined
     )
 
     const byCategorySql = and(
       args.categoryId
-        ? sql`${payment}.${payment.categoryId} = ${args.categoryId}`
+        ? sql`p."${payment.categoryId}" = ${args.categoryId}`
         : undefined
     )
 
     const byDescriptionSql = and(
       args.description
-        ? sql`${payment}.${payment.description} = ${args.description}`
+        ? sql`p."${payment.description}" = ${args.description}`
         : undefined
     )
-
-    const orderBySql = sql`${payment}.${payment.postedOn} desc`
 
     return db.first(
       sql`
         select ${paymentFieldsSql('p')}
         from "${payment}" p
         where p."${payment.accountId}" = ${args.accountId} 
-        and p."${payment.verified}" = TRUE
+        and p."${payment.verified}" = true
         ${byAmountSql}
         ${byPeerSql}
         ${byCategorySql}
         ${byDescriptionSql}
-        order by ${orderBySql}
+        order by p."${payment.postedOn}" desc
         limit 1
       `,
       mapPayment
