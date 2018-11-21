@@ -355,10 +355,8 @@ const AccountType = Type('Account', type =>
     ledgerBarChart: field
       .ofType(LedgerBarChartType)
       .args(arg => ({
-        fromDate: arg.ofDate().nullable(),
-        toDate: arg.ofDate().nullable(),
-        // amountMin: arg.ofFloat().nullable(),
-        // amountMax: arg.ofFloat().nullable(),
+        postedOnFrom: arg.ofDate().nullable(),
+        postedOnTo: arg.ofDate().nullable(),
       }))
       .resolve(
         createPrivateResolver(
@@ -369,8 +367,8 @@ const AccountType = Type('Account', type =>
             const result = await ledgerBarChart(
               scope,
               account,
-              args.fromDate,
-              args.toDate,
+              args.postedOnFrom,
+              args.postedOnTo
             )
 
             return result
