@@ -8,6 +8,7 @@ import listSimilarPaymentsById from 'api/dal/Payment/listSimilarPaymentsById'
 import getPeerByPaymentId from 'api/dal/Peer/getPeerByPaymentId'
 import getUserById from 'api/dal/User/getUserById'
 import countSimilarPaymentsByPid from 'api/dal/Payment/countSimilarPaymentsByPid'
+import paymentsDescriptionsByAccountId from 'api/dal/Payment/paymentsDescriptionsByAccountId'
 import mapAccount from 'api/mappers/mapAccount'
 import mapCategory from 'api/mappers/mapCategory'
 import mapPayment from 'api/mappers/mapPayment'
@@ -20,6 +21,7 @@ import PaymentsOrderType from './PaymentsOrderType'
 import UserType from './UserType'
 import PeerType from './PeerType'
 import createPaymentWhere from './helpers/createPaymentWhere'
+import R from 'ramda'
 
 const updaterConstructor = (
   field: ObjectTypeFieldBuilder,
@@ -43,6 +45,15 @@ const updaterConstructor = (
       )
     )
 }
+
+const PaymentSuggestedDescriptionType = Type(
+  'PaymentSuggestedDescription',
+  type =>
+    type.fields(field => ({
+      value: field.ofString(),
+      count: field.ofInt(),
+    }))
+)
 
 const PaymentType = Type('Payment', type =>
   type.fields(field => ({
@@ -170,6 +181,46 @@ const PaymentType = Type('Payment', type =>
     descriptionUpdater: updaterConstructor(field, 'descriptionUpdater'),
     peerUpdater: updaterConstructor(field, 'peerUpdater'),
     categoryUpdater: updaterConstructor(field, 'categoryUpdater'),
+    suggestedDescriptions: field
+      .listOf(PaymentSuggestedDescriptionType)
+      .args(arg => ({
+        search: arg.ofString().nullable(),
+      }))
+      .resolve(
+        createPrivateResolver(
+          'Account:suggestedDescriptions',
+          async ({ parent, args: { search }, scope }) => {
+            const payment: Payment = parent.$source
+
+            const args = R.isNil(search)
+              ? {
+                  accountId: payment.accountId,
+                  peerId: payment.peerId,
+                  categoryId: payment.categoryId,
+                }
+              : {
+                  accountId: payment.accountId,
+                  search,
+                }
+
+            const descriptions = await paymentsDescriptionsByAccountId(
+              args,
+              scope
+            )
+
+            const result: any[] = []
+
+            R.forEachObjIndexed((value, key) => {
+              result.push({
+                value: key,
+                count: value,
+              })
+            }, R.countBy(R.toLower)(descriptions))
+
+            return R.sort(R.descend(<any>R.prop('count')), result)
+          }
+        )
+      ),
   }))
 )
 
