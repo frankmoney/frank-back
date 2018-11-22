@@ -12,7 +12,6 @@ import countPaymentsTotal from 'api/dal/Payment/countPaymentsTotal'
 import getPaymentByPidAndAccountId from 'api/dal/Payment/getPaymentByPidAndAccountId'
 import getPaymentsLedgerPieChart from 'api/dal/Payment/getPaymentsLedgerPieChart'
 import listPayments from 'api/dal/Payment/listPayments'
-import paymentsDescriptionsByAccountPid from 'api/dal/Payment/paymentsDescriptionsByAccountPid'
 import countPeersByAccountId from 'api/dal/Peer/countPeersByAccountId'
 import getPeerByPidAndAccountId from 'api/dal/Peer/getPeerByPidAndAccountId'
 import listPeersByAccountId from 'api/dal/Peer/listPeersByAccountId'
@@ -170,25 +169,6 @@ const AccountType = Type('Account', type =>
             )
 
             return mapPeer(peer)
-          }
-        )
-      ),
-    paymentsDescriptions: field
-      .listOf(String)
-      .args(arg => ({
-        search: arg.ofString().nullable(),
-      }))
-      .resolve(
-        createPrivateResolver(
-          'Account:paymentsDescriptions',
-          ({ parent, args: { search }, scope }) => {
-            return paymentsDescriptionsByAccountPid(
-              {
-                accountPid: parent.pid,
-                search,
-              },
-              scope
-            )
           }
         )
       ),

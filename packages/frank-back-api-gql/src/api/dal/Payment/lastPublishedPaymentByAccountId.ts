@@ -33,7 +33,7 @@ export default createQuery<Args, Payment | undefined>(
 
     const byDescriptionSql = and(
       args.description
-        ? sql`p."${payment.description}" = ${args.description}`
+        ? sql`p."${payment.description}" ilike ${args.description}`
         : undefined
     )
 
