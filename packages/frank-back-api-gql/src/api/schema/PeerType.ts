@@ -1,10 +1,11 @@
 import { Type } from 'gql'
+import { extractFieldNames } from 'gql/parse'
 import Peer from 'store/types/Peer'
-import undefinedIfNull from 'utils/undefinedIfNull'
 import getAccountByPeerId from 'api/dal/Account/getAccountByPeerId'
 import countCategoriesByPeerId from 'api/dal/Category/countCategoriesByPeerId'
 import getCategoryByPidAndPeerId from 'api/dal/Category/getCategoryByPidAndPeerId'
 import listCategoriesByPeerId from 'api/dal/Category/listCategoriesByPeerId'
+import aggregatePayments from 'api/dal/Payment/aggregatePayments'
 import countPayments from 'api/dal/Payment/countPayments'
 import countPaymentsRevenue from 'api/dal/Payment/countPaymentsRevenue'
 import countPaymentsSpending from 'api/dal/Payment/countPaymentsSpending'
@@ -16,7 +17,9 @@ import mapAccount from 'api/mappers/mapAccount'
 import mapCategory from 'api/mappers/mapCategory'
 import mapPayment from 'api/mappers/mapPayment'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import AggregatedPayments from 'api/types/AggregatedPayments'
 import AccountType from './AccountType'
+import AggregatedPaymentsType from './AggregatedPaymentsType'
 import CategoryType from './CategoryType'
 import PaymentsOrderType from './PaymentsOrderType'
 import PaymentType from './PaymentType'
@@ -149,6 +152,38 @@ const PeerType = Type('Peer', type =>
             )
 
             return mapPayment(payments)
+          }
+        )
+      ),
+    aggregatePayments: field
+      .ofType(AggregatedPaymentsType)
+      .args(arg => ({
+        postedOnMin: arg.ofDate().nullable(),
+        postedOnMax: arg.ofDate().nullable(),
+        amountMin: arg.ofFloat().nullable(),
+        amountMax: arg.ofFloat().nullable(),
+        verified: arg.ofBool().nullable(),
+        search: arg.ofString().nullable(),
+      }))
+      .resolve(
+        createPrivateResolver(
+          'Account:aggregatePayments',
+          async ({ parent, args, info, scope }) => {
+            const peer: Peer = parent.$source
+
+            const result = await aggregatePayments(
+              {
+                fields: extractFieldNames<AggregatedPayments>(info),
+                where: createPaymentWhere(args, {
+                  peerId: {
+                    eq: peer.id,
+                  },
+                }),
+              },
+              scope
+            )
+
+            return result
           }
         )
       ),
