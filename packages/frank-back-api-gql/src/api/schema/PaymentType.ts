@@ -184,6 +184,7 @@ const PaymentType = Type('Payment', type =>
           ({ parent, args: { search }, scope }) => {
             const payment: Payment = parent.$source
 
+            // if inputted search text peerId and categoryId are skipped
             const args = R.isNil(search)
               ? {
                   accountId: payment.accountId,
