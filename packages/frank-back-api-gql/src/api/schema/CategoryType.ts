@@ -1,9 +1,11 @@
 import { Type } from 'gql'
+import { extractFieldNames } from 'gql/parse'
 import Category from 'store/types/Category'
 import getAccountByCategoryId from 'api/dal/Account/getAccountByCategoryId'
+import aggregatePayments from 'api/dal/Payment/aggregatePayments'
+import countPayments from 'api/dal/Payment/countPayments'
 import getPeerByPidAndCategoryId from 'api/dal/Peer/getPeerByPidAndCategoryId'
 import listPeersByCategoryId from 'api/dal/Peer/listPeersByCategoryId'
-import countPayments from 'api/dal/Payment/countPayments'
 import countPaymentsRevenue from 'api/dal/Payment/countPaymentsRevenue'
 import countPaymentsSpending from 'api/dal/Payment/countPaymentsSpending'
 import countPaymentsTotal from 'api/dal/Payment/countPaymentsTotal'
@@ -14,7 +16,9 @@ import mapAccount from 'api/mappers/mapAccount'
 import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import AggregatedPayments from 'api/types/AggregatedPayments'
 import AccountType from './AccountType'
+import AggregatedPaymentsType from './AggregatedPaymentsType'
 import LedgerBarChartPeriodType from './LedgerBarChartPeriodType'
 import LedgerBarChartType from './LedgerBarChartType'
 import PaymentsOrderType from './PaymentsOrderType'
@@ -145,6 +149,38 @@ const CategoryType = Type('Category', type =>
             )
 
             return mapPayment(payments)
+          }
+        )
+      ),
+    aggregatePayments: field
+      .ofType(AggregatedPaymentsType)
+      .args(arg => ({
+        postedOnMin: arg.ofDate().nullable(),
+        postedOnMax: arg.ofDate().nullable(),
+        amountMin: arg.ofFloat().nullable(),
+        amountMax: arg.ofFloat().nullable(),
+        verified: arg.ofBool().nullable(),
+        search: arg.ofString().nullable(),
+      }))
+      .resolve(
+        createPrivateResolver(
+          'Account:aggregatePayments',
+          async ({ parent, args, info, scope }) => {
+            const category: Category = parent.$source
+
+            const result = await aggregatePayments(
+              {
+                fields: extractFieldNames<AggregatedPayments>(info),
+                where: createPaymentWhere(args, {
+                  categoryId: {
+                    eq: category.id,
+                  },
+                }),
+              },
+              scope
+            )
+
+            return result
           }
         )
       ),

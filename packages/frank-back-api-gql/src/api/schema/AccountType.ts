@@ -1,7 +1,6 @@
 import { String, Type } from 'gql'
 import { extractFieldNames } from 'gql/parse'
 import Account from 'store/types/Account'
-import AggregatedPayments from 'store/types/AggregatedPayments'
 import countCategoriesByAccountId from 'api/dal/Category/countCategoriesByAccountId'
 import getCategoryByPidAndAccountId from 'api/dal/Category/getCategoryByPidAndAccountId'
 import listCategoriesByAccountId from 'api/dal/Category/listCategoriesByAccountId'
@@ -26,6 +25,7 @@ import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
 import mapStory from 'api/mappers/mapStory'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import AggregatedPayments from 'api/types/AggregatedPayments'
 import AggregatedPaymentsType from './AggregatedPaymentsType'
 import CategoryType from './CategoryType'
 import CurrencyType from './CurrencyType'
@@ -274,35 +274,6 @@ const AccountType = Type('Account', type =>
           }
         )
       ),
-    countPayments: field
-      .ofInt()
-      .args(arg => ({
-        postedOnMin: arg.ofDate().nullable(),
-        postedOnMax: arg.ofDate().nullable(),
-        amountMin: arg.ofFloat().nullable(),
-        amountMax: arg.ofFloat().nullable(),
-        verified: arg.ofBool().nullable(),
-        search: arg.ofString().nullable(),
-      }))
-      .resolve(
-        createPrivateResolver(
-          'Account:countPayments',
-          async ({ parent, args, scope }) => {
-            const account: Account = parent.$source
-
-            const count = await countPayments(
-              {
-                where: createPaymentWhere(args, {
-                  accountId: { eq: account.id },
-                }),
-              },
-              scope
-            )
-
-            return count
-          }
-        )
-      ),
     aggregatePayments: field
       .ofType(AggregatedPaymentsType)
       .args(arg => ({
@@ -332,6 +303,35 @@ const AccountType = Type('Account', type =>
             )
 
             return result
+          }
+        )
+      ),
+    countPayments: field
+      .ofInt()
+      .args(arg => ({
+        postedOnMin: arg.ofDate().nullable(),
+        postedOnMax: arg.ofDate().nullable(),
+        amountMin: arg.ofFloat().nullable(),
+        amountMax: arg.ofFloat().nullable(),
+        verified: arg.ofBool().nullable(),
+        search: arg.ofString().nullable(),
+      }))
+      .resolve(
+        createPrivateResolver(
+          'Account:countPayments',
+          async ({ parent, args, scope }) => {
+            const account: Account = parent.$source
+
+            const count = await countPayments(
+              {
+                where: createPaymentWhere(args, {
+                  accountId: { eq: account.id },
+                }),
+              },
+              scope
+            )
+
+            return count
           }
         )
       ),
