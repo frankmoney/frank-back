@@ -29,6 +29,15 @@ const paymentPredicateSql = (
         createWhereSql(sql`"${alias$}"."${payment.amount}"`, where.amount),
         createWhereSql(sql`"${alias$}"."${payment.postedOn}"`, where.postedOn),
         createWhereSql(sql`"${alias$}"."${payment.verified}"`, where.verified),
+        createWhereSql(
+          sql`"${alias$}"."${payment.accountId}"`,
+          where.accountId
+        ),
+        createWhereSql(
+          sql`"${alias$}"."${payment.categoryId}"`,
+          where.categoryId
+        ),
+        createWhereSql(sql`"${alias$}"."${payment.peerId}"`, where.peerId),
         where.containsText
           ? disjunction(
               sql`"${alias$}"."${payment.description}" ilike ${`%${

@@ -15,32 +15,34 @@ const createPaymentWhere = (
 ) => {
   const where: PaymentWhere = {}
 
-  if (!isNil(args.postedOnMin) || !isNil(args.postedOnMax)) {
-    where.postedOn = {}
-    if (!isNil(args.postedOnMin)) {
-      where.postedOn.gte = args.postedOnMin
+  if (args) {
+    if (!isNil(args.postedOnMin) || !isNil(args.postedOnMax)) {
+      where.postedOn = {}
+      if (!isNil(args.postedOnMin)) {
+        where.postedOn.gte = args.postedOnMin
+      }
+      if (!isNil(args.postedOnMax)) {
+        where.postedOn.lte = args.postedOnMax
+      }
     }
-    if (!isNil(args.postedOnMax)) {
-      where.postedOn.lte = args.postedOnMax
-    }
-  }
 
-  if (!isNil(args.amountMin) || !isNil(args.amountMax)) {
-    where.amount = {}
-    if (!isNil(args.amountMin)) {
-      where.amount!.gte = args.amountMin
+    if (!isNil(args.amountMin) || !isNil(args.amountMax)) {
+      where.amount = {}
+      if (!isNil(args.amountMin)) {
+        where.amount!.gte = args.amountMin
+      }
+      if (!isNil(args.amountMax)) {
+        where.amount!.lte = args.amountMax
+      }
     }
-    if (!isNil(args.amountMax)) {
-      where.amount!.lte = args.amountMax
+
+    if (!isNil(args.verified)) {
+      where.verified = { eq: args.verified }
     }
-  }
 
-  if (!isNil(args.verified)) {
-    where.verified = { eq: args.verified }
-  }
-
-  if (args.search) {
-    where.containsText = args.search
+    if (args.search) {
+      where.containsText = args.search
+    }
   }
 
   return extensions ? mergeDeepRight(where, extensions) : where

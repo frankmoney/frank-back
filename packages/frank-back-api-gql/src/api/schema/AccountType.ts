@@ -1,8 +1,11 @@
 import { String, Type } from 'gql'
+import { extractFieldNames } from 'gql/parse'
 import Account from 'store/types/Account'
+import AggregatedPayments from 'store/types/AggregatedPayments'
 import countCategoriesByAccountId from 'api/dal/Category/countCategoriesByAccountId'
 import getCategoryByPidAndAccountId from 'api/dal/Category/getCategoryByPidAndAccountId'
 import listCategoriesByAccountId from 'api/dal/Category/listCategoriesByAccountId'
+import aggregatePayments from 'api/dal/Payment/aggregatePayments'
 import countPayments from 'api/dal/Payment/countPayments'
 import countPaymentsRevenue from 'api/dal/Payment/countPaymentsRevenue'
 import countPaymentsSpending from 'api/dal/Payment/countPaymentsSpending'
@@ -23,6 +26,7 @@ import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
 import mapStory from 'api/mappers/mapStory'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import AggregatedPaymentsType from './AggregatedPaymentsType'
 import CategoryType from './CategoryType'
 import CurrencyType from './CurrencyType'
 import LedgerBarChartType from './LedgerBarChartType'
@@ -296,6 +300,38 @@ const AccountType = Type('Account', type =>
             )
 
             return count
+          }
+        )
+      ),
+    aggregatePayments: field
+      .ofType(AggregatedPaymentsType)
+      .args(arg => ({
+        postedOnMin: arg.ofDate().nullable(),
+        postedOnMax: arg.ofDate().nullable(),
+        amountMin: arg.ofFloat().nullable(),
+        amountMax: arg.ofFloat().nullable(),
+        verified: arg.ofBool().nullable(),
+        search: arg.ofString().nullable(),
+      }))
+      .resolve(
+        createPrivateResolver(
+          'Account:aggregatePayments',
+          async ({ parent, args, info, scope }) => {
+            const account: Account = parent.$source
+
+            const result = await aggregatePayments(
+              {
+                fields: extractFieldNames<AggregatedPayments>(info),
+                where: createPaymentWhere(args, {
+                  accountId: {
+                    eq: account.id,
+                  },
+                }),
+              },
+              scope
+            )
+
+            return result
           }
         )
       ),
