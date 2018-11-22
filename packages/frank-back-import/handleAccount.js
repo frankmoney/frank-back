@@ -26,11 +26,19 @@ export default async (account, daysAgo = 3) => {
       },
     })
 
-    const mxPayments = humps.camelizeKeys(mxResponse.transactions)
+    if (mxResponse.transactions) {
 
-    log.trace(`processing payments: ${mxPayments.length}`)
+      const mxPayments = humps.camelizeKeys(mxResponse.transactions)
 
-    await syncTransactions(account, mxPayments)
+      log.trace(`processing payments: ${mxPayments.length}`)
+
+      await syncTransactions(account, mxPayments)
+
+    } else {
+
+      // wtf!? need make some things here
+      // maybe mxUser or mxAccount were deleted
+    }
 
   } else {
 
