@@ -18,7 +18,7 @@ import listPeersByAccountId from 'api/dal/Peer/listPeersByAccountId'
 import getStoryByPidAndAccountId from 'api/dal/Story/getStoryByPidAndAccountId'
 import listStoriesByAccountId from 'api/dal/Story/listStoriesByAccountId'
 import { throwNotFound } from 'api/errors/NotFoundError'
-import ledgerBarChart from 'api/ledger_bar_chart'
+import ledgerBarChart from 'api/resolvers/ledgerBarChart'
 import mapCategory from 'api/mappers/mapCategory'
 import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
@@ -386,7 +386,8 @@ const AccountType = Type('Account', type =>
 
             const result = await ledgerBarChart(
               scope,
-              account,
+              account.id,
+              undefined,
               args.postedOnFrom,
               args.postedOnTo
             )

@@ -1,5 +1,5 @@
 import assert from 'assert'
-import ledgerBarChart from '../src/api/ledger_bar_chart'
+import ledgerBarChart from '../src/api/resolvers/ledgerBarChart'
 import {} from 'date-fns'
 
 //  дни 1 месяц                  30 баров

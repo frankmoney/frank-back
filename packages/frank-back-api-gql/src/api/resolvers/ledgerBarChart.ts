@@ -19,8 +19,9 @@ import {
   startOfYear,
 } from 'date-fns'
 import R from 'ramda'
-import Account from 'store/types/Account'
 import Payment from 'store/types/Payment'
+import Id from 'store/types/Id'
+import WhereDate from 'api/dal/helpers/WhereDate'
 
 const FORMAT_TEMPLATE = 'YYYY-MM-DD'
 
@@ -186,19 +187,32 @@ const generateBars = (
 
 export default async (
   scope: DefaultActionScope | null,
-  account: Account | null,
+  accountId?: Id,
+  categoryId?: Id,
   postedOnFrom?: Date,
   postedOnTo?: Date
 ): Promise<BarCharResult> => {
   let payments: Payment[] = []
 
-  if (scope && account) {
+  if (scope && accountId) {
+    const postedOnAnd: WhereDate[] = []
+
+    if (postedOnFrom) {
+      postedOnAnd.push({ gte: format(postedOnFrom, FORMAT_TEMPLATE) })
+    }
+
+    if (postedOnTo) {
+      postedOnAnd.push({ lt: format(postedOnTo, FORMAT_TEMPLATE) })
+    }
+
     payments = await listPayments(
       {
         where: {
           accountId: {
-            eq: account.id,
+            eq: accountId,
           },
+          categoryId: categoryId ? { eq: categoryId } : undefined,
+          postedOn: postedOnAnd.length > 0 ? { and: postedOnAnd } : undefined,
         },
         orderBy: 'postedOn_DESC',
       },
