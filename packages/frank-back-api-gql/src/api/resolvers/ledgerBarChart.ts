@@ -195,16 +195,6 @@ export default async (
   let payments: Payment[] = []
 
   if (scope && accountId) {
-    const postedOnAnd: WhereDate[] = []
-
-    if (postedOnFrom) {
-      postedOnAnd.push({ gte: format(postedOnFrom, FORMAT_TEMPLATE) })
-    }
-
-    if (postedOnTo) {
-      postedOnAnd.push({ lt: format(postedOnTo, FORMAT_TEMPLATE) })
-    }
-
     payments = await listPayments(
       {
         where: {
@@ -212,7 +202,10 @@ export default async (
             eq: accountId,
           },
           categoryId: categoryId ? { eq: categoryId } : undefined,
-          postedOn: postedOnAnd.length > 0 ? { and: postedOnAnd } : undefined,
+          postedOn: {
+            gte: postedOnFrom && format(postedOnFrom, FORMAT_TEMPLATE),
+            lt: postedOnTo && format(postedOnTo, FORMAT_TEMPLATE),
+          },
         },
         orderBy: 'postedOn_DESC',
       },
