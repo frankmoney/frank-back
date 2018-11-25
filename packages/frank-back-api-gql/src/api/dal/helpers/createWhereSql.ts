@@ -100,7 +100,7 @@ const createWhereSql = <T>(
 
   const handle = (predicateName: keyof typeof effectiveHandlers) => {
     const condition = predicate[predicateName]
-    if (condition) {
+    if (condition !== undefined) {
       const handler = effectiveHandlers[predicateName]!
       if (handler) {
         const branch = handler(expression, condition)
