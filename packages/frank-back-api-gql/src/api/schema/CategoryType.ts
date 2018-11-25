@@ -10,16 +10,15 @@ import countPaymentsRevenue from 'api/dal/Payment/countPaymentsRevenue'
 import countPaymentsSpending from 'api/dal/Payment/countPaymentsSpending'
 import countPaymentsTotal from 'api/dal/Payment/countPaymentsTotal'
 import getPaymentByPidAndCategoryId from 'api/dal/Payment/getPaymentByPidAndCategoryId'
-import getPaymentsLedgerBarChartByCategoryId from 'api/dal/Payment/getPaymentsLedgerBarChartByCategoryId'
 import listPayments from 'api/dal/Payment/listPayments'
 import mapAccount from 'api/mappers/mapAccount'
 import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import AggregatedPayments from 'api/types/AggregatedPayments'
+import ledgerBarChart from '../resolvers/ledgerBarChart'
 import AccountType from './AccountType'
 import AggregatedPaymentsType from './AggregatedPaymentsType'
-import LedgerBarChartPeriodType from './LedgerBarChartPeriodType'
 import LedgerBarChartType from './LedgerBarChartType'
 import PaymentsOrderType from './PaymentsOrderType'
 import PaymentType from './PaymentType'
@@ -273,11 +272,8 @@ const CategoryType = Type('Category', type =>
     ledgerBarChart: field
       .ofType(LedgerBarChartType)
       .args(arg => ({
-        postedOnMin: arg.ofDate().nullable(),
-        postedOnMax: arg.ofDate().nullable(),
-        amountMin: arg.ofFloat().nullable(),
-        amountMax: arg.ofFloat().nullable(),
-        period: arg.ofType(LedgerBarChartPeriodType).nullable(),
+        postedOnFrom: arg.ofDate().nullable(),
+        postedOnTo: arg.ofDate().nullable(),
       }))
       .resolve(
         createPrivateResolver(
@@ -285,16 +281,12 @@ const CategoryType = Type('Category', type =>
           async ({ parent, args, scope }) => {
             const category: Category = parent.$source
 
-            const result = await getPaymentsLedgerBarChartByCategoryId(
-              {
-                categoryId: category.id,
-                postedOnMin: args.postedOnMin,
-                postedOnMax: args.postedOnMax,
-                amountMin: args.amountMin,
-                amountMax: args.amountMax,
-                period: args.period || 'day',
-              },
-              scope
+            const result = await ledgerBarChart(
+              scope,
+              category.accountId,
+              category.id,
+              args.postedOnFrom,
+              args.postedOnTo
             )
 
             return result
