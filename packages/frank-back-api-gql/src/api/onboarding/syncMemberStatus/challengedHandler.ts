@@ -1,16 +1,8 @@
 import humps from 'humps'
 import R from 'ramda'
 import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
-import atriumClient from '../atriumClient'
 import { AWAITING_INPUT_STATUS, MFA_STEP, SUCCESS_STATUS } from '../constants'
 import { StatusHandler } from './StatusHandler'
-// import createLogger from 'utils/createLogger'
-
-const createLogger = (s1: any) => ({
-  debug: (s2: any) => console.log(s1 + ':' + s2),
-})
-
-const log = createLogger('app:onboarding:syncMemberStatus:challengedHandler')
 
 const handler: StatusHandler = async ({
   onboarding,
@@ -18,18 +10,14 @@ const handler: StatusHandler = async ({
   memberGuid,
   scope,
 }) => {
-  log.debug('start')
+  const log = scope.logFor('api:onboarding:syncMemberStatus:challengedHandler')
 
-  const atriumResponse = await atriumClient.listMemberChallenges({
-    params: {
-      userGuid,
-      memberGuid,
-    },
+  const res = await scope.mx.listMemberChallenges({
+    userGuid,
+    memberGuid,
   })
 
-  log.debug('atriumResponse:' + atriumResponse.toString())
-
-  const challenges = humps.camelizeKeys(atriumResponse.challenges)
+  const challenges = humps.camelizeKeys(res.challenges)
 
   if (
     onboarding.step !== MFA_STEP ||

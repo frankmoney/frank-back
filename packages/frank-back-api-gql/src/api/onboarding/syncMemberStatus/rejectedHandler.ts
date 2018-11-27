@@ -1,15 +1,10 @@
 import { CREDENTIALS_STEP, MFA_REJECTED_STATUS } from 'api/onboarding/constants'
 import { StatusHandler } from 'api/onboarding/syncMemberStatus/StatusHandler'
 import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
-// import createLogger from 'utils/createLogger'
-
-const createLogger = (s1: any) => ({
-  debug: (s2: any) => console.log(s1 + ':' + s2),
-})
-
-const log = createLogger('app:onboarding:syncMemberStatus:rejectedHandler')
 
 const handler: StatusHandler = async ({ onboarding, scope }) => {
+  const log = scope.logFor('api:onboarding:syncMemberStatus:rejectedHandler')
+
   log.debug('start')
 
   if (

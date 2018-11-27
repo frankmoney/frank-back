@@ -1,15 +1,10 @@
 import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
 import { FAILED_STATUS } from '../constants'
 import { StatusHandler } from './StatusHandler'
-// import createLogger from 'utils/createLogger'
-
-const createLogger = (s1: any) => ({
-  debug: (s2: any) => console.log(s1 + ':' + s2),
-})
-
-const log = createLogger('app:onboarding:syncMemberStatus:failedHandler')
 
 const handler: StatusHandler = async ({ onboarding, scope }) => {
+  const log = scope.logFor('api:onboarding:syncMemberStatus:failedHandler')
+
   log.debug('start')
 
   if (onboarding.credentials.status !== FAILED_STATUS) {

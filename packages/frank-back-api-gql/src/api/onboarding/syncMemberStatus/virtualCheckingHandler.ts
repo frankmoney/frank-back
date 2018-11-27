@@ -2,15 +2,11 @@ import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
 import { CHECKING_STATUS, CREDENTIALS_STEP, MFA_STEP } from '../constants'
 import { StatusHandler } from './StatusHandler'
 
-const createLogger = (s1: any) => ({
-  debug: (s2: any) => console.log(s1 + ':' + s2),
-})
-
-const log = createLogger(
-  'app:onboarding:syncMemberStatus:virtualCheckingHandler'
-)
-
 const handler: StatusHandler = async ({ onboarding, scope }) => {
+  const log = scope.logFor(
+    'api:onboarding:syncMemberStatus:virtualCheckingHandler'
+  )
+
   log.debug('start')
 
   const data = {
