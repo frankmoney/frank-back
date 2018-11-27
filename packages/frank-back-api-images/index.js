@@ -61,7 +61,7 @@ app.post('/', async (req, res, next) => {
   let tempPath, fileName, gmImage, origFileName
 
   try {
-    if (req.body.imageUrl) {
+    if (req.body && req.body.imageUrl) {
       fileName = basename(req.body.imageUrl)
       fileName = fileName.replace(ORIG_PREFIX, '')
       tempPath = `./tmp/${fileName}`
