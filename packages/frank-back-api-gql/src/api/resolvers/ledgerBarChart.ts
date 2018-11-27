@@ -215,8 +215,8 @@ export default async (
     {
       where: createPaymentWhere(R.omit(['postedOnMax', 'postedOnMin'], args), {
         postedOn: {
-          gte: postedOnFrom && format(postedOnFrom, FORMAT_TEMPLATE),
-          lt: postedOnTo && format(postedOnTo, FORMAT_TEMPLATE),
+          gte: postedOnFrom ? format(postedOnFrom, FORMAT_TEMPLATE) : undefined,
+          lt: postedOnTo ? format(postedOnTo, FORMAT_TEMPLATE) : undefined,
         },
       }),
       orderBy: 'postedOn_DESC',
