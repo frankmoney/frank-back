@@ -23,6 +23,7 @@ import {
 import R from 'ramda'
 import Payment from 'store/types/Payment'
 import Id from 'store/types/Id'
+import createPaymentWhere from 'api/schema/helpers/createPaymentWhere'
 
 const FORMAT_TEMPLATE = 'YYYY-MM-DD'
 
@@ -212,20 +213,12 @@ export default async (
 
   const payments = await listPayments(
     {
-      where: {
-        accountId: { eq: args.accountId },
-        categoryId: { eq: args.categoryId },
+      where: createPaymentWhere(R.omit(['postedOnMax', 'postedOnMin'], args), {
         postedOn: {
           gte: postedOnFrom && format(postedOnFrom, FORMAT_TEMPLATE),
           lt: postedOnTo && format(postedOnTo, FORMAT_TEMPLATE),
         },
-        amount: {
-          gte: args.amountMin,
-          lte: args.amountMax,
-        },
-        verified: { eq: args.verified },
-        containsText: args.search,
-      },
+      }),
       orderBy: 'postedOn_DESC',
     },
     scope
