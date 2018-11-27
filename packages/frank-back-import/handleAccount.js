@@ -13,6 +13,10 @@ export default async (accountId, daysAgo) => {
 
   const account = await Account.findByPk(accountId)
 
+  if (!account) {
+    throw new Error(`Can't find account. accountId: ${accountId}`);
+  }
+
   log.trace(`start: ${account.name}`)
 
   const { data } = account
