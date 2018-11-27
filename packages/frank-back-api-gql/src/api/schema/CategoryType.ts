@@ -272,8 +272,12 @@ const CategoryType = Type('Category', type =>
     ledgerBarChart: field
       .ofType(LedgerBarChartType)
       .args(arg => ({
-        postedOnFrom: arg.ofDate().nullable(),
-        postedOnTo: arg.ofDate().nullable(),
+        postedOnMin: arg.ofDate().nullable(),
+        postedOnMax: arg.ofDate().nullable(),
+        amountMin: arg.ofFloat().nullable(),
+        amountMax: arg.ofFloat().nullable(),
+        verified: arg.ofBool().nullable(),
+        search: arg.ofString().nullable(),
       }))
       .resolve(
         createPrivateResolver(
@@ -282,11 +286,11 @@ const CategoryType = Type('Category', type =>
             const category: Category = parent.$source
 
             const result = await ledgerBarChart(
-              scope,
-              category.accountId,
-              category.id,
-              args.postedOnFrom,
-              args.postedOnTo
+              {
+                ...args,
+                categoryId: category.id,
+              },
+              scope
             )
 
             return result

@@ -17,11 +17,12 @@ import {
   startOfQuarter,
   startOfWeek,
   startOfYear,
+  isEqual,
+  subDays,
 } from 'date-fns'
 import R from 'ramda'
 import Payment from 'store/types/Payment'
 import Id from 'store/types/Id'
-import WhereDate from 'api/dal/helpers/WhereDate'
 
 const FORMAT_TEMPLATE = 'YYYY-MM-DD'
 
@@ -34,8 +35,6 @@ type Bar = {
 }
 
 type BarCharResult = {
-  fromDate: string
-  toDate: string
   barSize: LedgerBarChartBarSize
   total: number
   maxTotal: number
@@ -142,16 +141,14 @@ const generateBars = (
 
     let endDate = startOfMonth(_toDate)
 
-    if (
-      format(endDate, FORMAT_TEMPLATE) === format(startDate, FORMAT_TEMPLATE)
-    ) {
+    if (isEqual(endDate, startDate)) {
       endDate = addMonths(endDate, 1)
     }
 
     const bar = {
       showDate: format(_fromDate, FORMAT_TEMPLATE),
       startDate: format(startDate, FORMAT_TEMPLATE),
-      endDate: format(endDate, FORMAT_TEMPLATE),
+      endDate: format(subDays(endDate, 1), FORMAT_TEMPLATE),
       revenue: 0,
       spending: 0,
     }
@@ -185,33 +182,54 @@ const generateBars = (
   }
 }
 
-export default async (
-  scope: DefaultActionScope | null,
-  accountId?: Id,
-  categoryId?: Id,
-  postedOnFrom?: Date,
-  postedOnTo?: Date
-): Promise<BarCharResult> => {
-  let payments: Payment[] = []
+export type Args = {
+  accountId?: Id
+  categoryId?: Id
+  postedOnMin?: Date
+  postedOnMax?: Date
+  amountMin?: number
+  amountMax?: number
+  verified?: boolean
+  search?: string
+}
 
-  if (scope && accountId) {
-    payments = await listPayments(
-      {
-        where: {
-          accountId: {
-            eq: accountId,
-          },
-          categoryId: categoryId ? { eq: categoryId } : undefined,
-          postedOn: {
-            gte: postedOnFrom && format(postedOnFrom, FORMAT_TEMPLATE),
-            lt: postedOnTo && format(postedOnTo, FORMAT_TEMPLATE),
-          },
-        },
-        orderBy: 'postedOn_DESC',
-      },
-      scope
-    )
+export default async (
+  args: Args,
+  scope: DefaultActionScope
+): Promise<BarCharResult> => {
+  const { postedOnMin, postedOnMax } = args
+
+  let postedOnFrom = postedOnMin
+  let postedOnTo = postedOnMax
+
+  // весь данный код написан с условием что правая граница не включается в интервал выборки
+  // к тому же минимальный интервал выборок - один целый месяц
+  // поэтому что бы не ломать сложную логику проихсодит конвертация postedOnMax -> postedOnTo
+  if (postedOnTo) {
+    postedOnTo = addMonths(postedOnTo, 1)
+    postedOnTo = startOfMonth(postedOnTo)
   }
+
+  const payments = await listPayments(
+    {
+      where: {
+        accountId: { eq: args.accountId },
+        categoryId: { eq: args.categoryId },
+        postedOn: {
+          gte: postedOnFrom && format(postedOnFrom, FORMAT_TEMPLATE),
+          lt: postedOnTo && format(postedOnTo, FORMAT_TEMPLATE),
+        },
+        amount: {
+          gte: args.amountMin,
+          lte: args.amountMax,
+        },
+        verified: { eq: args.verified },
+        containsText: args.search,
+      },
+      orderBy: 'postedOn_DESC',
+    },
+    scope
+  )
 
   if (R.isNil(postedOnTo)) {
     postedOnTo = addMonths(new Date(), 1)
@@ -243,8 +261,6 @@ export default async (
 
   return {
     barSize,
-    fromDate: format(postedOnFrom, FORMAT_TEMPLATE),
-    toDate: format(postedOnTo, FORMAT_TEMPLATE),
     total: Math.floor(total),
     maxRevenue: meta.maxRevenue,
     maxSpending: meta.maxSpending,
