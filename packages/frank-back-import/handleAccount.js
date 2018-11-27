@@ -45,7 +45,7 @@ export default async (accountId, daysAgo) => {
 
       } else {
 
-        log.trace(`MX haven't payments`)
+        log.trace(`MX has no payments`)
       }
 
 
