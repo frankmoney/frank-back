@@ -19,6 +19,7 @@ import AggregatedPayments from 'api/types/AggregatedPayments'
 import ledgerBarChart from '../resolvers/ledgerBarChart'
 import AccountType from './AccountType'
 import AggregatedPaymentsType from './AggregatedPaymentsType'
+import paymentsDefaultFilters from './helpers/paymentsDefaultFilters'
 import LedgerBarChartType from './LedgerBarChartType'
 import PaymentsOrderType from './PaymentsOrderType'
 import PaymentType from './PaymentType'
@@ -119,13 +120,8 @@ const CategoryType = Type('Category', type =>
     payments: field
       .listOf(PaymentType)
       .args(arg => ({
+        ...paymentsDefaultFilters(arg),
         sortBy: arg.ofType(PaymentsOrderType),
-        postedOnMin: arg.ofDate().nullable(),
-        postedOnMax: arg.ofDate().nullable(),
-        amountMin: arg.ofFloat().nullable(),
-        amountMax: arg.ofFloat().nullable(),
-        verified: arg.ofBool().nullable(),
-        search: arg.ofString().nullable(),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
       }))
@@ -154,12 +150,7 @@ const CategoryType = Type('Category', type =>
     aggregatePayments: field
       .ofType(AggregatedPaymentsType)
       .args(arg => ({
-        postedOnMin: arg.ofDate().nullable(),
-        postedOnMax: arg.ofDate().nullable(),
-        amountMin: arg.ofFloat().nullable(),
-        amountMax: arg.ofFloat().nullable(),
-        verified: arg.ofBool().nullable(),
-        search: arg.ofString().nullable(),
+        ...paymentsDefaultFilters(arg),
       }))
       .resolve(
         createPrivateResolver(
@@ -186,12 +177,7 @@ const CategoryType = Type('Category', type =>
     countPayments: field
       .ofInt()
       .args(arg => ({
-        postedOnMin: arg.ofDate().nullable(),
-        postedOnMax: arg.ofDate().nullable(),
-        amountMin: arg.ofFloat().nullable(),
-        amountMax: arg.ofFloat().nullable(),
-        verified: arg.ofBool().nullable(),
-        search: arg.ofString().nullable(),
+        ...paymentsDefaultFilters(arg),
       }))
       .resolve(
         createPrivateResolver(
@@ -272,12 +258,7 @@ const CategoryType = Type('Category', type =>
     ledgerBarChart: field
       .ofType(LedgerBarChartType)
       .args(arg => ({
-        postedOnMin: arg.ofDate().nullable(),
-        postedOnMax: arg.ofDate().nullable(),
-        amountMin: arg.ofFloat().nullable(),
-        amountMax: arg.ofFloat().nullable(),
-        verified: arg.ofBool().nullable(),
-        search: arg.ofString().nullable(),
+        ...paymentsDefaultFilters(arg),
       }))
       .resolve(
         createPrivateResolver(

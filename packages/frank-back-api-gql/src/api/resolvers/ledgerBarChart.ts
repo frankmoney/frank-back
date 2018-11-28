@@ -191,6 +191,7 @@ export type Args = {
   amountMin?: number
   amountMax?: number
   verified?: boolean
+  pending?: boolean
   search?: string
 }
 
