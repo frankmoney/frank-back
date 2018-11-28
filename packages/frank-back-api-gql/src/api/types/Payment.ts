@@ -9,6 +9,7 @@ type Payment = {
   peerName: string
   description: string
   verified: boolean
+  pending: boolean
 }
 
 export default Payment

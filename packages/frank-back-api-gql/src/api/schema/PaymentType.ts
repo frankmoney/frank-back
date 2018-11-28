@@ -19,6 +19,7 @@ import getSimilarPaymentDateRangeById from 'api/dal/Payment/getSimilarPaymentDat
 import DateTime from 'api/types/DateTime'
 import AccountType from './AccountType'
 import CategoryType from './CategoryType'
+import paymentsDefaultFilters from './helpers/paymentsDefaultFilters'
 import PaymentsOrderType from './PaymentsOrderType'
 import PaymentSuggestedDescriptionType from './PaymentSuggestedDescriptionType'
 import UserType from './UserType'
@@ -58,6 +59,7 @@ const PaymentType = Type('Payment', type =>
     peerName: field.ofString().nullable(),
     description: field.ofString().nullable(),
     verified: field.ofBool(),
+    pending: field.ofBool(),
     bankDescription: field
       .ofString()
       .nullable()
@@ -69,13 +71,8 @@ const PaymentType = Type('Payment', type =>
     similar: field
       .listOf(PaymentType)
       .args(arg => ({
+        ...paymentsDefaultFilters(arg),
         includeSelf: arg.ofBool(),
-        postedOnMin: arg.ofDate().nullable(),
-        postedOnMax: arg.ofDate().nullable(),
-        amountMin: arg.ofFloat().nullable(),
-        amountMax: arg.ofFloat().nullable(),
-        verified: arg.ofBool().nullable(),
-        search: arg.ofString().nullable(),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
         sortBy: arg.ofType(PaymentsOrderType),
@@ -135,13 +132,8 @@ const PaymentType = Type('Payment', type =>
     countSimilar: field
       .ofInt()
       .args(arg => ({
+        ...paymentsDefaultFilters(arg),
         includeSelf: arg.ofBool(),
-        postedOnMin: arg.ofDate().nullable(),
-        postedOnMax: arg.ofDate().nullable(),
-        amountMin: arg.ofFloat().nullable(),
-        amountMax: arg.ofFloat().nullable(),
-        verified: arg.ofBool().nullable(),
-        search: arg.ofString().nullable(),
       }))
       .resolve(
         createPrivateResolver(
