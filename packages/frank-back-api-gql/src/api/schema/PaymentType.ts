@@ -15,6 +15,8 @@ import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
 import mapUser from 'api/mappers/mapUser'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import getSimilarPaymentDateRangeById from 'api/dal/Payment/getSimilarPaymentDateRangeById'
+import DateTime from 'api/types/DateTime'
 import AccountType from './AccountType'
 import CategoryType from './CategoryType'
 import PaymentsOrderType from './PaymentsOrderType'
@@ -97,6 +99,36 @@ const PaymentType = Type('Payment', type =>
             )
 
             return mapPayment(payments)
+          }
+        )
+      ),
+    similarDateRange: field
+      .listOfDateTime()
+      .args(arg => ({
+        includeSelf: arg.ofBool(),
+        postedOnMin: arg.ofDate().nullable(),
+        postedOnMax: arg.ofDate().nullable(),
+        amountMin: arg.ofFloat().nullable(),
+        amountMax: arg.ofFloat().nullable(),
+        verified: arg.ofBool().nullable(),
+        search: arg.ofString().nullable(),
+      }))
+      .resolve(
+        createPrivateResolver<null | DateTime[]>(
+          'Payment:similarDateRange',
+          async ({ parent, args, scope }) => {
+            const payment: Payment = parent.$source
+
+            const range = await getSimilarPaymentDateRangeById(
+              {
+                id: payment.id,
+                includeSelf: args.includeSelf,
+                where: createPaymentWhere(args),
+              },
+              scope
+            )
+
+            return range
           }
         )
       ),
@@ -196,10 +228,7 @@ const PaymentType = Type('Payment', type =>
                   search,
                 }
 
-            return listPaymentDescriptionsByAccountId(
-              args,
-              scope
-            )
+            return listPaymentDescriptionsByAccountId(args, scope)
           }
         )
       ),
