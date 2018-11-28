@@ -1,5 +1,5 @@
-import { MigrationContext } from './1543396075038_t_payment_add_pending.migration'
-import { payment } from './1543396075038_t_payment_add_pending.names'
+import { MigrationContext } from './1543428591474_t_payment_c_pending.migration'
+import { payment } from './1543428591474_t_payment_c_pending.names'
 
 export const up = async ({ ddl }: MigrationContext) => {
   await ddl(x =>

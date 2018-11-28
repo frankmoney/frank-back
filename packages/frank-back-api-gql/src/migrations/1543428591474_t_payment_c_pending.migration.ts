@@ -13,7 +13,7 @@ import {
   drop,
 } from 'sql/ddl'
 import Database from 'store/Database'
-import { up, down } from './1543396075038_t_payment_add_pending'
+import { up, down } from './1543428591474_t_payment_c_pending'
 
 export type CreateExTableOptions<TTableName extends TableName> = {
   id?: boolean
@@ -158,8 +158,8 @@ export const createDdl = (db: Database): MigrationContextDdl => async (
 }
 
 export const migration = {
-  id: '1543396075038',
-  name: 't_payment_add_pending',
+  id: '1543428591474',
+  name: 't_payment_c_pending',
   up: ({ db }: { db: Database }) =>
     up({
       db,
