@@ -12,7 +12,6 @@ export const category = tableEx('t_category', {
   name: 'c_name',
   color: 'c_color',
   accountId: 'c_account_id',
-  type: 'c_type',
 })
 
 export const currency = table('t_currency', {
