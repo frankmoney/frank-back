@@ -10,26 +10,25 @@ export type Args = {
   categoryId?: Id
 }
 
-
 export default createQuery<Args, { description: string; count: number }[]>(
   'listPaymentDescriptionsByAccountId',
   (args, { db }) => {
     const byDescriptionSql = and(
       args.search
         ? sql`${payment}.${payment.description} ilike ${`%${args.search}%`}`
-        : undefined,
+        : undefined
     )
 
     const byPeerSql = and(
       args.peerId
         ? sql`${payment}.${payment.peerId} = ${args.peerId}`
-        : undefined,
+        : undefined
     )
 
     const byCategorySql = and(
       args.categoryId
         ? sql`${payment}.${payment.categoryId} = ${args.categoryId}`
-        : undefined,
+        : undefined
     )
 
     return db.query<{ description: string; count: number }>(
@@ -42,7 +41,7 @@ export default createQuery<Args, { description: string; count: number }[]>(
         ${byCategorySql}
         group by ${payment.description}
         order by count(*) desc
-      `,
+      `
     )
-  },
+  }
 )

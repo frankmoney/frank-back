@@ -196,10 +196,7 @@ const PaymentType = Type('Payment', type =>
                   search,
                 }
 
-            return listPaymentDescriptionsByAccountId(
-              args,
-              scope
-            )
+            return listPaymentDescriptionsByAccountId(args, scope)
           }
         )
       ),
