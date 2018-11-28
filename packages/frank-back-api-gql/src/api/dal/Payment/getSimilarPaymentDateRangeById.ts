@@ -1,6 +1,6 @@
 import { sql, and } from 'sql'
 import { payment } from 'store/names'
-import DateTime from 'store/types/DateTime'
+import Date from 'store/types/Date'
 import Id from 'store/types/Id'
 import createQuery from '../createQuery'
 import paymentPredicateSql from './helpers/paymentPredicateSql'
@@ -15,7 +15,7 @@ export type Args = {
 const includeSelfSql = (includeSelf: boolean) =>
   includeSelf ? undefined : sql`p."${payment.id}" <> o."${payment.id}"`
 
-export default createQuery<Args, null | DateTime[]>(
+export default createQuery<Args, null | Date[]>(
   'getSimilarPaymentDateRangeById',
   (args, { db }) =>
     db.first(

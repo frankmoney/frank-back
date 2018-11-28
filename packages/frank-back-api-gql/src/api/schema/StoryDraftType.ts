@@ -7,7 +7,7 @@ import getStoryDraftPaymentDateRangeByStoryId from 'api/dal/StoryDraftPayment/ge
 import mapPayment from 'api/mappers/mapPayment'
 import mapStory from 'api/mappers/mapStory'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
-import DateTime from 'api/types/DateTime'
+import Date from 'api/types/Date'
 import PaymentGql from 'api/types/Payment'
 import PaymentType from './PaymentType'
 import PaymentsOrderType from './PaymentsOrderType'
@@ -81,10 +81,10 @@ const StoryDraftType = Type('StoryDraft', type =>
       )
     ),
     paymentsDateRange: field
-      .listOfDateTime()
+      .listOfDate()
       .nullable()
       .resolve(
-        createPrivateResolver<null | DateTime[]>(
+        createPrivateResolver<null | Date[]>(
           'StoryDraft:paymentsDateRange',
           async ({ parent, scope }) => {
             const draft: StoryDraft = parent.$source
