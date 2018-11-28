@@ -125,6 +125,7 @@ const CategoryType = Type('Category', type =>
         amountMin: arg.ofFloat().nullable(),
         amountMax: arg.ofFloat().nullable(),
         verified: arg.ofBool().nullable(),
+        pending: arg.ofBool().nullable(),
         search: arg.ofString().nullable(),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),

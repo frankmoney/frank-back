@@ -56,6 +56,7 @@ const PaymentType = Type('Payment', type =>
     peerName: field.ofString().nullable(),
     description: field.ofString().nullable(),
     verified: field.ofBool(),
+    pending: field.ofBool(),
     bankDescription: field
       .ofString()
       .nullable()
@@ -196,10 +197,7 @@ const PaymentType = Type('Payment', type =>
                   search,
                 }
 
-            return listPaymentDescriptionsByAccountId(
-              args,
-              scope
-            )
+            return listPaymentDescriptionsByAccountId(args, scope)
           }
         )
       ),

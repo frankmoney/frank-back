@@ -8,6 +8,7 @@ export default interface PaymentWhere {
   amount?: WhereNumber
   postedOn?: WhereDate
   verified?: WhereBoolean
+  pending?: WhereBoolean
   containsText?: string
   accountId?: WhereId
   categoryId?: WhereIdNullable
