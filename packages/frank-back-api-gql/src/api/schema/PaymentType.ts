@@ -15,6 +15,8 @@ import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
 import mapUser from 'api/mappers/mapUser'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import getSimilarPaymentDateRangeById from 'api/dal/Payment/getSimilarPaymentDateRangeById'
+import Date from 'api/types/Date'
 import AccountType from './AccountType'
 import CategoryType from './CategoryType'
 import paymentsDefaultFilters from './helpers/paymentsDefaultFilters'
@@ -94,6 +96,31 @@ const PaymentType = Type('Payment', type =>
             )
 
             return mapPayment(payments)
+          }
+        )
+      ),
+    similarDateRange: field
+      .listOfDate()
+      .args(arg => ({
+        ...paymentsDefaultFilters(arg),
+        includeSelf: arg.ofBool(),
+      }))
+      .resolve(
+        createPrivateResolver<null | Date[]>(
+          'Payment:similarDateRange',
+          async ({ parent, args, scope }) => {
+            const payment: Payment = parent.$source
+
+            const range = await getSimilarPaymentDateRangeById(
+              {
+                id: payment.id,
+                includeSelf: args.includeSelf,
+                where: createPaymentWhere(args),
+              },
+              scope
+            )
+
+            return range
           }
         )
       ),
