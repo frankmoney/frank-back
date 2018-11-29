@@ -1,6 +1,6 @@
 import { sql } from 'sql'
 import { payment, storyDraftPayment } from 'store/names'
-import DateTime from 'store/types/DateTime'
+import Date from 'store/types/Date'
 import Id from 'store/types/Id'
 import createQuery from '../createQuery'
 
@@ -8,7 +8,7 @@ export type Args = {
   draftId: Id
 }
 
-export default createQuery<Args, null | DateTime[]>(
+export default createQuery<Args, null | Date[]>(
   'getStoryDraftPaymentDateRangeByStoryId',
   (args, { db }) =>
     db.first(

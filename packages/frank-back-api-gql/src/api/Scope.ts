@@ -2,6 +2,7 @@ import { Pool, PoolConfig } from 'pg'
 import Database from 'store/Database'
 import DatabaseConfig from 'store/DatabaseConfig'
 import { Log, logFor } from 'log'
+import { MxClient } from 'mx'
 import UnitOfWork from './UnitOfWork'
 import User from './User'
 import Assert from './assert/Assert'
@@ -34,6 +35,10 @@ export default class Scope {
     return this._assert || (this._assert = Assert.create(this))
   }
 
+  public get mx() {
+    return this._mx || (this._mx = MxClient.create(this))
+  }
+
   public constructor({ databaseConfig, user }: ScopeArgs) {
     this.databaseConfig = databaseConfig
     this.user = user
@@ -47,7 +52,7 @@ export default class Scope {
     })
   }
 
-  public logFor(name: string) {
+  public logFor(name: string): Log {
     return this._logs[name] || (this._logs[name] = logFor(name))
   }
 
@@ -55,5 +60,6 @@ export default class Scope {
   private _db?: Database
   private _uow?: UnitOfWork
   private _assert?: Assert
+  private _mx?: MxClient
   private _logs: { [name: string]: Log }
 }

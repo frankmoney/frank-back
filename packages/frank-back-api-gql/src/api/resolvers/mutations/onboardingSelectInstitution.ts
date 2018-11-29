@@ -3,7 +3,6 @@ import createMutations from 'utils/createMutations'
 import createOnboarding from 'api/dal/Onboarding/createOnboarding'
 import getOnboardingByUserId from 'api/dal/Onboarding/getOnboardingByUserId'
 import { throwArgumentError } from 'api/errors/ArgumentError'
-import AtriumClient from 'api/onboarding/atriumClient'
 import {
   CREDENTIALS_STEP,
   AWAITING_INPUT_STATUS,
@@ -24,15 +23,8 @@ const onboardingSelectInstitution = createPrivateResolver(
       return throwArgumentError()
     }
 
-    const { credentials } = await AtriumClient.listCredentials({
-      params: {
-        institutionCode,
-      },
-    })
-
-    const { institution } = await AtriumClient.readInstitution({
-      params: { institutionCode },
-    })
+    const { credentials } = await scope.mx.listCredentials({ institutionCode })
+    const { institution } = await scope.mx.readInstitution({ institutionCode })
 
     return mapOnboarding(
       await createOnboarding(

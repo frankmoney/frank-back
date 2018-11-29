@@ -37,6 +37,7 @@ import PeerType from './PeerType'
 import StoriesOrderType from './StoriesOrderType'
 import StoryType from './StoryType'
 import createPaymentWhere from './helpers/createPaymentWhere'
+import paymentsDefaultFilters from './helpers/paymentsDefaultFilters'
 
 const AccountType = Type('Account', type =>
   type.fields(field => ({
@@ -222,12 +223,7 @@ const AccountType = Type('Account', type =>
     payments: field
       .listOf(PaymentType)
       .args(arg => ({
-        postedOnMin: arg.ofDate().nullable(),
-        postedOnMax: arg.ofDate().nullable(),
-        amountMin: arg.ofFloat().nullable(),
-        amountMax: arg.ofFloat().nullable(),
-        verified: arg.ofBool().nullable(),
-        search: arg.ofString().nullable(),
+        ...paymentsDefaultFilters(arg),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
         sortBy: arg.ofType(PaymentsOrderType),
@@ -257,12 +253,7 @@ const AccountType = Type('Account', type =>
     aggregatePayments: field
       .ofType(AggregatedPaymentsType)
       .args(arg => ({
-        postedOnMin: arg.ofDate().nullable(),
-        postedOnMax: arg.ofDate().nullable(),
-        amountMin: arg.ofFloat().nullable(),
-        amountMax: arg.ofFloat().nullable(),
-        verified: arg.ofBool().nullable(),
-        search: arg.ofString().nullable(),
+        ...paymentsDefaultFilters(arg),
       }))
       .resolve(
         createPrivateResolver(
@@ -289,12 +280,7 @@ const AccountType = Type('Account', type =>
     countPayments: field
       .ofInt()
       .args(arg => ({
-        postedOnMin: arg.ofDate().nullable(),
-        postedOnMax: arg.ofDate().nullable(),
-        amountMin: arg.ofFloat().nullable(),
-        amountMax: arg.ofFloat().nullable(),
-        verified: arg.ofBool().nullable(),
-        search: arg.ofString().nullable(),
+        ...paymentsDefaultFilters(arg),
       }))
       .resolve(
         createPrivateResolver(
@@ -375,8 +361,7 @@ const AccountType = Type('Account', type =>
     ledgerBarChart: field
       .ofType(LedgerBarChartType)
       .args(arg => ({
-        postedOnFrom: arg.ofDate().nullable(),
-        postedOnTo: arg.ofDate().nullable(),
+        ...paymentsDefaultFilters(arg),
       }))
       .resolve(
         createPrivateResolver(
@@ -385,11 +370,11 @@ const AccountType = Type('Account', type =>
             const account: Account = parent.$source
 
             const result = await ledgerBarChart(
-              scope,
-              account.id,
-              undefined,
-              args.postedOnFrom,
-              args.postedOnTo
+              {
+                ...args,
+                accountId: account.id,
+              },
+              scope
             )
 
             return result
@@ -399,12 +384,7 @@ const AccountType = Type('Account', type =>
     ledgerPieChart: field
       .ofType(LedgerPieChartType)
       .args(arg => ({
-        postedOnMin: arg.ofDate().nullable(),
-        postedOnMax: arg.ofDate().nullable(),
-        amountMin: arg.ofFloat().nullable(),
-        amountMax: arg.ofFloat().nullable(),
-        verified: arg.ofBool().nullable(),
-        search: arg.ofString().nullable(),
+        ...paymentsDefaultFilters(arg),
       }))
       .resolve(
         createPrivateResolver(

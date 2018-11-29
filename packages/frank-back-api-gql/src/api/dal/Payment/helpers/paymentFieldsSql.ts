@@ -18,6 +18,7 @@ const paymentFieldsSql = (alias: string | Sql) => {
       sql`"${alias$}"."${payment.peerName}"`,
       sql`"${alias$}"."${payment.description}"`,
       sql`"${alias$}"."${payment.verified}"`,
+      sql`"${alias$}"."${payment.pending}"`,
       sql`"${alias$}"."${payment.accountId}"`,
       sql`"${alias$}"."${payment.peerId}"`,
       sql`"${alias$}"."${payment.categoryId}"`,

@@ -66,4 +66,8 @@ export default class ObjectTypeFieldBuilder {
   public listOfDateTime(): ObjectTypeFieldBuilderType {
     return this.listOf(DateTime)
   }
+
+  public listOfDate(): ObjectTypeFieldBuilderType {
+    return this.listOf(Date)
+  }
 }
