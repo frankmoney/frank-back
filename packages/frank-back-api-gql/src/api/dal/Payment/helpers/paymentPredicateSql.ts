@@ -13,7 +13,10 @@ const paymentPredicateSql = (
   const alias$: Sql = typeof alias === 'string' ? literal(alias) : alias
 
   const categoryAlias = sql`${alias$}.category`
-  const categorySql = categoryPredicateSql(categoryAlias, where && where.category)
+  const categorySql = categoryPredicateSql(
+    categoryAlias,
+    where && where.category
+  )
 
   return where
     ? conjunction(
@@ -63,18 +66,19 @@ const paymentPredicateSql = (
               )
             )
           : undefined,
-        categorySql && join(
-          [
-            sql`exists (`,
-            sql`select 1`,
-            sql`from "${category}" "${categoryAlias}"`,
-            sql`where "${categoryAlias}"."${category.id}"`,
-            sql`= "${alias$}"."${payment.categoryId}"`,
-            sql`and ${categorySql}`,
-            sql`)`,
-          ],
-          ' '
-        )
+        categorySql &&
+          join(
+            [
+              sql`exists (`,
+              sql`select 1`,
+              sql`from "${category}" "${categoryAlias}"`,
+              sql`where "${categoryAlias}"."${category.id}"`,
+              sql`= "${alias$}"."${payment.categoryId}"`,
+              sql`and ${categorySql}`,
+              sql`)`,
+            ],
+            ' '
+          )
       )
     : undefined
 }
