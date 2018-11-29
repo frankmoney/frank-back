@@ -1,28 +1,22 @@
-import { identity } from 'ramda'
-import { Sql, fragment, join, sql, literal } from 'sql'
-import { payment, peer } from 'store/names'
+import { Sql, join, sql, literal } from 'sql'
+import { category, payment, peer } from 'store/names'
+import categoryPredicateSql from '../../Category/helpers/categoryPredicateSql'
+import conjunction from '../../helpers/conjunction'
 import createWhereSql from '../../helpers/createWhereSql'
+import disjunction from '../../helpers/disjunction'
 import PaymentWhere from './PaymentWhere'
-
-const conjunction = (...branches: (undefined | Sql)[]) => {
-  const effective = branches.filter(identity)
-  return effective.length
-    ? fragment([literal('('), join(effective, ' and '), literal(')')])
-    : undefined
-}
-
-const disjunction = (...branches: (undefined | Sql)[]) => {
-  const effective = branches.filter(identity)
-  return effective.length
-    ? fragment([literal('('), join(effective, ' or '), literal(')')])
-    : undefined
-}
 
 const paymentPredicateSql = (
   alias: string | Sql,
   where?: PaymentWhere
 ): undefined | Sql => {
   const alias$: Sql = typeof alias === 'string' ? literal(alias) : alias
+
+  const categoryAlias = sql`${alias$}.category`
+  const categorySql = categoryPredicateSql(
+    categoryAlias,
+    where && where.category
+  )
 
   return where
     ? conjunction(
@@ -71,7 +65,20 @@ const paymentPredicateSql = (
                 )
               )
             )
-          : undefined
+          : undefined,
+        categorySql &&
+          join(
+            [
+              sql`exists (`,
+              sql`select 1`,
+              sql`from "${category}" "${categoryAlias}"`,
+              sql`where "${categoryAlias}"."${category.id}"`,
+              sql`= "${alias$}"."${payment.categoryId}"`,
+              sql`and ${categorySql}`,
+              sql`)`,
+            ],
+            ' '
+          )
       )
     : undefined
 }

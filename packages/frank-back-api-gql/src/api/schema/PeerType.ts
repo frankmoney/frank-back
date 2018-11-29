@@ -21,6 +21,7 @@ import AggregatedPayments from 'api/types/AggregatedPayments'
 import AccountType from './AccountType'
 import AggregatedPaymentsType from './AggregatedPaymentsType'
 import CategoryType from './CategoryType'
+import CategoryTypeType from './CategoryTypeType'
 import paymentsDefaultFilters from './helpers/paymentsDefaultFilters'
 import PaymentsOrderType from './PaymentsOrderType'
 import PaymentType from './PaymentType'
@@ -65,6 +66,7 @@ const PeerType = Type('Peer', type =>
         search: arg.ofString().nullable(),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
+        type: arg.ofType(CategoryTypeType).nullable(),
       }))
       .resolve(
         createPrivateResolver(
@@ -73,7 +75,13 @@ const PeerType = Type('Peer', type =>
             const peer: Peer = parent.$source
 
             const categories = await listCategoriesByPeerId(
-              { peerId: peer.id },
+              {
+                peerId: peer.id,
+                search: args.search,
+                take: args.take,
+                skip: args.skip,
+                type: args.type,
+              },
               scope
             )
 
@@ -85,6 +93,7 @@ const PeerType = Type('Peer', type =>
       .ofInt()
       .args(arg => ({
         search: arg.ofString().nullable(),
+        type: arg.ofType(CategoryTypeType).nullable(),
       }))
       .resolve(
         createPrivateResolver(
@@ -93,7 +102,11 @@ const PeerType = Type('Peer', type =>
             const peer: Peer = parent.$source
 
             const count = await countCategoriesByPeerId(
-              { peerId: peer.id },
+              {
+                peerId: peer.id,
+                search: args.search,
+                type: args.type,
+              },
               scope
             )
 

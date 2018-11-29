@@ -1,4 +1,5 @@
 import FieldArgumentBuilder from 'gql/nodes/FieldArgumentBuilder'
+import CategoryTypeType from 'api/schema/CategoryTypeType'
 
 const paymentsDefaultFilters = (arg: FieldArgumentBuilder) => ({
   postedOnMin: arg.ofDate().nullable(),
@@ -8,6 +9,7 @@ const paymentsDefaultFilters = (arg: FieldArgumentBuilder) => ({
   verified: arg.ofBool().nullable(),
   pending: arg.ofBool().nullable(),
   search: arg.ofString().nullable(),
+  categoryType: arg.ofType(CategoryTypeType).nullable(),
 })
 
 export default paymentsDefaultFilters

@@ -9,6 +9,7 @@ const mapCategory: Mapper<Category> = map<Category>()
   .for('name', x => x.name)
   .for('color', x => x.color)
   .for('accountId', x => x.accountId)
+  .for('type', x => x.type)
   .build()
 
 export default mapCategory
