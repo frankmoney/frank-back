@@ -12,6 +12,10 @@ export default sequelize.define('t_payment', {
     type: Sequelize.BIGINT,
     field: 'c_account_id',
   },
+  sourceId: {
+    type: Sequelize.BIGINT,
+    field: 'c_source_id',
+  },
   categoryId: {
     type: Sequelize.BIGINT,
     field: 'c_category_id',
@@ -39,6 +43,10 @@ export default sequelize.define('t_payment', {
   verified: {
     type: Sequelize.BOOLEAN,
     field: 'c_verified',
+  },
+  pending: {
+    type: Sequelize.BOOLEAN,
+    field: 'c_pending',
   },
   data: {
     type: Sequelize.JSONB,

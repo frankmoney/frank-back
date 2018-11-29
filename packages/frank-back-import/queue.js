@@ -1,4 +1,4 @@
-import handleAccount from './handleAccount'
+import handleSource from './handleSource'
 import createLogger from './createLogger'
 import * as Sentry from '@sentry/node'
 
@@ -14,11 +14,11 @@ class Queue {
     this._isRuning = false
   }
 
-  addImportTask(accountId, daysAgo) {
+  addImportTask(sourceId, daysAgo) {
 
-    log.trace(`addImportTask accountId: ${accountId} daysAgo: ${daysAgo}`)
+    log.trace(`addImportTask sourceId: ${sourceId} daysAgo: ${daysAgo}`)
 
-    this._queue.push([accountId, daysAgo])
+    this._queue.push([sourceId, daysAgo])
 
     if (!this._isRuning) {
 
@@ -40,7 +40,7 @@ class Queue {
 
       log.trace(`run _queue.length: ${this._queue.length}`)
 
-      await this.importAccount(this._queue.shift())
+      await this.importSource(this._queue.shift())
     }
 
     this._isRuning = false
@@ -48,17 +48,17 @@ class Queue {
     log.trace('run stop')
   }
 
-  async importAccount([accountId, daysAgo]) {
+  async importSource([sourceId, daysAgo]) {
 
-    log.trace(`importAccount accountId: ${accountId}`)
+    log.trace(`importSource sourceId: ${sourceId}`)
 
     try {
 
-      await handleAccount(accountId, daysAgo)
+      await handleSource(sourceId, daysAgo)
 
     } catch (e) {
 
-      log.trace(`importAccount exception: ${e}`)
+      log.trace(`importSource exception: ${e}`)
       Sentry.captureException(e)
     }
   }

@@ -3,23 +3,23 @@ import { format, subDays } from 'date-fns'
 import createLogger from './createLogger'
 import syncTransactions from './syncTransactions'
 import atriumClient from './atriumClient'
-import Account from './model/account'
+import Source from './model/source'
 
-const log = createLogger('import:handleAccount')
+const log = createLogger('import:handleSource')
 
 const DATE_FORMAT = 'YYYY-MM-DD'
 
-export default async (accountId, daysAgo) => {
+export default async (sourceId, daysAgo) => {
 
-  const account = await Account.findByPk(accountId)
+  const source = await Source.findByPk(sourceId)
 
-  if (!account) {
-    throw new Error(`Can't find account. accountId: ${accountId}`);
+  if (!source) {
+    throw new Error(`Can't find source. sourceId: ${sourceId}`);
   }
 
-  log.trace(`start: ${account.name}`)
+  log.trace(`start: ${source.name}`)
 
-  const { data } = account
+  const { data } = source
 
   const fromDate = subDays(new Date(), daysAgo)
 
@@ -41,7 +41,7 @@ export default async (accountId, daysAgo) => {
 
         log.trace(`processing MX payments: ${mxPayments.length}`)
 
-        await syncTransactions(account, mxPayments)
+        await syncTransactions(source, mxPayments)
 
       } else {
 
@@ -52,11 +52,11 @@ export default async (accountId, daysAgo) => {
     } else {
 
       // maybe mxUser or mxAccount were deleted
-      throw new Error(`MX response isn't normal. accountId: ${accountId}`);
+      throw new Error(`MX response isn't normal. sourceId: ${sourceId}`);
     }
 
   } else {
 
-    throw new Error(`Account haven't MX guid. accountId: ${accountId}`);
+    throw new Error(`Source haven't MX guid. sourceId: ${sourceId}`);
   }
 }

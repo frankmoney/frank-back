@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/node'
-import Account from './model/account'
+import Source from './model/source'
 import { CronJob } from 'cron'
 import queue from './queue'
 import createLogger from './createLogger'
@@ -9,37 +9,37 @@ import bodyParser from 'body-parser'
 Sentry.init({ dsn: process.env.SENTRY_DSN })
 
 const DEFAULT_DAYS_AGO = process.env.DEFAULT_DAYS_AGO || 2
-const CRON = process.env.CRON || '0 10 * * * *'
+const CRON = process.env.CRON || '0 10 * * *'
 const PORT = process.env.PORT || 3000
 
 const log = createLogger('import:index')
 const app = express()
 
-const putAllAccountsInQueue = async () => {
+const putAllSourcesInQueue = async () => {
 
-  log.trace('putAllAccountsInQueue')
+  log.trace('putAllSourcesInQueue')
 
-  const accounts = await Account.findAll()
+  const sources = await Source.findAll()
 
-  for (const account of accounts) {
+  for (const source of sources) {
 
-    queue.addImportTask(account.id, DEFAULT_DAYS_AGO)
+    queue.addImportTask(source.id, DEFAULT_DAYS_AGO)
   }
 }
 
-new CronJob(CRON, putAllAccountsInQueue, null, true, 'UTC')
+new CronJob(CRON, putAllSourcesInQueue, null, true, 'UTC')
 
 app.post('/import', bodyParser.json(), function(req, res) {
 
   try {
 
-    let { accountId, daysAgo, delay } = req.body
+    let { sourceId, daysAgo } = req.body
 
-    accountId = parseInt(accountId)
+    sourceId = parseInt(sourceId)
     daysAgo = parseInt(daysAgo)
 
-    if (isNaN(accountId)) {
-      throw new Error('accountId is not number')
+    if (isNaN(sourceId)) {
+      throw new Error('sourceId is not number')
     }
 
     if (isNaN(daysAgo)) {
@@ -50,23 +50,7 @@ app.post('/import', bodyParser.json(), function(req, res) {
       throw new Error(`daysAgo  isn't valid`)
     }
 
-    if (delay) {
-
-      delay = parseInt(delay)
-
-      if (isNaN(delay)) {
-        throw new Error('delay is not number')
-      }
-
-      if (delay < 1) {
-        throw new Error(`delay  isn't valid`)
-      }
-    }
-    else {
-      delay = 1
-    }
-
-    setTimeout(() => queue.addImportTask(accountId, daysAgo), delay * 1000)
+    queue.addImportTask(sourceId, daysAgo)
 
     res.send({ success: true })
 
