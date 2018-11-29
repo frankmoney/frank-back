@@ -12,7 +12,6 @@ export const category = tableEx('t_category', {
   name: 'c_name',
   color: 'c_color',
   accountId: 'c_account_id',
-  type: 'c_type',
 })
 
 export const currency = table('t_currency', {
@@ -49,7 +48,6 @@ export const payment = tableEx('t_payment', {
   peerName: 'c_peer_name',
   description: 'c_description',
   verified: 'c_verified',
-  pending: 'c_pending',
   sourceId: 'c_source_id',
   accountId: 'c_account_id',
   peerId: 'c_peer_id',
