@@ -21,6 +21,7 @@ import AggregatedPayments from 'api/types/AggregatedPayments'
 import AccountType from './AccountType'
 import AggregatedPaymentsType from './AggregatedPaymentsType'
 import CategoryType from './CategoryType'
+import paymentsDefaultFilters from './helpers/paymentsDefaultFilters'
 import PaymentsOrderType from './PaymentsOrderType'
 import PaymentType from './PaymentType'
 import createPaymentWhere from './helpers/createPaymentWhere'
@@ -123,13 +124,8 @@ const PeerType = Type('Peer', type =>
     payments: field
       .listOf(PaymentType)
       .args(arg => ({
+        ...paymentsDefaultFilters(arg),
         sortBy: arg.ofType(PaymentsOrderType),
-        postedOnMin: arg.ofDate().nullable(),
-        postedOnMax: arg.ofDate().nullable(),
-        amountMin: arg.ofFloat().nullable(),
-        amountMax: arg.ofFloat().nullable(),
-        verified: arg.ofBool().nullable(),
-        search: arg.ofString().nullable(),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
       }))
@@ -158,12 +154,7 @@ const PeerType = Type('Peer', type =>
     aggregatePayments: field
       .ofType(AggregatedPaymentsType)
       .args(arg => ({
-        postedOnMin: arg.ofDate().nullable(),
-        postedOnMax: arg.ofDate().nullable(),
-        amountMin: arg.ofFloat().nullable(),
-        amountMax: arg.ofFloat().nullable(),
-        verified: arg.ofBool().nullable(),
-        search: arg.ofString().nullable(),
+        ...paymentsDefaultFilters(arg),
       }))
       .resolve(
         createPrivateResolver(

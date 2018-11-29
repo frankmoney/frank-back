@@ -9,6 +9,7 @@ const createPaymentWhere = (
     amountMin?: number
     amountMax?: number
     verified?: boolean
+    pending?: boolean
     search?: string
   },
   extensions?: Partial<PaymentWhere>
@@ -38,6 +39,10 @@ const createPaymentWhere = (
 
     if (!isNil(args.verified)) {
       where.verified = { eq: args.verified }
+    }
+
+    if (!isNil(args.pending)) {
+      where.pending = { eq: args.pending }
     }
 
     if (args.search) {

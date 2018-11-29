@@ -29,6 +29,7 @@ const paymentPredicateSql = (
         createWhereSql(sql`"${alias$}"."${payment.amount}"`, where.amount),
         createWhereSql(sql`"${alias$}"."${payment.postedOn}"`, where.postedOn),
         createWhereSql(sql`"${alias$}"."${payment.verified}"`, where.verified),
+        createWhereSql(sql`"${alias$}"."${payment.pending}"`, where.pending),
         createWhereSql(
           sql`"${alias$}"."${payment.accountId}"`,
           where.accountId
