@@ -6,6 +6,7 @@ import Category from 'store/types/Category'
 import { throwArgumentError } from 'api/errors/ArgumentError'
 import createMutation from '../createMutation'
 import Id from 'store/types/Id'
+import categoryFieldsSql from './helpers/categoryFieldsSql'
 
 type CategoryData = {
   name: string
@@ -34,12 +35,7 @@ export default createMutation<Args, Category[]>(
       sql`
         insert into ${category} (${join(columns, ', ')})
         values ${join(values, ', ')}
-        returning
-          ${category.id},
-          ${category.pid},
-          ${category.name},
-          ${category.color},
-          ${category.accountId}
+        returning ${categoryFieldsSql(category)}
       `,
       mapCategory
     )

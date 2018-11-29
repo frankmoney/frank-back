@@ -8,6 +8,7 @@ const mapCategory: Mapper<Target, Source> = map<Target>()
   .for('pid', 'pid')
   .for('name', 'name')
   .for('color', 'color')
+  .for('type', 'type')
   .build()
 
 export default mapCategory

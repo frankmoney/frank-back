@@ -4,6 +4,7 @@ import { category } from 'store/names'
 import Category from 'store/types/Category'
 import Id from 'store/types/Id'
 import createQuery from '../createQuery'
+import categoryFieldsSql from './helpers/categoryFieldsSql'
 
 export type Args = {
   accountId: Id
@@ -17,24 +18,15 @@ export default createQuery<Args, Category[]>(
   (args, { db }) => {
     const searchSql = and(
       args.search
-        ? sql`${category.name} ilike ${`%${args.search}%`}`
+        ? sql`c.${category.name} ilike ${`%${args.search}%`}`
         : undefined
     )
 
     return db.query(
       sql`
-        select
-          ${category}.${category.id},
-          ${category}.${category.pid},
-          ${category}.${category.createdAt},
-          ${category}.${category.creatorId},
-          ${category}.${category.updatedAt},
-          ${category}.${category.updaterId},
-          ${category}.${category.name},
-          ${category}.${category.color},
-          ${category}.${category.accountId}
-        from ${category}
-        where ${category.accountId} = ${args.accountId}
+        select ${categoryFieldsSql('c')}
+        from ${category} c
+        where c.${category.accountId} = ${args.accountId}
         ${searchSql}
         ${limit({ take: args.take, skip: args.skip })};
       `,
