@@ -11,6 +11,7 @@ export type Args = {
   search?: string
   take?: number
   skip?: number
+  type?: string
 }
 
 export default createQuery<Args, Category[]>(
@@ -20,6 +21,10 @@ export default createQuery<Args, Category[]>(
       args.search
         ? sql`c.${category.name} ilike ${`%${args.search}%`}`
         : undefined
+    )
+
+    const typeSql = and(
+      args.type ? sql`c.${category.type} = ${args.type}` : undefined
     )
 
     return db.query(
@@ -33,6 +38,7 @@ export default createQuery<Args, Category[]>(
           and ${payment}.${payment.peerId} = ${args.peerId}
         )
         ${searchSql}
+        ${typeSql}
         ${limit({ take: args.take, skip: args.skip })};
       `,
       mapCategory

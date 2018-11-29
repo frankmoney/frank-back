@@ -11,6 +11,7 @@ const createPaymentWhere = (
     verified?: boolean
     pending?: boolean
     search?: string
+    categoryType?: string
   },
   extensions?: Partial<PaymentWhere>
 ) => {
@@ -47,6 +48,10 @@ const createPaymentWhere = (
 
     if (args.search) {
       where.containsText = args.search
+    }
+
+    if (!isNil(args.categoryType)) {
+      where.categoryType = args.categoryType
     }
   }
 

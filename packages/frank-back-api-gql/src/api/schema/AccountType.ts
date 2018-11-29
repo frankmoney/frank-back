@@ -27,6 +27,7 @@ import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import AggregatedPayments from 'api/types/AggregatedPayments'
 import AggregatedPaymentsType from './AggregatedPaymentsType'
 import CategoryType from './CategoryType'
+import CategoryTypeType from './CategoryTypeType'
 import CurrencyType from './CurrencyType'
 import LedgerBarChartType from './LedgerBarChartType'
 import LedgerPieChartType from './LedgerPieChartType'
@@ -70,6 +71,7 @@ const AccountType = Type('Account', type =>
         search: arg.ofString().nullable(),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
+        type: arg.ofType(CategoryTypeType).nullable(),
       }))
       .resolve(
         createPrivateResolver(
@@ -83,6 +85,7 @@ const AccountType = Type('Account', type =>
                 search: args.search,
                 take: args.take,
                 skip: args.skip,
+                type: args.type,
               },
               scope
             )
@@ -95,6 +98,7 @@ const AccountType = Type('Account', type =>
       .ofInt()
       .args(arg => ({
         search: arg.ofString().nullable(),
+        type: arg.ofType(CategoryTypeType).nullable(),
       }))
       .resolve(
         createPrivateResolver(
@@ -103,7 +107,11 @@ const AccountType = Type('Account', type =>
             const account: Account = parent.$source
 
             const count = await countCategoriesByAccountId(
-              { accountId: account.id, search: args.search },
+              {
+                accountId: account.id,
+                search: args.search,
+                type: args.type,
+              },
               scope
             )
 

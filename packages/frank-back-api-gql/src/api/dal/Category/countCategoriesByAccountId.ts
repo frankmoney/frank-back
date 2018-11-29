@@ -8,6 +8,7 @@ export type Args = {
   search?: string
   take?: number
   skip?: number
+  type?: string
 }
 
 export default createQuery<Args, number>(
@@ -19,12 +20,17 @@ export default createQuery<Args, number>(
         : undefined
     )
 
+    const typeSql = and(
+      args.type ? sql`${category.type} = ${args.type}` : undefined
+    )
+
     return db.scalar(
       sql`
         select count(*)
         from ${category}
         where ${category.accountId} = ${args.accountId}
-        ${searchSql};
+        ${searchSql}
+        ${typeSql};
       `
     )
   }

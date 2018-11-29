@@ -13,6 +13,7 @@ export default interface PaymentWhere {
   accountId?: WhereId
   categoryId?: WhereIdNullable
   peerId?: WhereIdNullable
+  categoryType?: string
   or?: PaymentWhere | PaymentWhere[]
   and?: PaymentWhere | PaymentWhere[]
 }

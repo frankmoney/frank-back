@@ -11,6 +11,7 @@ export type Args = {
   search?: string
   take?: number
   skip?: number
+  type?: string
 }
 
 export default createQuery<Args, Category[]>(
@@ -22,12 +23,17 @@ export default createQuery<Args, Category[]>(
         : undefined
     )
 
+    const typeSql = and(
+      args.type ? sql`c.${category.type} = ${args.type}` : undefined
+    )
+
     return db.query(
       sql`
         select ${categoryFieldsSql('c')}
         from ${category} c
         where c.${category.accountId} = ${args.accountId}
         ${searchSql}
+        ${typeSql}
         ${limit({ take: args.take, skip: args.skip })};
       `,
       mapCategory

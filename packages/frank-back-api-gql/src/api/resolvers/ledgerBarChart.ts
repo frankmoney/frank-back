@@ -193,6 +193,7 @@ export type Args = {
   verified?: boolean
   pending?: boolean
   search?: string
+  categoryType?: string
 }
 
 export default async (

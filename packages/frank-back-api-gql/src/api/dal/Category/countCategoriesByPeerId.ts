@@ -6,8 +6,7 @@ import createQuery from '../createQuery'
 export type Args = {
   peerId: Id
   search?: string
-  take?: number
-  skip?: number
+  type?: string
 }
 
 export default createQuery<Args, number>(
@@ -17,6 +16,10 @@ export default createQuery<Args, number>(
       args.search
         ? sql`${category.name} ilike ${`%${args.search}%`}`
         : undefined
+    )
+
+    const typeSql = and(
+      args.type ? sql`${category.type} = ${args.type}` : undefined
     )
 
     return db.scalar(
@@ -29,7 +32,8 @@ export default createQuery<Args, number>(
           where ${payment}.${payment.categoryId} = ${category}.${category.id}
           and ${payment}.${payment.peerId} = ${args.peerId}
         )
-        ${searchSql};
+        ${searchSql}
+        ${typeSql};
       `
     )
   }
