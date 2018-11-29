@@ -1,10 +1,10 @@
 import { Enum } from 'gql'
-import { CategoryType } from 'store/enums'
+import CategoryType from 'api/types/CategoryType'
 
 const CategoryTypeType = Enum('CategoryType', type =>
   type.values([
-    CategoryType[CategoryType.revenue],
-    CategoryType[CategoryType.spending],
+    CategoryType.revenue,
+    CategoryType.spending,
   ])
 )
 

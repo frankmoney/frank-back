@@ -1,3 +1,4 @@
+import CategoryWhere from '../../Category/helpers/CategoryWhere'
 import WhereBoolean from '../../helpers/WhereBoolean'
 import WhereDate from '../../helpers/WhereDate'
 import WhereId from '../../helpers/WhereId'
@@ -12,8 +13,8 @@ export default interface PaymentWhere {
   containsText?: string
   accountId?: WhereId
   categoryId?: WhereIdNullable
+  category?: CategoryWhere
   peerId?: WhereIdNullable
-  categoryType?: string
   or?: PaymentWhere | PaymentWhere[]
   and?: PaymentWhere | PaymentWhere[]
 }

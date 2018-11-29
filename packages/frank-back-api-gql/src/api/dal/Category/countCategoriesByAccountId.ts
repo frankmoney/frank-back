@@ -1,4 +1,5 @@
 import { and, sql } from 'sql'
+import { CategoryType } from 'store/enums'
 import { category } from 'store/names'
 import Id from 'store/types/Id'
 import createQuery from '../createQuery'
@@ -8,7 +9,7 @@ export type Args = {
   search?: string
   take?: number
   skip?: number
-  type?: string
+  type?: CategoryType
 }
 
 export default createQuery<Args, number>(

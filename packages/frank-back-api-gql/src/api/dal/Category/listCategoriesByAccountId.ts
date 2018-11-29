@@ -1,4 +1,5 @@
 import { and, limit, sql } from 'sql'
+import { CategoryType } from 'store/enums'
 import mapCategory from 'store/mappers/mapCategory'
 import { category } from 'store/names'
 import Category from 'store/types/Category'
@@ -11,7 +12,7 @@ export type Args = {
   search?: string
   take?: number
   skip?: number
-  type?: string
+  type?: CategoryType
 }
 
 export default createQuery<Args, Category[]>(

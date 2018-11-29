@@ -1,4 +1,5 @@
 import { and, sql } from 'sql'
+import { CategoryType } from 'store/enums'
 import { category, payment } from 'store/names'
 import Id from 'store/types/Id'
 import createQuery from '../createQuery'
@@ -6,7 +7,7 @@ import createQuery from '../createQuery'
 export type Args = {
   peerId: Id
   search?: string
-  type?: string
+  type?: CategoryType
 }
 
 export default createQuery<Args, number>(

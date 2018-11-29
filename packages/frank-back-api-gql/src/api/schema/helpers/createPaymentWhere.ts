@@ -1,5 +1,7 @@
 import { isNil, mergeDeepRight } from 'ramda'
+import { CategoryType as StoreCategoryType } from 'store/enums'
 import PaymentWhere from 'api/dal/Payment/helpers/PaymentWhere'
+import CategoryType from 'api/types/CategoryType'
 import Date from 'api/types/Date'
 
 const createPaymentWhere = (
@@ -11,7 +13,7 @@ const createPaymentWhere = (
     verified?: boolean
     pending?: boolean
     search?: string
-    categoryType?: string
+    categoryType?: CategoryType
   },
   extensions?: Partial<PaymentWhere>
 ) => {
@@ -51,7 +53,11 @@ const createPaymentWhere = (
     }
 
     if (!isNil(args.categoryType)) {
-      where.categoryType = args.categoryType
+      where.category = {
+        type: {
+          eq: args.categoryType,
+        },
+      }
     }
   }
 
