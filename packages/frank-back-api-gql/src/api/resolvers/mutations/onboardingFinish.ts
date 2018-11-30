@@ -7,7 +7,8 @@ import { throwArgumentError } from 'api/errors/ArgumentError'
 import mapAccount from 'api/mappers/mapAccount'
 import { COMPLETED_STEP, TEAM_STEP } from 'api/onboarding/constants'
 import AccountType from 'api/schema/AccountType'
-import createCategories from '../../dal/Category/createCategories'
+import createCategories from 'api/dal/Category/createCategories'
+import createSource from 'api/dal/Source/createSource'
 import createPrivateResolver from '../utils/createPrivateResolver'
 
 const onboardingFinish = createPrivateResolver(
@@ -31,10 +32,20 @@ const onboardingFinish = createPrivateResolver(
       {
         teamId: team.id,
         name,
+        currencyCode: existingOnboarding.account.currencyCode,
+      },
+      scope
+    )
+
+    await createSource(
+      {
+        accountId: account.id,
+        name: existingOnboarding.account.name, // original name
         data: existingOnboarding.account,
       },
       scope
     )
+
     await createCategories(
       {
         accountId: account.id,

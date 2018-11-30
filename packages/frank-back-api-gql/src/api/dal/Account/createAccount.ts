@@ -11,29 +11,23 @@ import createMutation from '../createMutation'
 type Args = {
   teamId: Id
   name: string
-  data: Json
+  currencyCode: string
 }
 
 export default createMutation<Args, Account>(
   'createAccount',
   async (args, { db }) => {
-    if (R.isNil(args.teamId) || R.isNil(args.name) || R.isNil(args.data)) {
+    if (
+      R.isNil(args.teamId) ||
+      R.isNil(args.name) ||
+      R.isNil(args.currencyCode)
+    ) {
       throwArgumentError()
     }
 
-    const columns = [
-      account.teamId,
-      account.name,
-      account.data,
-      account.currencyCode,
-    ]
+    const columns = [account.teamId, account.name, account.currencyCode]
 
-    const values = [
-      args.teamId,
-      args.name,
-      JSON.stringify(args.data),
-      args.data.currencyCode,
-    ]
+    const values = [args.teamId, args.name, args.currencyCode]
 
     return await db.first(
       sql`
@@ -44,7 +38,8 @@ export default createMutation<Args, Account>(
           ${account.pid},
           ${account.teamId},
           ${account.name},
-          ${account.data}
+          ${account.data},
+          ${account.currencyCode}
       `,
       mapAccount
     )

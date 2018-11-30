@@ -11,7 +11,7 @@ export default async (
 ) => {
   const log = scope.logFor(LOGGER_PREFIX)
 
-  log.debug('start')
+  log.trace('start')
 
   const challenges = challengesJson.map(x => JSON.parse(x))
 
@@ -29,6 +29,6 @@ export default async (
       },
     })
   } else {
-    log.debug("don't have member")
+    log.trace("don't have member")
   }
 }
