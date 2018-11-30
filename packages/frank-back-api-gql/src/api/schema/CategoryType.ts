@@ -19,6 +19,7 @@ import AggregatedPayments from 'api/types/AggregatedPayments'
 import ledgerBarChart from '../resolvers/ledgerBarChart'
 import AccountType from './AccountType'
 import AggregatedPaymentsType from './AggregatedPaymentsType'
+import CategoryTypeType from './CategoryTypeType'
 import paymentsDefaultFilters from './helpers/paymentsDefaultFilters'
 import LedgerBarChartType from './LedgerBarChartType'
 import PaymentsOrderType from './PaymentsOrderType'
@@ -32,6 +33,7 @@ const CategoryType = Type('Category', type =>
     pid: field.ofId(),
     name: field.ofString(),
     color: field.ofString(),
+    type: field.ofType(CategoryTypeType),
     account: field.ofType(AccountType).resolve(
       createPrivateResolver('Category:account', async ({ parent, scope }) => {
         const category: Category = parent.$source
