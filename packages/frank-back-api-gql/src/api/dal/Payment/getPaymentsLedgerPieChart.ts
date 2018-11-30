@@ -31,7 +31,11 @@ export default createQuery<Args, Result>(
     }>(
       sql`
         select
-          p."${payment.categoryId}" "categoryId",
+          case
+            when p."${payment.verified}"
+            then "${payment.categoryId}"
+            else null
+          end "categoryId",
           coalesce(
             sum(
               case
@@ -54,7 +58,12 @@ export default createQuery<Args, Result>(
           ) "spending"
         from "${payment}" p
         ${where(paymentPredicateSql('p', args.wherePayment))}
-        group by p."${payment.categoryId}"
+        group by
+          case
+            when p."${payment.verified}"
+            then p."${payment.categoryId}"
+            else null
+          end "categoryId"
       `
     )
 
