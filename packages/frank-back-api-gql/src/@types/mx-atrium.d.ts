@@ -209,6 +209,13 @@ declare module 'mx-atrium' {
           }[]
         }>
       >
+
+      public listMemberAccountNumbers(args: {
+        params: {
+          userGuid: string
+          memberGuid: string
+        }
+      }): Promise<Response<any>>
     }
   }
 

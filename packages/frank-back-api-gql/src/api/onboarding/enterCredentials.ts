@@ -11,7 +11,7 @@ const LOGGER_PREFIX = 'app:onboarding:enterCredentials'
 const createNewMxUser = async (scope: OnboardingScope) => {
   const log = scope.logFor(`${LOGGER_PREFIX}:createNewMxUser`)
 
-  log.debug('start')
+  log.trace('start')
 
   const { user } = await scope.mx.createUser({
     user: {
@@ -24,28 +24,6 @@ const createNewMxUser = async (scope: OnboardingScope) => {
   return await createUser({ guid: user.guid }, scope)
 }
 
-const mxUserForInstitution = async (
-  institutionCode: string,
-  scope: OnboardingScope
-) => {
-  const log = scope.logFor(`${LOGGER_PREFIX}:mxUserForInstitution`)
-
-  log.debug('start')
-
-  // const mxUser = await findFreeUser({institutionCode}, scope)
-  const mxUser = null
-
-  if (mxUser) {
-    log.debug('have free mxUser')
-
-    return mxUser
-  } else {
-    log.debug("don't have free mxUser")
-
-    return await createNewMxUser(scope)
-  }
-}
-
 const createMxMember = async (
   mxUser: MxUser,
   onboarding: Onboarding,
@@ -54,7 +32,7 @@ const createMxMember = async (
 ) => {
   const log = scope.logFor(`${LOGGER_PREFIX}:createMxMember`)
 
-  log.debug('start')
+  log.trace('start')
 
   const institutionCode = onboarding.institution.code
 
@@ -93,10 +71,7 @@ export default async (
 ) => {
   const log = scope.logFor(LOGGER_PREFIX)
 
-  log.debug('start')
-
-  const institutionCode = onboarding.institution.code
-  credentials = credentials.map((x: string) => JSON.parse(x))
+  log.trace('start')
 
   const existingMxMember = await getMemberById(
     { id: onboarding.mxMemberId },
@@ -104,7 +79,7 @@ export default async (
   )
 
   if (existingMxMember) {
-    log.debug('have member - update credentials')
+    log.trace('have member - update credentials')
 
     await scope.mx.updateMember({
       userGuid: existingMxMember.mxUser.mxGuid,
@@ -112,12 +87,12 @@ export default async (
       member: { credentials },
     })
   } else {
-    log.debug("don't have member - create new")
+    log.trace("don't have member - create new")
 
-    const mxUser = await mxUserForInstitution(institutionCode, scope)
+    const mxUser = await createNewMxUser(scope)
 
     await createMxMember(mxUser, onboarding, credentials, scope)
   }
 
-  log.debug('end')
+  log.trace('end')
 }
