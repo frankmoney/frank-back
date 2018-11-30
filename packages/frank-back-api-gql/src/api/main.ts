@@ -20,6 +20,7 @@ import { SystemUserId, SystemUserName, UserType } from 'store/enums'
 import { user } from 'store/names'
 import RequestContext from './RequestContext'
 import Scope from './Scope'
+import useHttpApi from './http/useHttpApi'
 import schema from './schema'
 
 const log = createLog('api:main')
@@ -141,6 +142,8 @@ const promise = scope.uow.start().then(async () => {
       )
     }
   })
+
+  useHttpApi(koaApp, '/http/')
 
   apolloServer.applyMiddleware({
     app: <any>koaApp, // cast to any as apollo-server-koa typings are broken

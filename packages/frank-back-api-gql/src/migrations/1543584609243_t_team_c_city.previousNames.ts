@@ -12,7 +12,6 @@ export const category = tableEx('t_category', {
   name: 'c_name',
   color: 'c_color',
   accountId: 'c_account_id',
-  type: 'c_type',
 })
 
 export const currency = table('t_currency', {
@@ -49,7 +48,6 @@ export const payment = tableEx('t_payment', {
   peerName: 'c_peer_name',
   description: 'c_description',
   verified: 'c_verified',
-  pending: 'c_pending',
   sourceId: 'c_source_id',
   accountId: 'c_account_id',
   peerId: 'c_peer_id',
@@ -100,8 +98,6 @@ export const storyPayment = tableEx('t_story_payment', {
 
 export const team = tableEx('t_team', {
   name: 'c_name',
-  city: 'c_city',
-  size: 'c_size',
 })
 
 export const teamMember = tableEx('t_team_member', {
@@ -132,7 +128,6 @@ export const user = tableEx('t_user', {
   avatar: 'c_avatar',
   color: 'c_color',
   passwordHash: 'c_password_hash',
-  phone: 'c_phone',
 })
 
 export const userType = table('t_user_type', {
