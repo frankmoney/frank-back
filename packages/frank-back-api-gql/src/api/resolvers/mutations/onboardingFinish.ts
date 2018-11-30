@@ -33,6 +33,7 @@ const onboardingFinish = createPrivateResolver(
         teamId: team.id,
         name,
         currencyCode: existingOnboarding.account.currencyCode,
+        creatorId: scope.user.id,
       },
       scope
     )
@@ -42,6 +43,7 @@ const onboardingFinish = createPrivateResolver(
         accountId: account.id,
         name: existingOnboarding.account.name, // original name
         data: existingOnboarding.account,
+        creatorId: scope.user.id,
       },
       scope
     )

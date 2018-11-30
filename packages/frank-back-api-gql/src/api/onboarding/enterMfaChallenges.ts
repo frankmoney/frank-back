@@ -7,13 +7,11 @@ const LOGGER_PREFIX = 'app:onboarding:enterMfaChallenges'
 export default async (
   onboarding: Onboarding,
   scope: OnboardingScope,
-  challengesJson: string[]
+  challenges: any
 ) => {
   const log = scope.logFor(LOGGER_PREFIX)
 
   log.trace('start')
-
-  const challenges = challengesJson.map(x => JSON.parse(x))
 
   const existingMxMember = await getMemberById(
     { id: onboarding.mxMemberId },

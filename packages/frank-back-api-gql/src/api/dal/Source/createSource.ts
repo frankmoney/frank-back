@@ -12,20 +12,18 @@ type Args = {
   accountId: Id
   name: string
   data: Json
+  creatorId: Id
 }
 
 export default createMutation<Args, Source>(
   'createSource',
   async (args, { db }) => {
-    if (R.isNil(args.accountId) || R.isNil(args.name) || R.isNil(args.data)) {
-      throwArgumentError()
-    }
-
     const columns = [
       source.accountId,
       source.name,
       source.data,
       source.currencyCode,
+      source.creatorId,
     ]
 
     const values = [
@@ -33,6 +31,7 @@ export default createMutation<Args, Source>(
       args.name,
       JSON.stringify(args.data),
       args.data.currencyCode,
+      args.creatorId,
     ]
 
     return await db.first(

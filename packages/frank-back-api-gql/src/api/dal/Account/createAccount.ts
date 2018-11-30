@@ -12,22 +12,20 @@ type Args = {
   teamId: Id
   name: string
   currencyCode: string
+  creatorId: Id
 }
 
 export default createMutation<Args, Account>(
   'createAccount',
   async (args, { db }) => {
-    if (
-      R.isNil(args.teamId) ||
-      R.isNil(args.name) ||
-      R.isNil(args.currencyCode)
-    ) {
-      throwArgumentError()
-    }
+    const columns = [
+      account.teamId,
+      account.name,
+      account.currencyCode,
+      account.creatorId,
+    ]
 
-    const columns = [account.teamId, account.name, account.currencyCode]
-
-    const values = [args.teamId, args.name, args.currencyCode]
+    const values = [args.teamId, args.name, args.currencyCode, args.creatorId]
 
     return await db.first(
       sql`

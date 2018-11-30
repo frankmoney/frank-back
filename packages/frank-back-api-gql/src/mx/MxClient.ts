@@ -225,6 +225,24 @@ export default class AtriumClient {
     )
   }
 
+  public async listMemberAccountNumbers({
+    userGuid,
+    memberGuid,
+  }: {
+    userGuid: string
+    memberGuid: string
+  }) {
+    return this.handleResponse(
+      await this.client.listMemberAccountNumbers({
+        params: {
+          userGuid,
+          memberGuid,
+        },
+      }),
+      `listMemberAccountNumbers(${userGuid}, ${memberGuid})`
+    )
+  }
+
   private readonly log: Log
   private readonly client: Atrium.Client
 

@@ -73,8 +73,6 @@ export default async (
 
   log.trace('start')
 
-  credentials = credentials.map((x: string) => JSON.parse(x))
-
   const existingMxMember = await getMemberById(
     { id: onboarding.mxMemberId },
     scope
