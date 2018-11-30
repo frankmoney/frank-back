@@ -63,7 +63,7 @@ export default createQuery<Args, Result>(
             when p."${payment.verified}"
             then p."${payment.categoryId}"
             else null
-          end "categoryId"
+          end
       `
     )
 
