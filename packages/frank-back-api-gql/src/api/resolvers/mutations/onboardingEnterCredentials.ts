@@ -1,30 +1,16 @@
-import createMutations from 'utils/createMutations'
-import getOnboardingByUserId from 'api/dal/Onboarding/getOnboardingByUserId'
 import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
-import { throwArgumentError } from 'api/errors/ArgumentError'
-import mapOnboarding from 'api/mappers/mapOnboarding'
 import { CHECKING_STATUS, CREDENTIALS_STEP } from 'api/onboarding/constants'
 import enterCredentials from 'api/onboarding/enterCredentials'
-import OnboardingType from 'api/schema/OnboardingType'
 import OnboardingCredentialsInput from 'api/schema/OnboardingCredentialsInput'
-import createPrivateResolver from '../utils/createPrivateResolver'
+import createOnboardingMutation from './helpers/createOnboardingMutation'
 
-const onboardingEnterCredentials = createPrivateResolver(
-  'Mutation:onboarding:enterCredentials',
-  async ({ scope, args: { credentials } }) => {
-    const existingOnboarding = await getOnboardingByUserId(
-      { userId: scope.user.id },
-      scope
-    )
-
-    if (
-      !existingOnboarding ||
-      existingOnboarding.step !== CREDENTIALS_STEP ||
-      existingOnboarding.credentials.status === CHECKING_STATUS
-    ) {
-      return throwArgumentError()
-    }
-
+export default createOnboardingMutation({
+  name: 'EnterCredentials',
+  step: CREDENTIALS_STEP,
+  mutationArgs: arg => ({
+    credentials: arg.listOf(OnboardingCredentialsInput),
+  }),
+  resolver: async (existingOnboarding, args, scope) => {
     const updatedOnboarding = await updateOnboardingByPid(
       {
         pid: existingOnboarding.pid,
@@ -36,18 +22,9 @@ const onboardingEnterCredentials = createPrivateResolver(
       scope
     )
 
-    // background
-    await enterCredentials(updatedOnboarding, scope, credentials)
+    // TODO background
+    await enterCredentials(updatedOnboarding, scope, args.credentials)
 
-    return mapOnboarding(updatedOnboarding)
-  }
-)
-
-export default createMutations(field => ({
-  onboardingEnterCredentials: field
-    .ofType(OnboardingType)
-    .args(arg => ({
-      credentials: arg.listOf(OnboardingCredentialsInput),
-    }))
-    .resolve(onboardingEnterCredentials),
-}))
+    return updatedOnboarding
+  },
+})
