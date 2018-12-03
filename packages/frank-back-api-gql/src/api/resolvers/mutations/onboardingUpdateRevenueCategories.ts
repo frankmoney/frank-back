@@ -1,24 +1,25 @@
 import createMutations from 'utils/createMutations'
-import { throwArgumentError } from 'api/errors/ArgumentError'
 import getOnboardingByUserId from 'api/dal/Onboarding/getOnboardingByUserId'
 import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
+import { throwArgumentError } from 'api/errors/ArgumentError'
 import mapOnboarding from 'api/mappers/mapOnboarding'
-import {
-  ACCOUNT_STEP,
-  SPENDING_CATEGORIES_STEP,
-} from 'api/onboarding/constants'
+import { REVENUE_CATEGORIES_STEP } from 'api/onboarding/constants'
 import OnboardingType from 'api/schema/OnboardingType'
+import OnboadingCategoryCreateInput from 'api/schema/OnboadingCategoryCreateInput'
 import createPrivateResolver from '../utils/createPrivateResolver'
 
-const onboardingCompleteAccountInfo = createPrivateResolver(
-  'Mutation:onboarding:completeAccountInfo',
-  async ({ scope }) => {
+const onboardingUpdateRevenueCategories = createPrivateResolver(
+  'Mutation:onboarding:updateRevenueCategories',
+  async ({ scope, args: { categories } }) => {
     const existingOnboarding = await getOnboardingByUserId(
       { userId: scope.user.id },
       scope
     )
 
-    if (!existingOnboarding || existingOnboarding.step !== ACCOUNT_STEP) {
+    if (
+      !existingOnboarding ||
+      existingOnboarding.step !== REVENUE_CATEGORIES_STEP
+    ) {
       return throwArgumentError()
     }
 
@@ -26,7 +27,10 @@ const onboardingCompleteAccountInfo = createPrivateResolver(
       await updateOnboardingByPid(
         {
           pid: existingOnboarding.pid,
-          step: SPENDING_CATEGORIES_STEP,
+          categories: {
+            ...existingOnboarding.categories,
+            revenue: categories,
+          },
         },
         scope
       )
@@ -35,7 +39,10 @@ const onboardingCompleteAccountInfo = createPrivateResolver(
 )
 
 export default createMutations(field => ({
-  onboardingCompleteAccountInfo: field
+  onboardingUpdateCategories: field
     .ofType(OnboardingType)
-    .resolve(onboardingCompleteAccountInfo),
+    .args(arg => ({
+      categories: arg.listOf(OnboadingCategoryCreateInput),
+    }))
+    .resolve(onboardingUpdateRevenueCategories),
 }))

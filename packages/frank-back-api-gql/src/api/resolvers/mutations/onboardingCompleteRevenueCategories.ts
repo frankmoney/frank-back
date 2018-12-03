@@ -3,20 +3,22 @@ import getOnboardingByUserId from 'api/dal/Onboarding/getOnboardingByUserId'
 import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
 import { throwArgumentError } from 'api/errors/ArgumentError'
 import mapOnboarding from 'api/mappers/mapOnboarding'
-import { CATEGORIES_STEP } from 'api/onboarding/constants'
+import { REVENUE_CATEGORIES_STEP, TEAM_STEP } from 'api/onboarding/constants'
 import OnboardingType from 'api/schema/OnboardingType'
-import CategoryUpdateInput from 'api/schema/CategoryUpdateInput'
 import createPrivateResolver from '../utils/createPrivateResolver'
 
-const onboardingUpdateCategories = createPrivateResolver(
-  'Mutation:onboarding:updateCategories',
-  async ({ scope, args: { categories } }) => {
+const onboardingCompleteRevenueCategories = createPrivateResolver(
+  'Mutation:onboarding:completeRevenueCategories',
+  async ({ scope }) => {
     const existingOnboarding = await getOnboardingByUserId(
       { userId: scope.user.id },
       scope
     )
 
-    if (!existingOnboarding || existingOnboarding.step !== CATEGORIES_STEP) {
+    if (
+      !existingOnboarding ||
+      existingOnboarding.step !== REVENUE_CATEGORIES_STEP
+    ) {
       return throwArgumentError()
     }
 
@@ -24,7 +26,7 @@ const onboardingUpdateCategories = createPrivateResolver(
       await updateOnboardingByPid(
         {
           pid: existingOnboarding.pid,
-          categories,
+          step: TEAM_STEP,
         },
         scope
       )
@@ -33,10 +35,7 @@ const onboardingUpdateCategories = createPrivateResolver(
 )
 
 export default createMutations(field => ({
-  onboardingUpdateCategories: field
+  onboardingCompleteCategories: field
     .ofType(OnboardingType)
-    .args(arg => ({
-      categories: arg.listOf(CategoryUpdateInput),
-    }))
-    .resolve(onboardingUpdateCategories),
+    .resolve(onboardingCompleteRevenueCategories),
 }))
