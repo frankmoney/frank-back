@@ -1,19 +1,26 @@
 import { REVENUE_CATEGORIES_STEP } from 'api/onboarding/constants'
-import OnboadingCategoryCreateInput from 'api/schema/OnboadingCategoryCreateInput'
-import createOnboardingUpdateStepMutation from './helpers/createOnboardingUpdateStepMutation'
+import OnboardingCategoryCreateInput from 'api/schema/OnboardingCategoryCreateInput'
+import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
+import createOnboardingMutation from './helpers/createOnboardingMutation'
 
-const mutation = createOnboardingUpdateStepMutation({
-  name: 'RevenueCategories',
+const mutation = createOnboardingMutation({
+  name: 'UpdateRevenueCategories',
   step: REVENUE_CATEGORIES_STEP,
   mutationArgs: arg => ({
-    categories: arg.listOf(OnboadingCategoryCreateInput),
+    categories: arg.listOf(OnboardingCategoryCreateInput),
   }),
-  resolve: (onboading, args) => ({
-    categories: {
-      ...onboading.categories,
-      revenue: args.categories,
-    },
-  }),
+  resolver: async (onboarding, args, scope) => {
+    return await updateOnboardingByPid(
+      {
+        pid: onboarding.pid,
+        categories: {
+          ...onboarding.categories,
+          revenue: args.categories,
+        },
+      },
+      scope
+    )
+  },
 })
 
 export default mutation

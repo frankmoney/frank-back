@@ -1,19 +1,26 @@
 import { SPENDING_CATEGORIES_STEP } from 'api/onboarding/constants'
-import OnboadingCategoryCreateInput from 'api/schema/OnboadingCategoryCreateInput'
-import createOnboardingUpdateStepMutation from './helpers/createOnboardingUpdateStepMutation'
+import OnboardingCategoryCreateInput from 'api/schema/OnboardingCategoryCreateInput'
+import updateOnboardingByPid from '../../dal/Onboarding/updateOnboardingByPid'
+import createOnboardingMutation from './helpers/createOnboardingMutation'
 
-const mutation = createOnboardingUpdateStepMutation({
-  name: 'SpendingCategories',
+const mutation = createOnboardingMutation({
+  name: 'UpdateSpendingCategories',
   step: SPENDING_CATEGORIES_STEP,
   mutationArgs: arg => ({
-    categories: arg.listOf(OnboadingCategoryCreateInput),
+    categories: arg.listOf(OnboardingCategoryCreateInput),
   }),
-  resolve: (onboading, args) => ({
-    categories: {
-      ...onboading.categories,
-      spending: args.categories,
-    },
-  }),
+  resolver: async (onboarding, args, scope) => {
+    return await updateOnboardingByPid(
+      {
+        pid: onboarding.pid,
+        categories: {
+          ...onboarding.categories,
+          spending: args.categories,
+        },
+      },
+      scope
+    )
+  },
 })
 
 export default mutation

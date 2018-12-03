@@ -1,20 +1,28 @@
 import { ACCOUNT_STEP } from 'api/onboarding/constants'
-import createOnboardingUpdateStepMutation from './helpers/createOnboardingUpdateStepMutation'
+import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
+import createOnboardingMutation from './helpers/createOnboardingMutation'
 
-const mutation = createOnboardingUpdateStepMutation({
-  name: 'AccountInfo',
+const mutation = createOnboardingMutation({
+  name: 'UpdateAccountInfo',
   step: ACCOUNT_STEP,
   mutationArgs: arg => ({
     title: arg.ofString().nullable(),
     description: arg.ofString().nullable(),
   }),
-  resolve: (onboading, args) => ({
-    account: {
-      ...onboading.account,
-      frankTitle: args.title || onboading.account.frankTitle,
-      frankDescription: args.description || onboading.account.frankDescription,
-    },
-  }),
+  resolver: async (onboarding, args, scope) => {
+    return await updateOnboardingByPid(
+      {
+        pid: onboarding.pid,
+        account: {
+          ...onboarding.account,
+          frankTitle: args.title || onboarding.account.frankTitle,
+          frankDescription:
+            args.description || onboarding.account.frankDescription,
+        },
+      },
+      scope
+    )
+  },
 })
 
 export default mutation

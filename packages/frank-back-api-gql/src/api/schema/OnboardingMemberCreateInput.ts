@@ -1,6 +1,6 @@
 import { Input } from 'gql'
 
-const OnboadingMemberCreateInput = Input('OnboadingMemberCreate', type =>
+const OnboardingMemberCreateInput = Input('OnboardingMemberCreate', type =>
   type.fields(field => ({
     role: field.ofString(),
     email: field.ofString(),
@@ -8,4 +8,4 @@ const OnboadingMemberCreateInput = Input('OnboadingMemberCreate', type =>
   }))
 )
 
-export default OnboadingMemberCreateInput
+export default OnboardingMemberCreateInput
