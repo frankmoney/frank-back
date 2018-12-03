@@ -1,14 +1,11 @@
-import {
-  ACCOUNT_STEP,
-  SPENDING_CATEGORIES_STEP,
-} from 'api/onboarding/constants'
+import { REVENUE_CATEGORIES_STEP, TEAM_STEP } from 'api/onboarding/constants'
 
 import createOnboardingCompleteStepMutation from './helpers/createOnboardingCompleteStepMutation'
 
 const mutation = createOnboardingCompleteStepMutation({
-  name: 'AccountInfo',
-  from: ACCOUNT_STEP,
-  to: SPENDING_CATEGORIES_STEP,
+  name: 'RevenueCategories',
+  from: REVENUE_CATEGORIES_STEP,
+  to: TEAM_STEP,
 })
 
 export default mutation

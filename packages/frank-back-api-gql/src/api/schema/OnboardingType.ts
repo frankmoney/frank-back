@@ -1,4 +1,9 @@
 import { Type } from 'gql'
+import Onboarding from '../../store/types/Onboarding'
+import Peer from '../../store/types/Peer'
+import getAccountByPeerId from '../dal/Account/getAccountByPeerId'
+import mapAccount from '../mappers/mapAccount'
+import createPrivateResolver from '../resolvers/utils/createPrivateResolver'
 
 const OnboardingType = Type('Onboarding', type =>
   type.fields(field => ({
@@ -7,7 +12,22 @@ const OnboardingType = Type('Onboarding', type =>
     credentials: field.ofJson(),
     accounts: field.ofJson().nullable(),
     account: field.ofJson().nullable(),
-    categories: field.ofJson().nullable(),
+    spendingCategories: field
+      .ofJson()
+      .nullable()
+      .resolve(
+        createPrivateResolver('Onboarding:spendingCategories', ({ parent }) => {
+          return parent.categories && parent.categories.spending
+        })
+      ),
+    revenueCategories: field
+      .ofJson()
+      .nullable()
+      .resolve(
+        createPrivateResolver('Onboarding:revenueCategories', ({ parent }) => {
+          return parent.categories && parent.categories.revenue
+        })
+      ),
     team: field.ofJson().nullable(),
     mfa: field.ofJson().nullable(),
   }))

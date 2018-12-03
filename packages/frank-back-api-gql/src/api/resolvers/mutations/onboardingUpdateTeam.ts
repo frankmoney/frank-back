@@ -1,44 +1,25 @@
-import { Json } from 'gql'
-import createMutations from 'utils/createMutations'
-import getOnboardingByUserId from 'api/dal/Onboarding/getOnboardingByUserId'
-import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
-import { throwArgumentError } from 'api/errors/ArgumentError'
-import mapOnboarding from 'api/mappers/mapOnboarding'
 import { TEAM_STEP } from 'api/onboarding/constants'
-import OnboardingType from 'api/schema/OnboardingType'
-import createPrivateResolver from '../utils/createPrivateResolver'
+import OnboardingMemberCreateInput from 'api/schema/OnboardingMemberCreateInput'
+import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
+import createOnboardingMutation from './helpers/createOnboardingMutation'
 
-const onboardingUpdateTeam = createPrivateResolver(
-  'Mutation:onboarding:updateTeam',
-  async ({ scope, args: { members } }) => {
-    const existingOnboarding = await getOnboardingByUserId(
-      { userId: scope.user.id },
+const mutation = createOnboardingMutation({
+  name: 'UpdateTeam',
+  step: TEAM_STEP,
+  mutationArgs: arg => ({
+    members: arg.listOf(OnboardingMemberCreateInput),
+  }),
+  resolver: async (onboarding, args, scope) => {
+    return await updateOnboardingByPid(
+      {
+        pid: onboarding.pid,
+        team: {
+          members: args.members,
+        },
+      },
       scope
     )
+  },
+})
 
-    if (!existingOnboarding || existingOnboarding.step !== TEAM_STEP) {
-      return throwArgumentError()
-    }
-
-    return mapOnboarding(
-      await updateOnboardingByPid(
-        {
-          pid: existingOnboarding.pid,
-          team: {
-            members: members.map((x: string) => JSON.parse(x)),
-          },
-        },
-        scope
-      )
-    )
-  }
-)
-
-export default createMutations(field => ({
-  onboardingUpdateTeam: field
-    .ofType(OnboardingType)
-    .args(arg => ({
-      members: arg.listOf(Json),
-    }))
-    .resolve(onboardingUpdateTeam),
-}))
+export default mutation
