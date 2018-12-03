@@ -1,4 +1,3 @@
-import { Json } from 'gql'
 import createMutations from 'utils/createMutations'
 import getOnboardingByUserId from 'api/dal/Onboarding/getOnboardingByUserId'
 import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
@@ -7,6 +6,7 @@ import mapOnboarding from 'api/mappers/mapOnboarding'
 import { CHECKING_STATUS, CREDENTIALS_STEP } from 'api/onboarding/constants'
 import enterCredentials from 'api/onboarding/enterCredentials'
 import OnboardingType from 'api/schema/OnboardingType'
+import OnboardingCredentialsInput from 'api/schema/OnboardingCredentialsInput'
 import createPrivateResolver from '../utils/createPrivateResolver'
 
 const onboardingEnterCredentials = createPrivateResolver(
@@ -47,7 +47,7 @@ export default createMutations(field => ({
   onboardingEnterCredentials: field
     .ofType(OnboardingType)
     .args(arg => ({
-      credentials: arg.listOf(Json),
+      credentials: arg.listOf(OnboardingCredentialsInput),
     }))
     .resolve(onboardingEnterCredentials),
 }))

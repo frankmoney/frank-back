@@ -21,6 +21,7 @@ import {
   subDays,
 } from 'date-fns'
 import R from 'ramda'
+import { CategoryType } from 'store/enums'
 import Payment from 'store/types/Payment'
 import Id from 'store/types/Id'
 import createPaymentWhere from 'api/schema/helpers/createPaymentWhere'
@@ -193,6 +194,7 @@ export type Args = {
   verified?: boolean
   pending?: boolean
   search?: string
+  categoryType?: CategoryType
 }
 
 export default async (

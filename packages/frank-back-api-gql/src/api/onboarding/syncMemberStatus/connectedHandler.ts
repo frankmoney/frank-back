@@ -26,6 +26,14 @@ const handler: StatusHandler = async ({
       memberGuid,
     })
 
+    // const accountNumbersResp = await scope.mx.listMemberAccountNumbers({
+    //   userGuid,
+    //   memberGuid,
+    // })
+
+    // console.log('HERE accountNumbersResp')
+    // console.log(accountNumbersResp)
+
     const data = {
       pid: onboarding.pid,
       step: ACCOUNTS_STEP,
