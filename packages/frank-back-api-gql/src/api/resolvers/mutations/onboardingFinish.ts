@@ -12,13 +12,17 @@ import createSource from 'api/dal/Source/createSource'
 import CategoryType from '../../types/CategoryType'
 import createPrivateResolver from '../utils/createPrivateResolver'
 import R from 'ramda'
+import request from 'request'
+
+const IMPORT_URL = process.env.IMPORT_URL
+const IMPORT_DAYS_AGO = process.env.IMPORT_DAYS_AGO || 90
 
 const onboardingFinish = createPrivateResolver(
   'Mutation:onboarding:finish',
   async ({ scope }) => {
     const existingOnboarding = await getOnboardingByUserId(
       { userId: scope.user.id },
-      scope
+      scope,
     )
 
     if (!existingOnboarding || existingOnboarding.step !== TEAM_STEP) {
@@ -37,25 +41,32 @@ const onboardingFinish = createPrivateResolver(
         currencyCode: existingOnboarding.account.currencyCode,
         creatorId: scope.user.id,
       },
-      scope
+      scope,
     )
 
-    await createSource(
+    const source = await createSource(
       {
         accountId: account.id,
         name: existingOnboarding.account.name, // original name
         data: existingOnboarding.account,
         creatorId: scope.user.id,
       },
-      scope
+      scope,
     )
+
+    request.post(IMPORT_URL!, {
+      json: {
+        sourceId: source.id,
+        daysAgo: IMPORT_DAYS_AGO,
+      },
+    })
 
     const spendingCategories = R.map(
       c => ({
         ...c,
         type: CategoryType.spending,
       }),
-      existingOnboarding.categories.spending || []
+      existingOnboarding.categories.spending || [],
     )
 
     const revenueCategories = R.map(
@@ -63,7 +74,7 @@ const onboardingFinish = createPrivateResolver(
         ...c,
         type: CategoryType.revenue,
       }),
-      existingOnboarding.categories.revenue || []
+      existingOnboarding.categories.revenue || [],
     )
 
     await createCategories(
@@ -71,7 +82,7 @@ const onboardingFinish = createPrivateResolver(
         accountId: account.id,
         categories: R.concat(spendingCategories, revenueCategories),
       },
-      scope
+      scope,
     )
 
     await updateOnboardingByPid(
@@ -79,11 +90,11 @@ const onboardingFinish = createPrivateResolver(
         pid: existingOnboarding.pid,
         step: COMPLETED_STEP,
       },
-      scope
+      scope,
     )
 
     return mapAccount(account)
-  }
+  },
 )
 
 export default createMutations(field => ({
