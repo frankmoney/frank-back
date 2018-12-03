@@ -22,7 +22,7 @@ const onboardingFinish = createPrivateResolver(
   async ({ scope }) => {
     const existingOnboarding = await getOnboardingByUserId(
       { userId: scope.user.id },
-      scope,
+      scope
     )
 
     if (!existingOnboarding || existingOnboarding.step !== TEAM_STEP) {
@@ -41,7 +41,7 @@ const onboardingFinish = createPrivateResolver(
         currencyCode: existingOnboarding.account.currencyCode,
         creatorId: scope.user.id,
       },
-      scope,
+      scope
     )
 
     const source = await createSource(
@@ -51,22 +51,24 @@ const onboardingFinish = createPrivateResolver(
         data: existingOnboarding.account,
         creatorId: scope.user.id,
       },
-      scope,
+      scope
     )
 
-    request.post(IMPORT_URL!, {
-      json: {
-        sourceId: source.id,
-        daysAgo: IMPORT_DAYS_AGO,
-      },
-    })
+    if (IMPORT_URL) {
+      request.post(IMPORT_URL, {
+        json: {
+          sourceId: source.id,
+          daysAgo: IMPORT_DAYS_AGO,
+        },
+      })
+    }
 
     const spendingCategories = R.map(
       c => ({
         ...c,
         type: CategoryType.spending,
       }),
-      existingOnboarding.categories.spending || [],
+      existingOnboarding.categories.spending || []
     )
 
     const revenueCategories = R.map(
@@ -74,7 +76,7 @@ const onboardingFinish = createPrivateResolver(
         ...c,
         type: CategoryType.revenue,
       }),
-      existingOnboarding.categories.revenue || [],
+      existingOnboarding.categories.revenue || []
     )
 
     await createCategories(
@@ -82,7 +84,7 @@ const onboardingFinish = createPrivateResolver(
         accountId: account.id,
         categories: R.concat(spendingCategories, revenueCategories),
       },
-      scope,
+      scope
     )
 
     await updateOnboardingByPid(
@@ -90,11 +92,11 @@ const onboardingFinish = createPrivateResolver(
         pid: existingOnboarding.pid,
         step: COMPLETED_STEP,
       },
-      scope,
+      scope
     )
 
     return mapAccount(account)
-  },
+  }
 )
 
 export default createMutations(field => ({
