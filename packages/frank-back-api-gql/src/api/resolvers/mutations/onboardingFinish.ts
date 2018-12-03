@@ -9,7 +9,9 @@ import { COMPLETED_STEP, TEAM_STEP } from 'api/onboarding/constants'
 import AccountType from 'api/schema/AccountType'
 import createCategories from 'api/dal/Category/createCategories'
 import createSource from 'api/dal/Source/createSource'
+import CategoryType from '../../types/CategoryType'
 import createPrivateResolver from '../utils/createPrivateResolver'
+import R from 'ramda'
 
 const onboardingFinish = createPrivateResolver(
   'Mutation:onboarding:finish',
@@ -48,10 +50,26 @@ const onboardingFinish = createPrivateResolver(
       scope
     )
 
+    const spendingCategories = R.map(
+      c => ({
+        ...c,
+        type: CategoryType.spending,
+      }),
+      existingOnboarding.categories.spending || []
+    )
+
+    const revenueCategories = R.map(
+      c => ({
+        ...c,
+        type: CategoryType.revenue,
+      }),
+      existingOnboarding.categories.revenue || []
+    )
+
     await createCategories(
       {
         accountId: account.id,
-        categories: existingOnboarding.categories,
+        categories: R.concat(spendingCategories, revenueCategories),
       },
       scope
     )
