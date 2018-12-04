@@ -5,6 +5,7 @@ import createUser from 'api/dal/mx/createUser'
 import createMember from 'api/dal/mx/createMember'
 import getMemberById from 'api/dal/mx/getMemberById'
 import OnboardingScope from './OnboardingScope'
+import * as Sentry from '@sentry/node'
 
 const LOGGER_PREFIX = 'app:onboarding:enterCredentials'
 
@@ -13,6 +14,8 @@ const createNewMxUser = async (scope: OnboardingScope) => {
 
   log.trace('start')
 
+  // TODO metadata
+
   const { user } = await scope.mx.createUser({
     user: {
       metadata: JSON.stringify({
@@ -20,6 +23,10 @@ const createNewMxUser = async (scope: OnboardingScope) => {
       }),
     },
   })
+
+  if (!user || !user.guid) {
+    throw new Error("mx.createUser didn't return user")
+  }
 
   return await createUser({ guid: user.guid }, scope)
 }
@@ -36,6 +43,8 @@ const createMxMember = async (
 
   const institutionCode = onboarding.institution.code
 
+  // TODO metadata
+
   const { member } = await scope.mx.createMember({
     userGuid: mxUser.mxGuid,
     member: {
@@ -43,6 +52,10 @@ const createMxMember = async (
       credentials,
     },
   })
+
+  if (!member || !member.guid) {
+    throw new Error("mx.createMember didn't return member")
+  }
 
   const mxMember = await createMember(
     {
@@ -78,20 +91,25 @@ export default async (
     scope
   )
 
-  if (existingMxMember) {
-    log.trace('have member - update credentials')
+  try {
+    if (existingMxMember) {
+      log.trace('have member - update credentials')
 
-    await scope.mx.updateMember({
-      userGuid: existingMxMember.mxUser.mxGuid,
-      memberGuid: existingMxMember.mxGuid,
-      member: { credentials },
-    })
-  } else {
-    log.trace("don't have member - create new")
+      await scope.mx.updateMember({
+        userGuid: existingMxMember.mxUser.mxGuid,
+        memberGuid: existingMxMember.mxGuid,
+        member: { credentials },
+      })
+    } else {
+      log.trace("don't have member - create new")
 
-    const mxUser = await createNewMxUser(scope)
+      const mxUser = await createNewMxUser(scope)
 
-    await createMxMember(mxUser, onboarding, credentials, scope)
+      await createMxMember(mxUser, onboarding, credentials, scope)
+    }
+  } catch (e) {
+    log.error('Exception: ' + e.toString())
+    Sentry.captureException(e)
   }
 
   log.trace('end')

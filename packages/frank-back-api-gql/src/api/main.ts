@@ -22,6 +22,11 @@ import RequestContext from './RequestContext'
 import Scope from './Scope'
 import useHttpApi from './http/useHttpApi'
 import schema from './schema'
+import * as Sentry from '@sentry/node'
+
+if (process.env.SENTRY_DNS) {
+  Sentry.init({ dsn: process.env.SENTRY_DNS })
+}
 
 const log = createLog('api:main')
 
