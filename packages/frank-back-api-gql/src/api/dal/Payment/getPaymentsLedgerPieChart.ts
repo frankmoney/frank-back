@@ -33,10 +33,7 @@ export default createQuery<Args, Result>(
     `
     const wherePaymentSql = paymentPredicateSql('p', args.wherePayment)
 
-    const totals = await scope.db.first<{
-      totalRevenue: number
-      totalSpending: number
-    }>(
+    const totalRevenue = await scope.db.scalar<number>(
       sql`
         select
           coalesce(
@@ -48,17 +45,7 @@ export default createQuery<Args, Result>(
               end
             ),
             0
-          ) "totalRevenue",
-          coalesce(
-            -sum(
-              case
-                when c."${category.type}" = ${CategoryType.spending}
-                then p."${payment.amount}"
-                else 0
-              end
-            ),
-            0
-          ) "totalSpending"
+          ) "totalRevenue"
         ${fromSql}
         ${where(wherePaymentSql)}
       `
@@ -69,7 +56,7 @@ export default createQuery<Args, Result>(
       spending: number
     }>(
       sql`
-        with "cte" as (
+        with p as (
           select
             p."${payment.amount}" "amount",
             case
@@ -80,10 +67,20 @@ export default createQuery<Args, Result>(
           ${fromSql}
           where c."${category.type}" = ${CategoryType.spending}
           ${and(wherePaymentSql)}
+        ),
+        g as (
+          select "categoryId", coalesce(-sum("amount"), 0) "spending"
+          from p
+          group by "categoryId"
         )
-        select "categoryId", coalesce(-sum("amount"), 0) "spending"
-        from "cte"
-        group by "categoryId";
+        select
+          "categoryId",
+          case
+            when "spending" > 0
+            then "spending"
+            else 0
+          end "spending"
+        from g
       `
     )
 
@@ -102,8 +99,8 @@ export default createQuery<Args, Result>(
     )
 
     return {
-      totalRevenue: totals.totalRevenue,
-      totalSpending: totals.totalSpending,
+      totalRevenue,
+      totalSpending: items.reduce((r, x) => r + x.spending, 0),
       items: items.map(x => ({
         spending: x.spending,
         category: (x.categoryId && categoryMap.get(x.categoryId)) || null,
