@@ -14,11 +14,7 @@ const createNewMxUser = async (scope: OnboardingScope) => {
   log.trace('start')
 
   const { user } = await scope.mx.createUser({
-    user: {
-      metadata: JSON.stringify({
-        first_name: 'auto_generated_user',
-      }),
-    },
+    user: {},
   })
 
   return await createUser({ guid: user.guid }, scope)
