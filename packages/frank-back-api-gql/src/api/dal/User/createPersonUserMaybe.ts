@@ -9,7 +9,7 @@ export type Args = {
   passwordHash: string
   lastName: null | string
   firstName: string
-  color: number,
+  color: number
   phone: null | string
 }
 
