@@ -5,7 +5,6 @@ import createUser from 'api/dal/mx/createUser'
 import createMember from 'api/dal/mx/createMember'
 import getMemberById from 'api/dal/mx/getMemberById'
 import OnboardingScope from './OnboardingScope'
-import * as Sentry from '@sentry/node'
 
 const LOGGER_PREFIX = 'app:onboarding:enterCredentials'
 
@@ -91,25 +90,20 @@ export default async (
     scope
   )
 
-  try {
-    if (existingMxMember) {
-      log.trace('have member - update credentials')
+  if (existingMxMember) {
+    log.trace('have member - update credentials')
 
-      await scope.mx.updateMember({
-        userGuid: existingMxMember.mxUser.mxGuid,
-        memberGuid: existingMxMember.mxGuid,
-        member: { credentials },
-      })
-    } else {
-      log.trace("don't have member - create new")
+    await scope.mx.updateMember({
+      userGuid: existingMxMember.mxUser.mxGuid,
+      memberGuid: existingMxMember.mxGuid,
+      member: { credentials },
+    })
+  } else {
+    log.trace("don't have member - create new")
 
-      const mxUser = await createNewMxUser(scope)
+    const mxUser = await createNewMxUser(scope)
 
-      await createMxMember(mxUser, onboarding, credentials, scope)
-    }
-  } catch (e) {
-    log.error('Exception: ' + e.toString())
-    Sentry.captureException(e)
+    await createMxMember(mxUser, onboarding, credentials, scope)
   }
 
   log.trace('end')
