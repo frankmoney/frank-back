@@ -39,6 +39,7 @@
     "@types/password-hash": "^1.2.20",
     "@types/pg": "^7.4.10",
     "@types/ramda": "^0.25.36",
+    "@types/request": "^2.48.1",
     "apollo-server": "^2.0.0",
     "apollo-server-koa": "^2.1.0",
     "co-body": "^6.0.0",
@@ -56,6 +57,7 @@
     "password-hash": "^1.2.2",
     "pg": "^7.4.3",
     "ramda": "^0.25.0",
+    "request": "^2.88.0",
     "ts-node": "^6.2.0",
     "tsconfig-paths": "^3.5.0",
     "typescript": "^3.0.1"

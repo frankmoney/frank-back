@@ -341,7 +341,7 @@ describe('LedgerBarChart', () => {
       assert.strictEqual(result.bars[1].startDate, '2016-04-01')
       assert.strictEqual(result.bars[1].endDate, '2016-07-01')
 
-      //.....
+      // .....
 
       assert.strictEqual(result.bars[8].showDate, '2018-01-01')
       assert.strictEqual(result.bars[8].startDate, '2018-01-01')
@@ -403,7 +403,7 @@ describe('LedgerBarChart', () => {
       assert.strictEqual(result.bars[2].startDate, '2013-04-01')
       assert.strictEqual(result.bars[2].endDate, '2013-07-01')
 
-      //.....
+      // .....
 
       assert.strictEqual(result.bars[20].showDate, '2017-10-01')
       assert.strictEqual(result.bars[20].startDate, '2017-10-01')

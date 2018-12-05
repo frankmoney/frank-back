@@ -7,7 +7,8 @@ import {
   ACCOUNT_STEP,
   ACCOUNTS_STEP,
   AWAITING_INPUT_STATUS,
-  CATEGORIES_STEP,
+  SPENDING_CATEGORIES_STEP,
+  REVENUE_CATEGORIES_STEP,
   CREDENTIALS_STEP,
   MFA_STEP,
   TEAM_STEP,
@@ -35,9 +36,12 @@ const onboardingBack = createPrivateResolver(
 
     switch (existingOnboarding.step) {
       case TEAM_STEP:
-        newStep = CATEGORIES_STEP
+        newStep = REVENUE_CATEGORIES_STEP
         break
-      case CATEGORIES_STEP:
+      case REVENUE_CATEGORIES_STEP:
+        newStep = SPENDING_CATEGORIES_STEP
+        break
+      case SPENDING_CATEGORIES_STEP:
         newStep = ACCOUNT_STEP
         break
       case ACCOUNT_STEP:
