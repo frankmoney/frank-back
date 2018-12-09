@@ -1,15 +1,4 @@
-process.on('uncaughtException', err => {
-  // tslint:disable-next-line:no-console
-  console.error('Unhandled promise rejection:', err.message, err.stack)
-  process.exit(1)
-})
-
-process.on('unhandledRejection', err => {
-  // tslint:disable-next-line:no-console
-  console.error('Unhandled promise rejection:', err.message, err.stack)
-  process.exit(1)
-})
-
+import { init as initSentry } from '@sentry/node'
 import { ApolloServer } from 'apollo-server-koa'
 import Koa, { Context as KoaContext } from 'koa'
 import * as R from 'ramda'
@@ -22,6 +11,10 @@ import RequestContext from './RequestContext'
 import Scope from './Scope'
 import useHttpApi from './http/useHttpApi'
 import schema from './schema'
+
+if (config.SENTRY_DSN) {
+  initSentry({ dsn: config.SENTRY_DSN })
+}
 
 const log = createLog('api:main')
 
@@ -67,7 +60,7 @@ const promise = scope.uow.start().then(async () => {
         }
 
         for (const error of body.errors) {
-          log.error('Apollo error\r\n%O', error)
+          log.error(error, 'Apollo error', error)
         }
       } else {
         try {

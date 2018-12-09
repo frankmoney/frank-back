@@ -11,14 +11,15 @@ export default class AtriumClient {
   public static create(scope: AtriumClientScope): AtriumClient {
     const log = scope.logFor('AtriumClient')
 
-    const environment = process.env.ATRIUM_PROD === 'true'
-      ? Atrium.environments.production
-      : Atrium.environments.development
+    const environment =
+      process.env.ATRIUM_PROD === 'true'
+        ? Atrium.environments.production
+        : Atrium.environments.development
 
     const client = new Atrium.Client(
       config.MX_API_KEY,
       config.MX_CLIENT_ID,
-      environment,
+      environment
     )
 
     return new AtriumClient(log, client)
@@ -30,8 +31,8 @@ export default class AtriumClient {
   }
 
   public async createUser({
-                            user,
-                          }: {
+    user,
+  }: {
     user: {
       identifier?: string
       is_disabled?: boolean
@@ -44,7 +45,7 @@ export default class AtriumClient {
           user,
         },
       }),
-      `createUser(${user.identifier})`,
+      `createUser(${user.identifier})`
     )
   }
 
@@ -55,13 +56,13 @@ export default class AtriumClient {
           name: args && args.name,
         },
       }),
-      `listInstitutions(${args && args.name})`,
+      `listInstitutions(${args && args.name})`
     )
   }
 
   public async readInstitution({
-                                 institutionCode,
-                               }: {
+    institutionCode,
+  }: {
     institutionCode: string
   }) {
     return this.handleResponse(
@@ -70,13 +71,13 @@ export default class AtriumClient {
           institutionCode,
         },
       }),
-      `readInstitution(${institutionCode})`,
+      `readInstitution(${institutionCode})`
     )
   }
 
   public async listCredentials({
-                                 institutionCode,
-                               }: {
+    institutionCode,
+  }: {
     institutionCode: string
   }) {
     return this.handleResponse(
@@ -85,14 +86,14 @@ export default class AtriumClient {
           institutionCode,
         },
       }),
-      `listCredentials(${institutionCode})`,
+      `listCredentials(${institutionCode})`
     )
   }
 
   public async createMember({
-                              userGuid,
-                              member,
-                            }: {
+    userGuid,
+    member,
+  }: {
     userGuid: string
     member: {
       credentials: {
@@ -113,14 +114,14 @@ export default class AtriumClient {
           member,
         },
       }),
-      `createMember(${userGuid}, ${member.identifier})`,
+      `createMember(${userGuid}, ${member.identifier})`
     )
   }
 
   public async readMember({
-                            userGuid,
-                            memberGuid,
-                          }: {
+    userGuid,
+    memberGuid,
+  }: {
     userGuid: string
     memberGuid: string
   }) {
@@ -131,15 +132,15 @@ export default class AtriumClient {
           memberGuid,
         },
       }),
-      `readMember(${userGuid}, ${memberGuid})`,
+      `readMember(${userGuid}, ${memberGuid})`
     )
   }
 
   public async updateMember({
-                              userGuid,
-                              memberGuid,
-                              member,
-                            }: {
+    userGuid,
+    memberGuid,
+    member,
+  }: {
     userGuid: string
     memberGuid: string
     member: {
@@ -161,14 +162,14 @@ export default class AtriumClient {
           member,
         },
       }),
-      `updateMember(${userGuid}, ${memberGuid})`,
+      `updateMember(${userGuid}, ${memberGuid})`
     )
   }
 
   public async listMemberChallenges({
-                                      userGuid,
-                                      memberGuid,
-                                    }: {
+    userGuid,
+    memberGuid,
+  }: {
     userGuid: string
     memberGuid: string
   }) {
@@ -179,15 +180,15 @@ export default class AtriumClient {
           memberGuid,
         },
       }),
-      `listMemberChallenges(${userGuid}, ${memberGuid})`,
+      `listMemberChallenges(${userGuid}, ${memberGuid})`
     )
   }
 
   public async resumeMemberAggregation({
-                                         userGuid,
-                                         memberGuid,
-                                         member,
-                                       }: {
+    userGuid,
+    memberGuid,
+    member,
+  }: {
     userGuid: string
     memberGuid: string
     member: {
@@ -207,14 +208,14 @@ export default class AtriumClient {
           member,
         },
       }),
-      `resumeMemberAggregation(${userGuid}, ${memberGuid})`,
+      `resumeMemberAggregation(${userGuid}, ${memberGuid})`
     )
   }
 
   public async listMemberAccounts({
-                                    userGuid,
-                                    memberGuid,
-                                  }: {
+    userGuid,
+    memberGuid,
+  }: {
     userGuid: string
     memberGuid: string
   }) {
@@ -225,14 +226,14 @@ export default class AtriumClient {
           memberGuid,
         },
       }),
-      `listMemberAccounts(${userGuid}, ${memberGuid})`,
+      `listMemberAccounts(${userGuid}, ${memberGuid})`
     )
   }
 
   public async listMemberAccountNumbers({
-                                          userGuid,
-                                          memberGuid,
-                                        }: {
+    userGuid,
+    memberGuid,
+  }: {
     userGuid: string
     memberGuid: string
   }) {
@@ -243,7 +244,7 @@ export default class AtriumClient {
           memberGuid,
         },
       }),
-      `listMemberAccountNumbers(${userGuid}, ${memberGuid})`,
+      `listMemberAccountNumbers(${userGuid}, ${memberGuid})`
     )
   }
 

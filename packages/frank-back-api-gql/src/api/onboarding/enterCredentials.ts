@@ -13,13 +13,19 @@ const createNewMxUser = async (scope: OnboardingScope) => {
 
   log.trace('start')
 
-  const {user} = await scope.mx.createUser({
+  // TODO metadata
+
+  const { user } = await scope.mx.createUser({
     user: {
       metadata: JSON.stringify({
         first_name: 'auto_generated_user',
       }),
     },
   })
+
+  if (!user || !user.guid) {
+    throw new Error("mx.createUser didn't return user")
+  }
 
   return await createUser({ guid: user.guid }, scope)
 }
@@ -36,6 +42,8 @@ const createMxMember = async (
 
   const institutionCode = onboarding.institution.code
 
+  // TODO metadata
+
   const { member } = await scope.mx.createMember({
     userGuid: mxUser.mxGuid,
     member: {
@@ -43,6 +51,10 @@ const createMxMember = async (
       credentials,
     },
   })
+
+  if (!member || !member.guid) {
+    throw new Error("mx.createMember didn't return member")
+  }
 
   const mxMember = await createMember(
     {
