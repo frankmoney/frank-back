@@ -68,6 +68,14 @@ const PaymentType = Type('Payment', type =>
           return parent.data ? parent.data.originalDescription : null
         })
       ),
+    rawPeerName: field
+      .ofString()
+      .nullable()
+      .resolve(
+        createPrivateResolver('Payment:rawPeerName', ({ parent }) => {
+          return parent.data ? parent.data.description : null
+        })
+      ),
     similar: field
       .listOf(PaymentType)
       .args(arg => ({

@@ -4,6 +4,7 @@ import { payment } from 'store/names'
 import Payment from 'store/types/Payment'
 import Id from 'store/types/Id'
 import createMutation from '../createMutation'
+import paymentFieldsSql from './helpers/paymentFieldsSql'
 
 type Args = {
   paymentId: Id
@@ -68,25 +69,7 @@ export default createMutation<Args, Payment>(
         update ${payment}
         set ${updateSql}
         where ${payment.id} = ${args.paymentId}
-        returning
-          ${payment}.${payment.id},
-          ${payment}.${payment.pid},
-          ${payment}.${payment.createdAt},
-          ${payment}.${payment.creatorId},
-          ${payment}.${payment.updatedAt},
-          ${payment}.${payment.updaterId},
-          ${payment}.${payment.data},
-          ${payment}.${payment.postedOn},
-          ${payment}.${payment.amount},
-          ${payment}.${payment.peerName},
-          ${payment}.${payment.description},
-          ${payment}.${payment.verified},
-          ${payment}.${payment.accountId},
-          ${payment}.${payment.peerId},
-          ${payment}.${payment.categoryId},
-          ${payment}.${payment.descriptionUpdaterId},
-          ${payment}.${payment.peerUpdaterId},
-          ${payment}.${payment.categoryUpdaterId}
+        returning ${paymentFieldsSql(payment)}
       `,
       mapPayment
     )

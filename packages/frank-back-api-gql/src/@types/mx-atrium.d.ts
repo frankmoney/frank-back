@@ -6,6 +6,7 @@ declare module 'mx-atrium' {
   namespace Exports {
     enum environments {
       development,
+      production,
     }
 
     type Response<T> = Response$<T>
