@@ -1,7 +1,6 @@
 import Onboarding from 'store/types/Onboarding'
 import getMemberById from 'api/dal/mx/getMemberById'
 import OnboardingScope from './OnboardingScope'
-import * as Sentry from '@sentry/node'
 
 const LOGGER_PREFIX = 'app:onboarding:enterMfaChallenges'
 
@@ -30,7 +29,6 @@ export default async (
   } else {
     // TOTO maybe exception?
     const m = `mx member not found`
-    Sentry.captureMessage(m, Sentry.Severity.Warning)
     log.warn(m)
   }
 }

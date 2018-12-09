@@ -7,7 +7,7 @@ const env = {
   MAILGUN_DOMAIN: process.env.MAILGUN_DOMAIN!,
   MAILGUN_API_KEY: process.env.MAILGUN_API_KEY!,
   USER_COLORS: process.env.USER_COLORS,
-  SENTRY_DNS: process.env.SENTRY_DNS,
+  SENTRY_DSN: process.env.SENTRY_DSN,
 }
 
 export default env

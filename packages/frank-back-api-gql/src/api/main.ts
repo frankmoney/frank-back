@@ -1,9 +1,4 @@
-import * as Sentry from '@sentry/node'
-
-if (process.env.SENTRY_DNS) {
-  Sentry.init({ dsn: process.env.SENTRY_DNS })
-}
-
+import { init as initSentry } from '@sentry/node'
 import { ApolloServer } from 'apollo-server-koa'
 import Koa, { Context as KoaContext } from 'koa'
 import * as R from 'ramda'
@@ -16,6 +11,10 @@ import RequestContext from './RequestContext'
 import Scope from './Scope'
 import useHttpApi from './http/useHttpApi'
 import schema from './schema'
+
+if (config.SENTRY_DSN) {
+  initSentry({ dsn: config.SENTRY_DSN })
+}
 
 const log = createLog('api:main')
 
@@ -58,19 +57,16 @@ const promise = scope.uow.start().then(async () => {
           await context.scope.uow.rollback()
         } catch (exc) {
           log.error('Failed to roll back\r\n%O', exc)
-          Sentry.captureException(exc)
         }
 
         for (const error of body.errors) {
-          log.error('Apollo error\r\n%O', error)
-          Sentry.captureException(error)
+          log.error(error, 'Apollo error', error)
         }
       } else {
         try {
           await context.scope.uow.commit()
         } catch (exc) {
           log.error('Failed to commit\r\n%O', exc)
-          Sentry.captureException(exc)
           throw exc
         }
       }

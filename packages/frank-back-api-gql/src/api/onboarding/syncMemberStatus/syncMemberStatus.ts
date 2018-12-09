@@ -24,7 +24,6 @@ import failedHandler from './failedHandler'
 import lockedHandler from './lockedHandler'
 import rejectedHandler from './rejectedHandler'
 import virtualCheckingHandler from './virtualCheckingHandler'
-import * as Sentry from '@sentry/node'
 
 const handlers: { [status: string]: StatusHandler } = {
   [CONNECTED_MXSTATUS]: connectedHandler,
@@ -86,7 +85,6 @@ const syncMemberStatus = async (
       const m = `mx unhandled member connection status = ${
         member.connection_status
       }`
-      Sentry.captureMessage(m, Sentry.Severity.Warning)
       log.warn(m)
     }
   }

@@ -17,7 +17,7 @@ const config = {
   MX_CLIENT_ID: env.MX_CLIENT_ID,
   MAILGUN_DOMAIN: env.MAILGUN_DOMAIN,
   MAILGUN_API_KEY: env.MAILGUN_API_KEY,
-  SENTRY_DNS: env.SENTRY_DNS,
+  SENTRY_DSN: env.SENTRY_DSN,
   USER_COLORS: env.USER_COLORS
     ? env.USER_COLORS.split(',').map(x => Number(x))
     : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
