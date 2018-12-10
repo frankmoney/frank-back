@@ -9,13 +9,13 @@ const log = createLogger('import:syncTransactions')
 const SYSTEM_USER_TYPE_ID = 1
 const IMPORT_USER_NAME = 'import'
 
-export default async (account, mxPayments) => {
+export default async (source, mxPayments) => {
 
-  log.trace(`start: ${account.name}`)
+  log.trace(`start: ${source.name}`)
 
   const { id: importUserId } = await User.findOne({ where: { typeId: SYSTEM_USER_TYPE_ID, name: IMPORT_USER_NAME } })
 
-  const payments = await Payment.findAll({ where: { accountId: account.id } })
+  const payments = await Payment.findAll({ where: { sourceId: source.id } })
   const filledPayments = R.filter(
     p => p.verified && p.peerId && p.categoryId && p.description,
     payments
@@ -37,7 +37,8 @@ export default async (account, mxPayments) => {
 
       const data = handleNewPayment(mxPayment, filledPayments, importUserId)
 
-      data.accountId = account.id
+      data.sourceId = source.id
+      data.accountId = source.accountId
 
       await Payment.create(data)
 
