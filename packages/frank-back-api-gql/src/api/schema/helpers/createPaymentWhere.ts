@@ -1,5 +1,4 @@
 import { isNil, mergeDeepRight } from 'ramda'
-import { CategoryType as StoreCategoryType } from 'store/enums'
 import PaymentWhere from 'api/dal/Payment/helpers/PaymentWhere'
 import CategoryType from 'api/types/CategoryType'
 import Date from 'api/types/Date'
