@@ -52,7 +52,7 @@ export default async (sourceId, daysAgo) => {
     } else {
 
       // maybe mxUser or mxAccount were deleted
-      throw new Error(`MX response isn't normal. sourceId: ${sourceId}`);
+      throw new Error(`MX response isn't normal. sourceId: ${sourceId}, status: ${mxResponse.status}`);
     }
 
   } else {
