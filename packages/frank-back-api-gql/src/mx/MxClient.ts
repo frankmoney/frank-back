@@ -11,10 +11,15 @@ export default class AtriumClient {
   public static create(scope: AtriumClientScope): AtriumClient {
     const log = scope.logFor('AtriumClient')
 
+    const environment =
+      process.env.ATRIUM_PROD === 'true'
+        ? Atrium.environments.production
+        : Atrium.environments.development
+
     const client = new Atrium.Client(
       config.MX_API_KEY,
       config.MX_CLIENT_ID,
-      Atrium.environments.development
+      environment
     )
 
     return new AtriumClient(log, client)

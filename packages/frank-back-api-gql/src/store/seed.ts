@@ -1,21 +1,15 @@
 import { SqlLiteral, join, sql } from 'sql'
+import CategoryType from 'api/types/CategoryType'
+import hashPassword from 'utils/hashPassword'
 import Database from './Database'
-import { TeamMemberRole } from './enums'
-import {
-  account,
-  category,
-  payment,
-  peer,
-  team,
-  teamMember,
-  user,
-} from './names'
+import { CurrencyCode, TeamMemberRole, UserType } from './enums'
+import { account, category, peer, team, teamMember, user } from './names'
 import seedPayments from './seeds/payments'
 
 export default async function seed({ db }: { db: Database }) {
   await seedUsers()
   await seedTeams()
-  await seedTeamMembers()
+  // await seedTeamMembers()
   await seedAccounts()
   await seedCategories()
   await seedPeers()
@@ -29,24 +23,21 @@ export default async function seed({ db }: { db: Database }) {
 
   async function seedUsers() {
     const users = [
-      { id: 1, email: 'upsnake@gmail.com', lastName: null, firstName: 'Ilya' },
+      { email: 'upsnake@gmail.com', lastName: null, firstName: 'Ilya' },
       {
-        id: 2,
         email: 'ilya.k@frank.ly',
         lastName: 'Kozlov',
         firstName: 'Ilya',
       },
-      { id: 3, email: 'tyoma@kzkv.ru', lastName: 'Kzkv', firstName: 'Tyoma' },
-      { id: 4, email: 'rinat@frank.ly', lastName: 'm', firstName: 'Rinat' },
-      { id: 5, email: 'gabriel@frank.ly', lastName: 'L', firstName: 'Gabriel' },
+      { email: 'tyoma@kzkv.ru', lastName: 'Kzkv', firstName: 'Tyoma' },
+      { email: 'rinat@frank.ly', lastName: 'M', firstName: 'Rinat' },
+      { email: 'gabriel@frank.ly', lastName: 'L', firstName: 'Gabriel' },
       {
-        id: 6,
         email: 'apetrova@frank.ly',
         lastName: 'Petrova',
         firstName: 'Nastya',
       },
       {
-        id: 7,
         email: 'nick@frank.ly',
         lastName: 'Delitski',
         firstName: 'Nick',
@@ -54,16 +45,22 @@ export default async function seed({ db }: { db: Database }) {
     ]
 
     const data = users.map(
-      x => sql`( ${x.id}, ${x.email}, ${x.lastName}, ${x.firstName} )`
+      x =>
+        sql`( ${x.email}, ${x.email}, ${x.lastName}, ${x.firstName}, ${
+          UserType.person
+        }, 1, ${hashPassword('123')} )`
     )
 
     await db.command(sql`
       insert into
         ${user} (
-          ${user.id},
           ${user.email},
+          ${user.name},
           ${user.lastName},
-          ${user.firstName}
+          ${user.firstName},
+          ${user.typeId},
+          ${user.color},
+          ${user.passwordHash}
         )
       values
         ${join(data, ', ')}
@@ -121,12 +118,14 @@ export default async function seed({ db }: { db: Database }) {
     ]
 
     const data = accounts.map(
-      x => sql`( ${x.accountId}, ${x.teamId}, ${x.name} )`
+      x => sql`( ${x.accountId}, ${x.teamId}, ${x.name}, ${CurrencyCode.usd} )`
     )
 
     await db.command(sql`
       insert into
-        ${account} ( ${account.id}, ${account.teamId}, ${account.name} )
+        ${account} ( ${account.id}, ${account.teamId}, ${account.name}, ${
+      account.currencyCode
+    } )
       values
         ${join(data, ', ')}
       on conflict ( ${account.id} )
@@ -138,96 +137,153 @@ export default async function seed({ db }: { db: Database }) {
 
   async function seedCategories() {
     const categories = [
-      { categoryId: 1, accountId: 1, name: 'Other income', color: '#0a70dd' },
+      {
+        categoryId: 1,
+        accountId: 1,
+        name: 'Other income',
+        color: '#0a70dd',
+        type: CategoryType.revenue,
+      },
       {
         categoryId: 2,
         accountId: 1,
         name: 'Software development',
         color: '#3cd5c1',
+        type: CategoryType.spending,
       },
-      { categoryId: 3, accountId: 1, name: 'Salary', color: '#00bd6a' },
-      { categoryId: 4, accountId: 1, name: 'Taxes', color: '#ffb54c' },
+      {
+        categoryId: 3,
+        accountId: 1,
+        name: 'Salary',
+        color: '#00bd6a',
+        type: CategoryType.spending,
+      },
+      {
+        categoryId: 4,
+        accountId: 1,
+        name: 'Taxes',
+        color: '#ffb54c',
+        type: CategoryType.spending,
+      },
       {
         categoryId: 5,
         accountId: 1,
         name: 'Product development',
         color: '#3cd5c1',
+        type: CategoryType.spending,
       },
       {
         categoryId: 6,
         accountId: 1,
         name: 'Internal transfer',
         color: '#0a70dd',
+        type: CategoryType.spending,
       },
       {
         categoryId: 7,
         accountId: 1,
         name: 'Government grants',
         color: '#00bd6a',
+        type: CategoryType.revenue,
       },
-      { categoryId: 8, accountId: 1, name: 'Product design', color: '#0aaddb' },
+      {
+        categoryId: 8,
+        accountId: 1,
+        name: 'Product design',
+        color: '#0aaddb',
+        type: CategoryType.spending,
+      },
       {
         categoryId: 9,
         accountId: 1,
         name: 'Fundraising events',
         color: '#00bd6a',
+        type: CategoryType.spending,
       },
       {
         categoryId: 10,
         accountId: 1,
         name: 'Fundraising expenses',
         color: '#b259ad',
+        type: CategoryType.spending,
       },
-      { categoryId: 11, accountId: 1, name: 'Grants', color: '#00bd6a' },
+      {
+        categoryId: 11,
+        accountId: 1,
+        name: 'Grants',
+        color: '#00bd6a',
+        type: CategoryType.revenue,
+      },
       {
         categoryId: 12,
         accountId: 1,
         name: 'Marketing research',
         color: '#c2e691',
+        type: CategoryType.spending,
       },
       {
         categoryId: 13,
         accountId: 1,
         name: 'Operating expenses',
         color: '#b259ad',
+        type: CategoryType.spending,
       },
       {
         categoryId: 14,
         accountId: 2,
         name: 'Fundraising expenses',
         color: '#b259ad',
+        type: CategoryType.spending,
       },
       {
         categoryId: 15,
         accountId: 2,
         name: 'Software development',
         color: '#3cd5c1',
+        type: CategoryType.spending,
       },
       {
         categoryId: 16,
         accountId: 2,
         name: 'Program expenses',
         color: '#fc5d7b',
+        type: CategoryType.spending,
       },
       {
         categoryId: 17,
         accountId: 2,
         name: 'Business development',
         color: '#d6c8a1',
+        type: CategoryType.spending,
       },
-      { categoryId: 18, accountId: 2, name: 'Salary', color: '#00bd6a' },
-      { categoryId: 19, accountId: 2, name: 'Investments', color: '#00bd6a' },
+      {
+        categoryId: 18,
+        accountId: 2,
+        name: 'Salary',
+        color: '#00bd6a',
+        type: CategoryType.spending,
+      },
+      {
+        categoryId: 19,
+        accountId: 2,
+        name: 'Investments',
+        color: '#00bd6a',
+        type: CategoryType.revenue,
+      },
     ]
 
     const data = categories.map(
-      x => sql`( ${x.categoryId}, ${x.accountId}, ${x.name}, ${x.color} )`
+      x =>
+        sql`( ${x.categoryId}, ${x.accountId}, ${x.name}, ${x.color}, ${
+          x.type
+        } )`
     )
 
     await db.command(sql`
       insert into
         ${category} ( ${category.id}, ${category.accountId}, ${
       category.name
-    }, ${category.color} )
+    }, ${category.color}, ${category.type} )
       values
         ${join(data, ', ')}
       on conflict ( ${category.id} )

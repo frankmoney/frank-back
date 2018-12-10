@@ -12,8 +12,9 @@ export type Args = {
 
 export default createMutation<Args, Id>(
   'createTeamMember',
-  async (args, { db }) => await db.scalar<Id>(
-    sql`
+  async (args, { db }) =>
+    await db.scalar<Id>(
+      sql`
       insert into
         "${teamMember}" (
           "${teamMember.creatorId}",
@@ -31,5 +32,5 @@ export default createMutation<Args, Id>(
       returning
         "${teamMember.id}"
     `
-  )
+    )
 )

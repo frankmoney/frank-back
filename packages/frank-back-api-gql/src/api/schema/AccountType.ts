@@ -1,4 +1,4 @@
-import { String, Type } from 'gql'
+import { Type } from 'gql'
 import { extractFieldNames } from 'gql/parse'
 import Account from 'store/types/Account'
 import countCategoriesByAccountId from 'api/dal/Category/countCategoriesByAccountId'
@@ -12,9 +12,9 @@ import countPaymentsTotal from 'api/dal/Payment/countPaymentsTotal'
 import getPaymentByPidAndAccountId from 'api/dal/Payment/getPaymentByPidAndAccountId'
 import getPaymentsLedgerPieChart from 'api/dal/Payment/getPaymentsLedgerPieChart'
 import listPayments from 'api/dal/Payment/listPayments'
-import countPeersByAccountId from 'api/dal/Peer/countPeersByAccountId'
-import getPeerByPidAndAccountId from 'api/dal/Peer/getPeerByPidAndAccountId'
-import listPeersByAccountId from 'api/dal/Peer/listPeersByAccountId'
+import countPeers from 'api/dal/Peer/countPeers'
+import getPeer from 'api/dal/Peer/getPeer'
+import listPeers from 'api/dal/Peer/listPeers'
 import getStoryByPidAndAccountId from 'api/dal/Story/getStoryByPidAndAccountId'
 import listStoriesByAccountId from 'api/dal/Story/listStoriesByAccountId'
 import { throwNotFound } from 'api/errors/NotFoundError'
@@ -38,7 +38,9 @@ import PeerType from './PeerType'
 import StoriesOrderType from './StoriesOrderType'
 import StoryType from './StoryType'
 import createPaymentWhere from './helpers/createPaymentWhere'
+import createPeerWhere from './helpers/createPeerWhere'
 import paymentsDefaultFilters from './helpers/paymentsDefaultFilters'
+import peersDefaultFilters from './helpers/peersDefaultFilters'
 
 const AccountType = Type('Account', type =>
   type.fields(field => ({
@@ -139,8 +141,13 @@ const AccountType = Type('Account', type =>
           async ({ parent, args, scope }) => {
             const account: Account = parent.$source
 
-            const peer = await getPeerByPidAndAccountId(
-              { accountId: account.id, pid: args.pid },
+            const peer = await getPeer(
+              {
+                where: {
+                  account: { id: { eq: account.id } },
+                  pid: { eq: args.pid },
+                },
+              },
               scope
             )
 
@@ -151,12 +158,10 @@ const AccountType = Type('Account', type =>
     peers: field
       .listOf(PeerType)
       .args(arg => ({
-        sortBy: arg.ofType(PeersOrderType),
-        donors: arg.ofBool(),
-        recipients: arg.ofBool(),
-        search: arg.ofString().nullable(),
+        ...peersDefaultFilters(arg),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
+        sortBy: arg.ofType(PeersOrderType),
       }))
       .resolve(
         createPrivateResolver(
@@ -164,12 +169,11 @@ const AccountType = Type('Account', type =>
           async ({ parent, args, scope }) => {
             const account: Account = parent.$source
 
-            const peer = await listPeersByAccountId(
+            const peers = await listPeers(
               {
-                accountId: account.id,
-                donors: args.donors,
-                recipients: args.recipients,
-                search: args.search,
+                where: createPeerWhere(args, {
+                  account: { id: { eq: account.id } },
+                }),
                 take: args.take,
                 skip: args.skip,
                 orderBy: args.sortBy,
@@ -177,16 +181,14 @@ const AccountType = Type('Account', type =>
               scope
             )
 
-            return mapPeer(peer)
+            return mapPeer(peers)
           }
         )
       ),
     countPeers: field
       .ofInt()
       .args(arg => ({
-        donors: arg.ofBool(),
-        recipients: arg.ofBool(),
-        search: arg.ofString().nullable(),
+        ...peersDefaultFilters(arg),
       }))
       .resolve(
         createPrivateResolver(
@@ -194,12 +196,11 @@ const AccountType = Type('Account', type =>
           async ({ parent, args, scope }) => {
             const account: Account = parent.$source
 
-            const count = await countPeersByAccountId(
+            const count = await countPeers(
               {
-                accountId: account.id,
-                donors: args.donors,
-                recipients: args.recipients,
-                search: args.search,
+                where: createPeerWhere(args, {
+                  account: { id: { eq: account.id } },
+                }),
               },
               scope
             )

@@ -24,9 +24,14 @@ type Body = {
 }
 
 const nullOrEmpty = (str: undefined | null | string) => !str || !str.trim()
-const normalize = (str: undefined | null | string) => nullOrEmpty(str) ? null : str!.trim()
+const normalize = (str: undefined | null | string) =>
+  nullOrEmpty(str) ? null : str!.trim()
 
-const handleSignUp = async (ctx: Context, next: () => Promise<any>, scope: Scope) => {
+const handleSignUp = async (
+  ctx: Context,
+  next: () => Promise<any>,
+  scope: Scope
+) => {
   if (ctx.is('json')) {
     const respondWithInvalidArgument = (field?: string) => {
       ctx.response.status = 401
@@ -77,7 +82,8 @@ const handleSignUp = async (ctx: Context, next: () => Promise<any>, scope: Scope
       scope
     )
 
-    const color = config.USER_COLORS[Math.floor(Math.random() * config.USER_COLORS.length)]
+    const color =
+      config.USER_COLORS[Math.floor(Math.random() * config.USER_COLORS.length)]
 
     const { status, userId } = await createPersonUserMaybe(
       {
@@ -94,7 +100,7 @@ const handleSignUp = async (ctx: Context, next: () => Promise<any>, scope: Scope
     if (status === 'duplicate') {
       ctx.response.status = 409
       ctx.response.body = {
-        code: 'email_in_use'
+        code: 'email_in_use',
       }
       return
     }

@@ -1,6 +1,7 @@
 import * as R from 'ramda'
 import { and, sql, where } from 'sql'
-import { payment } from 'store/names'
+import { CategoryType } from 'store/enums'
+import { category, payment } from 'store/names'
 import Id from 'store/types/Id'
 import mapCategory from 'api/mappers/mapCategory'
 import Category from 'api/types/Category'
@@ -14,9 +15,10 @@ export type Args = {
 }
 
 export type Result = {
+  totalRevenue: number
+  totalSpending: number
   items: {
     category: Category | null
-    revenue: number
     spending: number
   }[]
 }
@@ -24,50 +26,67 @@ export type Result = {
 export default createQuery<Args, Result>(
   'getPaymentsLedgerPieChart',
   async (args, scope) => {
-    const data = await scope.db.query<{
-      categoryId?: Id
-      revenue: number
-      spending: number
-    }>(
+    const fromSql = sql`
+      from "${payment}" p
+      join "${category}" c
+      on p."${payment.categoryId}" = c."${category.id}"
+    `
+    const wherePaymentSql = paymentPredicateSql('p', args.wherePayment)
+
+    const totalRevenue = await scope.db.scalar<number>(
       sql`
         select
-          case
-            when p."${payment.verified}"
-            then "${payment.categoryId}"
-            else null
-          end "categoryId",
           coalesce(
             sum(
               case
-                when p."${payment.amount}" > 0
+                when c."${category.type}" = ${CategoryType.revenue}
                 then p."${payment.amount}"
                 else 0
               end
             ),
             0
-          ) "revenue",
-          -coalesce(
-            sum(
-              case
-                when p."${payment.amount}" < 0
-                then p."${payment.amount}"
-                else 0
-              end
-            ),
-            0
-          ) "spending"
-        from "${payment}" p
-        ${where(paymentPredicateSql('p', args.wherePayment))}
-        group by
-          case
-            when p."${payment.verified}"
-            then p."${payment.categoryId}"
-            else null
-          end
+          ) "totalRevenue"
+        ${fromSql}
+        ${where(wherePaymentSql)}
       `
     )
 
-    const categoryIds = data.filter(x => x.categoryId).map(x => x.categoryId!)
+    const items = await scope.db.query<{
+      categoryId: null | Id
+      spending: number
+    }>(
+      sql`
+        with p as (
+          select
+            p."${payment.amount}" "amount",
+            case
+              when p."${payment.verified}"
+              then p."${payment.categoryId}"
+              else null
+            end "categoryId"
+          ${fromSql}
+          where c."${category.type}" = ${CategoryType.spending}
+          ${and(wherePaymentSql)}
+        ),
+        g as (
+          select "categoryId", coalesce(-sum("amount"), 0) "spending"
+          from p
+          group by "categoryId"
+        )
+        select
+          "categoryId",
+          case
+            when "spending" > 0
+            then "spending"
+            else 0
+          end "spending"
+        from g
+      `
+    )
+
+    const categoryIds = R.uniq(
+      items.filter(x => x.categoryId).map(x => x.categoryId!)
+    )
 
     const categoryModels = categoryIds.length
       ? await listCategoriesByIds({ ids: categoryIds }, scope)
@@ -75,12 +94,17 @@ export default createQuery<Args, Result>(
 
     const categories = mapCategory(categoryModels)
 
-    const items = data.map(x => ({
-      category: R.find(y => y.$source.id === x.categoryId, categories) || null,
-      revenue: x.revenue,
-      spending: x.spending,
-    }))
+    const categoryMap = new Map(
+      categories.map(x => <[Id, Category]>[x.$source.id, x])
+    )
 
-    return { items }
+    return {
+      totalRevenue,
+      totalSpending: items.reduce((r, x) => r + x.spending, 0),
+      items: items.map(x => ({
+        spending: x.spending,
+        category: (x.categoryId && categoryMap.get(x.categoryId)) || null,
+      })),
+    }
   }
 )

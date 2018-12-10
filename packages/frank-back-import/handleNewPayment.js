@@ -30,7 +30,7 @@ const secondMatcher = (mxPayment, payments) => {
 
   const condition = (data) => {
     return R.whereEq({ amount, type })(data)
-      && distance(data.originalDescription, originalDescription).similarity > SIMILAR_LIMIT
+      && distance(data.originalDescription, originalDescription).similarity >= SIMILAR_LIMIT
   }
 
   return freshestPayment(R.filter(p => condition(p.data), payments))
@@ -41,7 +41,7 @@ const thirdMatcher = (mxPayment, payments) => {
   const { originalDescription } = mxPayment
 
   const condition = (data) => {
-    return distance(data.originalDescription, originalDescription).similarity > SIMILAR_LIMIT
+    return distance(data.originalDescription, originalDescription).similarity >= SIMILAR_LIMIT
   }
 
   return freshestPayment(R.filter(p => condition(p.data), payments))
