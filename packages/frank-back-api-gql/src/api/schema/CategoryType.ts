@@ -4,8 +4,9 @@ import Category from 'store/types/Category'
 import getAccountByCategoryId from 'api/dal/Account/getAccountByCategoryId'
 import aggregatePayments from 'api/dal/Payment/aggregatePayments'
 import countPayments from 'api/dal/Payment/countPayments'
-import getPeerByPidAndCategoryId from 'api/dal/Peer/getPeerByPidAndCategoryId'
-import listPeersByCategoryId from 'api/dal/Peer/listPeersByCategoryId'
+import countPeers from 'api/dal/Peer/countPeers'
+import getPeer from 'api/dal/Peer/getPeer'
+import listPeers from 'api/dal/Peer/listPeers'
 import countPaymentsRevenue from 'api/dal/Payment/countPaymentsRevenue'
 import countPaymentsSpending from 'api/dal/Payment/countPaymentsSpending'
 import countPaymentsTotal from 'api/dal/Payment/countPaymentsTotal'
@@ -20,13 +21,15 @@ import ledgerBarChart from '../resolvers/ledgerBarChart'
 import AccountType from './AccountType'
 import AggregatedPaymentsType from './AggregatedPaymentsType'
 import CategoryTypeType from './CategoryTypeType'
-import paymentsDefaultFilters from './helpers/paymentsDefaultFilters'
 import LedgerBarChartType from './LedgerBarChartType'
 import PaymentsOrderType from './PaymentsOrderType'
 import PaymentType from './PaymentType'
 import PeersOrderType from './PeersOrderType'
 import PeerType from './PeerType'
 import createPaymentWhere from './helpers/createPaymentWhere'
+import createPeerWhere from './helpers/createPeerWhere'
+import paymentsDefaultFilters from './helpers/paymentsDefaultFilters'
+import peersDefaultFilters from './helpers/peersDefaultFilters'
 
 const CategoryType = Type('Category', type =>
   type.fields(field => ({
@@ -53,12 +56,23 @@ const CategoryType = Type('Category', type =>
       }))
       .resolve(
         createPrivateResolver(
-          'Category:peer',
+          'Account:peer',
           async ({ parent, args, scope }) => {
             const category: Category = parent.$source
 
-            const peer = await getPeerByPidAndCategoryId(
-              { categoryId: category.id, pid: args.pid },
+            const peer = await getPeer(
+              {
+                where: {
+                  payments: {
+                    any: {
+                      category: {
+                        id: { eq: category.id },
+                      },
+                    },
+                  },
+                  pid: { eq: args.pid },
+                },
+              },
               scope
             )
 
@@ -69,25 +83,28 @@ const CategoryType = Type('Category', type =>
     peers: field
       .listOf(PeerType)
       .args(arg => ({
-        sortBy: arg.ofType(PeersOrderType),
-        donors: arg.ofBool(),
-        recipients: arg.ofBool(),
-        search: arg.ofString().nullable(),
+        ...peersDefaultFilters(arg),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
+        sortBy: arg.ofType(PeersOrderType),
       }))
       .resolve(
         createPrivateResolver(
-          'Category:peers',
+          'Account:peers',
           async ({ parent, args, scope }) => {
             const category: Category = parent.$source
 
-            const peer = await listPeersByCategoryId(
+            const peers = await listPeers(
               {
-                categoryId: category.id,
-                donors: args.donors,
-                recipients: args.recipients,
-                search: args.search,
+                where: createPeerWhere(args, {
+                  payments: {
+                    any: {
+                      category: {
+                        id: { eq: category.id },
+                      },
+                    },
+                  },
+                }),
                 take: args.take,
                 skip: args.skip,
                 orderBy: args.sortBy,
@@ -95,7 +112,37 @@ const CategoryType = Type('Category', type =>
               scope
             )
 
-            return mapPeer(peer)
+            return mapPeer(peers)
+          }
+        )
+      ),
+    countPeers: field
+      .ofInt()
+      .args(arg => ({
+        ...peersDefaultFilters(arg),
+      }))
+      .resolve(
+        createPrivateResolver(
+          'Account:countPeers',
+          async ({ parent, args, scope }) => {
+            const category: Category = parent.$source
+
+            const count = await countPeers(
+              {
+                where: createPeerWhere(args, {
+                  payments: {
+                    any: {
+                      category: {
+                        id: { eq: category.id },
+                      },
+                    },
+                  },
+                }),
+              },
+              scope
+            )
+
+            return count
           }
         )
       ),
