@@ -1,7 +1,8 @@
 import { isNil, mergeDeepRight } from 'ramda'
-import PaymentWhere from '../../dal/Payment/helpers/PaymentWhere'
-import PeerPaymentsWhere from '../../dal/Peer/helpers/PeerPaymentsWhere'
-import PeerWhere from '../../dal/Peer/helpers/PeerWhere'
+import { CategoryType } from 'store/enums'
+import PaymentWhere from 'api/dal/Payment/helpers/PaymentWhere'
+import PeerPaymentsWhere from 'api/dal/Peer/helpers/PeerPaymentsWhere'
+import PeerWhere from 'api/dal/Peer/helpers/PeerWhere'
 
 const createPeerWhere = (
   args: {
@@ -21,8 +22,10 @@ const createPeerWhere = (
 
         if (!isNil(args.donors)) {
           const predicate: PaymentWhere = {
-            amount: {
-              gt: 0,
+            category: {
+              type: {
+                eq: CategoryType.revenue,
+              },
             },
           }
           wherePaymentsBranches.push(
@@ -32,8 +35,10 @@ const createPeerWhere = (
 
         if (!isNil(args.recipients)) {
           const predicate: PaymentWhere = {
-            amount: {
-              lt: 0,
+            category: {
+              type: {
+                eq: CategoryType.spending,
+              },
             },
           }
           wherePaymentsBranches.push(
