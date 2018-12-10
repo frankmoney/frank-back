@@ -81,7 +81,11 @@ const syncMemberStatus = async (
     if (handler) {
       onboarding = await handler(args)
     } else {
-      log.warn(`unhandled status = ${member.connection_status}`)
+      // TOTO maybe exception?
+      const m = `mx unhandled member connection status = ${
+        member.connection_status
+      }`
+      log.warn(m)
     }
   }
 

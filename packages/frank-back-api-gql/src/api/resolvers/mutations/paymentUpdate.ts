@@ -11,7 +11,7 @@ import lastPublishedPaymentByAccountId from 'api/dal/Payment/lastPublishedPaymen
 import Id from 'store/types/Id'
 import { SystemUserId } from 'store/enums'
 import getCategoryByPidAndAccountId from 'api/dal/Category/getCategoryByPidAndAccountId'
-import getPeerByPidAndAccountId from 'api/dal/Peer/getPeerByPidAndAccountId'
+import getPeer from 'api/dal/Peer/getPeer'
 import Payment from 'store/types/Payment'
 
 const handleString = (s: string | undefined | null) => {
@@ -105,9 +105,13 @@ const paymentUpdate = createPrivateResolver(
 
     if (peerPid) {
       // set new peer
-
-      const peer = await getPeerByPidAndAccountId(
-        { accountId: account.id, pid: peerPid },
+      const peer = await getPeer(
+        {
+          where: {
+            account: { id: { eq: account.id } },
+            pid: { eq: peerPid },
+          },
+        },
         scope
       )
 

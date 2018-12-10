@@ -45,6 +45,7 @@ export default async (db: Database, updateIdSequence: any) => {
       peerId: getRandomInt(1, maxPeerId + 1),
       postedOn: format(date, DATE_FORMAT),
       amount: amounts[getRandomInt(0, amounts.length)],
+      verified: getRandomInt(0, 2),
     })
   }
 
@@ -55,7 +56,8 @@ export default async (db: Database, updateIdSequence: any) => {
       ${x.categoryId}::bigint,
       ${x.peerId}::bigint,
       ${x.postedOn},
-      ${x.amount}
+      ${x.amount},
+      ${x.verified}
     )`
   )
 
@@ -67,7 +69,8 @@ export default async (db: Database, updateIdSequence: any) => {
           ${payment.categoryId},
           ${payment.peerId},
           ${payment.postedOn},
-          ${payment.amount}
+          ${payment.amount},
+          ${payment.verified}
         )
       values
         ${join(data, ', ')}

@@ -1,11 +1,10 @@
 import { Type } from 'gql'
 import ObjectTypeFieldBuilder from 'gql/nodes/ObjectTypeFieldBuilder'
 import Payment from 'store/types/Payment'
-import undefinedIfNull from 'utils/undefinedIfNull'
 import getAccountByPaymentId from 'api/dal/Account/getAccountByPaymentId'
 import getCategoryByPaymentId from 'api/dal/Category/getCategoryByPaymentId'
 import listSimilarPaymentsById from 'api/dal/Payment/listSimilarPaymentsById'
-import getPeerByPaymentId from 'api/dal/Peer/getPeerByPaymentId'
+import getPeer from 'api/dal/Peer/getPeer'
 import getUserById from 'api/dal/User/getUserById'
 import countSimilarPaymentsByPid from 'api/dal/Payment/countSimilarPaymentsByPid'
 import listPaymentDescriptionsByAccountId from 'api/dal/Payment/listPaymentDescriptionsByAccountId'
@@ -66,6 +65,14 @@ const PaymentType = Type('Payment', type =>
       .resolve(
         createPrivateResolver('Payment:bankDescription', ({ parent }) => {
           return parent.data ? parent.data.originalDescription : null
+        })
+      ),
+    rawPeerName: field
+      .ofString()
+      .nullable()
+      .resolve(
+        createPrivateResolver('Payment:rawPeerName', ({ parent }) => {
+          return parent.data ? parent.data.description : null
         })
       ),
     similar: field
@@ -166,8 +173,8 @@ const PaymentType = Type('Payment', type =>
         createPrivateResolver('Payment:peer', async ({ parent, scope }) => {
           const payment: Payment = parent.$source
 
-          const peer = await getPeerByPaymentId(
-            { paymentId: payment.id },
+          const peer = await getPeer(
+            { where: { id: { eq: payment.peerId } } },
             scope
           )
 

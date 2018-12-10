@@ -27,6 +27,8 @@ export default async (
       },
     })
   } else {
-    log.trace("don't have member")
+    // TOTO maybe exception?
+    const m = `mx member not found`
+    log.warn(m)
   }
 }

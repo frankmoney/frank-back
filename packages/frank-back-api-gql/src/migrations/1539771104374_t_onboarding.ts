@@ -7,11 +7,14 @@ import {
 
 export const up = async ({ ddl }: MigrationContext) => {
   await ddl(
-    x => x.create.table(mxUser, true).column(t => t.mxGuid, 'uuid not null'),
+    x =>
+      x.create
+        .table(mxUser, true)
+        .column(t => t.mxGuid, 'varchar(256) not null'),
     x =>
       x.create
         .table(mxMember, true)
-        .column(t => t.mxGuid, 'uuid not null')
+        .column(t => t.mxGuid, 'varchar(256) not null')
         .column(t => t.institutionCode, 'varchar(256) not null')
         .column(t => t.mxUserId, 'bigint not null'),
     x =>

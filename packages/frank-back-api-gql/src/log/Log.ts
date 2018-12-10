@@ -1,10 +1,19 @@
-type Log = {
-  trace(formatter: any, ...args: any[]): void
-  debug(formatter: any, ...args: any[]): void
-  info(formatter: any, ...args: any[]): void
-  warn(formatter: any, ...args: any[]): void
-  error(formatter: any, ...args: any[]): void
-  fatal(formatter: any, ...args: any[]): void
-}
+export default interface Log {
+  trace(formatter: string, ...args: any[]): void
+  trace(error: Error, formatter: string, ...args: any[]): void
 
-export default Log
+  debug(formatter: string, ...args: any[]): void
+  debug(error: Error, formatter: string, ...args: any[]): void
+
+  info(formatter: string, ...args: any[]): void
+  info(error: Error, formatter: string, ...args: any[]): void
+
+  warn(formatter: string, ...args: any[]): void
+  warn(error: Error, formatter: string, ...args: any[]): void
+
+  error(formatter: string, ...args: any[]): void
+  error(error: Error, formatter: string, ...args: any[]): void
+
+  fatal(formatter: string, ...args: any[]): void
+  fatal(error: Error, formatter: string, ...args: any[]): void
+}

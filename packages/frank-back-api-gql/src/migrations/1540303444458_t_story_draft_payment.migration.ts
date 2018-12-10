@@ -115,7 +115,7 @@ createEx.table = function table<TTableName extends TableName>(
     }
 
     if (options === true || options.creatorId) {
-      builder = builder.column(columns.creatorId, `bigint not null`)
+      builder = builder.column(columns.creatorId, `bigint`)
     }
 
     if (options === true || options.updaterId) {
