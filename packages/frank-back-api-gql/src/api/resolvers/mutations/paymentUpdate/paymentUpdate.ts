@@ -2,11 +2,13 @@ import createMutations from 'utils/createMutations'
 import updatePaymentByPidAndAccountPid from 'api/dal/Payment/updatePaymentByPidAndAccountPid'
 import getAccountByPid from 'api/dal/Account/getAccountByPid'
 import getPaymentByPidAndAccountId from 'api/dal/Payment/getPaymentByPidAndAccountId'
+import findOrCreatePeer from 'api/dal/Peer/findOrCreatePeer'
 import mapPayment from 'api/mappers/mapPayment'
 import PaymentType from 'api/schema/PaymentType'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
-import lastPublishedPaymentByAccountId from 'api/dal/Payment/lastPublishedPaymentByAccountId'
+import lastVerifiedPaymentByAccountId from 'api/dal/Payment/lastVerifiedPaymentByAccountId'
 import { SystemUserId } from 'store/enums'
+import { argumentError } from 'api/errors/ArgumentError'
 import {
   canSuggestCategory,
   canSuggestDescription,
@@ -54,7 +56,7 @@ const paymentUpdate = createPrivateResolver(
       descriptionUpdaterId,
     } = processedUserInput
 
-    const similarPayment = await lastPublishedPaymentByAccountId(
+    const similarPayment = await lastVerifiedPaymentByAccountId(
       {
         accountId: account.id,
         amount: payment.amount,
@@ -89,6 +91,39 @@ const paymentUpdate = createPrivateResolver(
       if (canSuggestDescription(canSuggestParams)) {
         description = similarPayment.description
         descriptionUpdaterId = SystemUserId.suggestion
+      }
+    }
+
+    if (verified || payment.verified) {
+      const actualCategoryId =
+        categoryId === undefined ? payment.categoryId : categoryId
+      const actualPeerId = peerId === undefined ? payment.peerId : peerId
+      const actualDescription =
+        description === undefined ? payment.description : description
+
+      if (!actualCategoryId) {
+        argumentError('category is undefined')
+      }
+
+      if (!actualDescription) {
+        argumentError('description is undefined')
+      }
+
+      if (!actualPeerId) {
+        const actualPeerName =
+          peerName === undefined ? payment.peerName : peerName
+
+        if (!actualPeerName) {
+          argumentError('peer is undefined')
+        }
+
+        peerId = await findOrCreatePeer(
+          {
+            accountId: account.id,
+            name: actualPeerName,
+          },
+          scope
+        )
       }
     }
 

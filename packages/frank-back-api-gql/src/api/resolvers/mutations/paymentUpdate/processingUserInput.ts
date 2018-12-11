@@ -1,7 +1,7 @@
 import Id from 'store/types/Id'
 import getCategoryByPidAndAccountId from 'api/dal/Category/getCategoryByPidAndAccountId'
 import Scope from 'api/Scope'
-import getPeerByPidAndAccountId from 'api/dal/Peer/getPeerByPidAndAccountId'
+import getPeer from 'api/dal/Peer/getPeer'
 import handleString from './handleString'
 
 type Args = {
@@ -25,8 +25,13 @@ type Out = {
 
 const processingPeer = async (peerPid: any, accountId: Id, scope: Scope) => {
   if (peerPid) {
-    const peer = await getPeerByPidAndAccountId(
-      { accountId, pid: peerPid },
+    const peer = await getPeer(
+      {
+        where: {
+          pid: { eq: peerPid },
+          account: { id: { eq: accountId } },
+        },
+      },
       scope
     )
 
