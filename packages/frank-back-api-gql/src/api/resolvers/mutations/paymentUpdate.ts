@@ -10,7 +10,7 @@ import { throwArgumentError } from 'api/errors/ArgumentError'
 import lastPublishedPaymentByAccountId from 'api/dal/Payment/lastPublishedPaymentByAccountId'
 import Id from 'store/types/Id'
 import { SystemUserId } from 'store/enums'
-import getCategoryByPidAndAccountId from 'api/dal/Category/getCategoryByPidAndAccountId'
+import getCategory from 'api/dal/Category/getCategory'
 import getPeer from 'api/dal/Peer/getPeer'
 import Payment from 'store/types/Payment'
 
@@ -121,9 +121,13 @@ const paymentUpdate = createPrivateResolver(
 
     if (categoryPid) {
       // set new category
-
-      const category = await getCategoryByPidAndAccountId(
-        { accountId: account.id, pid: categoryPid },
+      const category = await getCategory(
+        {
+          where: {
+            account: { id: { eq: account.id } },
+            pid: { eq: categoryPid },
+          },
+        },
         scope
       )
 

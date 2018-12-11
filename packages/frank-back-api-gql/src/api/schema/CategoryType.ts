@@ -183,7 +183,7 @@ const CategoryType = Type('Category', type =>
             const payments = await listPayments(
               {
                 where: createPaymentWhere(args, {
-                  categoryId: { eq: category.id },
+                  category: { id: { eq: category.id } },
                 }),
                 take: args.take,
                 skip: args.skip,
@@ -211,9 +211,7 @@ const CategoryType = Type('Category', type =>
               {
                 fields: extractFieldNames<AggregatedPayments>(info),
                 where: createPaymentWhere(args, {
-                  categoryId: {
-                    eq: category.id,
-                  },
+                  category: { id: { eq: category.id } },
                 }),
               },
               scope
@@ -237,7 +235,7 @@ const CategoryType = Type('Category', type =>
             const count = await countPayments(
               {
                 where: createPaymentWhere(args, {
-                  categoryId: { eq: category.id },
+                  category: { id: { eq: category.id } },
                 }),
               },
               scope
@@ -256,7 +254,7 @@ const CategoryType = Type('Category', type =>
           const count = await countPaymentsTotal(
             {
               where: createPaymentWhere(args, {
-                categoryId: { eq: category.id },
+                category: { id: { eq: category.id } },
               }),
             },
             scope
@@ -275,7 +273,7 @@ const CategoryType = Type('Category', type =>
           const count = await countPaymentsRevenue(
             {
               where: createPaymentWhere(args, {
-                categoryId: { eq: category.id },
+                category: { id: { eq: category.id } },
               }),
             },
             scope
@@ -294,7 +292,7 @@ const CategoryType = Type('Category', type =>
           const count = await countPaymentsSpending(
             {
               where: createPaymentWhere(args, {
-                categoryId: { eq: category.id },
+                category: { id: { eq: category.id } },
               }),
             },
             scope

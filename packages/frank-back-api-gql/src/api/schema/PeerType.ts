@@ -2,9 +2,9 @@ import { Type } from 'gql'
 import { extractFieldNames } from 'gql/parse'
 import Peer from 'store/types/Peer'
 import getAccountByPeerId from 'api/dal/Account/getAccountByPeerId'
-import countCategoriesByPeerId from 'api/dal/Category/countCategoriesByPeerId'
-import getCategoryByPidAndPeerId from 'api/dal/Category/getCategoryByPidAndPeerId'
-import listCategoriesByPeerId from 'api/dal/Category/listCategoriesByPeerId'
+import countCategories from 'api/dal/Category/countCategories'
+import getCategory from 'api/dal/Category/getCategory'
+import listCategories from 'api/dal/Category/listCategories'
 import aggregatePayments from 'api/dal/Payment/aggregatePayments'
 import countPayments from 'api/dal/Payment/countPayments'
 import countPaymentsRevenue from 'api/dal/Payment/countPaymentsRevenue'
@@ -22,10 +22,12 @@ import AccountType from './AccountType'
 import AggregatedPaymentsType from './AggregatedPaymentsType'
 import CategoryType from './CategoryType'
 import CategoryTypeType from './CategoryTypeType'
-import paymentsDefaultFilters from './helpers/paymentsDefaultFilters'
 import PaymentsOrderType from './PaymentsOrderType'
 import PaymentType from './PaymentType'
+import categoriesDefaultFilters from './helpers/categoriesDefaultFilters'
+import createCategoryWhere from './helpers/createCategoryWhere'
 import createPaymentWhere from './helpers/createPaymentWhere'
+import paymentsDefaultFilters from './helpers/paymentsDefaultFilters'
 
 const PeerType = Type('Peer', type =>
   type.fields(field => ({
@@ -51,8 +53,17 @@ const PeerType = Type('Peer', type =>
           async ({ parent, args, scope }) => {
             const peer: Peer = parent.$source
 
-            const category = await getCategoryByPidAndPeerId(
-              { peerId: peer.id, pid: args.pid },
+            const category = await getCategory(
+              {
+                where: {
+                  payments: {
+                    any: {
+                      peer: { id: { eq: peer.id } },
+                    },
+                  },
+                  pid: { eq: args.pid },
+                },
+              },
               scope
             )
 
@@ -63,10 +74,9 @@ const PeerType = Type('Peer', type =>
     categories: field
       .listOf(CategoryType)
       .args(arg => ({
-        search: arg.ofString().nullable(),
+        ...categoriesDefaultFilters(arg),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
-        type: arg.ofType(CategoryTypeType).nullable(),
       }))
       .resolve(
         createPrivateResolver(
@@ -74,13 +84,17 @@ const PeerType = Type('Peer', type =>
           async ({ parent, args, scope }) => {
             const peer: Peer = parent.$source
 
-            const categories = await listCategoriesByPeerId(
+            const categories = await listCategories(
               {
-                peerId: peer.id,
-                search: args.search,
+                where: createCategoryWhere(args, {
+                  payments: {
+                    any: {
+                      peer: { id: { eq: peer.id } },
+                    },
+                  },
+                }),
                 take: args.take,
                 skip: args.skip,
-                type: args.type,
               },
               scope
             )
@@ -92,8 +106,7 @@ const PeerType = Type('Peer', type =>
     countCategories: field
       .ofInt()
       .args(arg => ({
-        search: arg.ofString().nullable(),
-        type: arg.ofType(CategoryTypeType).nullable(),
+        ...categoriesDefaultFilters(arg),
       }))
       .resolve(
         createPrivateResolver(
@@ -101,11 +114,15 @@ const PeerType = Type('Peer', type =>
           async ({ parent, args, scope }) => {
             const peer: Peer = parent.$source
 
-            const count = await countCategoriesByPeerId(
+            const count = await countCategories(
               {
-                peerId: peer.id,
-                search: args.search,
-                type: args.type,
+                where: createCategoryWhere(args, {
+                  payments: {
+                    any: {
+                      peer: { id: { eq: peer.id } },
+                    },
+                  },
+                }),
               },
               scope
             )
@@ -151,7 +168,7 @@ const PeerType = Type('Peer', type =>
             const payments = await listPayments(
               {
                 where: createPaymentWhere(args, {
-                  peerId: { eq: peer.id },
+                  peer: { id: { eq: peer.id } },
                 }),
                 take: args.take,
                 skip: args.skip,
@@ -179,9 +196,7 @@ const PeerType = Type('Peer', type =>
               {
                 fields: extractFieldNames<AggregatedPayments>(info),
                 where: createPaymentWhere(args, {
-                  peerId: {
-                    eq: peer.id,
-                  },
+                  peer: { id: { eq: peer.id } },
                 }),
               },
               scope
@@ -210,7 +225,7 @@ const PeerType = Type('Peer', type =>
             const count = countPayments(
               {
                 where: createPaymentWhere(args, {
-                  peerId: { eq: peer.id },
+                  peer: { id: { eq: peer.id } },
                 }),
               },
               scope
@@ -229,7 +244,7 @@ const PeerType = Type('Peer', type =>
           const count = await countPaymentsTotal(
             {
               where: createPaymentWhere(args, {
-                peerId: { eq: peer.id },
+                peer: { id: { eq: peer.id } },
               }),
             },
             scope
@@ -248,7 +263,7 @@ const PeerType = Type('Peer', type =>
           const count = await countPaymentsRevenue(
             {
               where: createPaymentWhere(args, {
-                peerId: { eq: peer.id },
+                peer: { id: { eq: peer.id } },
               }),
             },
             scope
@@ -267,7 +282,7 @@ const PeerType = Type('Peer', type =>
           const count = await countPaymentsSpending(
             {
               where: createPaymentWhere(args, {
-                peerId: { eq: peer.id },
+                peer: { id: { eq: peer.id } },
               }),
             },
             scope

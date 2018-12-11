@@ -15,7 +15,7 @@ const createPaymentWhere = (
     categoryType?: CategoryType
   },
   extensions?: Partial<PaymentWhere>
-) => {
+): PaymentWhere => {
   const where: PaymentWhere = {}
 
   if (args) {

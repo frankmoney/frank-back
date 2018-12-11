@@ -1,9 +1,9 @@
 import { Sql, join, literal, sql } from 'sql'
-import { account, peer } from 'store/names'
+import { account, payment } from 'store/names'
 import AccountWhere from '../../Account/helpers/AccountWhere'
 import accountPredicateSql from '../../Account/helpers/accountPredicateSql'
 
-const peerAccountPredicateSql = (
+const paymentAccountPredicateSql = (
   alias: string | Sql,
   where?: AccountWhere
 ): undefined | Sql => {
@@ -26,7 +26,7 @@ const peerAccountPredicateSql = (
       sql`exists (`,
       sql`select 1`,
       sql`from "${account}" "${accountAlias$}"`,
-      sql`where "${alias$}"."${peer.accountId}"`,
+      sql`where "${alias$}"."${payment.accountId}"`,
       sql`= "${accountAlias$}"."${account.id}"`,
       sql`and ${accountWhereSql}`,
       sql`)`,
@@ -35,4 +35,4 @@ const peerAccountPredicateSql = (
   )
 }
 
-export default peerAccountPredicateSql
+export default paymentAccountPredicateSql

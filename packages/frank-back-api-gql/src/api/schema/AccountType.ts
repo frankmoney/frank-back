@@ -1,9 +1,9 @@
 import { Type } from 'gql'
 import { extractFieldNames } from 'gql/parse'
 import Account from 'store/types/Account'
-import countCategoriesByAccountId from 'api/dal/Category/countCategoriesByAccountId'
-import getCategoryByPidAndAccountId from 'api/dal/Category/getCategoryByPidAndAccountId'
-import listCategoriesByAccountId from 'api/dal/Category/listCategoriesByAccountId'
+import countCategories from 'api/dal/Category/countCategories'
+import getCategory from 'api/dal/Category/getCategory'
+import listCategories from 'api/dal/Category/listCategories'
 import aggregatePayments from 'api/dal/Payment/aggregatePayments'
 import countPayments from 'api/dal/Payment/countPayments'
 import countPaymentsRevenue from 'api/dal/Payment/countPaymentsRevenue'
@@ -37,6 +37,8 @@ import PeersOrderType from './PeersOrderType'
 import PeerType from './PeerType'
 import StoriesOrderType from './StoriesOrderType'
 import StoryType from './StoryType'
+import categoriesDefaultFilters from './helpers/categoriesDefaultFilters'
+import createCategoryWhere from './helpers/createCategoryWhere'
 import createPaymentWhere from './helpers/createPaymentWhere'
 import createPeerWhere from './helpers/createPeerWhere'
 import paymentsDefaultFilters from './helpers/paymentsDefaultFilters'
@@ -58,8 +60,13 @@ const AccountType = Type('Account', type =>
           async ({ parent, args, scope }) => {
             const account: Account = parent.$source
 
-            const category = await getCategoryByPidAndAccountId(
-              { accountId: account.id, pid: args.pid },
+            const category = await getCategory(
+              {
+                where: {
+                  account: { id: { eq: account.id } },
+                  pid: { eq: args.pid },
+                },
+              },
               scope
             )
 
@@ -70,10 +77,9 @@ const AccountType = Type('Account', type =>
     categories: field
       .listOf(CategoryType)
       .args(arg => ({
-        search: arg.ofString().nullable(),
+        ...categoriesDefaultFilters(arg),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
-        type: arg.ofType(CategoryTypeType).nullable(),
       }))
       .resolve(
         createPrivateResolver(
@@ -81,26 +87,25 @@ const AccountType = Type('Account', type =>
           async ({ parent, args, scope }) => {
             const account: Account = parent.$source
 
-            const category = await listCategoriesByAccountId(
+            const categories = await listCategories(
               {
-                accountId: account.id,
-                search: args.search,
+                where: createCategoryWhere(args, {
+                  account: { id: { eq: account.id } },
+                }),
                 take: args.take,
                 skip: args.skip,
-                type: args.type,
               },
               scope
             )
 
-            return mapCategory(category)
+            return mapCategory(categories)
           }
         )
       ),
     countCategories: field
       .ofInt()
       .args(arg => ({
-        search: arg.ofString().nullable(),
-        type: arg.ofType(CategoryTypeType).nullable(),
+        ...categoriesDefaultFilters(arg),
       }))
       .resolve(
         createPrivateResolver(
@@ -108,11 +113,11 @@ const AccountType = Type('Account', type =>
           async ({ parent, args, scope }) => {
             const account: Account = parent.$source
 
-            const count = await countCategoriesByAccountId(
+            const count = await countCategories(
               {
-                accountId: account.id,
-                search: args.search,
-                type: args.type,
+                where: createCategoryWhere(args, {
+                  account: { id: { eq: account.id } },
+                }),
               },
               scope
             )
@@ -246,7 +251,7 @@ const AccountType = Type('Account', type =>
             const payments = await listPayments(
               {
                 where: createPaymentWhere(args, {
-                  accountId: { eq: account.id },
+                  account: { id: { eq: account.id } },
                 }),
                 take: args.take,
                 skip: args.skip,
@@ -274,9 +279,7 @@ const AccountType = Type('Account', type =>
               {
                 fields: extractFieldNames<AggregatedPayments>(info),
                 where: createPaymentWhere(args, {
-                  accountId: {
-                    eq: account.id,
-                  },
+                  account: { id: { eq: account.id } },
                 }),
               },
               scope
@@ -300,7 +303,7 @@ const AccountType = Type('Account', type =>
             const count = await countPayments(
               {
                 where: createPaymentWhere(args, {
-                  accountId: { eq: account.id },
+                  account: { id: { eq: account.id } },
                 }),
               },
               scope
@@ -319,7 +322,7 @@ const AccountType = Type('Account', type =>
           const count = await countPaymentsTotal(
             {
               where: createPaymentWhere(args, {
-                accountId: { eq: account.id },
+                account: { id: { eq: account.id } },
               }),
             },
             scope
@@ -338,7 +341,7 @@ const AccountType = Type('Account', type =>
           const count = await countPaymentsRevenue(
             {
               where: createPaymentWhere(args, {
-                accountId: { eq: account.id },
+                account: { id: { eq: account.id } },
               }),
             },
             scope
@@ -357,7 +360,7 @@ const AccountType = Type('Account', type =>
           const count = await countPaymentsSpending(
             {
               where: createPaymentWhere(args, {
-                accountId: { eq: account.id },
+                account: { id: { eq: account.id } },
               }),
             },
             scope
@@ -404,7 +407,7 @@ const AccountType = Type('Account', type =>
             const result = await getPaymentsLedgerPieChart(
               {
                 wherePayment: createPaymentWhere(args, {
-                  accountId: { eq: account.id },
+                  account: { id: { eq: account.id } },
                 }),
               },
               scope

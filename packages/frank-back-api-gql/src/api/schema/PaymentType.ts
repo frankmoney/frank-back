@@ -2,7 +2,7 @@ import { Type } from 'gql'
 import ObjectTypeFieldBuilder from 'gql/nodes/ObjectTypeFieldBuilder'
 import Payment from 'store/types/Payment'
 import getAccountByPaymentId from 'api/dal/Account/getAccountByPaymentId'
-import getCategoryByPaymentId from 'api/dal/Category/getCategoryByPaymentId'
+import getCategory from 'api/dal/Category/getCategory'
 import listSimilarPaymentsById from 'api/dal/Payment/listSimilarPaymentsById'
 import getPeer from 'api/dal/Peer/getPeer'
 import getUserById from 'api/dal/User/getUserById'
@@ -188,8 +188,8 @@ const PaymentType = Type('Payment', type =>
         createPrivateResolver('Payment:category', async ({ parent, scope }) => {
           const payment: Payment = parent.$source
 
-          const category = await getCategoryByPaymentId(
-            { paymentId: payment.id },
+          const category = await getCategory(
+            { where: { id: { eq: payment.categoryId } } },
             scope
           )
 

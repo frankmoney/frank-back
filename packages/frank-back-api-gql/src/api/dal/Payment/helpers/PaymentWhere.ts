@@ -1,8 +1,8 @@
+import AccountWhere from '../../Account/helpers/AccountWhere'
 import CategoryWhere from '../../Category/helpers/CategoryWhere'
+import PeerWhere from '../../Peer/helpers/PeerWhere'
 import WhereBoolean from '../../helpers/WhereBoolean'
 import WhereDate from '../../helpers/WhereDate'
-import WhereId from '../../helpers/WhereId'
-import WhereIdNullable from '../../helpers/WhereIdNullable'
 import WhereNumber from '../../helpers/WhereNumber'
 
 export default interface PaymentWhere {
@@ -11,10 +11,9 @@ export default interface PaymentWhere {
   verified?: WhereBoolean
   pending?: WhereBoolean
   containsText?: string
-  accountId?: WhereId
-  categoryId?: WhereIdNullable
+  account?: AccountWhere
   category?: CategoryWhere
-  peerId?: WhereIdNullable
+  peer?: PeerWhere
   or?: PaymentWhere | PaymentWhere[]
   and?: PaymentWhere | PaymentWhere[]
 }
