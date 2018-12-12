@@ -15,7 +15,7 @@ export type Args = {
 }
 
 export default createQuery<Args, Payment | undefined>(
-  'lastPublishedPaymentByAccountId',
+  'lastVerifiedPaymentByAccountId',
   (args, { db }) => {
     const byAmountSql = and(
       args.amount ? sql`p."${payment.amount}" = ${args.amount}` : undefined

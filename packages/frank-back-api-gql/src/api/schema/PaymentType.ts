@@ -52,7 +52,6 @@ const PaymentType = Type('Payment', type =>
     data: field.ofJson().nullable(),
     postedOn: field.ofDate(),
     amount: field.ofFloat(),
-    peerName: field.ofString().nullable(),
     description: field.ofString().nullable(),
     verified: field.ofBool(),
     pending: field.ofBool(),
@@ -167,12 +166,18 @@ const PaymentType = Type('Payment', type =>
         createResolver('Payment:peer', async ({ parent, scope }) => {
           const payment: Payment = parent.$source
 
-          const peer = await getPeer(
-            { where: { id: { eq: payment.peerId } } },
-            scope
-          )
+          if (payment.peerId) {
+            const peer = await getPeer(
+              { where: { id: { eq: payment.peerId } } },
+              scope
+            )
 
-          return mapPeer(peer)
+            return mapPeer(peer)
+          } else if (payment.peerName) {
+            return { name: payment.peerName }
+          } else {
+            return null
+          }
         })
       ),
     category: field

@@ -30,7 +30,7 @@ import paymentsDefaultFilters from './helpers/paymentsDefaultFilters'
 
 const PeerType = Type('Peer', type =>
   type.fields(field => ({
-    pid: field.ofId(),
+    pid: field.ofId().nullable(),
     name: field.ofString(),
     account: field.ofType(AccountType).resolve(
       createResolver('Peer:account', async ({ parent, scope }) => {

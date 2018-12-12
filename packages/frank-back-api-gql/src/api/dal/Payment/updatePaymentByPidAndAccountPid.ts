@@ -62,6 +62,8 @@ export default createMutation<Args, Payment>(
       )
     }
 
+    updateSqlParts.push(sql`${payment.updatedAt} = ${new Date()}`)
+
     const updateSql = join(updateSqlParts, ', ')
 
     const result = await scope.db.first(
