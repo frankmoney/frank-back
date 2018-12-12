@@ -3,7 +3,7 @@ import getCategoryByPidAndAccountId from 'api/dal/Category/getCategoryByPidAndAc
 import Scope from 'api/Scope'
 import Payment from 'store/types/Payment'
 import findOrCreatePeer from 'api/dal/Peer/findOrCreatePeer'
-import handleString from './handleString'
+import nullOrNotWhiteSpace from './nullOrNotWhiteSpace'
 
 type UserInput = {
   description: any
@@ -65,7 +65,7 @@ const processingUserInput = async (args: Args): Promise<Out> => {
   const { userInput, existingPayment, scope } = args
 
   // description
-  let description = handleString(userInput.description)
+  let description = nullOrNotWhiteSpace(userInput.description)
 
   description =
     description === existingPayment.description ? undefined : description
@@ -75,7 +75,7 @@ const processingUserInput = async (args: Args): Promise<Out> => {
   // description
 
   // peer
-  let peerName = handleString(userInput.peerName)
+  let peerName = nullOrNotWhiteSpace(userInput.peerName)
 
   peerName = peerName === existingPayment.peerName ? undefined : peerName
 

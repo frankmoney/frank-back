@@ -1,6 +1,6 @@
 import R from 'ramda'
 
-const handleString = (s: string | undefined | null) => {
+const nullOrNotWhiteSpace = (s: string | undefined | null) => {
   if (R.isNil(s)) {
     return s
   }
@@ -10,4 +10,4 @@ const handleString = (s: string | undefined | null) => {
   return R.isEmpty(s) ? null : s
 }
 
-export default handleString
+export default nullOrNotWhiteSpace
