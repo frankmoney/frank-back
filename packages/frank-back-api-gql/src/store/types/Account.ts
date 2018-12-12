@@ -1,4 +1,4 @@
-import AccountAccessRole from './AccountAccessRole'
+import { AccountAccessRole } from '../enums'
 import ExtendedBase from './ExtendedBase'
 import Id from './Id'
 import Json from './Json'
@@ -9,6 +9,7 @@ type Account = ExtendedBase & {
   name: string
   teamId: Id
   currencyCode: string
+  public: boolean
 }
 
 export default Account

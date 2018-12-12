@@ -6,7 +6,6 @@ export const account = tableEx('t_account', {
   name: 'c_name',
   teamId: 'c_team_id',
   currencyCode: 'c_currency_code',
-  public: 'c_public',
 })
 
 export const category = tableEx('t_category', {

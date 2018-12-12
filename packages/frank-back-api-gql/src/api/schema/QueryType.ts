@@ -1,4 +1,5 @@
 import { Type, Json } from 'gql'
+import { AccountAccessRole } from 'store/enums'
 import getAccount from 'api/dal/Account/getAccount'
 import listAccounts from 'api/dal/Account/listAccounts'
 import getTeamByUserId from 'api/dal/Team/getTeamByUserId'
@@ -50,6 +51,18 @@ const QueryType = Type('Query', type =>
             },
             scope
           )
+
+          switch (account.accessRole) {
+            case AccountAccessRole.observer:
+            case AccountAccessRole.manager:
+            case AccountAccessRole.administrator:
+              break
+            default:
+              if (!account.public) {
+                return null
+              }
+              break
+          }
 
           return mapAccount(account)
         })

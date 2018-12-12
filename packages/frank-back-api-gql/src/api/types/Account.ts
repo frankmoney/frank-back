@@ -7,6 +7,7 @@ type Account = {
   data: Json
   name: string
   currencyCode: string
+  public: boolean
   access: AccountAccess
 }
 

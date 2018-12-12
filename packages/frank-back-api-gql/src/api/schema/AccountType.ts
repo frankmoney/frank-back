@@ -46,10 +46,11 @@ import peersDefaultFilters from './helpers/peersDefaultFilters'
 
 const AccountType = Type('Account', type =>
   type.fields(field => ({
-    access: field.ofType(AccountAccessType),
     pid: field.ofId(),
     data: field.ofJson().nullable(),
     name: field.ofString(),
+    public: field.ofBool(),
+    access: field.ofType(AccountAccessType),
     category: field
       .ofType(CategoryType)
       .args(arg => ({
