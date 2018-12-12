@@ -1,5 +1,6 @@
 import { Type, Json } from 'gql'
 import { AccountAccessRole } from 'store/enums'
+import { notFoundError } from 'api/errors/NotFoundError'
 import getAccount from 'api/dal/Account/getAccount'
 import listAccounts from 'api/dal/Account/listAccounts'
 import getTeamByUserId from 'api/dal/Team/getTeamByUserId'
@@ -52,14 +53,20 @@ const QueryType = Type('Query', type =>
             scope
           )
 
+          if (!account) {
+            throw notFoundError()
+          }
+
+          // forbid access to non-public accounts for other teams/anonyms
           switch (account.accessRole) {
             case AccountAccessRole.observer:
             case AccountAccessRole.manager:
             case AccountAccessRole.administrator:
               break
+
             default:
               if (!account.public) {
-                return null
+                throw notFoundError()
               }
               break
           }

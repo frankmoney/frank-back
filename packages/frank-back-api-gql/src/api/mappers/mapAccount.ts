@@ -5,7 +5,6 @@ import map from './map'
 
 const mapAccount: Mapper<Target, Source> = map<Target>()
   .from<Source>()
-  .for('access', m => m.use(x => ({ role: x.accessRole })))
   .for('pid', 'pid')
   .for('data', 'data')
   .for('name', 'name')

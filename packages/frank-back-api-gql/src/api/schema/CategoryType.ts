@@ -15,7 +15,7 @@ import listPayments from 'api/dal/Payment/listPayments'
 import mapAccount from 'api/mappers/mapAccount'
 import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
-import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import createResolver from 'api/resolvers/utils/createResolver'
 import AggregatedPayments from 'api/types/AggregatedPayments'
 import ledgerBarChart from '../resolvers/ledgerBarChart'
 import AccountType from './AccountType'
@@ -38,7 +38,7 @@ const CategoryType = Type('Category', type =>
     color: field.ofString(),
     type: field.ofType(CategoryTypeType),
     account: field.ofType(AccountType).resolve(
-      createPrivateResolver('Category:account', async ({ parent, scope }) => {
+      createResolver('Category:account', async ({ parent, scope }) => {
         const category: Category = parent.$source
 
         const account = await getAccount(
@@ -58,30 +58,27 @@ const CategoryType = Type('Category', type =>
         pid: arg.ofId(),
       }))
       .resolve(
-        createPrivateResolver(
-          'Category:peer',
-          async ({ parent, args, scope }) => {
-            const category: Category = parent.$source
+        createResolver('Category:peer', async ({ parent, args, scope }) => {
+          const category: Category = parent.$source
 
-            const peer = await getPeer(
-              {
-                where: {
-                  payments: {
-                    any: {
-                      category: {
-                        id: { eq: category.id },
-                      },
+          const peer = await getPeer(
+            {
+              where: {
+                payments: {
+                  any: {
+                    category: {
+                      id: { eq: category.id },
                     },
                   },
-                  pid: { eq: args.pid },
                 },
+                pid: { eq: args.pid },
               },
-              scope
-            )
+            },
+            scope
+          )
 
-            return mapPeer(peer)
-          }
-        )
+          return mapPeer(peer)
+        })
       ),
     peers: field
       .listOf(PeerType)
@@ -92,32 +89,29 @@ const CategoryType = Type('Category', type =>
         sortBy: arg.ofType(PeersOrderType),
       }))
       .resolve(
-        createPrivateResolver(
-          'Category:peers',
-          async ({ parent, args, scope }) => {
-            const category: Category = parent.$source
+        createResolver('Category:peers', async ({ parent, args, scope }) => {
+          const category: Category = parent.$source
 
-            const peers = await listPeers(
-              {
-                where: createPeerWhere(args, {
-                  payments: {
-                    any: {
-                      category: {
-                        id: { eq: category.id },
-                      },
+          const peers = await listPeers(
+            {
+              where: createPeerWhere(args, {
+                payments: {
+                  any: {
+                    category: {
+                      id: { eq: category.id },
                     },
                   },
-                }),
-                take: args.take,
-                skip: args.skip,
-                orderBy: args.sortBy,
-              },
-              scope
-            )
+                },
+              }),
+              take: args.take,
+              skip: args.skip,
+              orderBy: args.sortBy,
+            },
+            scope
+          )
 
-            return mapPeer(peers)
-          }
-        )
+          return mapPeer(peers)
+        })
       ),
     countPeers: field
       .ofInt()
@@ -125,7 +119,7 @@ const CategoryType = Type('Category', type =>
         ...peersDefaultFilters(arg),
       }))
       .resolve(
-        createPrivateResolver(
+        createResolver(
           'Category:countPeers',
           async ({ parent, args, scope }) => {
             const category: Category = parent.$source
@@ -155,19 +149,16 @@ const CategoryType = Type('Category', type =>
         pid: arg.ofId(),
       }))
       .resolve(
-        createPrivateResolver(
-          'Category:payment',
-          async ({ parent, args, scope }) => {
-            const category: Category = parent.$source
+        createResolver('Category:payment', async ({ parent, args, scope }) => {
+          const category: Category = parent.$source
 
-            const payment = await getPaymentByPidAndCategoryId(
-              { categoryId: category.id, pid: args.pid },
-              scope
-            )
+          const payment = await getPaymentByPidAndCategoryId(
+            { categoryId: category.id, pid: args.pid },
+            scope
+          )
 
-            return mapPayment(payment)
-          }
-        )
+          return mapPayment(payment)
+        })
       ),
     payments: field
       .listOf(PaymentType)
@@ -178,26 +169,23 @@ const CategoryType = Type('Category', type =>
         skip: arg.ofInt().nullable(),
       }))
       .resolve(
-        createPrivateResolver(
-          'Category:payments',
-          async ({ parent, args, scope }) => {
-            const category: Category = parent.$source
+        createResolver('Category:payments', async ({ parent, args, scope }) => {
+          const category: Category = parent.$source
 
-            const payments = await listPayments(
-              {
-                where: createPaymentWhere(args, {
-                  category: { id: { eq: category.id } },
-                }),
-                take: args.take,
-                skip: args.skip,
-                orderBy: args.sortBy,
-              },
-              scope
-            )
+          const payments = await listPayments(
+            {
+              where: createPaymentWhere(args, {
+                category: { id: { eq: category.id } },
+              }),
+              take: args.take,
+              skip: args.skip,
+              orderBy: args.sortBy,
+            },
+            scope
+          )
 
-            return mapPayment(payments)
-          }
-        )
+          return mapPayment(payments)
+        })
       ),
     aggregatePayments: field
       .ofType(AggregatedPaymentsType)
@@ -205,7 +193,7 @@ const CategoryType = Type('Category', type =>
         ...paymentsDefaultFilters(arg),
       }))
       .resolve(
-        createPrivateResolver(
+        createResolver(
           'Category:aggregatePayments',
           async ({ parent, args, info, scope }) => {
             const category: Category = parent.$source
@@ -230,7 +218,7 @@ const CategoryType = Type('Category', type =>
         ...paymentsDefaultFilters(arg),
       }))
       .resolve(
-        createPrivateResolver(
+        createResolver(
           'Category:countPayments',
           async ({ parent, args, scope }) => {
             const category: Category = parent.$source
@@ -249,26 +237,23 @@ const CategoryType = Type('Category', type =>
         )
       ),
     countTotal: field.ofFloat().resolve(
-      createPrivateResolver(
-        'Category:countTotal',
-        async ({ parent, args, scope }) => {
-          const category: Category = parent.$source
+      createResolver('Category:countTotal', async ({ parent, args, scope }) => {
+        const category: Category = parent.$source
 
-          const count = await countPaymentsTotal(
-            {
-              where: createPaymentWhere(args, {
-                category: { id: { eq: category.id } },
-              }),
-            },
-            scope
-          )
+        const count = await countPaymentsTotal(
+          {
+            where: createPaymentWhere(args, {
+              category: { id: { eq: category.id } },
+            }),
+          },
+          scope
+        )
 
-          return count
-        }
-      )
+        return count
+      })
     ),
     countRevenue: field.ofFloat().resolve(
-      createPrivateResolver(
+      createResolver(
         'Category:countRevenue',
         async ({ parent, args, scope }) => {
           const category: Category = parent.$source
@@ -287,7 +272,7 @@ const CategoryType = Type('Category', type =>
       )
     ),
     countSpending: field.ofFloat().resolve(
-      createPrivateResolver(
+      createResolver(
         'Category:countSpending',
         async ({ parent, args, scope }) => {
           const category: Category = parent.$source
@@ -311,7 +296,7 @@ const CategoryType = Type('Category', type =>
         ...paymentsDefaultFilters(arg),
       }))
       .resolve(
-        createPrivateResolver(
+        createResolver(
           'Category:ledgerBarChart',
           async ({ parent, args, scope }) => {
             const category: Category = parent.$source

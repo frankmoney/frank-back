@@ -13,7 +13,7 @@ import mapCategory from 'api/mappers/mapCategory'
 import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
 import mapUser from 'api/mappers/mapUser'
-import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import createResolver from 'api/resolvers/utils/createResolver'
 import getSimilarPaymentDateRangeById from 'api/dal/Payment/getSimilarPaymentDateRangeById'
 import Date from 'api/types/Date'
 import AccountType from './AccountType'
@@ -34,18 +34,15 @@ const updaterConstructor = (
     .ofType(UserType)
     .nullable()
     .resolve(
-      createPrivateResolver(
-        `Payment:${fieldName}`,
-        async ({ parent, scope }) => {
-          const payment: any = parent.$source
+      createResolver(`Payment:${fieldName}`, async ({ parent, scope }) => {
+        const payment: any = parent.$source
 
-          const idFieldName = <keyof Payment>`${fieldName}Id`
+        const idFieldName = <keyof Payment>`${fieldName}Id`
 
-          const user = await getUserById({ id: payment[idFieldName] }, scope)
+        const user = await getUserById({ id: payment[idFieldName] }, scope)
 
-          return mapUser(user)
-        }
-      )
+        return mapUser(user)
+      })
     )
 }
 
@@ -63,7 +60,7 @@ const PaymentType = Type('Payment', type =>
       .ofString()
       .nullable()
       .resolve(
-        createPrivateResolver('Payment:bankDescription', ({ parent }) => {
+        createResolver('Payment:bankDescription', ({ parent }) => {
           return parent.data ? parent.data.originalDescription : null
         })
       ),
@@ -71,7 +68,7 @@ const PaymentType = Type('Payment', type =>
       .ofString()
       .nullable()
       .resolve(
-        createPrivateResolver('Payment:rawPeerName', ({ parent }) => {
+        createResolver('Payment:rawPeerName', ({ parent }) => {
           return parent.data ? parent.data.description : null
         })
       ),
@@ -85,26 +82,23 @@ const PaymentType = Type('Payment', type =>
         sortBy: arg.ofType(PaymentsOrderType),
       }))
       .resolve(
-        createPrivateResolver(
-          'Payment:similar',
-          async ({ parent, args, scope }) => {
-            const payment: Payment = parent.$source
+        createResolver('Payment:similar', async ({ parent, args, scope }) => {
+          const payment: Payment = parent.$source
 
-            const payments = await listSimilarPaymentsById(
-              {
-                id: payment.id,
-                includeSelf: args.includeSelf,
-                where: createPaymentWhere(args),
-                take: args.take,
-                skip: args.skip,
-                orderBy: args.sortBy,
-              },
-              scope
-            )
+          const payments = await listSimilarPaymentsById(
+            {
+              id: payment.id,
+              includeSelf: args.includeSelf,
+              where: createPaymentWhere(args),
+              take: args.take,
+              skip: args.skip,
+              orderBy: args.sortBy,
+            },
+            scope
+          )
 
-            return mapPayment(payments)
-          }
-        )
+          return mapPayment(payments)
+        })
       ),
     similarDateRange: field
       .listOfDate()
@@ -113,7 +107,7 @@ const PaymentType = Type('Payment', type =>
         includeSelf: arg.ofBool(),
       }))
       .resolve(
-        createPrivateResolver<null | Date[]>(
+        createResolver<null | Date[]>(
           'Payment:similarDateRange',
           async ({ parent, args, scope }) => {
             const payment: Payment = parent.$source
@@ -138,24 +132,21 @@ const PaymentType = Type('Payment', type =>
         includeSelf: arg.ofBool(),
       }))
       .resolve(
-        createPrivateResolver(
-          'Payment:countSimilar',
-          ({ parent, args, scope }) => {
-            const count = countSimilarPaymentsByPid(
-              {
-                paymentPid: parent.pid,
-                includeSelf: args.includeSelf,
-                where: createPaymentWhere(args),
-              },
-              scope
-            )
+        createResolver('Payment:countSimilar', ({ parent, args, scope }) => {
+          const count = countSimilarPaymentsByPid(
+            {
+              paymentPid: parent.pid,
+              includeSelf: args.includeSelf,
+              where: createPaymentWhere(args),
+            },
+            scope
+          )
 
-            return count
-          }
-        )
+          return count
+        })
       ),
     account: field.ofType(AccountType).resolve(
-      createPrivateResolver('Payment:account', async ({ parent, scope }) => {
+      createResolver('Payment:account', async ({ parent, scope }) => {
         const payment: Payment = parent.$source
 
         const account = await getAccount(
@@ -173,7 +164,7 @@ const PaymentType = Type('Payment', type =>
       .ofType(PeerType)
       .nullable()
       .resolve(
-        createPrivateResolver('Payment:peer', async ({ parent, scope }) => {
+        createResolver('Payment:peer', async ({ parent, scope }) => {
           const payment: Payment = parent.$source
 
           const peer = await getPeer(
@@ -188,7 +179,7 @@ const PaymentType = Type('Payment', type =>
       .ofType(CategoryType)
       .nullable()
       .resolve(
-        createPrivateResolver('Payment:category', async ({ parent, scope }) => {
+        createResolver('Payment:category', async ({ parent, scope }) => {
           const payment: Payment = parent.$source
 
           const category = await getCategory(
@@ -208,7 +199,7 @@ const PaymentType = Type('Payment', type =>
         search: arg.ofString().nullable(),
       }))
       .resolve(
-        createPrivateResolver(
+        createResolver(
           'Account:suggestedDescriptions',
           ({ parent, args: { search }, scope }) => {
             const payment: Payment = parent.$source
