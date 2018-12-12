@@ -5,7 +5,7 @@ import categoryPredicateSql from '../../Category/helpers/categoryPredicateSql'
 
 const paymentCategoryPredicateSql = (
   alias: string | Sql,
-  where?: CategoryWhere
+  where: undefined | null | CategoryWhere
 ): undefined | Sql => {
   if (!where) {
     return undefined
@@ -15,7 +15,7 @@ const paymentCategoryPredicateSql = (
 
   const categoryAlias$: Sql = sql`${alias$}.category`
 
-  const categoryWhereSql = categoryPredicateSql(categoryAlias$)
+  const categoryWhereSql = categoryPredicateSql(categoryAlias$, where)
 
   if (!categoryWhereSql) {
     return undefined

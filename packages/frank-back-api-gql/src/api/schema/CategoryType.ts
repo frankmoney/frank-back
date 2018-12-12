@@ -1,7 +1,7 @@
 import { Type } from 'gql'
 import { extractFieldNames } from 'gql/parse'
 import Category from 'store/types/Category'
-import getAccountByCategoryId from 'api/dal/Account/getAccountByCategoryId'
+import getAccount from 'api/dal/Account/getAccount'
 import aggregatePayments from 'api/dal/Payment/aggregatePayments'
 import countPayments from 'api/dal/Payment/countPayments'
 import countPeers from 'api/dal/Peer/countPeers'
@@ -41,8 +41,11 @@ const CategoryType = Type('Category', type =>
       createPrivateResolver('Category:account', async ({ parent, scope }) => {
         const category: Category = parent.$source
 
-        const account = await getAccountByCategoryId(
-          { categoryId: category.id },
+        const account = await getAccount(
+          {
+            userId: scope.user && scope.user.id,
+            where: { id: { eq: category.accountId } },
+          },
           scope
         )
 
@@ -56,7 +59,7 @@ const CategoryType = Type('Category', type =>
       }))
       .resolve(
         createPrivateResolver(
-          'Account:peer',
+          'Category:peer',
           async ({ parent, args, scope }) => {
             const category: Category = parent.$source
 
@@ -90,7 +93,7 @@ const CategoryType = Type('Category', type =>
       }))
       .resolve(
         createPrivateResolver(
-          'Account:peers',
+          'Category:peers',
           async ({ parent, args, scope }) => {
             const category: Category = parent.$source
 
@@ -123,7 +126,7 @@ const CategoryType = Type('Category', type =>
       }))
       .resolve(
         createPrivateResolver(
-          'Account:countPeers',
+          'Category:countPeers',
           async ({ parent, args, scope }) => {
             const category: Category = parent.$source
 
@@ -203,7 +206,7 @@ const CategoryType = Type('Category', type =>
       }))
       .resolve(
         createPrivateResolver(
-          'Account:aggregatePayments',
+          'Category:aggregatePayments',
           async ({ parent, args, info, scope }) => {
             const category: Category = parent.$source
 
@@ -309,7 +312,7 @@ const CategoryType = Type('Category', type =>
       }))
       .resolve(
         createPrivateResolver(
-          'Account:ledgerBarChart',
+          'Category:ledgerBarChart',
           async ({ parent, args, scope }) => {
             const category: Category = parent.$source
 

@@ -1,7 +1,7 @@
 import R from 'ramda'
 import createMutations from 'utils/createMutations'
 import updatePaymentByPidAndAccountPid from 'api/dal/Payment/updatePaymentByPidAndAccountPid'
-import getAccountByPid from 'api/dal/Account/getAccountByPid'
+import getAccount from 'api/dal/Account/getAccount'
 import getPaymentByPidAndAccountId from 'api/dal/Payment/getPaymentByPidAndAccountId'
 import mapPayment from 'api/mappers/mapPayment'
 import PaymentType from 'api/schema/PaymentType'
@@ -86,7 +86,12 @@ const paymentUpdate = createPrivateResolver(
       throwArgumentError()
     }
 
-    const account = await getAccountByPid({ pid: accountPid }, scope)
+    const userId = scope.user.id
+
+    const account = await getAccount(
+      { userId, where: { pid: { eq: accountPid } } },
+      scope
+    )
     const payment = await getPaymentByPidAndAccountId(
       { accountId: account.id, pid: paymentPid },
       scope

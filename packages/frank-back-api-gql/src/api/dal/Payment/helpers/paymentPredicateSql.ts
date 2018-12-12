@@ -10,7 +10,7 @@ import paymentPeerPredicateSql from './paymentPeerPredicateSql'
 
 const paymentPredicateSql = (
   alias: string | Sql,
-  where?: PaymentWhere
+  where: undefined | null | PaymentWhere
 ): undefined | Sql => {
   if (!where) {
     return undefined
@@ -23,8 +23,8 @@ const paymentPredicateSql = (
     createWhereSql(sql`"${alias$}"."${payment.postedOn}"`, where.postedOn),
     createWhereSql(sql`"${alias$}"."${payment.verified}"`, where.verified),
     createWhereSql(sql`"${alias$}"."${payment.pending}"`, where.pending),
-    paymentAccountPredicateSql(alias$, where && where.account),
-    paymentCategoryPredicateSql(alias$, where && where.category),
+    paymentAccountPredicateSql(alias$, where.account),
+    paymentCategoryPredicateSql(alias$, where.category),
     paymentPeerPredicateSql(alias$, where && where.peer),
     where.containsText
       ? disjunction(

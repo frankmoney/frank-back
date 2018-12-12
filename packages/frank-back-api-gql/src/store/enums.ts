@@ -33,3 +33,11 @@ export enum CategoryType {
   revenue = 'revenue',
   spending = 'spending',
 }
+
+export enum AccountAccessRole {
+  nobody = 'nobody',
+  visitor = 'visitor',
+  observer = 'observer',
+  manager = 'manager',
+  administrator = 'administrator',
+}

@@ -1,8 +1,5 @@
 import { Type } from 'gql'
 import Onboarding from '../../store/types/Onboarding'
-import Peer from '../../store/types/Peer'
-import getAccountByPeerId from '../dal/Account/getAccountByPeerId'
-import mapAccount from '../mappers/mapAccount'
 import createPrivateResolver from '../resolvers/utils/createPrivateResolver'
 
 const OnboardingType = Type('Onboarding', type =>

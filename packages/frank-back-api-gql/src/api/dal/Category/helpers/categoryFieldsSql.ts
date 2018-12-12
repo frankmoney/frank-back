@@ -1,7 +1,7 @@
 import { Sql, join, sql, literal } from 'sql'
 import { category } from 'store/names'
 
-const categoryFieldsSql = (alias: string | Sql) => {
+const categoryFieldsSql = (alias: string | Sql): Sql => {
   const alias$: Sql = typeof alias === 'string' ? literal(alias) : alias
 
   return join(

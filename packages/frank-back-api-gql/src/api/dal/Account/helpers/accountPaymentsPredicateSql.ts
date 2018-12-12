@@ -1,19 +1,20 @@
 import { Sql, and, join, sql, literal } from 'sql'
-import { payment, peer } from 'store/names'
+import { account, payment } from 'store/names'
 import paymentPredicateSql from '../../Payment/helpers/paymentPredicateSql'
 import conjunction from '../../helpers/conjunction'
 import disjunction from '../../helpers/disjunction'
-import PeerPaymentsWhere from './PeerPaymentsWhere'
+import AccountPaymentsWhere from './AccountPaymentsWhere'
 
-const peerPaymentsPredicateSql = (
+const accountPaymentsPredicateSql = (
   alias: string | Sql,
-  where: undefined | null | PeerPaymentsWhere
+  where: undefined | null | AccountPaymentsWhere
 ): undefined | Sql => {
   if (!where) {
     return undefined
   }
 
   const alias$: Sql = typeof alias === 'string' ? literal(alias) : alias
+
   const paymentsAlias$: Sql = sql`${alias$}.payments`
 
   const branches: (undefined | Sql)[] = []
@@ -26,8 +27,8 @@ const peerPaymentsPredicateSql = (
           sql`exists (`,
           sql`select 1`,
           sql`from "${payment}" "${paymentsAlias$}"`,
-          sql`where "${alias$}"."${peer.id}"`,
-          sql`= "${paymentsAlias$}"."${payment.peerId}"`,
+          sql`where "${alias$}"."${account.id}"`,
+          sql`= "${paymentsAlias$}"."${payment.accountId}"`,
           sql`)`,
         ],
         ' '
@@ -42,8 +43,8 @@ const peerPaymentsPredicateSql = (
           sql`exists (`,
           sql`select 1`,
           sql`from "${payment}" "${paymentsAlias$}"`,
-          sql`where "${alias$}"."${peer.id}"`,
-          sql`= "${paymentsAlias$}"."${payment.peerId}"`,
+          sql`where "${alias$}"."${account.id}"`,
+          sql`= "${paymentsAlias$}"."${payment.accountId}"`,
           and(paymentPredicateSql(paymentsAlias$, where.any)),
           sql`)`,
         ],
@@ -59,8 +60,8 @@ const peerPaymentsPredicateSql = (
           sql`not exists (`,
           sql`select 1`,
           sql`from "${payment}" "${paymentsAlias$}"`,
-          sql`where "${alias$}"."${peer.id}"`,
-          sql`= "${paymentsAlias$}"."${payment.peerId}"`,
+          sql`where "${alias$}"."${account.id}"`,
+          sql`= "${paymentsAlias$}"."${payment.accountId}"`,
           and(paymentPredicateSql(paymentsAlias$, where.none)),
           sql`)`,
         ],
@@ -71,9 +72,11 @@ const peerPaymentsPredicateSql = (
 
   if (where.and) {
     if (Array.isArray(where.and)) {
-      branches.push(...where.and.map(x => peerPaymentsPredicateSql(alias, x)))
+      branches.push(
+        ...where.and.map(x => accountPaymentsPredicateSql(alias, x))
+      )
     } else {
-      branches.push(peerPaymentsPredicateSql(alias, where.and))
+      branches.push(accountPaymentsPredicateSql(alias, where.and))
     }
   }
 
@@ -83,14 +86,14 @@ const peerPaymentsPredicateSql = (
     if (Array.isArray(where.or)) {
       return disjunction(
         junction,
-        ...where.or.map(x => peerPaymentsPredicateSql(alias, x))
+        ...where.or.map(x => accountPaymentsPredicateSql(alias, x))
       )
     } else {
-      return disjunction(junction, peerPaymentsPredicateSql(alias, where.or))
+      return disjunction(junction, accountPaymentsPredicateSql(alias, where.or))
     }
   } else {
     return junction
   }
 }
 
-export default peerPaymentsPredicateSql
+export default accountPaymentsPredicateSql

@@ -19,7 +19,7 @@ export default createQuery<Args, Category[]>('listCategories', (args, { db }) =>
       select ${categoryFieldsSql('c')}
       from "${category}" c
       ${where(categoryPredicateSql('c', args.where))}
-      ${limit({ take: args.take, skip: args.skip })};
+      ${limit({ take: args.take, skip: args.skip })}
     `,
     mapCategory
   )

@@ -5,7 +5,7 @@ import accountPredicateSql from '../../Account/helpers/accountPredicateSql'
 
 const paymentAccountPredicateSql = (
   alias: string | Sql,
-  where?: AccountWhere
+  where: undefined | null | AccountWhere
 ): undefined | Sql => {
   if (!where) {
     return undefined
@@ -15,7 +15,7 @@ const paymentAccountPredicateSql = (
 
   const accountAlias$: Sql = sql`${alias$}.account`
 
-  const accountWhereSql = accountPredicateSql(accountAlias$)
+  const accountWhereSql = accountPredicateSql(accountAlias$, where)
 
   if (!accountWhereSql) {
     return undefined

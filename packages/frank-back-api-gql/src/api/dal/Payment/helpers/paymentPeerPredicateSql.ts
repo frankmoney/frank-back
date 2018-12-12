@@ -5,7 +5,7 @@ import peerPredicateSql from '../../Peer/helpers/peerPredicateSql'
 
 const paymentPeerPredicateSql = (
   alias: string | Sql,
-  where?: PeerWhere
+  where: undefined | null | PeerWhere
 ): undefined | Sql => {
   if (!where) {
     return undefined
@@ -15,7 +15,7 @@ const paymentPeerPredicateSql = (
 
   const peerAlias$: Sql = sql`${alias$}.peer`
 
-  const peerWhereSql = peerPredicateSql(peerAlias$)
+  const peerWhereSql = peerPredicateSql(peerAlias$, where)
 
   if (!peerWhereSql) {
     return undefined

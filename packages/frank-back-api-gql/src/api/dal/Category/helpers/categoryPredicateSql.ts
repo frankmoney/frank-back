@@ -9,7 +9,7 @@ import categoryPaymentsPredicateSql from './categoryPaymentsPredicateSql'
 
 const categoryPredicateSql = (
   alias: string | Sql,
-  where?: CategoryWhere
+  where: undefined | null | CategoryWhere
 ): undefined | Sql => {
   if (!where) {
     return undefined
@@ -21,8 +21,8 @@ const categoryPredicateSql = (
     createWhereSql(sql`"${alias$}"."${category.id}"`, where.id),
     createWhereSql(sql`"${alias$}"."${category.pid}"`, where.pid),
     createWhereSql(sql`"${alias$}"."${category.type}"`, where.type),
-    categoryAccountPredicateSql(alias$, where && where.account),
-    categoryPaymentsPredicateSql(alias, where && where.payments),
+    categoryAccountPredicateSql(alias$, where.account),
+    categoryPaymentsPredicateSql(alias, where.payments),
   ]
 
   if (where.and) {

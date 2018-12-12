@@ -6,6 +6,7 @@ import map from './map'
 const mapAccount: Mapper<Account> = map<Account>()
   .from(account)
   .extend()
+  .for('accessRole', 'accessRole')
   .for('data', x => x.data)
   .for('name', x => x.name)
   .for('teamId', x => x.teamId)

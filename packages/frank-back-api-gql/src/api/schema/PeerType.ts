@@ -1,7 +1,7 @@
 import { Type } from 'gql'
 import { extractFieldNames } from 'gql/parse'
 import Peer from 'store/types/Peer'
-import getAccountByPeerId from 'api/dal/Account/getAccountByPeerId'
+import getAccount from 'api/dal/Account/getAccount'
 import countCategories from 'api/dal/Category/countCategories'
 import getCategory from 'api/dal/Category/getCategory'
 import listCategories from 'api/dal/Category/listCategories'
@@ -21,7 +21,6 @@ import AggregatedPayments from 'api/types/AggregatedPayments'
 import AccountType from './AccountType'
 import AggregatedPaymentsType from './AggregatedPaymentsType'
 import CategoryType from './CategoryType'
-import CategoryTypeType from './CategoryTypeType'
 import PaymentsOrderType from './PaymentsOrderType'
 import PaymentType from './PaymentType'
 import categoriesDefaultFilters from './helpers/categoriesDefaultFilters'
@@ -37,7 +36,13 @@ const PeerType = Type('Peer', type =>
       createPrivateResolver('Peer:account', async ({ parent, scope }) => {
         const peer: Peer = parent.$source
 
-        const account = await getAccountByPeerId({ peerId: peer.id }, scope)
+        const account = await getAccount(
+          {
+            userId: scope.user && scope.user.id,
+            where: { id: { eq: peer.accountId } },
+          },
+          scope
+        )
 
         return mapAccount(account)
       })
@@ -188,7 +193,7 @@ const PeerType = Type('Peer', type =>
       }))
       .resolve(
         createPrivateResolver(
-          'Account:aggregatePayments',
+          'Peer:aggregatePayments',
           async ({ parent, args, info, scope }) => {
             const peer: Peer = parent.$source
 

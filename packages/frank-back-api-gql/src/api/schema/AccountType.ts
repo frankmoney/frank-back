@@ -25,9 +25,9 @@ import mapPeer from 'api/mappers/mapPeer'
 import mapStory from 'api/mappers/mapStory'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import AggregatedPayments from 'api/types/AggregatedPayments'
+import AccountAccessType from './AccountAccessType'
 import AggregatedPaymentsType from './AggregatedPaymentsType'
 import CategoryType from './CategoryType'
-import CategoryTypeType from './CategoryTypeType'
 import CurrencyType from './CurrencyType'
 import LedgerBarChartType from './LedgerBarChartType'
 import LedgerPieChartType from './LedgerPieChartType'
@@ -46,6 +46,7 @@ import peersDefaultFilters from './helpers/peersDefaultFilters'
 
 const AccountType = Type('Account', type =>
   type.fields(field => ({
+    access: field.ofType(AccountAccessType),
     pid: field.ofId(),
     data: field.ofJson().nullable(),
     name: field.ofString(),

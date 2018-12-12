@@ -1,20 +1,21 @@
 import { Sql, and, join, sql, literal } from 'sql'
-import { category, payment } from 'store/names'
-import paymentPredicateSql from '../../Payment/helpers/paymentPredicateSql'
+import { account, category } from 'store/names'
+import categoryPredicateSql from '../../Category/helpers/categoryPredicateSql'
 import conjunction from '../../helpers/conjunction'
 import disjunction from '../../helpers/disjunction'
-import CategoryPaymentsWhere from './CategoryPaymentsWhere'
+import AccountCategoriesWhere from './AccountCategoriesWhere'
 
-const categoryPaymentsPredicateSql = (
+const accountCategoriesPredicateSql = (
   alias: string | Sql,
-  where: undefined | null | CategoryPaymentsWhere
+  where: undefined | null | AccountCategoriesWhere
 ): undefined | Sql => {
   if (!where) {
     return undefined
   }
 
   const alias$: Sql = typeof alias === 'string' ? literal(alias) : alias
-  const paymentsAlias$: Sql = sql`${alias$}.payments`
+
+  const categoriesAlias$: Sql = sql`${alias$}.categories`
 
   const branches: (undefined | Sql)[] = []
 
@@ -25,9 +26,9 @@ const categoryPaymentsPredicateSql = (
           where.empty === true ? sql`not` : undefined,
           sql`exists (`,
           sql`select 1`,
-          sql`from "${payment}" "${paymentsAlias$}"`,
-          sql`where "${alias$}"."${category.id}"`,
-          sql`= "${paymentsAlias$}"."${payment.categoryId}"`,
+          sql`from "${category}" "${categoriesAlias$}"`,
+          sql`where "${alias$}"."${account.id}"`,
+          sql`= "${categoriesAlias$}"."${category.accountId}"`,
           sql`)`,
         ],
         ' '
@@ -41,10 +42,10 @@ const categoryPaymentsPredicateSql = (
         [
           sql`exists (`,
           sql`select 1`,
-          sql`from "${payment}" "${paymentsAlias$}"`,
-          sql`where "${alias$}"."${category.id}"`,
-          sql`= "${paymentsAlias$}"."${payment.categoryId}"`,
-          and(paymentPredicateSql(paymentsAlias$, where.any)),
+          sql`from "${category}" "${categoriesAlias$}"`,
+          sql`where "${alias$}"."${account.id}"`,
+          sql`= "${categoriesAlias$}"."${category.accountId}"`,
+          and(categoryPredicateSql(categoriesAlias$, where.any)),
           sql`)`,
         ],
         ' '
@@ -58,10 +59,10 @@ const categoryPaymentsPredicateSql = (
         [
           sql`not exists (`,
           sql`select 1`,
-          sql`from "${payment}" "${paymentsAlias$}"`,
-          sql`where "${alias$}"."${category.id}"`,
-          sql`= "${paymentsAlias$}"."${payment.categoryId}"`,
-          and(paymentPredicateSql(paymentsAlias$, where.none)),
+          sql`from "${category}" "${categoriesAlias$}"`,
+          sql`where "${alias$}"."${account.id}"`,
+          sql`= "${categoriesAlias$}"."${category.accountId}"`,
+          and(categoryPredicateSql(categoriesAlias$, where.none)),
           sql`)`,
         ],
         ' '
@@ -72,10 +73,10 @@ const categoryPaymentsPredicateSql = (
   if (where.and) {
     if (Array.isArray(where.and)) {
       branches.push(
-        ...where.and.map(x => categoryPaymentsPredicateSql(alias, x))
+        ...where.and.map(x => accountCategoriesPredicateSql(alias, x))
       )
     } else {
-      branches.push(categoryPaymentsPredicateSql(alias, where.and))
+      branches.push(accountCategoriesPredicateSql(alias, where.and))
     }
   }
 
@@ -85,12 +86,12 @@ const categoryPaymentsPredicateSql = (
     if (Array.isArray(where.or)) {
       return disjunction(
         junction,
-        ...where.or.map(x => categoryPaymentsPredicateSql(alias, x))
+        ...where.or.map(x => accountCategoriesPredicateSql(alias, x))
       )
     } else {
       return disjunction(
         junction,
-        categoryPaymentsPredicateSql(alias, where.or)
+        accountCategoriesPredicateSql(alias, where.or)
       )
     }
   } else {
@@ -98,4 +99,4 @@ const categoryPaymentsPredicateSql = (
   }
 }
 
-export default categoryPaymentsPredicateSql
+export default accountCategoriesPredicateSql
