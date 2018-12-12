@@ -7,6 +7,7 @@ import createMutation from '../createMutation'
 type Args = {
   accountId: Id
   name: string
+  create: boolean
 }
 
 export default createMutation<Args, Id>(
@@ -17,7 +18,7 @@ export default createMutation<Args, Id>(
         select ${peer.id}
         from ${peer}
         where ${peer}.${peer.accountId} = ${args.accountId}
-        and ${peer}.${peer.name} = ${args.name}
+        and ${peer}.${peer.name} ilike ${args.name}
       `
     )
 
@@ -25,16 +26,18 @@ export default createMutation<Args, Id>(
       return existingPeerId
     }
 
-    const columns = [peer.accountId, peer.name]
-    const values = [args.accountId, args.name]
+    if (args.create) {
+      const columns = [peer.accountId, peer.name]
+      const values = [args.accountId, args.name]
 
-    return await db.scalar(
-      sql`
+      return await db.scalar(
+        sql`
         insert into ${peer} (${join(columns, ', ')})
         values (${join(R.map(s => `'${s}'`, values), ', ')})
         returning
           ${peer.id}
       `
-    )
+      )
+    }
   }
 )
