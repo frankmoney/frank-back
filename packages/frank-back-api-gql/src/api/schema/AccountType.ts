@@ -1,9 +1,9 @@
 import { Type } from 'gql'
 import { extractFieldNames } from 'gql/parse'
 import Account from 'store/types/Account'
-import countCategoriesByAccountId from 'api/dal/Category/countCategoriesByAccountId'
-import getCategoryByPidAndAccountId from 'api/dal/Category/getCategoryByPidAndAccountId'
-import listCategoriesByAccountId from 'api/dal/Category/listCategoriesByAccountId'
+import countCategories from 'api/dal/Category/countCategories'
+import getCategory from 'api/dal/Category/getCategory'
+import listCategories from 'api/dal/Category/listCategories'
 import aggregatePayments from 'api/dal/Payment/aggregatePayments'
 import countPayments from 'api/dal/Payment/countPayments'
 import countPaymentsRevenue from 'api/dal/Payment/countPaymentsRevenue'
@@ -23,11 +23,12 @@ import mapCategory from 'api/mappers/mapCategory'
 import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
 import mapStory from 'api/mappers/mapStory'
-import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import createResolver from 'api/resolvers/utils/createResolver'
+import AccountAccess from 'api/types/AccountAccess'
 import AggregatedPayments from 'api/types/AggregatedPayments'
+import AccountAccessType from './AccountAccessType'
 import AggregatedPaymentsType from './AggregatedPaymentsType'
 import CategoryType from './CategoryType'
-import CategoryTypeType from './CategoryTypeType'
 import CurrencyType from './CurrencyType'
 import LedgerBarChartType from './LedgerBarChartType'
 import LedgerPieChartType from './LedgerPieChartType'
@@ -37,6 +38,8 @@ import PeersOrderType from './PeersOrderType'
 import PeerType from './PeerType'
 import StoriesOrderType from './StoriesOrderType'
 import StoryType from './StoryType'
+import categoriesDefaultFilters from './helpers/categoriesDefaultFilters'
+import createCategoryWhere from './helpers/createCategoryWhere'
 import createPaymentWhere from './helpers/createPaymentWhere'
 import createPeerWhere from './helpers/createPeerWhere'
 import paymentsDefaultFilters from './helpers/paymentsDefaultFilters'
@@ -47,72 +50,82 @@ const AccountType = Type('Account', type =>
     pid: field.ofId(),
     data: field.ofJson().nullable(),
     name: field.ofString(),
+    public: field.ofBool(),
+    access: field.ofType(AccountAccessType).resolve(
+      createResolver(
+        'Account.access',
+        ({ parent }): AccountAccess => {
+          const account: Account = parent.$source
+          return { role: account.accessRole }
+        }
+      )
+    ),
     category: field
       .ofType(CategoryType)
       .args(arg => ({
         pid: arg.ofId(),
       }))
       .resolve(
-        createPrivateResolver(
-          'Account:category',
-          async ({ parent, args, scope }) => {
-            const account: Account = parent.$source
+        createResolver('Account:category', async ({ parent, args, scope }) => {
+          const account: Account = parent.$source
 
-            const category = await getCategoryByPidAndAccountId(
-              { accountId: account.id, pid: args.pid },
-              scope
-            )
+          const category = await getCategory(
+            {
+              where: {
+                account: { id: { eq: account.id } },
+                pid: { eq: args.pid },
+              },
+            },
+            scope
+          )
 
-            return mapCategory(category)
-          }
-        )
+          return mapCategory(category)
+        })
       ),
     categories: field
       .listOf(CategoryType)
       .args(arg => ({
-        search: arg.ofString().nullable(),
+        ...categoriesDefaultFilters(arg),
         take: arg.ofInt().nullable(),
         skip: arg.ofInt().nullable(),
-        type: arg.ofType(CategoryTypeType).nullable(),
       }))
       .resolve(
-        createPrivateResolver(
+        createResolver(
           'Account:categories',
           async ({ parent, args, scope }) => {
             const account: Account = parent.$source
 
-            const category = await listCategoriesByAccountId(
+            const categories = await listCategories(
               {
-                accountId: account.id,
-                search: args.search,
+                where: createCategoryWhere(args, {
+                  account: { id: { eq: account.id } },
+                }),
                 take: args.take,
                 skip: args.skip,
-                type: args.type,
               },
               scope
             )
 
-            return mapCategory(category)
+            return mapCategory(categories)
           }
         )
       ),
     countCategories: field
       .ofInt()
       .args(arg => ({
-        search: arg.ofString().nullable(),
-        type: arg.ofType(CategoryTypeType).nullable(),
+        ...categoriesDefaultFilters(arg),
       }))
       .resolve(
-        createPrivateResolver(
+        createResolver(
           'Account:countCategories',
           async ({ parent, args, scope }) => {
             const account: Account = parent.$source
 
-            const count = await countCategoriesByAccountId(
+            const count = await countCategories(
               {
-                accountId: account.id,
-                search: args.search,
-                type: args.type,
+                where: createCategoryWhere(args, {
+                  account: { id: { eq: account.id } },
+                }),
               },
               scope
             )
@@ -122,7 +135,7 @@ const AccountType = Type('Account', type =>
         )
       ),
     currency: field.ofType(CurrencyType).resolve(
-      createPrivateResolver('Account:currency', async ({ parent }) => {
+      createResolver('Account:currency', async ({ parent }) => {
         const account: Account = parent.$source
 
         return {
@@ -136,24 +149,21 @@ const AccountType = Type('Account', type =>
         pid: arg.ofId(),
       }))
       .resolve(
-        createPrivateResolver(
-          'Account:peer',
-          async ({ parent, args, scope }) => {
-            const account: Account = parent.$source
+        createResolver('Account:peer', async ({ parent, args, scope }) => {
+          const account: Account = parent.$source
 
-            const peer = await getPeer(
-              {
-                where: {
-                  account: { id: { eq: account.id } },
-                  pid: { eq: args.pid },
-                },
+          const peer = await getPeer(
+            {
+              where: {
+                account: { id: { eq: account.id } },
+                pid: { eq: args.pid },
               },
-              scope
-            )
+            },
+            scope
+          )
 
-            return mapPeer(peer)
-          }
-        )
+          return mapPeer(peer)
+        })
       ),
     peers: field
       .listOf(PeerType)
@@ -164,26 +174,23 @@ const AccountType = Type('Account', type =>
         sortBy: arg.ofType(PeersOrderType),
       }))
       .resolve(
-        createPrivateResolver(
-          'Account:peers',
-          async ({ parent, args, scope }) => {
-            const account: Account = parent.$source
+        createResolver('Account:peers', async ({ parent, args, scope }) => {
+          const account: Account = parent.$source
 
-            const peers = await listPeers(
-              {
-                where: createPeerWhere(args, {
-                  account: { id: { eq: account.id } },
-                }),
-                take: args.take,
-                skip: args.skip,
-                orderBy: args.sortBy,
-              },
-              scope
-            )
+          const peers = await listPeers(
+            {
+              where: createPeerWhere(args, {
+                account: { id: { eq: account.id } },
+              }),
+              take: args.take,
+              skip: args.skip,
+              orderBy: args.sortBy,
+            },
+            scope
+          )
 
-            return mapPeer(peers)
-          }
-        )
+          return mapPeer(peers)
+        })
       ),
     countPeers: field
       .ofInt()
@@ -191,7 +198,7 @@ const AccountType = Type('Account', type =>
         ...peersDefaultFilters(arg),
       }))
       .resolve(
-        createPrivateResolver(
+        createResolver(
           'Account:countPeers',
           async ({ parent, args, scope }) => {
             const account: Account = parent.$source
@@ -215,19 +222,16 @@ const AccountType = Type('Account', type =>
         pid: arg.ofId(),
       }))
       .resolve(
-        createPrivateResolver(
-          'Account:payment',
-          async ({ parent, args, scope }) => {
-            const account: Account = parent.$source
+        createResolver('Account:payment', async ({ parent, args, scope }) => {
+          const account: Account = parent.$source
 
-            const payment = await getPaymentByPidAndAccountId(
-              { accountId: account.id, pid: args.pid },
-              scope
-            )
+          const payment = await getPaymentByPidAndAccountId(
+            { accountId: account.id, pid: args.pid },
+            scope
+          )
 
-            return mapPayment(payment)
-          }
-        )
+          return mapPayment(payment)
+        })
       ),
     payments: field
       .listOf(PaymentType)
@@ -238,26 +242,23 @@ const AccountType = Type('Account', type =>
         sortBy: arg.ofType(PaymentsOrderType),
       }))
       .resolve(
-        createPrivateResolver(
-          'Account:payments',
-          async ({ parent, args, scope }) => {
-            const account: Account = parent.$source
+        createResolver('Account:payments', async ({ parent, args, scope }) => {
+          const account: Account = parent.$source
 
-            const payments = await listPayments(
-              {
-                where: createPaymentWhere(args, {
-                  accountId: { eq: account.id },
-                }),
-                take: args.take,
-                skip: args.skip,
-                orderBy: args.sortBy,
-              },
-              scope
-            )
+          const payments = await listPayments(
+            {
+              where: createPaymentWhere(args, {
+                account: { id: { eq: account.id } },
+              }),
+              take: args.take,
+              skip: args.skip,
+              orderBy: args.sortBy,
+            },
+            scope
+          )
 
-            return mapPayment(payments)
-          }
-        )
+          return mapPayment(payments)
+        })
       ),
     aggregatePayments: field
       .ofType(AggregatedPaymentsType)
@@ -265,7 +266,7 @@ const AccountType = Type('Account', type =>
         ...paymentsDefaultFilters(arg),
       }))
       .resolve(
-        createPrivateResolver(
+        createResolver(
           'Account:aggregatePayments',
           async ({ parent, args, info, scope }) => {
             const account: Account = parent.$source
@@ -274,9 +275,7 @@ const AccountType = Type('Account', type =>
               {
                 fields: extractFieldNames<AggregatedPayments>(info),
                 where: createPaymentWhere(args, {
-                  accountId: {
-                    eq: account.id,
-                  },
+                  account: { id: { eq: account.id } },
                 }),
               },
               scope
@@ -292,7 +291,7 @@ const AccountType = Type('Account', type =>
         ...paymentsDefaultFilters(arg),
       }))
       .resolve(
-        createPrivateResolver(
+        createResolver(
           'Account:countPayments',
           async ({ parent, args, scope }) => {
             const account: Account = parent.$source
@@ -300,7 +299,7 @@ const AccountType = Type('Account', type =>
             const count = await countPayments(
               {
                 where: createPaymentWhere(args, {
-                  accountId: { eq: account.id },
+                  account: { id: { eq: account.id } },
                 }),
               },
               scope
@@ -311,26 +310,23 @@ const AccountType = Type('Account', type =>
         )
       ),
     countTotal: field.ofFloat().resolve(
-      createPrivateResolver(
-        'Account:countTotal',
-        async ({ parent, args, scope }) => {
-          const account: Account = parent.$source
+      createResolver('Account:countTotal', async ({ parent, args, scope }) => {
+        const account: Account = parent.$source
 
-          const count = await countPaymentsTotal(
-            {
-              where: createPaymentWhere(args, {
-                accountId: { eq: account.id },
-              }),
-            },
-            scope
-          )
+        const count = await countPaymentsTotal(
+          {
+            where: createPaymentWhere(args, {
+              account: { id: { eq: account.id } },
+            }),
+          },
+          scope
+        )
 
-          return count
-        }
-      )
+        return count
+      })
     ),
     countRevenue: field.ofFloat().resolve(
-      createPrivateResolver(
+      createResolver(
         'Account:countRevenue',
         async ({ parent, args, scope }) => {
           const account: Account = parent.$source
@@ -338,7 +334,7 @@ const AccountType = Type('Account', type =>
           const count = await countPaymentsRevenue(
             {
               where: createPaymentWhere(args, {
-                accountId: { eq: account.id },
+                account: { id: { eq: account.id } },
               }),
             },
             scope
@@ -349,7 +345,7 @@ const AccountType = Type('Account', type =>
       )
     ),
     countSpending: field.ofFloat().resolve(
-      createPrivateResolver(
+      createResolver(
         'Account:countSpending',
         async ({ parent, args, scope }) => {
           const account: Account = parent.$source
@@ -357,7 +353,7 @@ const AccountType = Type('Account', type =>
           const count = await countPaymentsSpending(
             {
               where: createPaymentWhere(args, {
-                accountId: { eq: account.id },
+                account: { id: { eq: account.id } },
               }),
             },
             scope
@@ -373,7 +369,7 @@ const AccountType = Type('Account', type =>
         ...paymentsDefaultFilters(arg),
       }))
       .resolve(
-        createPrivateResolver(
+        createResolver(
           'Account:ledgerBarChart',
           async ({ parent, args, scope }) => {
             const account: Account = parent.$source
@@ -396,7 +392,7 @@ const AccountType = Type('Account', type =>
         ...paymentsDefaultFilters(arg),
       }))
       .resolve(
-        createPrivateResolver(
+        createResolver(
           'Account:ledgerPieChart',
           async ({ parent, args, scope }) => {
             const account: Account = parent.$source
@@ -404,7 +400,7 @@ const AccountType = Type('Account', type =>
             const result = await getPaymentsLedgerPieChart(
               {
                 wherePayment: createPaymentWhere(args, {
-                  accountId: { eq: account.id },
+                  account: { id: { eq: account.id } },
                 }),
               },
               scope
@@ -420,23 +416,20 @@ const AccountType = Type('Account', type =>
         pid: arg.ofId(),
       }))
       .resolve(
-        createPrivateResolver(
-          'Account:story',
-          async ({ parent, args, scope }) => {
-            const account: Account = parent.$source
+        createResolver('Account:story', async ({ parent, args, scope }) => {
+          const account: Account = parent.$source
 
-            const story = await getStoryByPidAndAccountId(
-              { accountId: account.id, pid: args.pid },
-              scope
-            )
+          const story = await getStoryByPidAndAccountId(
+            { accountId: account.id, pid: args.pid },
+            scope
+          )
 
-            if (story == null) {
-              return throwNotFound()
-            }
-
-            return mapStory(story)
+          if (story == null) {
+            return throwNotFound()
           }
-        )
+
+          return mapStory(story)
+        })
       ),
     stories: field
       .listOf(StoryType)
@@ -447,25 +440,22 @@ const AccountType = Type('Account', type =>
         sortBy: arg.ofType(StoriesOrderType),
       }))
       .resolve(
-        createPrivateResolver(
-          'Account:stories',
-          async ({ parent, args, scope }) => {
-            const account: Account = parent.$source
+        createResolver('Account:stories', async ({ parent, args, scope }) => {
+          const account: Account = parent.$source
 
-            const stories = await listStoriesByAccountId(
-              {
-                accountId: account.id,
-                published: args.published,
-                take: args.take,
-                skip: args.skip,
-                orderBy: args.sortBy,
-              },
-              scope
-            )
+          const stories = await listStoriesByAccountId(
+            {
+              accountId: account.id,
+              published: args.published,
+              take: args.take,
+              skip: args.skip,
+              orderBy: args.sortBy,
+            },
+            scope
+          )
 
-            return mapStory(stories)
-          }
-        )
+          return mapStory(stories)
+        })
       ),
   }))
 )

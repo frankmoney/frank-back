@@ -6,6 +6,7 @@ type Account = {
   data: Json
   name: string
   currencyCode: string
+  public: boolean
 }
 
 export default Account

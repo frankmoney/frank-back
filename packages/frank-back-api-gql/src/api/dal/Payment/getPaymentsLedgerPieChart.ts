@@ -5,7 +5,7 @@ import { category, payment } from 'store/names'
 import Id from 'store/types/Id'
 import mapCategory from 'api/mappers/mapCategory'
 import Category from 'api/types/Category'
-import listCategoriesByIds from '../Category/listCategoriesByIds'
+import listCategories from '../Category/listCategories'
 import createQuery from '../createQuery'
 import PaymentWhere from './helpers/PaymentWhere'
 import paymentPredicateSql from './helpers/paymentPredicateSql'
@@ -89,7 +89,10 @@ export default createQuery<Args, Result>(
     )
 
     const categoryModels = categoryIds.length
-      ? await listCategoriesByIds({ ids: categoryIds }, scope)
+      ? await listCategories(
+          { where: { or: categoryIds.map(x => ({ id: { eq: x } })) } },
+          scope
+        )
       : []
 
     const categories = mapCategory(categoryModels)

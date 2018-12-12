@@ -7,7 +7,7 @@ import PeerPaymentsWhere from './PeerPaymentsWhere'
 
 const peerPaymentsPredicateSql = (
   alias: string | Sql,
-  where?: PeerPaymentsWhere
+  where: undefined | null | PeerPaymentsWhere
 ): undefined | Sql => {
   if (!where) {
     return undefined
@@ -61,7 +61,7 @@ const peerPaymentsPredicateSql = (
           sql`from "${payment}" "${paymentsAlias$}"`,
           sql`where "${alias$}"."${peer.id}"`,
           sql`= "${paymentsAlias$}"."${payment.peerId}"`,
-          and(paymentPredicateSql(paymentsAlias$, where.any)),
+          and(paymentPredicateSql(paymentsAlias$, where.none)),
           sql`)`,
         ],
         ' '

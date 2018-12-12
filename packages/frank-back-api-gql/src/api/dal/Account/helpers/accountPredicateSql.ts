@@ -4,10 +4,14 @@ import conjunction from '../../helpers/conjunction'
 import createWhereSql from '../../helpers/createWhereSql'
 import disjunction from '../../helpers/disjunction'
 import AccountWhere from './AccountWhere'
+import accountCategoriesPredicateSql from './accountCategoriesPredicateSql'
+import accountPeersPredicateSql from './accountPeersPredicateSql'
+import accountPaymentsPredicateSql from './accountPaymentsPredicateSql'
+import accountTeamPredicateSql from './accountTeamPredicateSql'
 
 const accountPredicateSql = (
   alias: string | Sql,
-  where?: AccountWhere
+  where: undefined | null | AccountWhere
 ): undefined | Sql => {
   if (!where) {
     return undefined
@@ -19,6 +23,10 @@ const accountPredicateSql = (
     createWhereSql(sql`"${alias$}"."${account.id}"`, where.id),
     createWhereSql(sql`"${alias$}"."${account.pid}"`, where.pid),
     createWhereSql(sql`"${alias$}"."${account.name}"`, where.name),
+    accountTeamPredicateSql(alias, where.team),
+    accountCategoriesPredicateSql(alias$, where.categories),
+    accountPeersPredicateSql(alias, where.peers),
+    accountPaymentsPredicateSql(alias, where.payments),
   ]
 
   if (where.and) {

@@ -1,11 +1,11 @@
 import { Sql, join, literal, sql } from 'sql'
 import { account, peer } from 'store/names'
-import accountPredicateSql from '../../Account/helpers/accountPredicateSql'
 import AccountWhere from '../../Account/helpers/AccountWhere'
+import accountPredicateSql from '../../Account/helpers/accountPredicateSql'
 
 const peerAccountPredicateSql = (
   alias: string | Sql,
-  where?: AccountWhere
+  where: undefined | null | AccountWhere
 ): undefined | Sql => {
   if (!where) {
     return undefined
@@ -15,7 +15,7 @@ const peerAccountPredicateSql = (
 
   const accountAlias$: Sql = sql`${alias$}.account`
 
-  const accountWhereSql = accountPredicateSql(accountAlias$)
+  const accountWhereSql = accountPredicateSql(accountAlias$, where)
 
   if (!accountWhereSql) {
     return undefined

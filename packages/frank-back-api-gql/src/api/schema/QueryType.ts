@@ -1,6 +1,8 @@
 import { Type, Json } from 'gql'
-import getAccountByPidAndUserId from 'api/dal/Account/getAccountByPidAndUserId'
-import listAccountsByUserId from 'api/dal/Account/listAccountsByUserId'
+import { AccountAccessRole } from 'store/enums'
+import { notFoundError } from 'api/errors/NotFoundError'
+import getAccount from 'api/dal/Account/getAccount'
+import listAccounts from 'api/dal/Account/listAccounts'
 import getTeamByUserId from 'api/dal/Team/getTeamByUserId'
 import getUserById from 'api/dal/User/getUserById'
 import mapAccount from 'api/mappers/mapAccount'
@@ -42,14 +44,35 @@ const QueryType = Type('Query', type =>
         pid: arg.ofId(),
       }))
       .resolve(
-        createPrivateResolver('account', async ({ args, scope }) =>
-          mapAccount(
-            await getAccountByPidAndUserId(
-              { pid: args.pid, userId: scope.user.id },
-              scope
-            )
+        createResolver('account', async ({ args, scope }) => {
+          const account = await getAccount(
+            {
+              userId: scope.user && scope.user.id,
+              where: { pid: { eq: args.pid } },
+            },
+            scope
           )
-        )
+
+          if (!account) {
+            throw notFoundError()
+          }
+
+          // forbid access to non-public accounts for other teams/anonyms
+          switch (account.accessRole) {
+            case AccountAccessRole.observer:
+            case AccountAccessRole.manager:
+            case AccountAccessRole.administrator:
+              break
+
+            default:
+              if (!account.public) {
+                throw notFoundError()
+              }
+              break
+          }
+
+          return mapAccount(account)
+        })
       ),
     accounts: field
       .listOf(AccountType)
@@ -57,18 +80,30 @@ const QueryType = Type('Query', type =>
         search: arg.ofString().nullable(),
       }))
       .resolve(
-        createResolver(
-          'accounts',
-          async ({ args, scope }) =>
-            scope.user
-              ? mapAccount(
-                  await listAccountsByUserId(
-                    { userId: scope.user.id, search: args.search },
-                    scope
-                  )
-                )
-              : []
-        )
+        createPrivateResolver('accounts', async ({ args, scope }) => {
+          const accounts = await listAccounts(
+            {
+              userId: scope.user.id,
+              where: {
+                team: {
+                  members: {
+                    any: {
+                      user: {
+                        id: {
+                          eq: scope.user.id,
+                        },
+                      },
+                    },
+                  },
+                },
+                name: args.search ? { contains: args.search } : undefined,
+              },
+            },
+            scope
+          )
+
+          return mapAccount(accounts)
+        })
       ),
     onboarding: field
       .ofType(OnboardingType)

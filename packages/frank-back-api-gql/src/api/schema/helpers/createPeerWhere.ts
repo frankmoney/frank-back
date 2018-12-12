@@ -11,7 +11,7 @@ const createPeerWhere = (
     search?: null | string
   },
   extensions?: Partial<PeerWhere>
-) => {
+): PeerWhere => {
   const where: PeerWhere = {}
 
   if (args) {

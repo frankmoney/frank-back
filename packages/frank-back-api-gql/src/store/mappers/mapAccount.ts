@@ -6,10 +6,12 @@ import map from './map'
 const mapAccount: Mapper<Account> = map<Account>()
   .from(account)
   .extend()
+  .for('accessRole', 'accessRole')
   .for('data', x => x.data)
   .for('name', x => x.name)
   .for('teamId', x => x.teamId)
   .for('currencyCode', x => x.currencyCode)
+  .for('public', x => x.public)
   .build()
 
 export default mapAccount
