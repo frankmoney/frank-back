@@ -1,9 +1,9 @@
 import createMutations from 'utils/createMutations'
 import updatePaymentByPidAndAccountPid from 'api/dal/Payment/updatePaymentByPidAndAccountPid'
-import getAccountByPid from 'api/dal/Account/getAccountByPid'
 import getPaymentByPidAndAccountId from 'api/dal/Payment/getPaymentByPidAndAccountId'
 import findOrCreatePeer from 'api/dal/Peer/findOrCreatePeer'
 import mapPayment from 'api/mappers/mapPayment'
+import getAccount from 'api/dal/Account/getAccount'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import lastVerifiedPaymentByAccountId from 'api/dal/Payment/lastVerifiedPaymentByAccountId'
 import { SystemUserId } from 'store/enums'
@@ -19,20 +19,25 @@ import processingUserInput from './processingUserInput'
 const paymentUpdate = createPrivateResolver(
   'Mutation:paymentUpdate',
   async ({
-    args: {
-      accountPid,
-      paymentPid,
-      description,
-      peerName,
-      categoryPid,
-      verified,
-    },
-    scope,
-  }) => {
-    const account = await getAccountByPid({ pid: accountPid }, scope)
+           args: {
+             accountPid,
+             paymentPid,
+             description,
+             peerName,
+             categoryPid,
+             verified,
+           },
+           scope,
+         }) => {
+
+    const account = await getAccount({
+      where: { pid: { eq: accountPid } },
+      userId: scope.user.id,
+    }, scope)
+
     const payment = await getPaymentByPidAndAccountId(
       { accountId: account.id, pid: paymentPid },
-      scope
+      scope,
     )
 
     const processedUserInput = await processingUserInput({
@@ -70,7 +75,7 @@ const paymentUpdate = createPrivateResolver(
         categoryId: actualCategoryId,
         description: actualDescription,
       },
-      scope
+      scope,
     )
 
     if (similarPayment) {
@@ -122,7 +127,7 @@ const paymentUpdate = createPrivateResolver(
             name: actualPeerName,
             create: true,
           },
-          scope
+          scope,
         )
       }
     }
@@ -139,14 +144,14 @@ const paymentUpdate = createPrivateResolver(
         descriptionUpdaterId,
         verified,
       },
-      scope
+      scope,
     )
 
     return {
       payment: mapPayment(updatedPayment),
       suggestedPayments: [],
     }
-  }
+  },
 )
 
 export default createMutations(field => ({
