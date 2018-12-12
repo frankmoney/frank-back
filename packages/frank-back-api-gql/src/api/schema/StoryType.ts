@@ -1,12 +1,14 @@
 import { Type } from 'gql'
+import { AccountAccessRole } from 'store/enums'
 import Story from 'store/types/Story'
+import getAccount from 'api/dal/Account/getAccount'
 import countPaymentsByStoryId from 'api/dal/Payment/countPaymentsByStoryId'
 import listPaymentsByStoryId from 'api/dal/Payment/listPaymentsByStoryId'
 import getStoryDraftByStoryId from 'api/dal/StoryDraft/getStoryDraftByStoryId'
 import getStoryPaymentDateRangeByStoryId from 'api/dal/StoryPayment/getStoryPaymentDateRangeByStoryId'
 import mapPayment from 'api/mappers/mapPayment'
 import mapStoryDraft from 'api/mappers/mapStoryDraft'
-import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import createResolver from 'api/resolvers/utils/createResolver'
 import Date from 'api/types/Date'
 import PaymentGql from 'api/types/Payment'
 import StoryDraftGql from 'api/types/StoryDraft'
@@ -23,21 +25,39 @@ const StoryType = Type('Story', type =>
     title: field.ofString().nullable(),
     cover: field.ofJson().nullable(),
     body: field.ofJson().nullable(),
-    draft: field.ofType(StoryDraftType).resolve(
-      createPrivateResolver<StoryDraftGql>(
-        'Story:draft',
-        async ({ parent, scope }) => {
-          const story: Story = parent.$source
+    draft: field
+      .ofType(StoryDraftType)
+      .nullable()
+      .resolve(
+        createResolver<null | StoryDraftGql>(
+          'Story:draft',
+          async ({ parent, scope }) => {
+            const story: Story = parent.$source
 
-          const draft = await getStoryDraftByStoryId(
-            { storyId: story.id },
-            scope
-          )
+            const account = await getAccount(
+              {
+                userId: scope.user && scope.user.id,
+                where: { id: { eq: story.accountId } },
+              },
+              scope
+            )
 
-          return mapStoryDraft(draft!)
-        }
-      )
-    ),
+            switch (account.accessRole) {
+              case AccountAccessRole.manager:
+              case AccountAccessRole.administrator:
+                const draft = await getStoryDraftByStoryId(
+                  { storyId: story.id },
+                  scope
+                )
+
+                return mapStoryDraft(draft!)
+
+              default:
+                return null
+            }
+          }
+        )
+      ),
     payments: field
       .listOf(PaymentType)
       .args(arg => ({
@@ -46,7 +66,7 @@ const StoryType = Type('Story', type =>
         skip: arg.ofInt().nullable(),
       }))
       .resolve(
-        createPrivateResolver<PaymentGql[]>(
+        createResolver<PaymentGql[]>(
           'Story:payments',
           async ({ parent, args, scope }) => {
             const story: Story = parent.$source
@@ -66,7 +86,7 @@ const StoryType = Type('Story', type =>
         )
       ),
     countPayments: field.ofInt().resolve(
-      createPrivateResolver<number>(
+      createResolver<number>(
         'Story:countPayments',
         async ({ parent, scope }) => {
           const story: Story = parent.$source
@@ -84,7 +104,7 @@ const StoryType = Type('Story', type =>
       .listOfDate()
       .nullable()
       .resolve(
-        createPrivateResolver<null | Date[]>(
+        createResolver<null | Date[]>(
           'Story:paymentsDateRange',
           async ({ parent, scope }) => {
             const story: Story = parent.$source
