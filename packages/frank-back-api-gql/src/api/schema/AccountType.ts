@@ -1,5 +1,6 @@
 import { Type } from 'gql'
 import { extractFieldNames } from 'gql/parse'
+import { AccountAccessRole } from 'store/enums'
 import Account from 'store/types/Account'
 import countCategories from 'api/dal/Category/countCategories'
 import getCategory from 'api/dal/Category/getCategory'
@@ -17,7 +18,7 @@ import getPeer from 'api/dal/Peer/getPeer'
 import listPeers from 'api/dal/Peer/listPeers'
 import getStoryByPidAndAccountId from 'api/dal/Story/getStoryByPidAndAccountId'
 import listStoriesByAccountId from 'api/dal/Story/listStoriesByAccountId'
-import { throwNotFound } from 'api/errors/NotFoundError'
+import { notFoundError } from 'api/errors/NotFoundError'
 import ledgerBarChart from 'api/resolvers/ledgerBarChart'
 import mapCategory from 'api/mappers/mapCategory'
 import mapPayment from 'api/mappers/mapPayment'
@@ -425,7 +426,18 @@ const AccountType = Type('Account', type =>
           )
 
           if (story == null) {
-            return throwNotFound()
+            throw notFoundError()
+          }
+
+          if (!story.publishedAt) {
+            switch (account.accessRole) {
+              case AccountAccessRole.manager:
+              case AccountAccessRole.administrator:
+                break
+
+              default:
+                throw notFoundError()
+            }
           }
 
           return mapStory(story)
@@ -443,10 +455,22 @@ const AccountType = Type('Account', type =>
         createResolver('Account:stories', async ({ parent, args, scope }) => {
           const account: Account = parent.$source
 
+          let published: boolean
+          switch (account.accessRole) {
+            case AccountAccessRole.manager:
+            case AccountAccessRole.administrator:
+              published = args.published
+              break
+
+            default:
+              published = true
+              break
+          }
+
           const stories = await listStoriesByAccountId(
             {
               accountId: account.id,
-              published: args.published,
+              published,
               take: args.take,
               skip: args.skip,
               orderBy: args.sortBy,
