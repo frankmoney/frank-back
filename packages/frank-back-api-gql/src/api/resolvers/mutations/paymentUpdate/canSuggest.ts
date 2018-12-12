@@ -1,7 +1,6 @@
 import { SystemUserId } from 'store/enums'
 import Payment from 'store/types/Payment'
 import R from 'ramda'
-import Pid from 'api/types/Pid'
 import Id from 'store/types/Id'
 
 const isSystemUser = (id: Id) =>
@@ -13,8 +12,7 @@ const isSystemUser = (id: Id) =>
   ])
 
 type UserInput = {
-  categoryPid?: Pid | null
-  peerPid?: Pid | null
+  categoryId?: Id | null
   peerName?: string | null
   description?: string | null
 }
@@ -28,8 +26,9 @@ export const canSuggestCategory = (args: Args): boolean => {
   const { existingPayment, userInput } = args
 
   return (
-    userInput.categoryPid === undefined && // user don't set new category
+    userInput.categoryId === undefined && // user don't set new category
     (R.isNil(existingPayment.categoryId) || // category empty
+    R.isNil(existingPayment.categoryUpdaterId) || // updater is empty
       isSystemUser(existingPayment.categoryUpdaterId)) // category was installed by AI (lol)
   )
 }
@@ -38,9 +37,9 @@ export const canSuggestPeer = (args: Args): boolean => {
   const { existingPayment, userInput } = args
 
   return (
-    userInput.peerPid === undefined &&
     userInput.peerName === undefined && // user don't set new peer
-    ((R.isNil(existingPayment.peerName) && R.isNil(existingPayment.peerId)) || // peer empty
+    (R.isNil(existingPayment.peerName) || // peer empty
+    R.isNil(existingPayment.peerUpdaterId) || // updater is empty
       isSystemUser(existingPayment.peerUpdaterId)) // peer was installed by AI (lol)
   )
 }
@@ -51,6 +50,7 @@ export const canSuggestDescription = (args: Args): boolean => {
   return (
     userInput.description === undefined && // user don't set new description
     (R.isNil(existingPayment.description) || // description empty
+    R.isNil(existingPayment.descriptionUpdaterId) || // updater is empty
       isSystemUser(existingPayment.descriptionUpdaterId)) // description was installed by AI (lol)
   )
 }

@@ -4,11 +4,11 @@ import getAccountByPid from 'api/dal/Account/getAccountByPid'
 import getPaymentByPidAndAccountId from 'api/dal/Payment/getPaymentByPidAndAccountId'
 import findOrCreatePeer from 'api/dal/Peer/findOrCreatePeer'
 import mapPayment from 'api/mappers/mapPayment'
-import PaymentType from 'api/schema/PaymentType'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import lastVerifiedPaymentByAccountId from 'api/dal/Payment/lastVerifiedPaymentByAccountId'
 import { SystemUserId } from 'store/enums'
 import { argumentError } from 'api/errors/ArgumentError'
+import PaymentUpdateResultType from 'api/schema/PaymentUpdateResultType'
 import {
   canSuggestCategory,
   canSuggestDescription,
@@ -23,7 +23,6 @@ const paymentUpdate = createPrivateResolver(
       accountPid,
       paymentPid,
       description,
-      peerPid,
       peerName,
       categoryPid,
       verified,
@@ -37,12 +36,13 @@ const paymentUpdate = createPrivateResolver(
     )
 
     const processedUserInput = await processingUserInput({
-      description,
-      peerName,
-      peerPid,
-      categoryPid,
-      accountId: account.id,
+      existingPayment: payment,
       scope,
+      userInput: {
+        description,
+        peerName,
+        categoryPid,
+      },
     })
 
     description = processedUserInput.description
@@ -56,13 +56,19 @@ const paymentUpdate = createPrivateResolver(
       descriptionUpdaterId,
     } = processedUserInput
 
+    const actualCategoryId =
+      categoryId === undefined ? payment.categoryId : categoryId
+    const actualPeerId = peerId === undefined ? payment.peerId : peerId
+    const actualDescription =
+      description === undefined ? payment.description : description
+
     const similarPayment = await lastVerifiedPaymentByAccountId(
       {
         accountId: account.id,
         amount: payment.amount,
-        peerId,
-        categoryId,
-        description,
+        peerId: actualPeerId,
+        categoryId: actualCategoryId,
+        description: actualDescription,
       },
       scope
     )
@@ -71,8 +77,7 @@ const paymentUpdate = createPrivateResolver(
       const canSuggestParams = {
         existingPayment: payment,
         userInput: {
-          categoryPid,
-          peerPid,
+          categoryId,
           peerName,
           description,
         },
@@ -95,12 +100,6 @@ const paymentUpdate = createPrivateResolver(
     }
 
     if (verified || payment.verified) {
-      const actualCategoryId =
-        categoryId === undefined ? payment.categoryId : categoryId
-      const actualPeerId = peerId === undefined ? payment.peerId : peerId
-      const actualDescription =
-        description === undefined ? payment.description : description
-
       if (!actualCategoryId) {
         argumentError('category is undefined')
       }
@@ -121,39 +120,42 @@ const paymentUpdate = createPrivateResolver(
           {
             accountId: account.id,
             name: actualPeerName,
+            create: true,
           },
           scope
         )
       }
     }
 
-    return mapPayment(
-      await updatePaymentByPidAndAccountPid(
-        {
-          paymentId: payment.id,
-          description,
-          peerName,
-          peerId,
-          categoryId,
-          peerUpdaterId,
-          categoryUpdaterId,
-          descriptionUpdaterId,
-          verified,
-        },
-        scope
-      )
+    const updatedPayment = await updatePaymentByPidAndAccountPid(
+      {
+        paymentId: payment.id,
+        description,
+        peerName,
+        peerId,
+        categoryId,
+        peerUpdaterId,
+        categoryUpdaterId,
+        descriptionUpdaterId,
+        verified,
+      },
+      scope
     )
+
+    return {
+      payment: mapPayment(updatedPayment),
+      suggestedPayments: [],
+    }
   }
 )
 
 export default createMutations(field => ({
   paymentUpdate: field
-    .ofType(PaymentType)
+    .ofType(PaymentUpdateResultType)
     .args(arg => ({
       accountPid: arg.ofId(),
       paymentPid: arg.ofId(),
       description: arg.ofString().nullable(),
-      peerPid: arg.ofId().nullable(),
       peerName: arg.ofString().nullable(),
       categoryPid: arg.ofId().nullable(),
       verified: arg.ofBool().nullable(),

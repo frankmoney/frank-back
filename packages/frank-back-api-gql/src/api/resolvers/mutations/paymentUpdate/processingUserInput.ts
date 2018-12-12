@@ -1,15 +1,19 @@
 import Id from 'store/types/Id'
 import getCategoryByPidAndAccountId from 'api/dal/Category/getCategoryByPidAndAccountId'
 import Scope from 'api/Scope'
-import getPeer from 'api/dal/Peer/getPeer'
+import Payment from 'store/types/Payment'
+import findOrCreatePeer from 'api/dal/Peer/findOrCreatePeer'
 import handleString from './handleString'
 
-type Args = {
+type UserInput = {
   description: any
   peerName: any
-  peerPid: any
   categoryPid: any
-  accountId: Id
+}
+
+type Args = {
+  existingPayment: Payment
+  userInput: UserInput
   scope: Scope
 }
 
@@ -23,31 +27,21 @@ type Out = {
   categoryUpdaterId?: Id
 }
 
-const processingPeer = async (peerPid: any, accountId: Id, scope: Scope) => {
-  if (peerPid) {
-    const peer = await getPeer(
+const processingPeer = async (peerName: any, accountId: Id, scope: Scope) => {
+  if (peerName) {
+    const peerId = await findOrCreatePeer(
       {
-        where: {
-          pid: { eq: peerPid },
-          account: { id: { eq: accountId } },
-        },
+        name: peerName,
+        accountId,
+        create: false,
       },
       scope
     )
 
-    return {
-      peerId: peer.id,
-      peerUpdaterId: scope.user!.id,
-    }
-  }
-  if (peerPid === null) {
-    return {
-      peerId: null,
-      peerUpdaterId: scope.user!.id,
-    }
+    return peerId || null // id or null
   }
 
-  return {}
+  return peerName // null | undefined
 }
 
 const processingCategory = async (
@@ -61,50 +55,59 @@ const processingCategory = async (
       scope
     )
 
-    return {
-      categoryId: category.id,
-      categoryUpdaterId: scope.user!.id,
-    }
+    return category || null // id or null
   }
 
-  if (categoryPid === null) {
-    return {
-      categoryId: null,
-      categoryUpdaterId: scope.user!.id,
-    }
-  }
-
-  return {}
+  return categoryPid // null | undefined
 }
 
 const processingUserInput = async (args: Args): Promise<Out> => {
-  let { description, peerName } = args
+  const { userInput, existingPayment, scope } = args
 
-  const { peerPid, categoryPid, accountId, scope } = args
+  // description
+  let description = handleString(userInput.description)
 
-  description = handleString(description)
-  peerName = handleString(peerName)
+  description =
+    description === existingPayment.description ? undefined : description
 
-  let { peerId, peerUpdaterId } = await processingPeer(
-    peerPid,
-    accountId,
+  const descriptionUpdaterId =
+    description !== undefined ? scope.user!.id : undefined
+  // description
+
+  // peer
+  let peerName = handleString(userInput.peerName)
+
+  peerName = peerName === existingPayment.peerName ? undefined : peerName
+
+  const peerUpdaterId = peerName !== undefined ? scope.user!.id : undefined
+
+  const peerId = await processingPeer(
+    peerName,
+    existingPayment.accountId,
     scope
   )
-  const { categoryId, categoryUpdaterId } = await processingCategory(
-    categoryPid,
-    accountId,
+  // peer
+
+  // category
+  const category = await processingCategory(
+    userInput.categoryPid,
+    existingPayment.accountId,
     scope
   )
 
-  let descriptionUpdaterId: Id | undefined
+  let categoryId: Id | undefined | null
+  let categoryUpdaterId: Id | undefined
 
-  if (description !== undefined) {
-    descriptionUpdaterId = scope.user!.id
-  }
+  const tempCategoryId = category && category.id
 
-  if (peerName !== undefined) {
-    peerUpdaterId = scope.user!.id
+  if (
+    tempCategoryId !== undefined &&
+    tempCategoryId !== existingPayment.categoryId
+  ) {
+    categoryId = tempCategoryId
+    categoryUpdaterId = scope.user!.id
   }
+  // category
 
   return {
     description,

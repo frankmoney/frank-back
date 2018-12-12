@@ -29,7 +29,7 @@ import createPaymentWhere from './helpers/createPaymentWhere'
 
 const PeerType = Type('Peer', type =>
   type.fields(field => ({
-    pid: field.ofId(),
+    pid: field.ofId().nullable(),
     name: field.ofString(),
     account: field.ofType(AccountType).resolve(
       createPrivateResolver('Peer:account', async ({ parent, scope }) => {
