@@ -216,11 +216,13 @@ export default async (
 
   const payments = await listPayments(
     {
-      where: createPaymentWhere(R.omit(['postedOnMax', 'postedOnMin'], args), {
+      where: createPaymentWhere(R.omit(['postedOnMax', 'postedOnMin', 'accountId', 'categoryId'], args), {
         postedOn: {
           gte: postedOnFrom ? format(postedOnFrom, FORMAT_TEMPLATE) : undefined,
           lt: postedOnTo ? format(postedOnTo, FORMAT_TEMPLATE) : undefined,
         },
+        account: {id: {eq: args.accountId}},
+        category: {id: {eq: args.categoryId}}
       }),
       orderBy: 'postedOn_DESC',
     },
