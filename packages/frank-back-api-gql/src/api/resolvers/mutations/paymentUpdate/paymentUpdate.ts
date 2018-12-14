@@ -9,12 +9,14 @@ import lastVerifiedPaymentByAccountId from 'api/dal/Payment/lastVerifiedPaymentB
 import { SystemUserId } from 'store/enums'
 import { argumentError } from 'api/errors/ArgumentError'
 import PaymentUpdateResultType from 'api/schema/PaymentUpdateResultType'
+import Payment from 'store/types/Payment'
 import {
   canSuggestCategory,
   canSuggestDescription,
   canSuggestPeer,
 } from './canSuggest'
 import processingUserInput from './processingUserInput'
+import suggestPayments from './suggestPayments'
 
 const paymentUpdate = createPrivateResolver(
   'Mutation:paymentUpdate',
@@ -97,6 +99,7 @@ const paymentUpdate = createPrivateResolver(
 
       if (canSuggestPeer(canSuggestParams)) {
         peerId = similarPayment.peerId
+        peerName = similarPayment.peerName
         peerUpdaterId = SystemUserId.suggestion
       }
 
@@ -106,7 +109,9 @@ const paymentUpdate = createPrivateResolver(
       }
     }
 
-    if (verified || payment.verified) {
+    const actualVerified = verified === undefined ? payment.verified : verified
+
+    if (actualVerified) {
       if (!actualCategoryId) {
         argumentError('category is undefined')
       }
@@ -149,9 +154,15 @@ const paymentUpdate = createPrivateResolver(
       scope
     )
 
+    let suggestedPayments: Payment[] = []
+
+    if (actualVerified) {
+      suggestedPayments = await suggestPayments(updatedPayment, scope)
+    }
+
     return {
       payment: mapPayment(updatedPayment),
-      suggestedPayments: [],
+      suggestedPayments: mapPayment(suggestedPayments),
     }
   }
 )

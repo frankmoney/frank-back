@@ -4,7 +4,7 @@ import distance from 'damerau-levenshtein'
 
 const log = createLogger('import:handleNewPayment')
 
-const SIMILAR_LIMIT = 0.8
+const SIMILAR_LIMIT = process.env.SIMILAR_LIMIT || 0.8
 
 const freshestPayment = (payments) => {
 
@@ -90,6 +90,7 @@ export default (
 
     result.categoryId = similarPayment.categoryId
     result.peerId = similarPayment.peerId
+    result.peerName = similarPayment.peerName
     result.description = similarPayment.description
 
     result.descriptionUpdaterId = importUserId
