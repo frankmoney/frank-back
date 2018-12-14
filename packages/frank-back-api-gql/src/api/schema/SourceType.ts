@@ -27,13 +27,19 @@ const SourceType = Type('Source', type =>
       })
     ),
     currency: field.ofType(CurrencyType).resolve(
-      createResolver('Account:currency', async ({ parent }) => {
+      createResolver('Source:currency', async ({ parent }) => {
         const source: Source = parent.$source
 
         return {
           code: source.currencyCode,
         }
       })
+    ),
+    bankLogo: field.ofString().nullable().resolve(
+      createResolver('Source:bankLogo', async ({ parent }) => parent.$source.data.bankLogo)
+    ),
+    bankName: field.ofString().nullable().resolve(
+      createResolver('Source:bankName', async ({ parent }) => parent.$source.data.bankName)
     ),
   }))
 )

@@ -48,7 +48,11 @@ const onboardingFinish = createPrivateResolver(
       {
         accountId: account.id,
         name: existingOnboarding.account.name, // original name
-        data: existingOnboarding.account,
+        data: {
+          ...existingOnboarding.account,
+          bankName: existingOnboarding.institution.name,
+          bankLogo: existingOnboarding.institution.mediumLogoUrl,
+        },
         creatorId: scope.user.id,
       },
       scope
