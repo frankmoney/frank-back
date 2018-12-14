@@ -19,25 +19,27 @@ import processingUserInput from './processingUserInput'
 const paymentUpdate = createPrivateResolver(
   'Mutation:paymentUpdate',
   async ({
-           args: {
-             accountPid,
-             paymentPid,
-             description,
-             peerName,
-             categoryPid,
-             verified,
-           },
-           scope,
-         }) => {
-
-    const account = await getAccount({
-      where: { pid: { eq: accountPid } },
-      userId: scope.user.id,
-    }, scope)
+    args: {
+      accountPid,
+      paymentPid,
+      description,
+      peerName,
+      categoryPid,
+      verified,
+    },
+    scope,
+  }) => {
+    const account = await getAccount(
+      {
+        where: { pid: { eq: accountPid } },
+        userId: scope.user.id,
+      },
+      scope
+    )
 
     const payment = await getPaymentByPidAndAccountId(
       { accountId: account.id, pid: paymentPid },
-      scope,
+      scope
     )
 
     const processedUserInput = await processingUserInput({
@@ -75,7 +77,7 @@ const paymentUpdate = createPrivateResolver(
         categoryId: actualCategoryId,
         description: actualDescription,
       },
-      scope,
+      scope
     )
 
     if (similarPayment) {
@@ -127,7 +129,7 @@ const paymentUpdate = createPrivateResolver(
             name: actualPeerName,
             create: true,
           },
-          scope,
+          scope
         )
       }
     }
@@ -144,14 +146,14 @@ const paymentUpdate = createPrivateResolver(
         descriptionUpdaterId,
         verified,
       },
-      scope,
+      scope
     )
 
     return {
       payment: mapPayment(updatedPayment),
       suggestedPayments: [],
     }
-  },
+  }
 )
 
 export default createMutations(field => ({

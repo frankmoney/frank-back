@@ -35,7 +35,7 @@ const processingPeer = async (peerName: any, accountId: Id, scope: Scope) => {
         accountId,
         create: false,
       },
-      scope,
+      scope
     )
 
     return peerId || null // id or null
@@ -47,7 +47,7 @@ const processingPeer = async (peerName: any, accountId: Id, scope: Scope) => {
 const processingCategory = async (
   categoryPid: any,
   accountId: Id,
-  scope: Scope,
+  scope: Scope
 ) => {
   if (categoryPid) {
     const category = await getCategory(
@@ -57,7 +57,7 @@ const processingCategory = async (
           account: { id: { eq: accountId } },
         },
       },
-      scope,
+      scope
     )
 
     return category || null // id or null
@@ -89,7 +89,7 @@ const processingUserInput = async (args: Args): Promise<Out> => {
   const peerId = await processingPeer(
     peerName,
     existingPayment.accountId,
-    scope,
+    scope
   )
   // peer
 
@@ -97,7 +97,7 @@ const processingUserInput = async (args: Args): Promise<Out> => {
   const category = await processingCategory(
     userInput.categoryPid,
     existingPayment.accountId,
-    scope,
+    scope
   )
 
   let categoryId: Id | undefined | null

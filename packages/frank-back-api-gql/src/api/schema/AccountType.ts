@@ -16,6 +16,8 @@ import listPayments from 'api/dal/Payment/listPayments'
 import countPeers from 'api/dal/Peer/countPeers'
 import getPeer from 'api/dal/Peer/getPeer'
 import listPeers from 'api/dal/Peer/listPeers'
+import getSource from 'api/dal/Source/getSource'
+import listSources from 'api/dal/Source/listSources'
 import getStoryByPidAndAccountId from 'api/dal/Story/getStoryByPidAndAccountId'
 import listStoriesByAccountId from 'api/dal/Story/listStoriesByAccountId'
 import { notFoundError } from 'api/errors/NotFoundError'
@@ -23,6 +25,7 @@ import ledgerBarChart from 'api/resolvers/ledgerBarChart'
 import mapCategory from 'api/mappers/mapCategory'
 import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
+import mapSource from 'api/mappers/mapSource'
 import mapStory from 'api/mappers/mapStory'
 import createResolver from 'api/resolvers/utils/createResolver'
 import AccountAccess from 'api/types/AccountAccess'
@@ -37,14 +40,17 @@ import PaymentsOrderType from './PaymentsOrderType'
 import PaymentType from './PaymentType'
 import PeersOrderType from './PeersOrderType'
 import PeerType from './PeerType'
+import SourceType from './SourceType'
 import StoriesOrderType from './StoriesOrderType'
 import StoryType from './StoryType'
 import categoriesDefaultFilters from './helpers/categoriesDefaultFilters'
 import createCategoryWhere from './helpers/createCategoryWhere'
 import createPaymentWhere from './helpers/createPaymentWhere'
 import createPeerWhere from './helpers/createPeerWhere'
+import createSourceWhere from './helpers/createSourceWhere'
 import paymentsDefaultFilters from './helpers/paymentsDefaultFilters'
 import peersDefaultFilters from './helpers/peersDefaultFilters'
+import sourcesDefaultFilters from './helpers/sourcesDefaultFilters'
 
 const AccountType = Type('Account', type =>
   type.fields(field => ({
@@ -61,6 +67,53 @@ const AccountType = Type('Account', type =>
         }
       )
     ),
+    source: field
+      .ofType(SourceType)
+      .args(arg => ({
+        pid: arg.ofId(),
+      }))
+      .resolve(
+        createResolver('Account:source', async ({ parent, args, scope }) => {
+          const account: Account = parent.$source
+
+          const source = await getSource(
+            {
+              where: {
+                account: { id: { eq: account.id } },
+                pid: { eq: args.pid },
+              },
+            },
+            scope
+          )
+
+          return mapSource(source)
+        })
+      ),
+    sources: field
+      .listOf(SourceType)
+      .args(arg => ({
+        ...sourcesDefaultFilters(arg),
+        take: arg.ofInt().nullable(),
+        skip: arg.ofInt().nullable(),
+      }))
+      .resolve(
+        createResolver('Account:sources', async ({ parent, args, scope }) => {
+          const account: Account = parent.$source
+
+          const sources = await listSources(
+            {
+              where: createSourceWhere(args, {
+                account: { id: { eq: account.id } },
+              }),
+              take: args.take,
+              skip: args.skip,
+            },
+            scope
+          )
+
+          return mapSource(sources)
+        })
+      ),
     category: field
       .ofType(CategoryType)
       .args(arg => ({

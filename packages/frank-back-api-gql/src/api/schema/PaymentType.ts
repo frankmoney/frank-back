@@ -1,3 +1,4 @@
+import * as R from 'ramda'
 import { Type } from 'gql'
 import ObjectTypeFieldBuilder from 'gql/nodes/ObjectTypeFieldBuilder'
 import Payment from 'store/types/Payment'
@@ -8,23 +9,25 @@ import getPeer from 'api/dal/Peer/getPeer'
 import getUserById from 'api/dal/User/getUserById'
 import countSimilarPaymentsByPid from 'api/dal/Payment/countSimilarPaymentsByPid'
 import listPaymentDescriptionsByAccountId from 'api/dal/Payment/listPaymentDescriptionsByAccountId'
+import getSource from 'api/dal/Source/getSource'
 import mapAccount from 'api/mappers/mapAccount'
 import mapCategory from 'api/mappers/mapCategory'
 import mapPayment from 'api/mappers/mapPayment'
 import mapPeer from 'api/mappers/mapPeer'
+import mapSource from 'api/mappers/mapSource'
 import mapUser from 'api/mappers/mapUser'
 import createResolver from 'api/resolvers/utils/createResolver'
 import getSimilarPaymentDateRangeById from 'api/dal/Payment/getSimilarPaymentDateRangeById'
 import Date from 'api/types/Date'
 import AccountType from './AccountType'
 import CategoryType from './CategoryType'
+import SourceType from './SourceType'
 import paymentsDefaultFilters from './helpers/paymentsDefaultFilters'
 import PaymentsOrderType from './PaymentsOrderType'
 import PaymentSuggestedDescriptionType from './PaymentSuggestedDescriptionType'
 import UserType from './UserType'
 import PeerType from './PeerType'
 import createPaymentWhere from './helpers/createPaymentWhere'
-import R from 'ramda'
 
 const updaterConstructor = (
   field: ObjectTypeFieldBuilder,
@@ -144,6 +147,18 @@ const PaymentType = Type('Payment', type =>
           return count
         })
       ),
+    source: field.ofType(SourceType).resolve(
+      createResolver('Payment:source', async ({ parent, scope }) => {
+        const payment: Payment = parent.$source
+
+        const source = await getSource(
+          { where: { id: { eq: payment.sourceId } } },
+          scope
+        )
+
+        return mapSource(source)
+      })
+    ),
     account: field.ofType(AccountType).resolve(
       createResolver('Payment:account', async ({ parent, scope }) => {
         const payment: Payment = parent.$source

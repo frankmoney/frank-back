@@ -23,10 +23,16 @@ export default createMutation<Args, Account>(
       account.name,
       account.currencyCode,
       account.creatorId,
-      account.public
+      account.public,
     ]
 
-    const values = [args.teamId, args.name, args.currencyCode, args.creatorId, false]
+    const values = [
+      args.teamId,
+      args.name,
+      args.currencyCode,
+      args.creatorId,
+      false,
+    ]
 
     return await db.first(
       sql`
