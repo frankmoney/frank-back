@@ -12,6 +12,7 @@ const mapUser: Mapper<User> = map<User>()
   .for('avatar', x => x.avatar)
   .for('name', x => x.name)
   .for('color', x => x.color)
+  .for('typeId', x => x.typeId)
   .build()
 
 export default mapUser

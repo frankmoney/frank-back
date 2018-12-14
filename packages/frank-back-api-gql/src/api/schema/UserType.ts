@@ -1,5 +1,6 @@
-// import createTeamResolver from 'api/resolvers/factories/createTeamResolver'
 import { Type } from 'gql'
+import createResolver from 'api/resolvers/utils/createResolver'
+import {UserType as UserTypeEnum} from 'store/enums'
 
 const UserType = Type('User', type =>
   type.fields(field => ({
@@ -10,14 +11,9 @@ const UserType = Type('User', type =>
     name: field.ofString(),
     avatar: field.ofJson().nullable(),
     color: field.ofInt(),
-    // team: field
-    //   .ofType(TeamType)
-    //   .resolve(
-    //     createTeamResolver<User>(
-    //       'User:team',
-    //       ({ parent: { $source: user } }) => sql`${t_team.id} = ${user.team_id}`
-    //     )
-    //   ),
+    isSystem: field.ofBool().nullable().resolve(
+      createResolver('Source:isSystem', async ({ parent }) => parent.$source.typeId === UserTypeEnum.system)
+    ),
   }))
 )
 
