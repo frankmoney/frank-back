@@ -1,15 +1,10 @@
-import { SqlLiteral, join, sql } from 'sql'
-import hashPassword from 'utils/hashPassword'
+import { sql } from 'sql'
 import Database from './Database'
-import { CategoryType, CurrencyCode, TeamMemberRole, UserType } from './enums'
+import { CategoryType } from './enums'
 import {
-  account,
   category,
   payment,
   peer,
-  team,
-  teamMember,
-  user,
 } from './names'
 import parse from 'csv-parse/lib/sync'
 import fs from 'fs'
@@ -17,6 +12,26 @@ import Id from './types/Id'
 
 const randomHexColor = () =>
   '#' + ('000000' + Math.floor(Math.random() * 16777215).toString(16)).slice(-6)
+
+const getRandomInt = (min: number, max: number) =>
+  Math.floor(Math.random() * (max - min)) + min
+
+const DESCRIPTIONS = [
+  'In 2001, Elon Musk conceptualized Mars Oasis, a project to land a miniature experimental greenhouse and grow plants on Mars',
+  'On the flight home, Musk realized that he could start a company that could build the affordable rockets he needed',
+  'According to early Tesla and SpaceX investor Steve Jurvetson,[29] Musk calculated that the raw materials for building a rocket',
+  'In early 2002, Musk was seeking staff for his new space company, soon to be named SpaceX',
+  'Musk approached rocket engineer Tom Mueller (now SpaceX\'s CTO of Propulsion) and Mueller agreed to work for Musk, and thus SpaceX was born',
+  'As of March 2018, SpaceX had over 100 launches on its manifest representing about $12 billion in contract revenue',
+  'The contracts included both commercial and government (NASA/DOD) customers',
+  'Musk has stated that one of his goals is to decrease the cost and improve the reliability of access to space, ultimately by a factor of ten',
+  'CEO Elon Musk said: "I believe $500 per pound ($1,100/kg) or less is very achievable',
+  'A major goal of SpaceX has been to develop a rapidly reusable launch system',
+  'SpaceX currently manufactures three broad classes of rocket engine in-house',
+  'Since the founding of SpaceX in 2002, the company has developed three families of rocket engines',
+  'Merlin is a family of rocket engines developed by SpaceX for use on its Falcon rocket family',
+  'SpaceX\'s Falcon 9 rocket carrying the Dragon spacecraft, lifts off during the COTS Demo Flight 1 in December 2010'
+]
 
 const CATS: { [key: string]: Id } = {}
 
@@ -85,16 +100,21 @@ const createPeer = async (accountId: Id, peerName: string, db: Database) => {
 }
 
 export default async function seed({ db }: { db: Database }) {
-  const accountId = 3
+  const accountId = 15
 
   const csvContent = fs.readFileSync('./payments.csv', 'utf8')
 
-  const records = parse(csvContent, {
+  const records: any[] = parse(csvContent, {
     columns: true,
     skip_empty_lines: true,
   })
 
-  for (const record of records) {
+  let currentPercent = 0
+
+  for (let i=0; i<records.length; i++ ) {
+
+    const record = records[i]
+
     const categoryName = record.category.trim()
 
     let categoryId = await findCategory(accountId, categoryName, db)
@@ -104,6 +124,11 @@ export default async function seed({ db }: { db: Database }) {
     }
 
     const peerName = record.peer.trim()
+    let originalDescription = record.memo.trim()
+
+    if (!originalDescription) {
+      originalDescription = `fake bank description; ${peerName}; RndHex: ${randomHexColor()}`
+    }
 
     let peerId = await findPeer(accountId, peerName, db)
 
@@ -117,21 +142,34 @@ export default async function seed({ db }: { db: Database }) {
           ${payment.accountId},
           ${payment.categoryId},
           ${payment.peerId},
+          ${payment.peerName},
           ${payment.postedOn},
           ${payment.amount},
           ${payment.description},
-          ${payment.verified}
+          ${payment.verified},
+          ${payment.data}
         )
       values
         ${sql`(
           ${accountId},
           ${categoryId},
           ${peerId},
+          ${peerName},
           ${record.date},
           ${record.sum},
-          ${record.title || record.desc},
-          true
+          ${DESCRIPTIONS[getRandomInt(0, DESCRIPTIONS.length)]},
+          true,
+          ${{originalDescription}}
         )`};
     `)
+
+    const newPercent = Math.floor(100*i/records.length)
+
+    if (newPercent !== currentPercent) {
+
+      currentPercent = newPercent
+
+      console.log(currentPercent)
+    }
   }
 }
