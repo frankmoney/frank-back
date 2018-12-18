@@ -4,6 +4,7 @@ import Scope from 'api/Scope'
 import Payment from 'store/types/Payment'
 import findOrCreatePeer from 'api/dal/Peer/findOrCreatePeer'
 import nullOrNotWhiteSpace from './nullOrNotWhiteSpace'
+import { argumentError } from 'api/errors/ArgumentError'
 
 type UserInput = {
   description: any
@@ -49,6 +50,7 @@ const processingCategory = async (
   accountId: Id,
   scope: Scope
 ) => {
+
   if (categoryPid) {
     const category = await getCategory(
       {
@@ -60,7 +62,11 @@ const processingCategory = async (
       scope
     )
 
-    return category || null // id or null
+    if (!category) {
+      throw argumentError('Category not found')
+    }
+
+    return category
   }
 
   return categoryPid // null | undefined

@@ -113,11 +113,11 @@ const paymentUpdate = createPrivateResolver(
 
     if (actualVerified) {
       if (!actualCategoryId) {
-        argumentError('category is undefined')
+        throw argumentError('category is undefined')
       }
 
       if (!actualDescription) {
-        argumentError('description is undefined')
+        throw argumentError('description is undefined')
       }
 
       if (!actualPeerId) {
@@ -125,7 +125,7 @@ const paymentUpdate = createPrivateResolver(
           peerName === undefined ? payment.peerName : peerName
 
         if (!actualPeerName) {
-          argumentError('peer is undefined')
+          throw argumentError('peer is undefined')
         }
 
         peerId = await findOrCreatePeer(
