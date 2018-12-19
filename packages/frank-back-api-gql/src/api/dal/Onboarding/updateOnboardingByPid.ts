@@ -21,6 +21,7 @@ type Args = {
   mxMemberId?: Id
   clearMember?: boolean
   clearMfa?: boolean
+  sourceId?: Id
 }
 
 export default createMutation<Args, Onboarding>(
@@ -82,11 +83,16 @@ export default createMutation<Args, Onboarding>(
       updateSqlParts.push(sql`${onboarding.mfa} = NULL`)
     }
 
-    if (updateSqlParts.length) {
-      const updateSql = join(updateSqlParts, ', ')
+    if (!R.isNil(args.sourceId)) {
+      updateSqlParts.push(sql`${onboarding.sourceId} = ${args.sourceId}`)
+    }
 
-      const result = await db.first(
-        sql`
+    updateSqlParts.push(sql`${onboarding.updatedAt} = ${new Date()}`)
+
+    const updateSql = join(updateSqlParts, ', ')
+
+    const result = await db.first(
+      sql`
           update ${onboarding}
           set ${updateSql}
           where ${onboarding.pid} = ${args.pid}
@@ -105,40 +111,12 @@ export default createMutation<Args, Onboarding>(
             ${onboarding.account},
             ${onboarding.categories},
             ${onboarding.team},
-            ${onboarding.mxMemberId}
-        `,
-        mapOnboarding
-      )
-
-      return result
-    } else {
-      const result = await db.first(
-        sql`
-          select
-            ${onboarding.id},
-            ${onboarding.pid},
-            ${onboarding.createdAt},
-            ${onboarding.creatorId},
-            ${onboarding.updatedAt},
-            ${onboarding.updaterId},
-            ${onboarding.step},
-            ${onboarding.institution},
-            ${onboarding.credentials},
-            ${onboarding.mfa},
-            ${onboarding.accounts},
-            ${onboarding.account},
-            ${onboarding.categories},
-            ${onboarding.team},
             ${onboarding.mxMemberId},
             ${onboarding.sourceId}
-          from ${onboarding}
-          where ${onboarding.pid} = ${args.pid}
-          limit 1
         `,
-        mapOnboarding
-      )
+      mapOnboarding
+    )
 
-      return result
-    }
+    return result
   }
 )

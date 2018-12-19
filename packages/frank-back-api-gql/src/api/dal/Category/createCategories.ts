@@ -27,6 +27,10 @@ export default createMutation<Args, Category[]>(
       throwArgumentError()
     }
 
+    if (args.categories.length === 0) {
+      return []
+    }
+
     const columns = [
       category.type,
       category.name,
