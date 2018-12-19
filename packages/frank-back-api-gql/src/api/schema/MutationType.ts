@@ -1,17 +1,19 @@
+import storyPublicationNotification from '@frankmoney/frank-mail/storyPublicationNotification'
 import { Type } from 'gql'
+import { TeamMemberRole, UserType as UserTypeEnum } from 'store/enums'
 import hashPassword from 'utils/hashPassword'
 import updatePeerByPidAndUserId from 'api/dal/Peer/updatePeerByPidAndUserId'
 import createStory from 'api/dal/Story/createStory'
 import deleteStoryById from 'api/dal/Story/deleteStoryById'
-import getStoryById from 'api/dal/Story/getStoryById'
-import getStoryByPid from 'api/dal/Story/getStoryByPid'
+import getStory from 'api/dal/Story/getStory'
 import unpublishStoryByPid from 'api/dal/Story/unpublishStoryByPid'
 import createStoryDraft from 'api/dal/StoryDraft/createStoryDraft'
 import getStoryDraftById from 'api/dal/StoryDraft/getStoryDraftById'
 import publishStoryDraftByPid from 'api/dal/StoryDraft/publishStoryDraftByPid'
 import updateStoryDraftByPid from 'api/dal/StoryDraft/updateStoryDraftByPid'
 import updateTeamMemberByPidAndUserId from 'api/dal/TeamMember/updateTeamMemberByPidAndUserId'
-import getUserById from 'api/dal/User/getUserById'
+import getUser from 'api/dal/User/getUser'
+import listUsers from 'api/dal/User/listUsers'
 import updateUserAvatarById from 'api/dal/User/updateUserAvatarById'
 import updateUserPasswordById from 'api/dal/User/updateUserPasswordById'
 import { forbiddenError, throwForbidden } from 'api/errors/ForbiddenError'
@@ -54,7 +56,10 @@ const MutationType = Type('Mutation', type =>
             throw forbiddenError()
           }
 
-          const user = await getUserById({ id: userId }, scope)
+          const user = await getUser(
+            { where: { id: { eq: scope.user.id } } },
+            scope
+          )
 
           return mapUser(user)
         })
@@ -66,7 +71,10 @@ const MutationType = Type('Mutation', type =>
       }))
       .resolve(
         createPrivateResolver('meChangePassword', async ({ args, scope }) => {
-          const user = await getUserById({ id: scope.user.id }, scope)
+          const user = await getUser(
+            { where: { id: { eq: scope.user.id } } },
+            scope
+          )
 
           if (!user) {
             throw notFoundError()
@@ -98,7 +106,33 @@ const MutationType = Type('Mutation', type =>
               return undefined
             }
 
-            const user = await getUserById({ id: member.userId }, scope)
+            const user = await getUser(
+              {
+                where: {
+                  teamMembers: {
+                    any: {
+                      team: {
+                        members: {
+                          any: {
+                            user: { id: { eq: scope.user.id } },
+                            and: {
+                              or: [
+                                { roleId: { eq: TeamMemberRole.manager } },
+                                {
+                                  roleId: { eq: TeamMemberRole.administrator },
+                                },
+                              ],
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                  id: { eq: member.userId },
+                },
+              },
+              scope
+            )
 
             return mapTeamMember({ member, user, currentUserId: scope.user.id })
           }
@@ -165,7 +199,29 @@ const MutationType = Type('Mutation', type =>
             return throwForbidden()
           }
 
-          const story = await getStoryById({ userId, id: storyId }, scope)
+          const story = await getStory(
+            {
+              where: {
+                account: {
+                  team: {
+                    members: {
+                      any: {
+                        user: { id: { eq: userId } },
+                        and: {
+                          or: [
+                            { roleId: { eq: TeamMemberRole.manager } },
+                            { roleId: { eq: TeamMemberRole.administrator } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                },
+                id: { eq: storyId },
+              },
+            },
+            scope
+          )
 
           if (!story) {
             return throwForbidden()
@@ -192,7 +248,29 @@ const MutationType = Type('Mutation', type =>
             return throwNotFound()
           }
 
-          const story = await getStoryById({ userId, id: storyId }, scope)
+          const story = await getStory(
+            {
+              where: {
+                account: {
+                  team: {
+                    members: {
+                      any: {
+                        user: { id: { eq: userId } },
+                        and: {
+                          or: [
+                            { roleId: { eq: TeamMemberRole.manager } },
+                            { roleId: { eq: TeamMemberRole.administrator } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                },
+                id: { eq: storyId },
+              },
+            },
+            scope
+          )
 
           if (!story) {
             return throwNotFound()
@@ -210,7 +288,29 @@ const MutationType = Type('Mutation', type =>
         createPrivateResolver('storyDelete', async ({ args, scope }) => {
           const userId = scope.user.id
 
-          const story = await getStoryByPid({ userId, pid: args.pid }, scope)
+          const story = await getStory(
+            {
+              where: {
+                account: {
+                  team: {
+                    members: {
+                      any: {
+                        user: { id: { eq: userId } },
+                        and: {
+                          or: [
+                            { roleId: { eq: TeamMemberRole.manager } },
+                            { roleId: { eq: TeamMemberRole.administrator } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                },
+                pid: { eq: args.pid },
+              },
+            },
+            scope
+          )
 
           if (!story) {
             return throwNotFound()
@@ -265,26 +365,94 @@ const MutationType = Type('Mutation', type =>
         pid: arg.ofId(),
       }))
       .resolve(
-        createPrivateResolver('storyDraftPublish', async ({ args, scope }) => {
-          const userId = scope.user.id
+        createPrivateResolver(
+          'storyDraftPublish',
+          async ({ log, args, scope }) => {
+            const userId = scope.user.id
 
-          const draftId = await publishStoryDraftByPid(
-            { userId, pid: args.pid },
-            scope
-          )
+            const draftId = await publishStoryDraftByPid(
+              { userId, pid: args.pid },
+              scope
+            )
 
-          if (!draftId) {
-            return throwNotFound()
+            if (!draftId) {
+              return throwNotFound()
+            }
+
+            const draft = await getStoryDraftById({ id: draftId }, scope)
+
+            if (!draft) {
+              return throwNotFound()
+            }
+
+            const story = await getStory(
+              { where: { id: { eq: draft.storyId } } },
+              scope
+            )
+
+            const creator = await getUser(
+              { where: { id: { eq: userId } } },
+              scope
+            )
+
+            const users = await listUsers(
+              {
+                where: {
+                  typeId: { eq: UserTypeEnum.person },
+                  teamMembers: {
+                    any: {
+                      team: {
+                        accounts: {
+                          any: {
+                            id: {
+                              eq: story.accountId,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              scope
+            )
+
+            await scope.uow.commit()
+
+            await Promise.all(
+              users.map(async user => {
+                try {
+                  const mail = storyPublicationNotification({
+                    data: {
+                      user,
+                      creator,
+                      link: scope.config.MAIL.links.storyPublicationNotification(
+                        {
+                          storyPid: story.pid,
+                        }
+                      ),
+                    },
+                  })
+
+                  await scope.mailer.send({ to: user.email }, mail)
+
+                  log.debug(
+                    `Sent story publication notification mail to ${user.email}`
+                  )
+                } catch (exc) {
+                  log.error(
+                    exc,
+                    `Failed to send story publication notification mail to ${
+                      user.email
+                    }`
+                  )
+                }
+              })
+            )
+
+            return mapStoryDraft(draft)
           }
-
-          const draft = await getStoryDraftById({ id: draftId }, scope)
-
-          if (!draft) {
-            return throwNotFound()
-          }
-
-          return mapStoryDraft(draft)
-        })
+        )
       ),
   }))
 )

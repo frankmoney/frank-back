@@ -4,6 +4,7 @@ import conjunction from '../../helpers/conjunction'
 import createWhereSql from '../../helpers/createWhereSql'
 import disjunction from '../../helpers/disjunction'
 import TeamWhere from './TeamWhere'
+import teamAccountsPredicateSql from './teamAccountsPredicateSql'
 import teamMembersPredicateSql from './teamMembersPredicateSql'
 
 const teamPredicateSql = (
@@ -20,7 +21,8 @@ const teamPredicateSql = (
     createWhereSql(sql`"${alias$}"."${team.id}"`, where.id),
     createWhereSql(sql`"${alias$}"."${team.pid}"`, where.pid),
     createWhereSql(sql`"${alias$}"."${team.name}"`, where.name),
-    teamMembersPredicateSql(alias, where.members),
+    teamMembersPredicateSql(alias$, where.members),
+    teamAccountsPredicateSql(alias$, where.accounts),
   ]
 
   if (where.and) {

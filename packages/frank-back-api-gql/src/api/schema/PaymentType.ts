@@ -6,7 +6,7 @@ import getAccount from 'api/dal/Account/getAccount'
 import getCategory from 'api/dal/Category/getCategory'
 import listSimilarPaymentsById from 'api/dal/Payment/listSimilarPaymentsById'
 import getPeer from 'api/dal/Peer/getPeer'
-import getUserById from 'api/dal/User/getUserById'
+import getUser from 'api/dal/User/getUser'
 import countSimilarPaymentsByPid from 'api/dal/Payment/countSimilarPaymentsByPid'
 import listPaymentDescriptionsByAccountId from 'api/dal/Payment/listPaymentDescriptionsByAccountId'
 import getSource from 'api/dal/Source/getSource'
@@ -42,7 +42,10 @@ const updaterConstructor = (
 
         const idFieldName = <keyof Payment>`${fieldName}Id`
 
-        const user = await getUserById({ id: payment[idFieldName] }, scope)
+        const user = await getUser(
+          { where: { id: { eq: payment[idFieldName] } } },
+          scope
+        )
 
         return mapUser(user)
       })

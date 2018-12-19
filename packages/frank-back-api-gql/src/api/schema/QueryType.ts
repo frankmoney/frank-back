@@ -4,7 +4,7 @@ import { notFoundError } from 'api/errors/NotFoundError'
 import getAccount from 'api/dal/Account/getAccount'
 import listAccounts from 'api/dal/Account/listAccounts'
 import getTeamByUserId from 'api/dal/Team/getTeamByUserId'
-import getUserById from 'api/dal/User/getUserById'
+import getUser from 'api/dal/User/getUser'
 import mapAccount from 'api/mappers/mapAccount'
 import mapTeam from 'api/mappers/mapTeam'
 import mapUser from 'api/mappers/mapUser'
@@ -25,7 +25,10 @@ const QueryType = Type('Query', type =>
       .resolve(
         createResolver('me', async ({ scope }) => {
           if (scope.user) {
-            const user = await getUserById({ id: scope.user.id }, scope)
+            const user = await getUser(
+              { where: { id: { eq: scope.user.id } } },
+              scope
+            )
             return mapUser(user)
           }
           return null

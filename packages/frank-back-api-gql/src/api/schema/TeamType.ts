@@ -5,8 +5,8 @@ import { TeamMemberRole } from 'store/enums'
 import getTeamMemberByPidAndTeamId from 'api/dal/TeamMember/getTeamMemberByPidAndTeamId'
 import getTeamMemberRoleByUserId from 'api/dal/TeamMember/getTeamMemberRoleByUserId'
 import listTeamMembersByTeamId from 'api/dal/TeamMember/listTeamMembersByTeamId'
-import getUserById from 'api/dal/User/getUserById'
-import listUsersByIds from 'api/dal/User/listUsersByIds'
+import getUser from 'api/dal/User/getUser'
+import listUsers from 'api/dal/User/listUsers'
 import mapTeamMember from 'api/mappers/mapTeamMember'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import TeamMemberType from './TeamMemberType'
@@ -34,7 +34,10 @@ const TeamType = Type('Team', type =>
               scope
             )
 
-            const user = await getUserById({ id: member.userId }, scope)
+            const user = await getUser(
+              { where: { id: { eq: member.userId } } },
+              scope
+            )
 
             const currentUserId = scope.user.id
             const currentUserRole = await getTeamMemberRoleByUserId(
@@ -61,8 +64,12 @@ const TeamType = Type('Team', type =>
           scope
         )
 
-        const users = await listUsersByIds(
-          { ids: members.map(x => x.userId) },
+        const users = await listUsers(
+          {
+            where: {
+              or: members.map(({ userId }) => ({ id: { eq: userId } })),
+            },
+          },
           scope
         )
 

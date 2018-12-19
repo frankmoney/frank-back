@@ -1,9 +1,10 @@
 import { Sql, literal, sql } from 'sql'
-import { teamMember } from 'store/names'
+import { user } from 'store/names'
 import conjunction from '../../helpers/conjunction'
 import createWhereSql from '../../helpers/createWhereSql'
 import disjunction from '../../helpers/disjunction'
 import UserWhere from './UserWhere'
+import userTeamMembersPredicateSql from './userTeamMembersPredicateSql'
 
 const userPredicateSql = (
   alias: string | Sql,
@@ -16,8 +17,10 @@ const userPredicateSql = (
   const alias$: Sql = typeof alias === 'string' ? literal(alias) : alias
 
   const branches: (undefined | Sql)[] = [
-    createWhereSql(sql`"${alias$}"."${teamMember.id}"`, where.id),
-    createWhereSql(sql`"${alias$}"."${teamMember.pid}"`, where.pid),
+    createWhereSql(sql`"${alias$}"."${user.id}"`, where.id),
+    createWhereSql(sql`"${alias$}"."${user.pid}"`, where.pid),
+    createWhereSql(sql`"${alias$}"."${user.typeId}"`, where.typeId),
+    userTeamMembersPredicateSql(alias$, where.teamMembers),
   ]
 
   if (where.and) {
