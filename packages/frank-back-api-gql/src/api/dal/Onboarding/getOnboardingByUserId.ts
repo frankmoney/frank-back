@@ -30,7 +30,8 @@ export default createQuery<Args, Onboarding>(
         ${onboarding.account},
         ${onboarding.categories},
         ${onboarding.team},
-        ${onboarding.mxMemberId}
+        ${onboarding.mxMemberId},
+        ${onboarding.sourceId}
       from ${onboarding}
       where ${onboarding.creatorId} = ${args.userId} 
       and ${onboarding.step} != ${COMPLETED_STEP}

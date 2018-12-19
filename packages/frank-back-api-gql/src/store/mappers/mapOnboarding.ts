@@ -15,6 +15,7 @@ const mapOnboarding: Mapper<Onboarding> = map<Onboarding>()
   .for('categories', x => x.categories)
   .for('team', x => x.team)
   .for('mxMemberId', x => x.mxMemberId)
+  .for('sourceId', x => x.sourceId)
   .build()
 
 export default mapOnboarding

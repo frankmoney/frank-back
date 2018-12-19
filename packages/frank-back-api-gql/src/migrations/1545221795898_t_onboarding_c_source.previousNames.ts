@@ -41,7 +41,6 @@ export const onboarding = tableEx('t_onboarding', {
   team: 'c_team',
   userId: 'c_user_id',
   mxMemberId: 'c_mx_member_id',
-  sourceId: 'c_source_id',
 })
 
 export const payment = tableEx('t_payment', {

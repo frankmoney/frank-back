@@ -12,6 +12,7 @@ type Onboarding = ExtendedBase & {
   categories: Json
   team: Json
   mxMemberId: Id
+  sourceId: Id
 }
 
 export default Onboarding
