@@ -1,3 +1,3 @@
-id,sum,date,peer,category,title,desc
-12602,-51,2018-12-04,Gusto,Operating expenses,,
-12599,-100,2018-12-03,Google,Operating expenses,,
+id,sum,date,peer,category,title,desc,memo
+12613,-2987.44,2018-12-12,Gusto Net Semjnajet,Unspecified,,,GUSTO NET 827108 6semjnajet3 Frank Money Inc
+12612,-2800.0,2018-12-11,Parshukov Sergey Vladimirovich Ip,Product development,,,"SENDER ID:=SVBKUS6S; SENDER REF:=20183451032500; ORG ID:=3301319750; ORG:=FRANK MONEY, INC.; ORG ADDRESS:=3 VENTANA COURTEMERALD HILLS, CA 94063; BNF ID:=40802840201500000867; BNF NAME:=PARSHUKOV SERGEY VLADIMIROVICH IP; BNF ADDRESS:=UL OCHAKOVSKAYA B.,"

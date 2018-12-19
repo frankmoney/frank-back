@@ -60,7 +60,8 @@ export default createMutation<Args, Onboarding>(
           ${onboarding.account},
           ${onboarding.categories},
           ${onboarding.team},
-          ${onboarding.mxMemberId}
+          ${onboarding.mxMemberId},
+          ${onboarding.sourceId}
       `,
       mapOnboarding
     )

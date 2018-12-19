@@ -36,6 +36,7 @@ export default createQuery<Args, { description: string; count: number }[]>(
         select ${payment.description} "description", count(*) "count"
         from ${payment}
         where ${payment}.${payment.accountId} = ${args.accountId}
+        and ${payment}.${payment.description} is not null
         ${byDescriptionSql}
         ${byPeerSql}
         ${byCategorySql}
