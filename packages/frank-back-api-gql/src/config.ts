@@ -3,6 +3,9 @@ import { PoolConfig } from 'pg'
 import { isNil } from 'ramda'
 import env from './env'
 
+const parseBoolString = (str: undefined | null | string): boolean =>
+  str ? ['1', 't', 'true'].indexOf(str.toLowerCase()) >= 0 : false
+
 const parseJsString = <T>(str: string) => {
   // tslint:disable-next-line:prefer-const no-unnecessary-initializer
   let result: any = undefined
@@ -118,6 +121,12 @@ const buildMailConfig = () => {
   return result
 }
 
+if (!env.AUTHENTICATION_JWT_KEY || !env.AUTHENTICATION_JWT_KEY.trim()) {
+  throw new Error(
+    'Invalid configuration: AUTHENTICATION_JWT_KEY should be set and not empty'
+  )
+}
+
 const config = {
   DEBUG: env.DEBUG,
   PORT: Number(env.PORT),
@@ -127,6 +136,8 @@ const config = {
   MAILGUN_DOMAIN: env.MAILGUN_DOMAIN,
   MAILGUN_API_KEY: env.MAILGUN_API_KEY,
   SENTRY_DSN: env.SENTRY_DSN,
+  AUTHENTICATION_DISABLED: parseBoolString(env.AUTHENTICATION_DISABLED),
+  AUTHENTICATION_JWT_KEY: env.AUTHENTICATION_JWT_KEY,
   USER_COLORS: env.USER_COLORS
     ? env.USER_COLORS.split(',').map(x => Number(x))
     : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],

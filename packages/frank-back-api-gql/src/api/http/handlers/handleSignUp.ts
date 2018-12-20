@@ -1,4 +1,3 @@
-import { URL } from 'url'
 import parseBody from 'co-body'
 import { Context } from 'koa'
 import userCreationConfirmationMail from '@frankmoney/frank-mail/userCreationConfirmation'

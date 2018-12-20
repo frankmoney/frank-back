@@ -20,6 +20,8 @@ const userPredicateSql = (
     createWhereSql(sql`"${alias$}"."${user.id}"`, where.id),
     createWhereSql(sql`"${alias$}"."${user.pid}"`, where.pid),
     createWhereSql(sql`"${alias$}"."${user.typeId}"`, where.typeId),
+    createWhereSql(sql`"${alias$}"."${user.name}"`, where.name),
+    createWhereSql(sql`"${alias$}"."${user.email}"`, where.email),
     userTeamMembersPredicateSql(alias$, where.teamMembers),
   ]
 
