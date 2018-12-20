@@ -103,7 +103,8 @@ app.use(async (req, res, next) => {
     if (authenticationDisabled) {
       const email =
         req.query.currentUser ||
-        req.headers['x-current-user']
+        req.headers['x-current-user'] ||
+        req.cookies.currentUser
 
       if (email) {
         const dbResponse = await dbPool.query(
