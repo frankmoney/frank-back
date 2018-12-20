@@ -5,6 +5,7 @@ import WhereString from '../../helpers/WhereString'
 import AccountCategoriesWhere from './AccountCategoriesWhere'
 import AccountPeersWhere from './AccountPeersWhere'
 import AccountPaymentsWhere from './AccountPaymentsWhere'
+import AccountStoriesWhere from './AccountStoriesWhere'
 
 export default interface AccountWhere {
   id?: WhereId
@@ -14,6 +15,7 @@ export default interface AccountWhere {
   categories?: AccountCategoriesWhere
   peers?: AccountPeersWhere
   payments?: AccountPaymentsWhere
+  stories?: AccountStoriesWhere
   or?: AccountWhere | AccountWhere[]
   and?: AccountWhere | AccountWhere[]
 }

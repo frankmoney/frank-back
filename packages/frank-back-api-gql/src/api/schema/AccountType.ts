@@ -18,7 +18,7 @@ import getPeer from 'api/dal/Peer/getPeer'
 import listPeers from 'api/dal/Peer/listPeers'
 import getSource from 'api/dal/Source/getSource'
 import listSources from 'api/dal/Source/listSources'
-import getStoryByPidAndAccountId from 'api/dal/Story/getStoryByPidAndAccountId'
+import getStory from 'api/dal/Story/getStory'
 import listStoriesByAccountId from 'api/dal/Story/listStoriesByAccountId'
 import { notFoundError } from 'api/errors/NotFoundError'
 import ledgerBarChart from 'api/resolvers/ledgerBarChart'
@@ -473,8 +473,13 @@ const AccountType = Type('Account', type =>
         createResolver('Account:story', async ({ parent, args, scope }) => {
           const account: Account = parent.$source
 
-          const story = await getStoryByPidAndAccountId(
-            { accountId: account.id, pid: args.pid },
+          const story = await getStory(
+            {
+              where: {
+                account: { id: { eq: account.id } },
+                pid: { eq: args.pid },
+              },
+            },
             scope
           )
 

@@ -35,12 +35,24 @@ const SourceType = Type('Source', type =>
         }
       })
     ),
-    bankLogo: field.ofString().nullable().resolve(
-      createResolver('Source:bankLogo', async ({ parent }) => parent.$source.data.bankLogo)
-    ),
-    bankName: field.ofString().nullable().resolve(
-      createResolver('Source:bankName', async ({ parent }) => parent.$source.data.bankName)
-    ),
+    bankLogo: field
+      .ofString()
+      .nullable()
+      .resolve(
+        createResolver(
+          'Source:bankLogo',
+          async ({ parent }) => parent.$source.data.bankLogo
+        )
+      ),
+    bankName: field
+      .ofString()
+      .nullable()
+      .resolve(
+        createResolver(
+          'Source:bankName',
+          async ({ parent }) => parent.$source.data.bankName
+        )
+      ),
   }))
 )
 

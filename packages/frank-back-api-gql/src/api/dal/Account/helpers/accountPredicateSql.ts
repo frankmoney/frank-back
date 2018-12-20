@@ -7,6 +7,7 @@ import AccountWhere from './AccountWhere'
 import accountCategoriesPredicateSql from './accountCategoriesPredicateSql'
 import accountPeersPredicateSql from './accountPeersPredicateSql'
 import accountPaymentsPredicateSql from './accountPaymentsPredicateSql'
+import accountStoriesPredicateSql from './accountStoriesPredicateSql'
 import accountTeamPredicateSql from './accountTeamPredicateSql'
 
 const accountPredicateSql = (
@@ -23,10 +24,11 @@ const accountPredicateSql = (
     createWhereSql(sql`"${alias$}"."${account.id}"`, where.id),
     createWhereSql(sql`"${alias$}"."${account.pid}"`, where.pid),
     createWhereSql(sql`"${alias$}"."${account.name}"`, where.name),
-    accountTeamPredicateSql(alias, where.team),
+    accountTeamPredicateSql(alias$, where.team),
     accountCategoriesPredicateSql(alias$, where.categories),
-    accountPeersPredicateSql(alias, where.peers),
-    accountPaymentsPredicateSql(alias, where.payments),
+    accountPeersPredicateSql(alias$, where.peers),
+    accountPaymentsPredicateSql(alias$, where.payments),
+    accountStoriesPredicateSql(alias$, where.stories),
   ]
 
   if (where.and) {

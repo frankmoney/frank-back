@@ -50,7 +50,6 @@ const processingCategory = async (
   accountId: Id,
   scope: Scope
 ) => {
-
   if (categoryPid) {
     const category = await getCategory(
       {

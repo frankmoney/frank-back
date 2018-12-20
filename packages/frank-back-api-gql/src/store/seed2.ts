@@ -1,11 +1,7 @@
 import { sql } from 'sql'
 import Database from './Database'
 import { CategoryType } from './enums'
-import {
-  category,
-  payment,
-  peer,
-} from './names'
+import { category, payment, peer } from './names'
 import parse from 'csv-parse/lib/sync'
 import fs from 'fs'
 import Id from './types/Id'
@@ -21,7 +17,7 @@ const DESCRIPTIONS = [
   'On the flight home, Musk realized that he could start a company that could build the affordable rockets he needed',
   'According to early Tesla and SpaceX investor Steve Jurvetson,[29] Musk calculated that the raw materials for building a rocket',
   'In early 2002, Musk was seeking staff for his new space company, soon to be named SpaceX',
-  'Musk approached rocket engineer Tom Mueller (now SpaceX\'s CTO of Propulsion) and Mueller agreed to work for Musk, and thus SpaceX was born',
+  "Musk approached rocket engineer Tom Mueller (now SpaceX's CTO of Propulsion) and Mueller agreed to work for Musk, and thus SpaceX was born",
   'As of March 2018, SpaceX had over 100 launches on its manifest representing about $12 billion in contract revenue',
   'The contracts included both commercial and government (NASA/DOD) customers',
   'Musk has stated that one of his goals is to decrease the cost and improve the reliability of access to space, ultimately by a factor of ten',
@@ -30,7 +26,7 @@ const DESCRIPTIONS = [
   'SpaceX currently manufactures three broad classes of rocket engine in-house',
   'Since the founding of SpaceX in 2002, the company has developed three families of rocket engines',
   'Merlin is a family of rocket engines developed by SpaceX for use on its Falcon rocket family',
-  'SpaceX\'s Falcon 9 rocket carrying the Dragon spacecraft, lifts off during the COTS Demo Flight 1 in December 2010'
+  "SpaceX's Falcon 9 rocket carrying the Dragon spacecraft, lifts off during the COTS Demo Flight 1 in December 2010",
 ]
 
 const CATS: { [key: string]: Id } = {}
@@ -111,8 +107,7 @@ export default async function seed({ db }: { db: Database }) {
 
   let currentPercent = 0
 
-  for (let i=0; i<records.length; i++ ) {
-
+  for (let i = 0; i < records.length; i++) {
     const record = records[i]
 
     const categoryName = record.category.trim()
@@ -159,14 +154,13 @@ export default async function seed({ db }: { db: Database }) {
           ${record.sum},
           ${DESCRIPTIONS[getRandomInt(0, DESCRIPTIONS.length)]},
           true,
-          ${{originalDescription}}
+          ${{ originalDescription }}
         )`};
     `)
 
-    const newPercent = Math.floor(100*i/records.length)
+    const newPercent = Math.floor((100 * i) / records.length)
 
     if (newPercent !== currentPercent) {
-
       currentPercent = newPercent
 
       console.log(currentPercent)

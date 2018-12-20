@@ -1,5 +1,7 @@
+import { URL } from 'url'
 import parseBody from 'co-body'
 import { Context } from 'koa'
+import userCreationConfirmationMail from '@frankmoney/frank-mail/userCreationConfirmation'
 import config from 'config'
 import { TeamMemberRole } from 'store/enums'
 import hashPassword from 'utils/hashPassword'
@@ -32,6 +34,8 @@ const handleSignUp = async (
   next: () => Promise<any>,
   scope: Scope
 ) => {
+  const log = scope.logFor('http:signUp')
+
   if (ctx.is('json')) {
     const respondWithInvalidArgument = (field?: string) => {
       ctx.response.status = 401
@@ -71,28 +75,37 @@ const handleSignUp = async (
       return respondWithInvalidArgument('user.firstName')
     }
 
-    const passwordHash = hashPassword(body.user.password)
+    const name = body.team.name.trim()
+    const city = normalize(body.team.city)
+    const size = normalize(body.team.size)
 
-    const teamId = await createTeam(
-      {
-        name: body.team.name.trim(),
-        city: normalize(body.team.city),
-        size: normalize(body.team.size),
-      },
-      scope
-    )
+    const email = body.user.email.trim()
+    const lastName = normalize(body.user.lastName)
+    const firstName = body.user.firstName.trim()
+    const phone = normalize(body.user.phone)
+
+    const passwordHash = hashPassword(body.user.password)
 
     const color =
       config.USER_COLORS[Math.floor(Math.random() * config.USER_COLORS.length)]
 
+    const teamId = await createTeam(
+      {
+        name,
+        city,
+        size,
+      },
+      scope
+    )
+
     const { status, userId } = await createPersonUserMaybe(
       {
-        email: body.user.email.trim(),
+        email,
         passwordHash,
-        lastName: normalize(body.user.lastName),
-        firstName: body.user.firstName.trim(),
+        lastName,
+        firstName,
         color,
-        phone: normalize(body.user.phone),
+        phone,
       },
       scope
     )
@@ -113,6 +126,31 @@ const handleSignUp = async (
       },
       scope
     )
+
+    await scope.uow.commit()
+
+    try {
+      const mail = userCreationConfirmationMail({
+        data: {
+          user: {
+            lastName,
+            firstName,
+          },
+          link: config.MAIL.links.userCreationConfirmation({
+            token: userId,
+          }),
+        },
+      })
+
+      await scope.mailer.send({ to: email }, mail)
+
+      log.info(`Sent user creation confirmation mail to "${email}"`)
+    } catch (exc) {
+      log.error(
+        exc,
+        `Failed to send user creation confirmation mail to "${email}"`
+      )
+    }
 
     ctx.response.status = 201
     ctx.response.body = {

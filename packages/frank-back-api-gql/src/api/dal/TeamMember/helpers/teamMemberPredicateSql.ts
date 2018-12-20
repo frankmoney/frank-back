@@ -4,6 +4,8 @@ import conjunction from '../../helpers/conjunction'
 import createWhereSql from '../../helpers/createWhereSql'
 import disjunction from '../../helpers/disjunction'
 import TeamMemberWhere from './TeamMemberWhere'
+import teamMemberTeamPredicateSql from './teamMemberTeamPredicateSql'
+import teamMemberUserPredicateSql from './teamMemberUserPredicateSql'
 
 const teamMemberPredicateSql = (
   alias: string | Sql,
@@ -18,6 +20,9 @@ const teamMemberPredicateSql = (
   const branches: (undefined | Sql)[] = [
     createWhereSql(sql`"${alias$}"."${teamMember.id}"`, where.id),
     createWhereSql(sql`"${alias$}"."${teamMember.pid}"`, where.pid),
+    createWhereSql(sql`"${alias$}"."${teamMember.roleId}"`, where.roleId),
+    teamMemberTeamPredicateSql(alias$, where.team),
+    teamMemberUserPredicateSql(alias$, where.user),
   ]
 
   if (where.and) {

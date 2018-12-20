@@ -19,7 +19,7 @@ if (config.SENTRY_DSN) {
 const log = createLog('api:main')
 
 const scope = new Scope({
-  databaseConfig: config.DATABASE,
+  config,
   user: null,
 })
 
@@ -104,7 +104,7 @@ const promise = scope.uow.start().then(async () => {
     const userId = Number(ctx.headers['x-authenticated-user-id'])
 
     context.scope = new Scope({
-      databaseConfig: config.DATABASE,
+      config,
       user: userId ? { id: userId } : null,
     })
 
