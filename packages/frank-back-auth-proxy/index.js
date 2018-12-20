@@ -76,7 +76,10 @@ app.use(async (req, res, next) => {
           authenticationJwtKey,
           (err, result) => err
             ? (
-              err.name === 'JsonWebTokenError' && err.message === 'invalid token'
+              err.name === 'JsonWebTokenError' && (
+                err.message === 'invalid token' ||
+                err.message === 'jwt malformed'
+              )
                 ? resolve(null)
                 : reject(err)
             )
@@ -104,7 +107,7 @@ app.use(async (req, res, next) => {
       const email =
         req.query.currentUser ||
         req.headers['x-current-user'] ||
-        req.cookies.currentUser
+        (claims ? null : req.cookies[authenticationCookie])
 
       if (email) {
         const dbResponse = await dbPool.query(
