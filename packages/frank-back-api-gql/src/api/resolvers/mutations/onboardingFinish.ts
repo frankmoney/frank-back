@@ -9,7 +9,8 @@ import { COMPLETED_STEP, TEAM_STEP } from 'api/onboarding/constants'
 import AccountType from 'api/schema/AccountType'
 import createCategories from 'api/dal/Category/createCategories'
 import CategoryType from 'api/types/CategoryType'
-import updateSource from '../../dal/Source/updateSource'
+import updatePaymentsBySourceId from 'api/dal/Payment/updatePaymentsBySourceId'
+import updateSource from 'api/dal/Source/updateSource'
 import createPrivateResolver from '../utils/createPrivateResolver'
 import R from 'ramda'
 
@@ -44,6 +45,14 @@ const onboardingFinish = createPrivateResolver(
     await updateSource(
       {
         id: existingOnboarding.sourceId,
+        accountId: account.id,
+      },
+      scope,
+    )
+
+    await updatePaymentsBySourceId(
+      {
+        sourceId: existingOnboarding.sourceId,
         accountId: account.id,
       },
       scope,
