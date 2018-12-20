@@ -50,14 +50,6 @@ const onboardingFinish = createPrivateResolver(
       scope,
     )
 
-    await updatePaymentsBySourceId(
-      {
-        sourceId: existingOnboarding.sourceId,
-        accountId: account.id,
-      },
-      scope,
-    )
-
     const categories = existingOnboarding.categories || {}
 
     const spendingCategories = R.map(
@@ -90,6 +82,14 @@ const onboardingFinish = createPrivateResolver(
         step: COMPLETED_STEP,
       },
       scope
+    )
+
+    await updatePaymentsBySourceId(
+      {
+        sourceId: existingOnboarding.sourceId,
+        accountId: account.id,
+      },
+      scope,
     )
 
     return mapAccount(account)

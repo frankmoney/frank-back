@@ -37,6 +37,8 @@ export default async (source, mxPayments) => {
 
       const data = handleNewPayment(mxPayment, filledPayments, importUserId)
 
+      await source.reload()
+
       data.sourceId = source.id
       data.accountId = source.accountId
 
