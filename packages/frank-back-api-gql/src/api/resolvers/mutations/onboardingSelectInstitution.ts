@@ -24,7 +24,16 @@ const onboardingSelectInstitution = createPrivateResolver(
     }
 
     const { credentials } = await scope.mx.listCredentials({ institutionCode })
+
+    if (!credentials) {
+      throw new Error("mx.listCredentials didn't return credentials")
+    }
+
     const { institution } = await scope.mx.readInstitution({ institutionCode })
+
+    if (!institution) {
+      throw new Error("mx.readInstitution didn't return institution")
+    }
 
     return mapOnboarding(
       await createOnboarding(

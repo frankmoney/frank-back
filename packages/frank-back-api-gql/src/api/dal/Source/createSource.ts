@@ -9,7 +9,7 @@ import { throwArgumentError } from 'api/errors/ArgumentError'
 import createMutation from '../createMutation'
 
 type Args = {
-  accountId: Id
+  accountId?: Id
   name: string
   data: Json
   creatorId: Id
@@ -19,7 +19,6 @@ export default createMutation<Args, Source>(
   'createSource',
   async (args, { db }) => {
     const columns = [
-      source.accountId,
       source.name,
       source.data,
       source.currencyCode,
@@ -27,12 +26,16 @@ export default createMutation<Args, Source>(
     ]
 
     const values = [
-      args.accountId,
       args.name,
       JSON.stringify(args.data),
       args.data.currencyCode,
       args.creatorId,
     ]
+
+    if (args.accountId) {
+      columns.push(source.accountId)
+      values.push(args.accountId)
+    }
 
     return await db.first(
       sql`
