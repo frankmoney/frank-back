@@ -7,9 +7,10 @@ type Account = ExtendedBase & {
   accessRole: AccountAccessRole
   data: Json
   name: string
+  description: string
+  public: boolean
   teamId: Id
   currencyCode: string
-  public: boolean
 }
 
 export default Account

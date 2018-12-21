@@ -57,6 +57,7 @@ const AccountType = Type('Account', type =>
     pid: field.ofId(),
     data: field.ofJson().nullable(),
     name: field.ofString(),
+    description: field.ofString().nullable(),
     public: field.ofBool(),
     access: field.ofType(AccountAccessType).resolve(
       createResolver(

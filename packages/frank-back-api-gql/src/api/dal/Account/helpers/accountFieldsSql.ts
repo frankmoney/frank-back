@@ -46,6 +46,7 @@ const accountFieldsSql = (
       sql`"${alias$}"."${account.updaterId}"`,
       sql`"${alias$}"."${account.data}"`,
       sql`"${alias$}"."${account.name}"`,
+      sql`"${alias$}"."${account.description}"`,
       sql`"${alias$}"."${account.teamId}"`,
       sql`"${alias$}"."${account.currencyCode}"`,
       sql`"${alias$}"."${account.public}"`,

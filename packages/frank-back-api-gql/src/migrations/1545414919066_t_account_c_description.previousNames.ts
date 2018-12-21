@@ -4,10 +4,9 @@ import { SqlLiteral, literal } from 'sql'
 export const account = tableEx('t_account', {
   data: 'c_data',
   name: 'c_name',
-  description: 'c_description',
-  public: 'c_public',
   teamId: 'c_team_id',
   currencyCode: 'c_currency_code',
+  public: 'c_public',
 })
 
 export const category = tableEx('t_category', {

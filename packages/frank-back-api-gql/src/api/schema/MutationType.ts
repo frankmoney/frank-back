@@ -1,3 +1,4 @@
+import { isNil } from 'ramda'
 import storyPublicationNotification from '@frankmoney/frank-mail/storyPublicationNotification'
 import { Type } from 'gql'
 import { TeamMemberRole, UserType as UserTypeEnum } from 'store/enums'
@@ -172,7 +173,10 @@ const MutationType = Type('Mutation', type =>
               userId,
               update: {
                 name: update.name ? update.name! : undefined,
-                public: update.public ? update.public! : undefined,
+                description: isNil(update.description)
+                  ? undefined
+                  : update.description.trim() || null,
+                public: isNil(update.public) ? update.public! : undefined,
               },
               where: {
                 pid: { eq: args.pid },

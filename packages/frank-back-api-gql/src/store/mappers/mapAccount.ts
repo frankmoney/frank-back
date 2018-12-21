@@ -9,9 +9,10 @@ const mapAccount: Mapper<Account> = map<Account>()
   .for('accessRole', 'accessRole')
   .for('data', x => x.data)
   .for('name', x => x.name)
+  .for('description', x => x.description)
+  .for('public', x => x.public)
   .for('teamId', x => x.teamId)
   .for('currencyCode', x => x.currencyCode)
-  .for('public', x => x.public)
   .build()
 
 export default mapAccount

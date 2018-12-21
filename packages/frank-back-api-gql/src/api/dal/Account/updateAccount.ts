@@ -10,6 +10,7 @@ export type Args = {
   userId: Id
   update: {
     name?: string
+    description?: null | string
     public?: boolean
   }
   where?: AccountWhere
@@ -26,6 +27,7 @@ export default createMutation<Args, undefined | null | Id>(
       },
       columns: {
         name: account.name,
+        description: account.description,
         public: account.public,
         updatedAt: account.updatedAt,
         updaterId: account.updaterId,
