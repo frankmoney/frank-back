@@ -1,7 +1,7 @@
 import humps from 'humps'
 import { format, subDays } from 'date-fns'
 import createLogger from './createLogger'
-import syncTransactions from './syncTransactions'
+import syncPayments from './syncPayments'
 import atriumClient from './atriumClient'
 import Source from './model/source'
 
@@ -41,7 +41,7 @@ export default async (sourceId, daysAgo) => {
 
         log.trace(`processing MX payments: ${mxPayments.length}`)
 
-        await syncTransactions(source, mxPayments)
+        await syncPayments(source, mxPayments)
 
       } else {
 

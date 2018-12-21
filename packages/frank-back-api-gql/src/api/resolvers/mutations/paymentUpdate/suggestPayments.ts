@@ -91,7 +91,7 @@ const suggestPayments = async (originalPayment: Payment, scope: Scope) => {
     },
     scope
   )
-  
+
   const similarFilter = (itemPayment: Payment) =>
     itemPayment.data &&
     originalPayment.data &&
