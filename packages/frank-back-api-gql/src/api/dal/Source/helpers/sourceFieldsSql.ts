@@ -14,6 +14,7 @@ const sourceFieldsSql = (alias: string | Sql): Sql => {
       sql`"${alias$}"."${source.updaterId}"`,
       sql`"${alias$}"."${source.data}"`,
       sql`"${alias$}"."${source.name}"`,
+      sql`"${alias$}"."${source.status}"`,
       sql`"${alias$}"."${source.currencyCode}"`,
       sql`"${alias$}"."${source.accountId}"`,
     ],

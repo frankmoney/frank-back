@@ -8,6 +8,7 @@ const mapSource: Mapper<Target, Source> = map<Target>()
   .for('pid', 'pid')
   .for('data', 'data')
   .for('name', 'name')
+  .for('status', 'status')
   .build()
 
 export default mapSource
