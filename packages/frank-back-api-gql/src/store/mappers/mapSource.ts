@@ -10,6 +10,7 @@ const mapSource: Mapper<Source> = map<Source>()
   .for('name', x => x.name)
   .for('currencyCode', x => x.currencyCode)
   .for('accountId', x => x.accountId)
+  .for('status', x => x.status)
   .build()
 
 export default mapSource
