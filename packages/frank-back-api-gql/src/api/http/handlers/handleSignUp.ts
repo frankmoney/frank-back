@@ -87,7 +87,9 @@ const handleSignUp = async (
       const passwordHash = hashPassword(body.user.password)
 
       const color =
-        config.USER_COLORS[Math.floor(Math.random() * config.USER_COLORS.length)]
+        config.USER_COLORS[
+          Math.floor(Math.random() * config.USER_COLORS.length)
+        ]
 
       const teamId = await createTeam(
         {
