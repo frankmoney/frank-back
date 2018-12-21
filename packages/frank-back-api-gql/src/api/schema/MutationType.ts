@@ -2,6 +2,13 @@ import storyPublicationNotification from '@frankmoney/frank-mail/storyPublicatio
 import { Type } from 'gql'
 import { TeamMemberRole, UserType as UserTypeEnum } from 'store/enums'
 import hashPassword from 'utils/hashPassword'
+import getAccount from 'api/dal/Account/getAccount'
+import updateAccount from 'api/dal/Account/updateAccount'
+import createCategory from 'api/dal/Category/createCategory'
+import deleteCategory from 'api/dal/Category/deleteCategory'
+import getCategory from 'api/dal/Category/getCategory'
+import updateCategory from 'api/dal/Category/updateCategory'
+import countPayments from 'api/dal/Payment/countPayments'
 import updatePeerByPidAndUserId from 'api/dal/Peer/updatePeerByPidAndUserId'
 import createStory from 'api/dal/Story/createStory'
 import deleteStoryById from 'api/dal/Story/deleteStoryById'
@@ -18,23 +25,34 @@ import updateUserAvatarById from 'api/dal/User/updateUserAvatarById'
 import updateUserPasswordById from 'api/dal/User/updateUserPasswordById'
 import { forbiddenError, throwForbidden } from 'api/errors/ForbiddenError'
 import { notFoundError, throwNotFound } from 'api/errors/NotFoundError'
+import mapAccount from 'api/mappers/mapAccount'
+import mapCategory from 'api/mappers/mapCategory'
 import mapPeer from 'api/mappers/mapPeer'
 import mapStory from 'api/mappers/mapStory'
 import mapStoryDraft from 'api/mappers/mapStoryDraft'
 import mapTeamMember from 'api/mappers/mapTeamMember'
 import mapUser from 'api/mappers/mapUser'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import AccountUpdateUpdate from 'api/types/AccountUpdateUpdate'
+import CategoryDeleteResult from 'api/types/CategoryDeleteResult'
+import CategoryUpdateUpdate from 'api/types/CategoryUpdateUpdate'
 import PeerUpdateUpdate from 'api/types/PeerUpdateUpdate'
 import Pid from 'api/types/Pid'
 import paymentUpdate from 'api/resolvers/mutations/paymentUpdate'
+import AccountType from './AccountType'
+import AccountUpdateUpdateInput from './AccountUpdateUpdateInput'
+import CategoryDeleteType from './CategoryDeleteType'
+import CategoryType from './CategoryType'
+import CategoryTypeType from './CategoryTypeType'
+import CategoryUpdateUpdateInput from './CategoryUpdateUpdateInput'
 import PeerType from './PeerType'
 import PeerUpdateUpdateInput from './PeerUpdateUpdateInput'
 import StoryType from './StoryType'
 import StoryDraftType from './StoryDraftType'
 import TeamMemberRoleType from './TeamMemberRoleType'
 import TeamMemberType from './TeamMemberType'
-import onboarding from './onboarding'
 import UserType from './UserType'
+import onboarding from './onboarding'
 
 const MutationType = Type('Mutation', type =>
   type.fields(field => ({
@@ -137,6 +155,239 @@ const MutationType = Type('Mutation', type =>
             return mapTeamMember({ member, user, currentUserId: scope.user.id })
           }
         )
+      ),
+    accountUpdate: field
+      .ofType(AccountType)
+      .args(arg => ({
+        pid: arg.ofId(),
+        update: arg.ofType(AccountUpdateUpdateInput),
+      }))
+      .resolve(
+        createPrivateResolver('accountUpdate', async ({ args, scope }) => {
+          const userId = scope.user.id
+          const update: AccountUpdateUpdate = args.update
+
+          const accountId = await updateAccount(
+            {
+              userId,
+              update: {
+                name: update.name ? update.name! : undefined,
+                public: update.public ? update.public! : undefined,
+              },
+              where: {
+                pid: { eq: args.pid },
+                team: {
+                  members: {
+                    any: {
+                      user: { id: { eq: userId } },
+                      and: {
+                        or: [
+                          { roleId: { eq: TeamMemberRole.manager } },
+                          { roleId: { eq: TeamMemberRole.administrator } },
+                        ],
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            scope
+          )
+
+          if (!accountId) {
+            throw notFoundError()
+          }
+
+          const account = await getAccount(
+            { userId, where: { id: { eq: accountId } } },
+            scope
+          )
+
+          return mapAccount(account)
+        })
+      ),
+    categoryCreate: field
+      .ofType(CategoryType)
+      .args(arg => ({
+        accountPid: arg.ofId(),
+        type: arg.ofType(CategoryTypeType),
+        name: arg.ofString(),
+        color: arg.ofString(),
+      }))
+      .resolve(
+        createPrivateResolver('categoryCreate', async ({ args, scope }) => {
+          const userId = scope.user.id
+
+          const account = await getAccount(
+            {
+              userId,
+              where: {
+                pid: { eq: args.accountPid },
+                team: {
+                  members: {
+                    any: {
+                      user: { id: { eq: userId } },
+                      and: {
+                        or: [
+                          { roleId: { eq: TeamMemberRole.manager } },
+                          { roleId: { eq: TeamMemberRole.administrator } },
+                        ],
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            scope
+          )
+
+          if (!account) {
+            throw notFoundError()
+          }
+
+          const categoryId = await createCategory(
+            {
+              userId,
+              accountId: account.id,
+              type: args.type,
+              name: args.name,
+              color: args.color,
+            },
+            scope
+          )
+
+          if (!categoryId) {
+            throw notFoundError()
+          }
+
+          const category = await getCategory(
+            { where: { id: { eq: categoryId } } },
+            scope
+          )
+
+          return mapCategory(category)
+        })
+      ),
+    categoryDelete: field
+      .ofType(CategoryDeleteType)
+      .args(arg => ({
+        pid: arg.ofId(),
+      }))
+      .resolve(
+        createPrivateResolver('categoryDelete', async ({ args, scope }) => {
+          const userId = scope.user.id
+
+          const category = await getCategory(
+            {
+              where: {
+                pid: { eq: args.pid },
+                account: {
+                  team: {
+                    members: {
+                      any: {
+                        user: { id: { eq: userId } },
+                        and: {
+                          or: [
+                            { roleId: { eq: TeamMemberRole.manager } },
+                            { roleId: { eq: TeamMemberRole.administrator } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            scope
+          )
+
+          if (!category) {
+            throw notFoundError()
+          }
+
+          const paymentCount = await countPayments(
+            { where: { category: { id: { eq: category.id } } } },
+            scope
+          )
+
+          let result: CategoryDeleteResult
+
+          if (paymentCount === 0) {
+            await deleteCategory(
+              {
+                userId,
+                where: { id: { eq: category.id } },
+              },
+              scope
+            )
+
+            result = CategoryDeleteResult.success
+          } else {
+            result = CategoryDeleteResult.hasPayments
+          }
+
+          const account = await getAccount(
+            { userId, where: { id: { eq: category.accountId } } },
+            scope
+          )
+
+          return {
+            result,
+            account: mapAccount(account),
+          }
+        })
+      ),
+    categoryUpdate: field
+      .ofType(CategoryType)
+      .args(arg => ({
+        pid: arg.ofId(),
+        update: arg.ofType(CategoryUpdateUpdateInput),
+      }))
+      .resolve(
+        createPrivateResolver('categoryUpdate', async ({ args, scope }) => {
+          const userId = scope.user.id
+          const update: CategoryUpdateUpdate = args.update
+
+          const categoryId = await updateCategory(
+            {
+              userId,
+              update: {
+                name: update.name ? update.name! : undefined,
+                color: update.color ? update.color! : undefined,
+              },
+              where: {
+                pid: { eq: args.pid },
+                account: {
+                  team: {
+                    members: {
+                      any: {
+                        user: { id: { eq: userId } },
+                        and: {
+                          or: [
+                            { roleId: { eq: TeamMemberRole.manager } },
+                            { roleId: { eq: TeamMemberRole.administrator } },
+                          ],
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            scope
+          )
+
+          if (!categoryId) {
+            throw notFoundError()
+          }
+
+          const category = await getCategory(
+            { where: { id: { eq: categoryId } } },
+            scope
+          )
+
+          return mapCategory(category)
+        })
       ),
     peerUpdate: field
       .ofType(PeerType)

@@ -12,8 +12,10 @@ import {
 } from './canSuggest'
 
 const SIMILAR_LIMIT = process.env.SIMILAR_LIMIT || 0.8
-const SIMILAR_AMOUNT_PERCENT = (process.env.SIMILAR_AMOUNT_PERCENT && parseInt(process.env.SIMILAR_AMOUNT_PERCENT)) || 10
-
+const SIMILAR_AMOUNT_PERCENT =
+  (process.env.SIMILAR_AMOUNT_PERCENT &&
+    parseInt(process.env.SIMILAR_AMOUNT_PERCENT, 10)) ||
+  10
 
 const updatePaymentIfNeeded = async (
   payment: Payment,
@@ -71,11 +73,10 @@ const updatePaymentIfNeeded = async (
 }
 
 const suggestPayments = async (originalPayment: Payment, scope: Scope) => {
-
   const amount = originalPayment.amount
 
-  const rightAmount = amount + (amount * SIMILAR_AMOUNT_PERCENT)/100
-  const leftAmount = amount - (amount * SIMILAR_AMOUNT_PERCENT)/100
+  const rightAmount = amount + (amount * SIMILAR_AMOUNT_PERCENT) / 100
+  const leftAmount = amount - (amount * SIMILAR_AMOUNT_PERCENT) / 100
 
   const newPaymentsWihSameAmount = await listPayments(
     {

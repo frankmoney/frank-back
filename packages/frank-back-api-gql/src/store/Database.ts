@@ -148,7 +148,7 @@ export default class Database {
       : this._pgclient.query(arg0, arg1)
   }
 
-  public async command(sql: SqlFragment): Promise<void> {
+  public async command(sql: SqlFragment): Promise<number> {
     if (!this._pgclient) {
       throw new Error('Not open')
     }
@@ -157,7 +157,7 @@ export default class Database {
       await this.begin()
     }
 
-    await this._command(sql)
+    return await this._command(sql)
   }
 
   public async query<T = any>(
@@ -328,10 +328,9 @@ export default class Database {
     return { text, values: params, rowMode: 'array' }
   }
 
-  private _command(sql: SqlFragment): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const query = this.createQueryArrayConfig(sql)
-      this._pgclient!.query(query, err => (err ? reject(err) : resolve()))
-    })
+  private async _command(sql: SqlFragment): Promise<number> {
+    const query = this.createQueryArrayConfig(sql)
+    const result = await this._pgclient!.query(query)
+    return result ? result.rowCount : 0
   }
 }

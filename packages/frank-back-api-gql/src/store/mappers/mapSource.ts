@@ -8,9 +8,9 @@ const mapSource: Mapper<Source> = map<Source>()
   .extend()
   .for('data', x => x.data)
   .for('name', x => x.name)
+  .for('status', x => x.status)
   .for('currencyCode', x => x.currencyCode)
   .for('accountId', x => x.accountId)
-  .for('status', x => x.status)
   .build()
 
 export default mapSource

@@ -6,7 +6,7 @@ import disjunction from '../../helpers/disjunction'
 import SourceWhere from './SourceWhere'
 import sourceAccountPredicateSql from './sourceAccountPredicateSql'
 
-const categoryPredicateSql = (
+const sourcePredicateSql = (
   alias: string | Sql,
   where: undefined | null | SourceWhere
 ): undefined | Sql => {
@@ -25,9 +25,9 @@ const categoryPredicateSql = (
 
   if (where.and) {
     if (Array.isArray(where.and)) {
-      branches.push(...where.and.map(x => categoryPredicateSql(alias, x)))
+      branches.push(...where.and.map(x => sourcePredicateSql(alias, x)))
     } else {
-      branches.push(categoryPredicateSql(alias, where.and))
+      branches.push(sourcePredicateSql(alias, where.and))
     }
   }
 
@@ -37,14 +37,14 @@ const categoryPredicateSql = (
     if (Array.isArray(where.or)) {
       return disjunction(
         junction,
-        ...where.or.map(x => categoryPredicateSql(alias, x))
+        ...where.or.map(x => sourcePredicateSql(alias, x))
       )
     } else {
-      return disjunction(junction, categoryPredicateSql(alias, where.or))
+      return disjunction(junction, sourcePredicateSql(alias, where.or))
     }
   } else {
     return junction
   }
 }
 
-export default categoryPredicateSql
+export default sourcePredicateSql

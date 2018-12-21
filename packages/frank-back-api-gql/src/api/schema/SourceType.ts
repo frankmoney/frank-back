@@ -5,12 +5,14 @@ import mapAccount from 'api/mappers/mapAccount'
 import createResolver from 'api/resolvers/utils/createResolver'
 import AccountType from './AccountType'
 import CurrencyType from './CurrencyType'
+import SourceStatusType from './SourceStatusType'
 
 const SourceType = Type('Source', type =>
   type.fields(field => ({
     pid: field.ofId(),
     data: field.ofJson().nullable(),
     name: field.ofString(),
+    status: field.ofType(SourceStatusType),
     account: field.ofType(AccountType).resolve(
       createResolver('Source:account', async ({ parent, scope }) => {
         const source: Source = parent.$source

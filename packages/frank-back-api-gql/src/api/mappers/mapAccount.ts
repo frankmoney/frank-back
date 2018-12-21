@@ -8,6 +8,7 @@ const mapAccount: Mapper<Target, Source> = map<Target>()
   .for('pid', 'pid')
   .for('data', 'data')
   .for('name', 'name')
+  .for('public', 'public')
   .build()
 
 export default mapAccount
