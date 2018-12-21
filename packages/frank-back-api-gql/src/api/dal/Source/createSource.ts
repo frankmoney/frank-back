@@ -1,11 +1,11 @@
 import R from 'ramda'
 import { join, sql } from 'sql'
 import mapSource from 'store/mappers/mapSource'
+import { SourceStatus } from 'store/enums'
 import { source } from 'store/names'
 import Source from 'store/types/Source'
 import Id from 'store/types/Id'
 import Json from 'store/types/Json'
-import { throwArgumentError } from 'api/errors/ArgumentError'
 import createMutation from '../createMutation'
 
 type Args = {
@@ -23,6 +23,7 @@ export default createMutation<Args, Source>(
       source.data,
       source.currencyCode,
       source.creatorId,
+      source.status,
     ]
 
     const values = [
@@ -30,6 +31,7 @@ export default createMutation<Args, Source>(
       JSON.stringify(args.data),
       args.data.currencyCode,
       args.creatorId,
+      SourceStatus.active,
     ]
 
     if (args.accountId) {

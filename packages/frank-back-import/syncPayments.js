@@ -2,9 +2,10 @@ import createLogger from './createLogger'
 import R from 'ramda'
 import Payment from './model/payment'
 import User from './model/user'
+import Source from './model/source'
 import handleNewPayment from './handleNewPayment'
 
-const log = createLogger('import:syncTransactions')
+const log = createLogger('import:syncPayments')
 
 const SYSTEM_USER_TYPE_ID = 1
 const IMPORT_USER_NAME = 'import'
@@ -18,7 +19,7 @@ export default async (source, mxPayments) => {
   const payments = await Payment.findAll({ where: { sourceId: source.id } })
   const filledPayments = R.filter(
     p => p.verified && p.peerId && p.categoryId && p.description,
-    payments
+    payments,
   )
 
   log.trace(`existing payments: ${payments.length}`)
@@ -46,5 +47,15 @@ export default async (source, mxPayments) => {
 
       log.trace('payment already in system - do nothing')
     }
+  }
+
+  const updateSource = await Source.findByPk(source.id)
+
+  if (updateSource.accountId !== source.accountId) {
+
+    await Payment.update(
+      { accountId: updateSource.accountId },
+      { where: { sourceId: updateSource.id } },
+    )
   }
 }

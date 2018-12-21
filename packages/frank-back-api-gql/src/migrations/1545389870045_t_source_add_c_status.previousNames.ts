@@ -71,7 +71,6 @@ export const source = tableEx('t_source', {
   data: 'c_data',
   currencyCode: 'c_currency_code',
   accountId: 'c_account_id',
-  status: 'c_status',
 })
 
 export const story = tableEx('t_story', {

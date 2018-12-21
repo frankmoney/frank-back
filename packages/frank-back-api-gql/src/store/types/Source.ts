@@ -7,6 +7,7 @@ type Source = ExtendedBase & {
   name: string
   accountId: Id
   currencyCode: string
+  status: string
 }
 
 export default Source
