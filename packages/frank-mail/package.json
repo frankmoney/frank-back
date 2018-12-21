@@ -1,9 +1,10 @@
 {
   "name": "@frankmoney/frank-mail",
-  "version": "1.0.7",
+  "version": "1.0.10",
   "private": true,
   "scripts": {
-    "build": "node scripts build"
+    "build": "node scripts build",
+    "pub": "npm publish build"
   },
   "dependencies": {
     "react": "^16.5.2",

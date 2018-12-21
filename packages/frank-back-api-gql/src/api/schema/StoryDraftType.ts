@@ -2,7 +2,7 @@ import { Type } from 'gql'
 import StoryDraft from 'store/types/StoryDraft'
 import countPaymentsByStoryDraftId from 'api/dal/Payment/countPaymentsByStoryDraftId'
 import listPaymentsByStoryDraftId from 'api/dal/Payment/listPaymentsByStoryDraftId'
-import getStoryByStoryDraftId from 'api/dal/Story/getStoryByStoryDraftId'
+import getStory from 'api/dal/Story/getStory'
 import getStoryDraftPaymentDateRangeByStoryId from 'api/dal/StoryDraftPayment/getStoryDraftPaymentDateRangeByStoryId'
 import mapPayment from 'api/mappers/mapPayment'
 import mapStory from 'api/mappers/mapStory'
@@ -29,8 +29,8 @@ const StoryDraftType = Type('StoryDraft', type =>
         async ({ parent, args, scope }) => {
           const draft: StoryDraft = parent.$source
 
-          const story = await getStoryByStoryDraftId(
-            { draftId: draft.id },
+          const story = await getStory(
+            { where: { id: { eq: draft.storyId } } },
             scope
           )
 

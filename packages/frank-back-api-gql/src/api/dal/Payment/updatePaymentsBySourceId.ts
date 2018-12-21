@@ -14,7 +14,6 @@ type Args = {
 export default createMutation<Args, Payment[]>(
   'updatePaymentsBySourceId',
   async (args, scope) => {
-
     const updateSqlParts: Sql[] = []
 
     if (args.accountId !== undefined) {
@@ -32,9 +31,9 @@ export default createMutation<Args, Payment[]>(
         where ${payment.sourceId} = ${args.sourceId}
         returning ${paymentFieldsSql(payment)}
       `,
-      mapPayment,
+      mapPayment
     )
 
     return result
-  },
+  }
 )

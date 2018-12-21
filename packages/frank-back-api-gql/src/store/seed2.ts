@@ -1,20 +1,13 @@
 import { sql } from 'sql'
 import Database from './Database'
 import { CategoryType } from './enums'
-import {
-  category,
-  payment,
-  peer,
-} from './names'
+import { category, payment, peer } from './names'
 import parse from 'csv-parse/lib/sync'
 import fs from 'fs'
 import Id from './types/Id'
 
 const randomHexColor = () =>
   '#' + ('000000' + Math.floor(Math.random() * 16777215).toString(16)).slice(-6)
-
-const getRandomInt = (min: number, max: number) =>
-  Math.floor(Math.random() * (max - min)) + min
 
 const CATS: { [key: string]: Id } = {}
 
@@ -94,8 +87,7 @@ export default async function seed({ db }: { db: Database }) {
 
   let currentPercent = 0
 
-  for (let i=0; i<records.length; i++ ) {
-
+  for (let i = 0; i < records.length; i++) {
     const record = records[i]
 
     const categoryName = record.category.trim()
@@ -145,14 +137,13 @@ export default async function seed({ db }: { db: Database }) {
           ${record.sum},
           ${description || null},
           false,
-          ${{originalDescription}}
+          ${{ originalDescription }}
         )`};
     `)
 
-    const newPercent = Math.floor(100*i/records.length)
+    const newPercent = Math.floor((100 * i) / records.length)
 
     if (newPercent !== currentPercent) {
-
       currentPercent = newPercent
 
       console.log(currentPercent)

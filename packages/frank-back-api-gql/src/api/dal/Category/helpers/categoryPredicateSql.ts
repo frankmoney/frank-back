@@ -22,7 +22,7 @@ const categoryPredicateSql = (
     createWhereSql(sql`"${alias$}"."${category.pid}"`, where.pid),
     createWhereSql(sql`"${alias$}"."${category.type}"`, where.type),
     categoryAccountPredicateSql(alias$, where.account),
-    categoryPaymentsPredicateSql(alias, where.payments),
+    categoryPaymentsPredicateSql(alias$, where.payments),
   ]
 
   if (where.and) {

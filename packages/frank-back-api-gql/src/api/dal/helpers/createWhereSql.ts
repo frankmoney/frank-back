@@ -25,7 +25,16 @@ const disjunction = (...branches: (undefined | Sql)[]) => {
 const defaultHandlers: Handlers = {
   isNull: expression => sql`${expression} is null`,
   isNotNull: expression => sql`${expression} is not null`,
-  eq: (expression, value) => sql`${expression} = ${value}`,
+  eq: (expression, value) => {
+    if (Array.isArray(value)) {
+      const [val, cs] = value
+      return cs
+        ? sql`${expression} = ${val}`
+        : sql`lower(${expression}) = lower(${val})`
+    } else {
+      return sql`${expression} = ${value}`
+    }
+  },
   gt: (expression, value) => sql`${expression} > ${value}`,
   lt: (expression, value) => sql`${expression} < ${value}`,
   gte: (expression, value) => sql`${expression} >= ${value}`,

@@ -1,5 +1,8 @@
 import updateOnboardingByPid from 'api/dal/Onboarding/updateOnboardingByPid'
-import { ACCOUNT_STEP, SPENDING_CATEGORIES_STEP } from 'api/onboarding/constants'
+import {
+  ACCOUNT_STEP,
+  SPENDING_CATEGORIES_STEP,
+} from 'api/onboarding/constants'
 import createSource from 'api/dal/Source/createSource'
 import createOnboardingMutation from './helpers/createOnboardingMutation'
 import request from 'request'
@@ -12,7 +15,6 @@ export default createOnboardingMutation({
   step: ACCOUNT_STEP,
   mutationArgs: arg => ({}),
   resolver: async (existingOnboarding, args, scope) => {
-
     const source = await createSource(
       {
         name: existingOnboarding.account.name, // original name
@@ -39,7 +41,7 @@ export default createOnboardingMutation({
       {
         pid: existingOnboarding.pid,
         step: SPENDING_CATEGORIES_STEP,
-        sourceId: source.id
+        sourceId: source.id,
       },
       scope
     )
