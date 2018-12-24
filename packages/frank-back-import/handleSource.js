@@ -7,14 +7,22 @@ import Source from './model/source'
 
 const log = createLogger('import:handleSource')
 
+const IMPORT_FAILED_URL = process.env.IMPORT_FAILED_URL
+
 const DATE_FORMAT = 'YYYY-MM-DD'
+
+const sendFailedNotification = (sourceId) => {
+  if (IMPORT_FAILED_URL) {
+    request.get(`${IMPORT_FAILED_URL}?source_id=${sourceId}`)
+  }
+}
 
 export default async (sourceId, daysAgo) => {
 
   const source = await Source.findByPk(sourceId)
 
   if (!source) {
-    throw new Error(`Can't find source. sourceId: ${sourceId}`);
+    throw new Error(`Can't find source. sourceId: ${sourceId}`)
   }
 
   log.trace(`start: ${source.name}`)
@@ -25,38 +33,50 @@ export default async (sourceId, daysAgo) => {
 
   if (data && data.userGuid && data.guid) {
 
-    const mxResponse = await atriumClient.listAccountTransactions({
-      params: {
-        userGuid: data.userGuid,
-        accountGuid: data.guid,
-        from_date: format(fromDate, DATE_FORMAT),
-      },
+    const params = {
+      userGuid: data.userGuid,
+      accountGuid: data.guid,
+    }
+
+    const mxResponseAccount = await atriumClient.readAccount({ params })
+
+    if (!mxResponseAccount.account) {
+
+      sendFailedNotification(sourceId)
+
+      throw new Error(`MX account response isn't normal. sourceId: ${sourceId}, status: ${mxResponseAccount.status}`)
+    }
+
+    await source.update({
+      data: Object.assign({}, source.data, humps.camelizeKeys(mxResponseAccount.account)),
     })
 
-    if (mxResponse.transactions) {
+    const mxResponseTransactions = await atriumClient.listAccountTransactions({
+      params: Object.assign({}, params, { from_date: format(fromDate, DATE_FORMAT) }),
+    })
 
-      if (mxResponse.transactions.length > 0) {
+    if (!mxResponseTransactions.transactions) {
 
-        const mxPayments = humps.camelizeKeys(mxResponse.transactions)
+      sendFailedNotification(sourceId)
 
-        log.trace(`processing MX payments: ${mxPayments.length}`)
+      throw new Error(`MX transactions response isn't normal. sourceId: ${sourceId}, status: ${mxResponseTransactions.status}`)
+    }
 
-        await syncPayments(source, mxPayments)
+    if (mxResponseTransactions.transactions.length > 0) {
 
-      } else {
+      const mxPayments = humps.camelizeKeys(mxResponseTransactions.transactions)
 
-        log.trace(`MX has no payments`)
-      }
+      log.trace(`processing MX payments: ${mxPayments.length}`)
 
+      await syncPayments(source, mxPayments)
 
     } else {
 
-      // maybe mxUser or mxAccount were deleted
-      throw new Error(`MX response isn't normal. sourceId: ${sourceId}, status: ${mxResponse.status}`);
+      log.trace(`MX has no payments`)
     }
 
   } else {
 
-    throw new Error(`Source haven't MX guid. sourceId: ${sourceId}`);
+    throw new Error(`Source haven't MX guid. sourceId: ${sourceId}`)
   }
 }
