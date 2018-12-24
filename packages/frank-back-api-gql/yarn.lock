@@ -44,10 +44,10 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@frankmoney/frank-mail@^1.0.10":
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/@frankmoney/frank-mail/-/frank-mail-1.0.10.tgz#cd114a792ff5bbd3c7621a8a61b1e74f9dc2485f"
-  integrity sha512-yiFDT0I3RQo7H7ehyi1n0JzREMn8U8mYagzeB+8Rz3APSDkjUATbCACMabRphvCmvSoXtC4KeYcu5xRtEl2HHg==
+"@frankmoney/frank-mail@^1.0.12":
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/@frankmoney/frank-mail/-/frank-mail-1.0.12.tgz#b04ea7d7dcf83d85b0655b02be995845a23ba97c"
+  integrity sha512-WcaMd+P83lnCCffw9X4vZbliuRzHnWGhtSJQEAKVjV1BVattiWJjT9PgBeoZxzWw0qw81QVkuulGctsR8E2kng==
   dependencies:
     react "^16.5.2"
     react-dom "^16.5.2"
@@ -443,6 +443,13 @@
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-2.3.4.tgz#821878b81bfab971b93a265a561d54ea61f9059f"
   integrity sha512-Set5ZdrAaKI/qHdFlVMgm/GsAv/wkXhSTuZFkJ+JI7HK+wIkIlOaUXSXieIvJ0+OvGIqtREFoE+NHJtEq0gtEw==
+
+"@types/uuid@^3.4.4":
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-3.4.4.tgz#7af69360fa65ef0decb41fd150bf4ca5c0cefdf5"
+  integrity sha512-tPIgT0GUmdJQNSHxp0X2jnpQfBSTfGxUMc/2CXBU2mnyTFVYVa2ojpoQ74w0U2yn2vw3jnC640+77lkFFpdVDw==
+  dependencies:
+    "@types/node" "*"
 
 "@types/ws@^5.1.2":
   version "5.1.2"

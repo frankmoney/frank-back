@@ -29,7 +29,7 @@
     }
   },
   "dependencies": {
-    "@frankmoney/frank-mail": "^1.0.10",
+    "@frankmoney/frank-mail": "^1.0.12",
     "@sentry/node": "4.4.1",
     "@types/co-body": "^0.0.3",
     "@types/debug": "^0.0.30",
@@ -41,6 +41,7 @@
     "@types/pg": "^7.4.10",
     "@types/ramda": "^0.25.36",
     "@types/request": "^2.48.1",
+    "@types/uuid": "^3.4.4",
     "apollo-server": "^2.0.0",
     "apollo-server-koa": "^2.1.0",
     "co-body": "^6.0.0",
@@ -63,7 +64,8 @@
     "request": "^2.88.0",
     "ts-node": "^6.2.0",
     "tsconfig-paths": "^3.5.0",
-    "typescript": "^3.0.1"
+    "typescript": "^3.0.1",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@types/fs-extra": "^5.0.4",
