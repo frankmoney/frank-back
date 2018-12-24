@@ -27,8 +27,9 @@ const createLog = (name: string): Log => {
       level,
       format: args[0],
       args: args.slice(1),
-      formatted: format(args[1], ...args.slice(1)),
+      formatted: format(args[0], ...args.slice(1)),
     }
+
     scopes.forEach(x => x.log(event))
   }
 

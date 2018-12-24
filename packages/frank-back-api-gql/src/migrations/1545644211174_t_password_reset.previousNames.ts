@@ -45,15 +45,6 @@ export const onboarding = tableEx('t_onboarding', {
   sourceId: 'c_source_id',
 })
 
-export const passwordReset = table('t_password_reset', {
-  id: 'c_id',
-  token: 'c_token',
-  createdAt: 'c_created_at',
-  updatedAt: 'c_updated_at',
-  usedAt: 'c_used_at',
-  userId: 'c_user_id',
-})
-
 export const payment = tableEx('t_payment', {
   data: 'c_data',
   postedOn: 'c_posted_on',

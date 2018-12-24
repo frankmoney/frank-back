@@ -1,6 +1,6 @@
 {
   "name": "@frankmoney/frank-mail",
-  "version": "1.0.10",
+  "version": "1.0.12",
   "private": true,
   "scripts": {
     "build": "node scripts build",

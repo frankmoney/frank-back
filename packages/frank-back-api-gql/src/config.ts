@@ -67,6 +67,17 @@ const buildMailConfig = () => {
   }
 
   if (
+    !env.MAIL_PASSWORD_RESET_REQUEST_LINK ||
+    env.MAIL_PASSWORD_RESET_REQUEST_LINK.indexOf('@(TOKEN)') < 0
+  ) {
+    throw new Error(
+      `Invalid configuration: MAIL_PASSWORD_RESET_REQUEST_LINK should be present and contain token "@(TOKEN)"; got: ${
+        env.MAIL_PASSWORD_RESET_REQUEST_LINK
+      }`
+    )
+  }
+
+  if (
     !env.MAIL_ACCOUNT_CREATION_NOTIFICATION_LINK ||
     env.MAIL_ACCOUNT_CREATION_NOTIFICATION_LINK.indexOf('@(ACCOUNT_PID)') < 0
   ) {
@@ -99,6 +110,12 @@ const buildMailConfig = () => {
       base: linkBase,
       userCreationConfirmation: createLinkBuilder(
         buildLink(env.MAIL_USER_CREATION_CONFIRMATION_LINK),
+        {
+          token: 'TOKEN',
+        }
+      ),
+      passwordResetRequest: createLinkBuilder(
+        buildLink(env.MAIL_PASSWORD_RESET_REQUEST_LINK),
         {
           token: 'TOKEN',
         }
