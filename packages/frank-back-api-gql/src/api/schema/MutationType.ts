@@ -176,7 +176,7 @@ const MutationType = Type('Mutation', type =>
                 description: isNil(update.description)
                   ? undefined
                   : update.description.trim() || null,
-                public: isNil(update.public) ? update.public! : undefined,
+                public: isNil(update.public) ? undefined : update.public!,
               },
               where: {
                 pid: { eq: args.pid },
