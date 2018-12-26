@@ -1,4 +1,5 @@
 import React from 'react'
+import { Box, Item, A } from 'react-html-email'
 import { DEFAULT_LINK_STYLE } from './styles'
 
 const LINK_COLOR = '#20284A'
@@ -26,14 +27,18 @@ const dividerStyle = {
 export default () => {
 
   return (
-    <div id='footerContainer'>
-      <div style={dividerStyle}> </div>
-      <div style={{ float: 'right' }}>
-        <a href="#" target="_blank" style={mediaLinkStyle}>Medium</a>
-        <a href="#" target="_blank" style={mediaLinkStyle}>Facebook</a>
-        <a href="#" target="_blank" style={mediaLinkStyle}>Twitter</a>
-      </div>
-      <a href="#" target="_blank" style={frankLinkStyle}>Frank Team</a>
-    </div>
+    <Box width='100%'>
+      <Item>
+        <div style={dividerStyle}/>
+      </Item>
+      <Item>
+        <div style={{ float: 'right' }}>
+          <A href="#" style={mediaLinkStyle}>Medium</A>
+          <A href="#" style={mediaLinkStyle}>Facebook</A>
+          <A href="#" style={mediaLinkStyle}>Twitter</A>
+        </div>
+        <A href="#" style={frankLinkStyle}>Frank Team</A>
+      </Item>
+    </Box>
   )
 }

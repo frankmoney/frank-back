@@ -1,4 +1,5 @@
 import React from 'react'
+import { Box, Item, A } from 'react-html-email'
 import { DEFAULT_LINK_STYLE } from './styles'
 
 const BUTTON_COLOR = '#484DE7'
@@ -15,17 +16,21 @@ const linkStyle = {
 }
 
 const containerStyle = {
-  margin: '20px 0'
+  padding: '20px 0',
 }
 
 export default (arg: {
   link: string,
   name: string
-                }) => {
+}) => {
 
-  const {link, name} = arg
+  const { link, name } = arg
 
-  return <div style={containerStyle}>
-    <a href={link} target="_blank" style={linkStyle}>{name}</a>
-  </div>
+  return (
+    <Box>
+      <Item style={containerStyle}>
+        <A href={link} style={linkStyle}>{name}</A>
+      </Item>
+    </Box>
+  )
 }

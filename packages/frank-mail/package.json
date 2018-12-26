@@ -13,6 +13,7 @@
     "express": "^4.16.4",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
+    "react-html-email": "^3.0.0",
     "ts-node": "^7.0.1",
     "tsconfig-paths": "^3.7.0"
   },
