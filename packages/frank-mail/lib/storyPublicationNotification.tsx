@@ -13,7 +13,9 @@ export type StoryPublicationNotificationData = {
     lastName?: null | string
     firstName: string
   },
-  accountName: string,
+  account: {
+    name: string
+  }
   story: {
     imageUrl: string,
     title: string,
@@ -34,8 +36,8 @@ const imageStyle = {
 const titleContainerStyle = {
   ...DEFAULT_TEXT_STYLE,
   paddingTop: '15px',
-  lineHeight: '28px',
   fontSize: '22px',
+  lineHeight: '28px',
   color: '#252B43',
 }
 
@@ -46,17 +48,17 @@ const descriptionContainerStyle = {
 }
 
 export default createTemplate<StoryPublicationNotificationData>(
-  ({ data: { user, creator, accountName, story } }) => {
+  ({ data: { user, creator, account, story } }) => {
     const userFullName = user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName
     const creatorFullName = creator.lastName ? `${creator.firstName} ${creator.lastName}` : creator.firstName
 
     return {
-      subject: `New story in ${accountName}: ${story.title}`,
+      subject: `New story in ${account.name}: ${story.title}`,
       body: (
         <Box>
           <Item style={DEFAULT_TEXT_STYLE}>
             Hi {userFullName}, your teammate <b>{creatorFullName}</b> just published a new story in
-            your <b>{accountName}</b> account for you to read:
+            your <b>{account.name}</b> account for you to read:
           </Item>
           <Item style={imageContainerStyle}>
             <Image src={story.imageUrl} width='100%' style={imageStyle} alt='Story pic'/>

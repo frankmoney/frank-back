@@ -4,27 +4,20 @@ import StoryPublicationNotification from './lib/storyPublicationNotification'
 
 const app = express()
 
-app.get('/AccountCreationNotification', (req, res) => {
-
-  const accountCreationNotification = AccountCreationNotification({
+const mails = {
+  'AccountCreationNotification': AccountCreationNotification({
     data: {
       user: { firstName: 'Tom' },
       creator: { firstName: 'Nick' },
-      accountName: 'Frank Money Inc',
+      account: { name: 'Frank Money Inc' },
       link: 'https://ya.ru',
     },
-  })
-
-  res.send(accountCreationNotification.html)
-})
-
-app.get('/StoryPublicationNotification', (req, res) => {
-
-  const storyPublicationNotification = StoryPublicationNotification({
+  }),
+  'StoryPublicationNotification': StoryPublicationNotification({
     data: {
       user: { firstName: 'Tom' },
       creator: { firstName: 'Nick' },
-      accountName: 'Frank Money Inc',
+      account: { name: 'Frank Money Inc' },
       story: {
         imageUrl: 'https://iso.500px.com/wp-content/uploads/2016/11/stock-photo-159533631-1500x1000.jpg',
         title: 'Breakwater reaches 500 backers. New reward levels are released',
@@ -32,13 +25,20 @@ app.get('/StoryPublicationNotification', (req, res) => {
         link: 'http://habr.com',
       },
     },
-  })
+  }),
+}
 
-  res.send(storyPublicationNotification.html)
-})
+const keys = Object.keys(mails)
+
+for (const key of keys) {
+  app.get(`/${key}`, (req, res) => {
+    res.send(mails[key].html)
+  })
+}
 
 app.listen(3000, () => {
   console.log('Emails:')
-  console.log('http://localhost:3000/accountCreationNotification')
-  console.log('http://localhost:3000/storyPublicationNotification')
+  for (const key of keys) {
+    console.log(`http://localhost:3000/${key}`)
+  }
 })
