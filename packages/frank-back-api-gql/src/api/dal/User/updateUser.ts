@@ -1,22 +1,21 @@
 import { sql, where } from 'sql'
-import { category } from 'store/names'
+import { user } from 'store/names'
 import Id from 'store/types/Id'
 import createMutation from '../createMutation'
 import createUpdateSetSql from '../helpers/createUpdateSetSql'
-import CategoryWhere from './helpers/CategoryWhere'
-import categoryPredicateSql from './helpers/categoryPredicateSql'
+import UserWhere from './helpers/UserWhere'
+import userPredicateSql from './helpers/userPredicateSql'
 
 export type Args = {
   userId: Id
   update: {
-    name?: string
-    color?: string
+    passwordHash?: string
   }
-  where?: CategoryWhere
+  where?: UserWhere
 }
 
 export default createMutation<Args, undefined | null | Id>(
-  'updateCategory',
+  'updateUser',
   async (args, { db }) => {
     const setSql = createUpdateSetSql({
       values: args.update,
@@ -25,29 +24,28 @@ export default createMutation<Args, undefined | null | Id>(
         updaterId: args.userId,
       },
       columns: {
-        name: category.name,
-        color: category.color,
-        updatedAt: category.updatedAt,
-        updaterId: category.updaterId,
+        passwordHash: user.passwordHash,
+        updatedAt: user.updatedAt,
+        updaterId: user.updaterId,
       },
     })
 
-    const categoryId = setSql
+    const userId = setSql
       ? await db.scalar<Id>(
           sql`
-            update "${category}"
+            update "${user}"
             set ${setSql}
-            where "${category.id}" = (
-              select c."${category.id}"
-              from "${category}" c
-              ${where(categoryPredicateSql('c', args.where))}
+            where "${user.id}" = (
+              select u."${user.id}"
+              from "${user}" u
+              ${where(userPredicateSql('u', args.where))}
               limit 1
             )
-            returning "${category.id}"
+            returning "${user.id}"
           `
         )
       : undefined
 
-    return categoryId
+    return userId
   }
 )

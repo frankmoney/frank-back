@@ -8,7 +8,7 @@ import userFieldsSql from './helpers/userFieldsSql'
 import userPredicateSql from './helpers/userPredicateSql'
 
 export type Args = {
-  where?: UserWhere
+  where: UserWhere
 }
 
 export default createQuery<Args, User>('getUser', (args, { db }) =>
