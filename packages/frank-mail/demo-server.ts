@@ -1,6 +1,7 @@
 import express from 'express'
 import AccountCreationNotification from './lib/accountCreationNotification'
 import StoryPublicationNotification from './lib/storyPublicationNotification'
+import AccountAggregationIssues from './lib/accountAggregationIssues'
 
 const app = express()
 
@@ -26,6 +27,13 @@ const mails = {
       },
     },
   }),
+  'AccountAggregationIssues': AccountAggregationIssues({
+    data: {
+      user: { firstName: 'Tom' },
+      account: { name: 'Frank Money Inc' },
+      link: 'http://fb.com',
+    }
+  })
 }
 
 const keys = Object.keys(mails)

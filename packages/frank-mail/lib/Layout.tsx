@@ -2,18 +2,38 @@ import React, { ReactElement } from 'react'
 import { Email, Box, Item, A } from 'react-html-email'
 import Footer from './Footer'
 import Logo from './Logo'
+import { DEFAULT_TEXT_STYLE } from './styles'
 
-import {
-  CARD_STYLE,
-  CARD_BODY_CONTAINER_STYLE,
-  CARD_WIDTH,
-  CARD_BACKGROUND_COLOR,
-  BODY_BACKGROUND_COLOR,
-  CARD_MARGIN_BOTTOM,
-  CARD_MARGIN_TOP,
-  END_NOTE_STYLE,
-  UNSUBSCRIBE_LINK_STYLE,
-} from './styles'
+export const CARD_WIDTH = '460px'
+export const CARD_BACKGROUND_COLOR = '#FFFFFF'
+export const BODY_BACKGROUND_COLOR = '#F5F5F5'
+export const CARD_MARGIN_TOP = '40px'
+export const CARD_MARGIN_BOTTOM = '40px'
+
+export const CARD_STYLE = {
+  backgroundColor: CARD_BACKGROUND_COLOR,
+  borderRadius: '8px',
+  filter: 'drop-shadow(0 0 10px rgba(0,0,0,0.03))',
+  padding: '40px 40px 25px 40px',
+}
+
+export const CARD_BODY_CONTAINER_STYLE = {
+  paddingTop: '40px',
+}
+
+export const END_NOTE_STYLE = {
+  ...DEFAULT_TEXT_STYLE,
+  fontSize: '16px',
+  lineHeight: '24px',
+  color: 'rgba(32, 40, 74, 0.3)',
+  paddingTop: '25px',
+}
+
+export const UNSUBSCRIBE_LINK_STYLE = {
+  color: 'rgba(32, 40, 74, 0.5)',
+  textDecoration: 'none',
+}
+
 
 export default (args: {
   body: ReactElement<any>,
