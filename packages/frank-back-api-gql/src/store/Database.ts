@@ -7,12 +7,19 @@ import {
   QueryResult,
   types,
 } from 'pg'
+import { identity } from 'ramda'
 import { SqlFragment, build, raw, sql as SQL } from 'sql'
 import Log from 'log/Log'
 import createLog from 'log/create'
 import Mapper from './mappers/Mapper'
 
+const fixThis = (oid: number, name: string) =>
+  types.setTypeParser(oid, x => {
+    throw new Error(`Fix OID=${oid} (${name}): ${x}`)
+  })
+
 types.setTypeParser(16, x => x === 't') // boolean
+
 types.setTypeParser(20, x => Number(x))
 types.setTypeParser(21, x => Number(x))
 types.setTypeParser(23, x => Number(x))
@@ -25,6 +32,19 @@ types.setTypeParser(1021, x => Number(x))
 types.setTypeParser(1022, x => Number(x))
 types.setTypeParser(1231, x => Number(x))
 types.setTypeParser(1700, x => Number(x))
+
+fixThis(1082, 'date')
+fixThis(1083, 'time')
+types.setTypeParser(1114, identity) // timestamp
+fixThis(1115, '_timestamp')
+fixThis(1182, '_date')
+fixThis(1183, '_time')
+fixThis(1184, 'timestamptz')
+fixThis(1185, '_timestamptz')
+fixThis(1186, 'interval')
+fixThis(1187, '_interval')
+fixThis(1266, 'timetz')
+fixThis(1270, '_timetz')
 
 type TxStatus = 'delayed' | 'active'
 
@@ -80,6 +100,21 @@ export default class Database {
     }
 
     this.log.trace('Client acquired')
+
+    try {
+      await this._command(SQL`set timezone to 'utc'`)
+    } catch (exc) {
+      this.log.error(exc, 'Failed to set time zone for current session')
+
+      try {
+        this._pgclient.release(exc)
+      } catch (exc2) {
+        this.log.error(exc, 'Failed to release client')
+      }
+
+      delete this._pgclient
+      throw exc
+    }
 
     if (this._options.setRole) {
       this.log.trace(`Setting role to ${this._options.setRole}`)

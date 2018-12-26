@@ -1,5 +1,7 @@
 import { URL } from 'url'
 import { Context } from 'koa'
+import config from 'config'
+import { literal } from 'sql'
 import Scope from 'api/Scope'
 import getPasswordReset from 'api/dal/PasswordReset/getPasswordReset'
 import getUser from 'api/dal/User/getUser'
@@ -16,12 +18,25 @@ const handleResetPasswordGet = async (
     const token = url.searchParams.get('token')
 
     if (token) {
-      const pr = await getPasswordReset({ token }, scope)
-      log.info('pr:', pr)
+      const pr = await getPasswordReset(
+        {
+          where: {
+            token: { eq: token },
+            usedAt: { isNull: true },
+            createdAt: {
+              gt: literal(
+                `(now() at time zone 'utc') - (interval '` +
+                  config.RESET_PASSWORD_TOKEN_TTL_MINUTES +
+                  ` minutes')`
+              ),
+            },
+          },
+        },
+        scope
+      )
+
       if (pr) {
         const user = await getUser({ where: { id: { eq: pr.userId } } }, scope)
-        log.info('user:', user)
-
         if (user) {
           ctx.response.status = 200
           ctx.response.body = {
@@ -35,6 +50,10 @@ const handleResetPasswordGet = async (
           }
         }
       } else {
+        log.warn(
+          `Attempt to use non-existent or expired reset password token ${token}`
+        )
+
         ctx.response.status = 404
         ctx.response.body = {
           code: 'not_found',

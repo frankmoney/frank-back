@@ -1,6 +1,7 @@
 import { Context } from 'koa'
 import Scope from 'api/Scope'
 import handleResetPasswordGet from './handleResetPasswordGet'
+import handleResetPasswordPost from './handleResetPasswordPost'
 
 const handleResetPassword = async (
   ctx: Context,
@@ -12,6 +13,8 @@ const handleResetPassword = async (
   try {
     if (ctx.req.method === 'GET') {
       await handleResetPasswordGet(ctx, next, scope)
+    } else if (ctx.req.method === 'POST') {
+      await handleResetPasswordPost(ctx, next, scope)
     } else {
       ctx.response.status = 405
       ctx.response.set('Allow', 'GET, POST')

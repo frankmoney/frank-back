@@ -1,11 +1,14 @@
-import { sql } from 'sql'
+import { sql, where } from 'sql'
 import mapPasswordReset from 'store/mappers/mapPasswordReset'
 import { passwordReset } from 'store/names'
 import PasswordReset from 'store/types/PasswordReset'
 import createQuery from '../createQuery'
+import PasswordResetWhere from './helpers/PasswordResetWhere'
+import passwordResetFieldsSql from './helpers/passwordResetFieldsSql'
+import passwordResetPredicateSql from './helpers/passwordResetPredicateSql'
 
 export type Args = {
-  token: string
+  where: PasswordResetWhere
 }
 
 const getPasswordReset = createQuery<Args, PasswordReset>(
@@ -13,11 +16,11 @@ const getPasswordReset = createQuery<Args, PasswordReset>(
   (args, { db }) =>
     db.first(
       sql`
-      select *
-      from "${passwordReset}"
-      where "${passwordReset.token}" = ${args.token}
-      limit 1
-    `,
+        select ${passwordResetFieldsSql('pr')}
+        from "${passwordReset}" pr
+        ${where(passwordResetPredicateSql('pr', args.where))}
+        limit 1
+      `,
       mapPasswordReset
     )
 )
