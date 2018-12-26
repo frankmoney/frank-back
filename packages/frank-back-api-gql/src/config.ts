@@ -144,6 +144,14 @@ if (!env.AUTHENTICATION_JWT_KEY || !env.AUTHENTICATION_JWT_KEY.trim()) {
   )
 }
 
+if (!Number(env.RESET_PASSWORD_TOKEN_TTL_MINUTES)) {
+  throw new Error(
+    `Invalid configuration: RESET_PASSWORD_TOKEN_TTL_MINUTES should be a number, got: ${
+      env.RESET_PASSWORD_TOKEN_TTL_MINUTES
+    }`
+  )
+}
+
 const config = {
   DEBUG: env.DEBUG,
   PORT: Number(env.PORT),
@@ -155,6 +163,9 @@ const config = {
   SENTRY_DSN: env.SENTRY_DSN,
   AUTHENTICATION_DISABLED: parseBoolString(env.AUTHENTICATION_DISABLED),
   AUTHENTICATION_JWT_KEY: env.AUTHENTICATION_JWT_KEY,
+  RESET_PASSWORD_TOKEN_TTL_MINUTES: Number(
+    env.RESET_PASSWORD_TOKEN_TTL_MINUTES
+  ),
   USER_COLORS: env.USER_COLORS
     ? env.USER_COLORS.split(',').map(x => Number(x))
     : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
