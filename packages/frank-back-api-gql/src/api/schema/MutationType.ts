@@ -40,6 +40,8 @@ import CategoryUpdateUpdate from 'api/types/CategoryUpdateUpdate'
 import PeerUpdateUpdate from 'api/types/PeerUpdateUpdate'
 import Pid from 'api/types/Pid'
 import paymentUpdate from 'api/resolvers/mutations/paymentUpdate'
+import listPaymentsByStoryId from 'api/dal/Payment/listPaymentsByStoryId'
+import { paymentsDatesDescription } from 'mailer/helpers'
 import AccountType from './AccountType'
 import AccountUpdateUpdateInput from './AccountUpdateUpdateInput'
 import CategoryDeleteType from './CategoryDeleteType'
@@ -655,6 +657,11 @@ const MutationType = Type('Mutation', type =>
               scope
             )
 
+            const payments = await listPaymentsByStoryId(
+              {storyId: story.id, orderBy: 'postedOn_ASC'},
+              scope
+            )
+
             const users = await listUsers(
               {
                 where: {
@@ -688,9 +695,11 @@ const MutationType = Type('Mutation', type =>
                       creator,
                       account,
                       story: {
-                        imageUrl: story.cover.thumbs.sized,
                         title: story.title!,
-                        description: story.body.text,
+                        paymentsCount: payments.length,
+                        paymentsDates: paymentsDatesDescription(payments),
+                        imageUrl: story.cover && story.cover.thumbs && story.cover.thumbs.sized,
+                        description: story.body && story.body.text,
                         link: scope.config.MAIL.links.storyPublicationNotification(
                           {
                             storyPid: story.pid,
