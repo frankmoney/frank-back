@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Item, Span } from 'react-html-email'
+import { Box, Item } from 'react-html-email'
 import createTemplate from './createTemplate'
 import Button from './components/Button'
 import { getUserFullName } from './helpers'

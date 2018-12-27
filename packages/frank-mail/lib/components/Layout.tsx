@@ -8,7 +8,9 @@ export const CARD_WIDTH = '460px'
 export const CARD_BACKGROUND_COLOR = '#FFFFFF'
 export const BODY_BACKGROUND_COLOR = '#F5F5F5'
 export const CARD_MARGIN_TOP = '40px'
-export const CARD_MARGIN_BOTTOM = '40px'
+export const CARD_MARGIN_BOTTOM = '60px'
+
+const DISPLAY_UNSUBSCRIBE_NOTE = false
 
 export const CARD_STYLE = {
   backgroundColor: CARD_BACKGROUND_COLOR,
@@ -37,6 +39,7 @@ export const UNSUBSCRIBE_LINK_STYLE = {
 
 export default (args: {
   body: ReactElement<any>,
+  logoAlign?: 'left' | 'center'
 }) => {
 
   return (
@@ -46,7 +49,7 @@ export default (args: {
         <Box>
           <Item bgcolor={CARD_BACKGROUND_COLOR} style={CARD_STYLE}>
             <Box>
-              <Item>
+              <Item align={args.logoAlign}>
                 <Logo/>
               </Item>
               <Item style={CARD_BODY_CONTAINER_STYLE}>
@@ -57,11 +60,14 @@ export default (args: {
               </Item>
             </Box>
           </Item>
-          <Item style={END_NOTE_STYLE}>
-            Any questions? Reply to this email or
-            <A href='#' style={UNSUBSCRIBE_LINK_STYLE}> request a call back Unsubscribe </A>
-            from all future emails like this
-          </Item>
+          {
+            DISPLAY_UNSUBSCRIBE_NOTE &&
+            <Item style={END_NOTE_STYLE}>
+              Any questions? Reply to this email or
+              <A href='#' style={UNSUBSCRIBE_LINK_STYLE}> request a call back Unsubscribe </A>
+              from all future emails like this
+            </Item>
+          }
         </Box>
         <Box height={CARD_MARGIN_BOTTOM} width={CARD_WIDTH}><Item/></Box>
       </Item>

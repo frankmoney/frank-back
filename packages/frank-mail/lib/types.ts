@@ -17,6 +17,7 @@ export type TemplateBuilderArgs<TData> = {
 
 export type TemplateBuilderResult = {
   subject: string
+  logoAlign?: 'left' | 'center'
   body: React.ReactElement<any>
 }
 

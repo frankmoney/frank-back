@@ -17,18 +17,20 @@ const linkStyle = {
 
 const boxStyle = {
   marginTop: '23px',
+  width: '100%',
 }
 
 export default (arg: {
   link: string,
-  name: string
+  name: string,
+  align?: 'left' | 'center'
 }) => {
 
-  const { link, name } = arg
+  const { link, name, align } = arg
 
   return (
     <Box style={boxStyle}>
-      <Item>
+      <Item style={{textAlign: align}}>
         <A href={link} style={linkStyle}>{name}</A>
       </Item>
     </Box>
