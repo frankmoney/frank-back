@@ -50,7 +50,7 @@ export default createTemplate<UserCreationConfirmationData>(
   ({ data: { link } }) => {
 
     return {
-      subject: `Frank account created for...`,
+      subject: `Welcome to Frank! Please confirm your email`,
       logoAlign: 'center',
       body: (
         <Box>

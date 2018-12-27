@@ -23,7 +23,7 @@ export default createTemplate<PasswordResetRequestData>(
     const userFullName = getUserFullName(user)
 
     return {
-      subject: `Frank password reset`,
+      subject: `Password reset`,
       body: (
         <Box>
           <Item style={DEFAULT_TEXT_STYLE}>

@@ -16,7 +16,7 @@ export default createTemplate<AccountAggregationIssuesData>(
   ({ data: { user, link, account } }) => {
     const userFullName = getUserFullName(user)
     return {
-      subject: `${account.name} was added`,
+      subject: `${account.name} needs your attention`,
       body: (
         <Box>
           <Item style={DEFAULT_TEXT_STYLE}>
