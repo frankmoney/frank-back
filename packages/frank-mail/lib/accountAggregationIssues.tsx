@@ -1,23 +1,20 @@
 import React from 'react'
 import { Box, Item, Span } from 'react-html-email'
 import createTemplate from './createTemplate'
-import Button from './Button'
+import Button from './components/Button'
+import { getUserFullName } from './helpers'
 import {DEFAULT_TEXT_STYLE} from './styles'
+import { AccountType, UserType } from './types'
 
 export type AccountAggregationIssuesData = {
-  user: {
-    lastName?: null | string
-    firstName: string
-  }
-  account: {
-    name: string
-  }
+  user: UserType
+  account: AccountType
   link: string
 }
 
 export default createTemplate<AccountAggregationIssuesData>(
   ({ data: { user, link, account } }) => {
-    const userFullName = user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName
+    const userFullName = getUserFullName(user)
     return {
       subject: `${account.name} was added`,
       body: (

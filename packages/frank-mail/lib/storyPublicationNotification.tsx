@@ -1,21 +1,15 @@
 import React from 'react'
 import { Box, Item, Span, Image } from 'react-html-email'
-import Button from './Button'
+import Button from './components/Button'
 import createTemplate from './createTemplate'
+import { getUserFullName } from './helpers'
 import { DEFAULT_TEXT_STYLE } from './styles'
+import { AccountType, UserType } from './types'
 
 export type StoryPublicationNotificationData = {
-  user: {
-    lastName?: null | string
-    firstName: string
-  }
-  creator: {
-    lastName?: null | string
-    firstName: string
-  },
-  account: {
-    name: string
-  }
+  user: UserType
+  creator: UserType,
+  account: AccountType
   story: {
     imageUrl: string,
     title: string,
@@ -49,8 +43,8 @@ const descriptionContainerStyle = {
 
 export default createTemplate<StoryPublicationNotificationData>(
   ({ data: { user, creator, account, story } }) => {
-    const userFullName = user.lastName ? `${user.firstName} ${user.lastName}` : user.firstName
-    const creatorFullName = creator.lastName ? `${creator.firstName} ${creator.lastName}` : creator.firstName
+    const userFullName = getUserFullName(user)
+    const creatorFullName = getUserFullName(creator)
 
     return {
       subject: `New story in ${account.name}: ${story.title}`,

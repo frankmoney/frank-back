@@ -2,6 +2,7 @@ import express from 'express'
 import AccountCreationNotification from './lib/accountCreationNotification'
 import StoryPublicationNotification from './lib/storyPublicationNotification'
 import AccountAggregationIssues from './lib/accountAggregationIssues'
+import PasswordResetRequest from './lib/passwordResetRequest'
 
 const app = express()
 
@@ -32,8 +33,14 @@ const mails = {
       user: { firstName: 'Tom' },
       account: { name: 'Frank Money Inc' },
       link: 'http://fb.com',
-    }
-  })
+    },
+  }),
+  'PasswordResetRequest': PasswordResetRequest({
+    data: {
+      user: { firstName: 'Tom' },
+      link: 'http://t.me',
+    },
+  }),
 }
 
 const keys = Object.keys(mails)

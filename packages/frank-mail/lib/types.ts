@@ -21,5 +21,14 @@ export type TemplateBuilderResult = {
 }
 
 export type TemplateBuilder<TData> = (
-  args: TemplateBuilderArgs<TData>
+  args: TemplateBuilderArgs<TData>,
 ) => TemplateBuilderResult
+
+export type UserType = {
+  lastName?: null | string
+  firstName: string
+}
+
+export type AccountType = {
+  name: string
+}
