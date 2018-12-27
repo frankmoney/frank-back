@@ -29,7 +29,7 @@
     }
   },
   "dependencies": {
-    "@frankmoney/frank-mail": "^1.0.14",
+    "@frankmoney/frank-mail": "^1.0.15",
     "@sentry/node": "4.4.1",
     "@types/co-body": "^0.0.3",
     "@types/debug": "^0.0.30",
