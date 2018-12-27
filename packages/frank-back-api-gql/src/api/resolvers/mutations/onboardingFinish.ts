@@ -123,6 +123,7 @@ const onboardingFinish = createPrivateResolver(
             data: {
               user,
               creator,
+              account,
               link: scope.config.MAIL.links.accountCreationNotification({
                 accountPid: account.pid,
               }),

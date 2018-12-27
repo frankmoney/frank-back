@@ -650,6 +650,11 @@ const MutationType = Type('Mutation', type =>
               scope
             )
 
+            const account = await getAccount(
+              { where: { id: { eq: story.accountId } }, userId },
+              scope
+            )
+
             const users = await listUsers(
               {
                 where: {
@@ -681,11 +686,17 @@ const MutationType = Type('Mutation', type =>
                     data: {
                       user,
                       creator,
-                      link: scope.config.MAIL.links.storyPublicationNotification(
-                        {
-                          storyPid: story.pid,
-                        }
-                      ),
+                      account,
+                      story: {
+                        imageUrl: story.cover.thumbs.sized,
+                        title: story.title!,
+                        description: story.body.text,
+                        link: scope.config.MAIL.links.storyPublicationNotification(
+                          {
+                            storyPid: story.pid,
+                          }
+                        ),
+                      },
                     },
                   })
 
