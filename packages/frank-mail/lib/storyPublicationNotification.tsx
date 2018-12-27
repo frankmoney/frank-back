@@ -11,15 +11,17 @@ export type StoryPublicationNotificationData = {
   creator: UserType,
   account: AccountType
   story: {
-    imageUrl: string,
     title: string,
-    description: string,
     link: string,
+    paymentsCount: number,
+    paymentsDates?: string,
+    imageUrl?: string,
+    description?: string,
   },
 }
 
 const imageContainerStyle = {
-  paddingTop: '15px',
+  paddingTop: '27px',
 }
 
 const imageStyle = {
@@ -29,15 +31,26 @@ const imageStyle = {
 
 const titleContainerStyle = {
   ...DEFAULT_TEXT_STYLE,
-  paddingTop: '15px',
+  paddingTop: '14px',
   fontSize: '22px',
   lineHeight: '28px',
   color: '#252B43',
 }
 
+const paymentsContainerStyle = {
+  ...DEFAULT_TEXT_STYLE,
+  paddingTop: '8px',
+  color: '#252B43',
+}
+
+const paymentsDatesStyle = {
+  opacity: 0.3,
+  marginLeft: '15px',
+}
+
 const descriptionContainerStyle = {
   ...DEFAULT_TEXT_STYLE,
-  paddingTop: '15px',
+  paddingTop: '11px',
   opacity: 0.5,
 }
 
@@ -54,15 +67,28 @@ export default createTemplate<StoryPublicationNotificationData>(
             Hi {userFullName}, your teammate <b>{creatorFullName}</b> just published a new story in
             your <b>{account.name}</b> account for you to read:
           </Item>
-          <Item style={imageContainerStyle}>
-            <Image src={story.imageUrl} width='100%' style={imageStyle} alt='Story pic'/>
-          </Item>
+          {
+            story.imageUrl &&
+            <Item style={imageContainerStyle}>
+              <Image src={story.imageUrl} width='100%' style={imageStyle} alt='Story pic'/>
+            </Item>
+          }
           <Item style={titleContainerStyle}>
             <b>{story.title}</b>
           </Item>
-          <Item style={descriptionContainerStyle}>
-            {story.description}
-          </Item>
+          {
+            story.paymentsCount &&
+            <Item style={paymentsContainerStyle}>
+              <b>$&nbsp;&nbsp;&nbsp;{story.paymentsCount} payment{story.paymentsCount > 1 ? 's' : ''}</b><span
+              style={paymentsDatesStyle}>{story.paymentsDates}</span>
+            </Item>
+          }
+          {
+            story.description &&
+            <Item style={descriptionContainerStyle}>
+              {story.description}
+            </Item>
+          }
           <Item>
             <Button link={story.link} name='Read now'/>
           </Item>
