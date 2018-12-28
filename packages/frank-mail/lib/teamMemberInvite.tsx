@@ -1,43 +1,98 @@
 import React from 'react'
+import { Box, Item, A } from 'react-html-email'
+import { getUserFullName } from './helpers'
+import Button from './components/Button'
 import createTemplate from './createTemplate'
+import { DEFAULT_TEXT_STYLE } from './styles'
+import { UserType, TeamType } from './types'
+import { Image } from 'react-html-email'
 
 export type TeamMemberInviteData = {
-  inviter: {
-    lastName?: string
-    firstName: string
-  }
-  team: {
-    name: string
-  }
-  invitee: {
-    email: string
-  }
-  note?: string
+  admin: UserType
+  team: TeamType
   link: string
 }
 
+export const IMAGE1_URL = 'https://assets2.frank.ly/frank/email/invite_pic1_294@2x.png'
+export const IMAGE1_WIDTH = 294
+export const IMAGE1_HEIGHT = 209
+
+export const IMAGE2_URL = 'https://assets2.frank.ly/frank/email/invite_pic2_190@2x.png'
+export const IMAGE2_WIDTH = 190
+export const IMAGE2_HEIGHT = 193
+
+const headerStyle = {
+  ...DEFAULT_TEXT_STYLE,
+  textAlign: 'center',
+  fontSize: '36px',
+  lineHeight: '40px',
+  paddingTop: '32px',
+}
+
+const mainTextStyle = {
+  ...DEFAULT_TEXT_STYLE,
+  textAlign: 'center',
+  fontSize: '22px',
+  lineHeight: '30px',
+  paddingTop: '23px',
+}
+
+const secondPicContainerStyle = {
+  paddingTop: '70px',
+}
+
+const footerTextStyle = {
+  ...DEFAULT_TEXT_STYLE,
+  textAlign: 'center',
+  fontSize: '18px',
+  lineHeight: '26px',
+  color: 'rgba(32, 40, 74, 0.5)',
+  paddingTop: '95px',
+}
+
+const linkStyle = {
+  color: '#484DE7',
+  textDecoration: 'none',
+}
+
+
 export default createTemplate<TeamMemberInviteData>(
-  ({ data: { inviter, team, invitee, note, link } }) => {
-    const inviterFullName = inviter.lastName ? `${inviter.firstName} ${inviter.lastName}` : inviter.firstName
+  ({ data: { link, admin, team } }) => {
+
+    const adminFullName = getUserFullName(admin)
 
     return {
-      subject: `${inviterFullName} invited you to join ${team.name}`,
+      subject: `${adminFullName} invited you to join ${team.name}`,
+      logoAlign: 'center',
       body: (
-        <div>
-          <div>
-            {inviterFullName}{' '}
-            has invited you to join team {team.name} at Frank
-          </div>
-          {note && (
-            <div>
-              <b>A note for you:</b> {note}
-            </div>
-          )}
-          <div>
-            <a href={link} target="_blank">Join now</a>
-          </div>
-        </div>
-      )
+        <Box>
+          <Item align='center'>
+            <Image src={IMAGE1_URL} width={IMAGE1_WIDTH} height={IMAGE1_HEIGHT} alt='Invite pic'/>
+          </Item>
+          <Item style={headerStyle}>
+            <b>Alex has invited you to join team at Frank</b>
+          </Item>
+          <Item style={mainTextStyle}>
+            A note for you: Please help me out with connecting our bank account to Frank
+          </Item>
+          <Item>
+            <Button link={link} name='Join now' align='center'/>
+          </Item>
+          <Item align='center' style={secondPicContainerStyle}>
+            <Image src={IMAGE2_URL} width={IMAGE2_WIDTH} height={IMAGE2_HEIGHT} alt='Invite pic'/>
+          </Item>
+          <Item style={headerStyle}>
+            <b>Essential tools for modern charity</b>
+          </Item>
+          <Item style={mainTextStyle}>
+            Frank radically simplifies fundraising and creates new view of financial transparency
+          </Item>
+          <Item style={footerTextStyle}>
+            Questions? We’re available 24/7.<br/>
+            Reply to this email or <A href='#' style={linkStyle}>request a call back</A>.
+          </Item>
+        </Box>
+      ),
     }
-  }
+  },
 )

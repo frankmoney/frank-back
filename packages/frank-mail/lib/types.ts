@@ -33,3 +33,7 @@ export type UserType = {
 export type AccountType = {
   name: string
 }
+
+export type TeamType = {
+  name: string
+}

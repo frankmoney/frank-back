@@ -4,6 +4,7 @@ import StoryPublicationNotification from './lib/storyPublicationNotification'
 import AccountAggregationIssues from './lib/accountAggregationIssues'
 import PasswordResetRequest from './lib/passwordResetRequest'
 import UserCreationConfirmation from './lib/userCreationConfirmation'
+import TeamMemberInvite from './lib/teamMemberInvite'
 
 const app = express()
 
@@ -49,7 +50,18 @@ const mails = {
       user: {firstName: 'Tom'},
       link: 'https://conform-email.com'
     }
-  })
+  }),
+  'TeamMemberInvite': TeamMemberInvite({
+    data: {
+      admin: {
+        firstName: 'Tom'
+      },
+      team: {
+        name: 'Frank Team'
+      },
+      link: 'http://paste.org'
+    }
+  }),
 }
 
 const keys = Object.keys(mails)
