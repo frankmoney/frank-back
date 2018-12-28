@@ -1,6 +1,6 @@
 import R from 'ramda'
 import accountCreationNotification from '@frankmoney/frank-mail/accountCreationNotification'
-import { UserType } from 'store/enums'
+import { SystemUserId, UserType } from 'store/enums'
 import createMutations from 'utils/createMutations'
 import createAccount from 'api/dal/Account/createAccount'
 import createCategories from 'api/dal/Category/createCategories'
@@ -47,8 +47,9 @@ const onboardingFinish = createPrivateResolver(
 
     await updateSource(
       {
-        id: existingOnboarding.sourceId,
-        accountId: account.id,
+        userId: SystemUserId.system,
+        update: { accountId: account.id },
+        where: { id: { eq: existingOnboarding.sourceId } },
       },
       scope
     )
