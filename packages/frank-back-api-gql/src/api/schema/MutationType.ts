@@ -40,6 +40,8 @@ import CategoryUpdateUpdate from 'api/types/CategoryUpdateUpdate'
 import PeerUpdateUpdate from 'api/types/PeerUpdateUpdate'
 import Pid from 'api/types/Pid'
 import paymentUpdate from 'api/resolvers/mutations/paymentUpdate'
+import listPaymentsByStoryId from 'api/dal/Payment/listPaymentsByStoryId'
+import { paymentsDatesDescription } from 'mailer/helpers'
 import AccountType from './AccountType'
 import AccountUpdateUpdateInput from './AccountUpdateUpdateInput'
 import CategoryDeleteType from './CategoryDeleteType'
@@ -650,6 +652,16 @@ const MutationType = Type('Mutation', type =>
               scope
             )
 
+            const account = await getAccount(
+              { where: { id: { eq: story.accountId } }, userId },
+              scope
+            )
+
+            const payments = await listPaymentsByStoryId(
+              {storyId: story.id, orderBy: 'postedOn_ASC'},
+              scope
+            )
+
             const users = await listUsers(
               {
                 where: {
@@ -681,11 +693,19 @@ const MutationType = Type('Mutation', type =>
                     data: {
                       user,
                       creator,
-                      link: scope.config.MAIL.links.storyPublicationNotification(
-                        {
-                          storyPid: story.pid,
-                        }
-                      ),
+                      account,
+                      story: {
+                        title: story.title!,
+                        paymentsCount: payments.length,
+                        paymentsDates: paymentsDatesDescription(payments),
+                        imageUrl: story.cover && story.cover.thumbs && story.cover.thumbs.sized,
+                        description: story.body && story.body.text,
+                        link: scope.config.MAIL.links.storyPublicationNotification(
+                          {
+                            storyPid: story.pid,
+                          }
+                        ),
+                      },
                     },
                   })
 
