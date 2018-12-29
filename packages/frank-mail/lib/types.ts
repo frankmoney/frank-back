@@ -17,9 +17,23 @@ export type TemplateBuilderArgs<TData> = {
 
 export type TemplateBuilderResult = {
   subject: string
+  logoAlign?: 'left' | 'center'
   body: React.ReactElement<any>
 }
 
 export type TemplateBuilder<TData> = (
-  args: TemplateBuilderArgs<TData>
+  args: TemplateBuilderArgs<TData>,
 ) => TemplateBuilderResult
+
+export type UserType = {
+  lastName?: null | string
+  firstName: string
+}
+
+export type AccountType = {
+  name: string
+}
+
+export type TeamType = {
+  name: string
+}

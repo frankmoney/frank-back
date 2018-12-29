@@ -47,6 +47,7 @@ export default createQuery<Args, AggregatedPayments>(
           ${fieldsSql}
         from "${payment}" p
         ${where(paymentPredicateSql('p', args.where))}
+        limit 1
       `
     )
   }

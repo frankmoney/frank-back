@@ -14,10 +14,11 @@ export default createMutation<Args, number>('deleteCategory', (args, { db }) =>
   db.command(
     sql`
       delete from "${category}"
-      where "${category.id}" in (
+      where "${category.id}" = (
         select c."${category.id}"
         from "${category}" c
         ${where(categoryPredicateSql('c', args.where))}
+        limit 1
       )
     `
   )

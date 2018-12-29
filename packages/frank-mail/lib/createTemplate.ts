@@ -1,17 +1,17 @@
-import ReactDOM from 'react-dom/server'
 import { Template, TemplateArgs, TemplateBuilder } from './types'
+import Layout from './components/Layout'
+import { renderEmail } from 'react-html-email'
 
 const createTemplate = <TData>(
-  builder: TemplateBuilder<TData>
+  builder: TemplateBuilder<TData>,
 ): Template<TData> => {
   return (args: TemplateArgs<TData>) => {
-    const { subject, body } = builder({
+
+    const { subject, body, logoAlign } = builder({
       data: args.data,
     })
 
-    const bodyHtml = ReactDOM.renderToStaticMarkup(body)
-
-    const html = `<!doctype html><html><body>${bodyHtml}</body></html>`
+    const html = renderEmail(Layout({ body, logoAlign }))
 
     return {
       subject,

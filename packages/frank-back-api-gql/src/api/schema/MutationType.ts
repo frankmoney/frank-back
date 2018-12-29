@@ -10,20 +10,23 @@ import createCategory from 'api/dal/Category/createCategory'
 import deleteCategory from 'api/dal/Category/deleteCategory'
 import getCategory from 'api/dal/Category/getCategory'
 import updateCategory from 'api/dal/Category/updateCategory'
+import aggregatePayments from 'api/dal/Payment/aggregatePayments'
 import countPayments from 'api/dal/Payment/countPayments'
 import listPayments from 'api/dal/Payment/listPayments'
 import updatePeerByPidAndUserId from 'api/dal/Peer/updatePeerByPidAndUserId'
 import createStory from 'api/dal/Story/createStory'
-import deleteStoryById from 'api/dal/Story/deleteStoryById'
+import deleteStory from 'api/dal/Story/deleteStory'
 import getStory from 'api/dal/Story/getStory'
 import updateStory, { Args as UpdateStoryArgs } from 'api/dal/Story/updateStory'
+import deleteStoryPayments from 'api/dal/StoryPayment/deleteStoryPayments'
+import mergeStoryPayments from 'api/dal/StoryPayment/mergeStoryPayments'
 import updateTeamMemberByPidAndUserId from 'api/dal/TeamMember/updateTeamMemberByPidAndUserId'
 import getUser from 'api/dal/User/getUser'
 import listUsers from 'api/dal/User/listUsers'
 import updateUserAvatarById from 'api/dal/User/updateUserAvatarById'
 import updateUserPasswordById from 'api/dal/User/updateUserPasswordById'
 import { argumentError } from 'api/errors/ArgumentError'
-import { forbiddenError, throwForbidden } from 'api/errors/ForbiddenError'
+import { forbiddenError } from 'api/errors/ForbiddenError'
 import { notFoundError, throwNotFound } from 'api/errors/NotFoundError'
 import mapAccount from 'api/mappers/mapAccount'
 import mapCategory from 'api/mappers/mapCategory'
@@ -39,7 +42,6 @@ import PeerUpdateUpdate from 'api/types/PeerUpdateUpdate'
 import Pid from 'api/types/Pid'
 import StoryUpdateUpdate from 'api/types/StoryUpdateUpdate'
 import paymentUpdate from 'api/resolvers/mutations/paymentUpdate'
-import mergeStoryPayments from '../dal/StoryPayment/mergeStoryPayments'
 import AccountType from './AccountType'
 import AccountUpdateUpdateInput from './AccountUpdateUpdateInput'
 import CategoryDeleteType from './CategoryDeleteType'
@@ -466,7 +468,7 @@ const MutationType = Type('Mutation', type =>
                       id: { eq: account.id },
                     },
                     and: {
-                      or: args.paymentPids.map(x => ({
+                      or: args.paymentPids.map((x: Pid) => ({
                         pid: { eq: Number(x) },
                       })),
                     },
@@ -528,6 +530,20 @@ const MutationType = Type('Mutation', type =>
                 scope
               )
 
+              const aggregatedPayments = await aggregatePayments(
+                {
+                  fields: ['count', 'postedOnMin', 'postedOnMax'],
+                  where: {
+                    stories: {
+                      any: {
+                        id: { eq: story.id },
+                      },
+                    },
+                  },
+                },
+                scope
+              )
+
               const users = await listUsers(
                 {
                   where: {
@@ -557,11 +573,22 @@ const MutationType = Type('Mutation', type =>
                       data: {
                         user,
                         creator,
-                        link: scope.config.MAIL.links.storyPublicationNotification(
-                          {
-                            storyPid: story.pid,
-                          }
-                        ),
+                        account,
+                        story: {
+                          title: story.title!,
+                          imageUrl: story.cover.thumbs.sized,
+                          description: story.body.text,
+                          paymentCount: aggregatedPayments.count!,
+                          paymentDates: [
+                            aggregatedPayments.postedOnMin!,
+                            aggregatedPayments.postedOnMax!,
+                          ],
+                          link: scope.config.MAIL.links.storyPublicationNotification(
+                            {
+                              storyPid: story.pid,
+                            }
+                          ),
+                        },
                       },
                     })
 
@@ -630,7 +657,12 @@ const MutationType = Type('Mutation', type =>
             return throwNotFound()
           }
 
-          await deleteStoryById({ userId, id: story.id }, scope)
+          await deleteStoryPayments({ storyId: story.id }, scope)
+
+          await deleteStory(
+            { userId, where: { id: { eq: story.id } } },
+            scope
+          )
 
           return mapStory(story)
         })
@@ -782,6 +814,25 @@ const MutationType = Type('Mutation', type =>
                 scope
               )
 
+              const updatedStoryAccount = await getAccount(
+                { userId, where: { id: { eq: updatedStory.accountId } } },
+                scope
+              )
+
+              const updatedAggregatedPayments = await aggregatePayments(
+                {
+                  fields: ['count', 'postedOnMin', 'postedOnMax'],
+                  where: {
+                    stories: {
+                      any: {
+                        id: { eq: updatedStory.id },
+                      },
+                    },
+                  },
+                },
+                scope
+              )
+
               const users = await listUsers(
                 {
                   where: {
@@ -811,11 +862,22 @@ const MutationType = Type('Mutation', type =>
                       data: {
                         user,
                         creator,
-                        link: scope.config.MAIL.links.storyPublicationNotification(
-                          {
-                            storyPid: story.pid,
-                          }
-                        ),
+                        account: updatedStoryAccount,
+                        story: {
+                          title: updatedStory.title!,
+                          imageUrl: updatedStory.cover.thumbs.sized,
+                          description: updatedStory.body.text,
+                          paymentCount: updatedAggregatedPayments.count!,
+                          paymentDates: [
+                            updatedAggregatedPayments.postedOnMin!,
+                            updatedAggregatedPayments.postedOnMax!,
+                          ],
+                          link: scope.config.MAIL.links.storyPublicationNotification(
+                            {
+                              storyPid: story.pid,
+                            }
+                          ),
+                        },
                       },
                     })
 
