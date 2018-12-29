@@ -153,6 +153,10 @@ const PaymentType = Type('Payment', type =>
     source: field.ofType(SourceType).resolve(
       createResolver('Payment:source', async ({ parent, scope }) => {
         const payment: Payment = parent.$source
+        
+        if (!payment.source) {
+          return null
+        }
 
         const source = await getSource(
           { where: { id: { eq: payment.sourceId } } },
