@@ -150,7 +150,7 @@ const PaymentType = Type('Payment', type =>
           return count
         })
       ),
-    source: field.ofType(SourceType).resolve(
+    source: field.ofType(SourceType).nullable().resolve(
       createResolver('Payment:source', async ({ parent, scope }) => {
         const payment: Payment = parent.$source
         
