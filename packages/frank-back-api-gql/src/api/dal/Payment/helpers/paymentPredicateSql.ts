@@ -7,6 +7,7 @@ import PaymentWhere from './PaymentWhere'
 import paymentAccountPredicateSql from './paymentAccountPredicateSql'
 import paymentCategoryPredicateSql from './paymentCategoryPredicateSql'
 import paymentPeerPredicateSql from './paymentPeerPredicateSql'
+import paymentStoriesPredicateSql from './paymentStoriesPredicateSql'
 
 const paymentPredicateSql = (
   alias: string | Sql,
@@ -25,7 +26,8 @@ const paymentPredicateSql = (
     createWhereSql(sql`"${alias$}"."${payment.pending}"`, where.pending),
     paymentAccountPredicateSql(alias$, where.account),
     paymentCategoryPredicateSql(alias$, where.category),
-    paymentPeerPredicateSql(alias$, where && where.peer),
+    paymentPeerPredicateSql(alias$, where.peer),
+    paymentStoriesPredicateSql(alias$, where.stories),
     where.containsText
       ? disjunction(
           sql`"${alias$}"."${payment.description}" ilike ${`%${

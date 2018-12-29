@@ -1,49 +1,42 @@
-import { sql } from 'sql'
-import { account, story, teamMember } from 'store/names'
+import { Sql, sql } from 'sql'
+import { story } from 'store/names'
+import DateTime from 'store/types/DateTime'
 import Id from 'store/types/Id'
-import Pid from 'store/types/Pid'
+import Json from 'store/types/Json'
 import createMutation from '../createMutation'
 
 export type Args = {
   userId: Id
-  accountPid: Pid
+  accountId: Id
+  title: null | string
+  cover: null | Json
+  body: null | Json
+  publishedAt: null | DateTime | Sql
 }
 
-export default createMutation<Args, null | Id>(
-  'createStory',
-  async (args, { db }) => {
-    const accountId = await db.scalar<undefined | Id>(
-      sql`
-        select ${account}.${account.id}
-        from ${account}
-        join ${teamMember}
-        on ${account}.${account.teamId} = ${teamMember}.${teamMember.teamId}
-        where ${teamMember}.${teamMember.userId} = ${args.userId}
-        and ${account}.${account.pid} = ${args.accountPid};
-      `
-    )
-
-    if (!accountId) {
-      return null
-    }
-
-    const storyId = await db.scalar<Id>(
-      sql`
-        insert into
-          ${story} (
-            ${story.creatorId},
-            ${story.accountId}
-          )
-        values
-          (
-            ${args.userId},
-            ${accountId}
-          )
-        returning
-          ${story}.${story.id};
-      `
-    )
-
-    return storyId
-  }
+export default createMutation<Args, Id>('createStory', (args, { db }) =>
+  db.scalar<Id>(
+    sql`
+      insert into
+        "${story}" (
+          "${story.creatorId}",
+          "${story.accountId}",
+          "${story.title}",
+          "${story.cover}",
+          "${story.body}",
+          "${story.publishedAt}"
+        )
+      values
+        (
+          ${args.userId},
+          ${args.accountId},
+          ${args.title},
+          ${args.cover},
+          ${args.body},
+          ${args.publishedAt}
+        )
+      returning
+        "${story.id}"
+    `
+  )
 )

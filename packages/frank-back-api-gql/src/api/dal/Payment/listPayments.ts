@@ -1,4 +1,4 @@
-import { limit, sql, where } from 'sql'
+import { limit, orderBy, sql, where } from 'sql'
 import mapPayment from 'store/mappers/mapPayment'
 import { payment } from 'store/names'
 import Payment from 'store/types/Payment'
@@ -13,7 +13,7 @@ export type Args = {
   where?: PaymentWhere
   take?: number
   skip?: number
-  orderBy: PaymentsOrder
+  orderBy?: PaymentsOrder
 }
 
 export default createQuery<Args, Payment[]>('listPayments', (args, { db }) =>
@@ -22,7 +22,7 @@ export default createQuery<Args, Payment[]>('listPayments', (args, { db }) =>
       select ${paymentFieldsSql('p')}
       from "${payment}" p
       ${where(paymentPredicateSql('p', args.where))}
-      order by ${paymentOrderBySql('p', args.orderBy)}
+      ${orderBy(paymentOrderBySql('p', args.orderBy))}
       ${limit({ take: args.take, skip: args.skip })};
     `,
     mapPayment

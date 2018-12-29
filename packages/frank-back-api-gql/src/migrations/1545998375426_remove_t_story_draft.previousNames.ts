@@ -92,6 +92,20 @@ export const story = tableEx('t_story', {
   accountId: 'c_account_id',
 })
 
+export const storyDraft = tableEx('t_story_draft', {
+  publishedAt: 'c_published_at',
+  cover: 'c_cover',
+  title: 'c_title',
+  body: 'c_body',
+  published: 'c_published',
+  storyId: 'c_story_id',
+})
+
+export const storyDraftPayment = tableEx('t_story_draft_payment', {
+  storyDraftId: 'c_story_draft_id',
+  paymentId: 'c_payment_id',
+})
+
 export const storyPayment = tableEx('t_story_payment', {
   storyId: 'c_story_id',
   paymentId: 'c_payment_id',

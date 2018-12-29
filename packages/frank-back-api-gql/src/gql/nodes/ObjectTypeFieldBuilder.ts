@@ -63,6 +63,10 @@ export default class ObjectTypeFieldBuilder {
     return this.ofType(Time)
   }
 
+  public listOfId(): ObjectTypeFieldBuilderType {
+    return this.listOf(Id)
+  }
+
   public listOfDateTime(): ObjectTypeFieldBuilderType {
     return this.listOf(DateTime)
   }

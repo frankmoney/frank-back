@@ -62,4 +62,8 @@ export default class InputTypeFieldBuilder {
   public ofTime(): InputTypeFieldBuilderType {
     return this.ofType(Time)
   }
+
+  public listOfId(): InputTypeFieldBuilderType {
+    return this.listOf(Id)
+  }
 }
