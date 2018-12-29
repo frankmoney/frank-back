@@ -658,7 +658,7 @@ const MutationType = Type('Mutation', type =>
             )
 
             const payments = await listPaymentsByStoryId(
-              {storyId: story.id, orderBy: 'postedOn_ASC'},
+              { storyId: story.id, orderBy: 'postedOn_ASC' },
               scope
             )
 
@@ -698,7 +698,10 @@ const MutationType = Type('Mutation', type =>
                         title: story.title!,
                         paymentsCount: payments.length,
                         paymentsDates: paymentsDatesDescription(payments),
-                        imageUrl: story.cover && story.cover.thumbs && story.cover.thumbs.sized,
+                        imageUrl:
+                          story.cover &&
+                          story.cover.thumbs &&
+                          story.cover.thumbs.sized,
                         description: story.body && story.body.text,
                         link: scope.config.MAIL.links.storyPublicationNotification(
                           {

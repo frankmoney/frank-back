@@ -150,22 +150,25 @@ const PaymentType = Type('Payment', type =>
           return count
         })
       ),
-    source: field.ofType(SourceType).nullable().resolve(
-      createResolver('Payment:source', async ({ parent, scope }) => {
-        const payment: Payment = parent.$source
-        
-        if (!payment.source) {
-          return null
-        }
+    source: field
+      .ofType(SourceType)
+      .nullable()
+      .resolve(
+        createResolver('Payment:source', async ({ parent, scope }) => {
+          const payment: Payment = parent.$source
 
-        const source = await getSource(
-          { where: { id: { eq: payment.sourceId } } },
-          scope
-        )
+          if (!payment.sourceId) {
+            return null
+          }
 
-        return mapSource(source)
-      })
-    ),
+          const source = await getSource(
+            { where: { id: { eq: payment.sourceId } } },
+            scope
+          )
+
+          return mapSource(source)
+        })
+      ),
     account: field.ofType(AccountType).resolve(
       createResolver('Payment:account', async ({ parent, scope }) => {
         const payment: Payment = parent.$source
