@@ -480,7 +480,7 @@ const MutationType = Type('Mutation', type =>
 
           if (args.published === true) {
             const canBePublished =
-              !!args.title && !!args.cover && !!args.body && !!payments.length
+              !!args.title && !!args.body && !!payments.length
 
             if (!canBePublished) {
               throw argumentError('published')
@@ -731,9 +731,6 @@ const MutationType = Type('Mutation', type =>
             (dalUpdate.title === undefined
               ? !!story.title
               : !!dalUpdate.title) &&
-            (dalUpdate.cover === undefined
-              ? !!story.cover
-              : !!dalUpdate.cover) &&
             (dalUpdate.body === undefined ? !!story.body : !!dalUpdate.body) &&
             (payments
               ? !!payments.length
