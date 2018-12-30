@@ -1,5 +1,6 @@
 import AccountWhere from '../../Account/helpers/AccountWhere'
 import CategoryWhere from '../../Category/helpers/CategoryWhere'
+import WhereId from '../../helpers/WhereId'
 import WherePid from '../../helpers/WherePid'
 import PeerWhere from '../../Peer/helpers/PeerWhere'
 import WhereBoolean from '../../helpers/WhereBoolean'
@@ -8,6 +9,7 @@ import WhereNumber from '../../helpers/WhereNumber'
 import PaymentStoriesWhere from './PaymentStoriesWhere'
 
 export default interface PaymentWhere {
+  id?: WhereId
   pid?: WherePid
   amount?: WhereNumber
   postedOn?: WhereDate

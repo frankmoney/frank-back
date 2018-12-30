@@ -20,6 +20,8 @@ const paymentPredicateSql = (
   const alias$: Sql = typeof alias === 'string' ? literal(alias) : alias
 
   const branches: (undefined | Sql)[] = [
+    createWhereSql(sql`"${alias$}"."${payment.id}"`, where.id),
+    createWhereSql(sql`"${alias$}"."${payment.pid}"`, where.pid),
     createWhereSql(sql`"${alias$}"."${payment.amount}"`, where.amount),
     createWhereSql(sql`"${alias$}"."${payment.postedOn}"`, where.postedOn),
     createWhereSql(sql`"${alias$}"."${payment.verified}"`, where.verified),

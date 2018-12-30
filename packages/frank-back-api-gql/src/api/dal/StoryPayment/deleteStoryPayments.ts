@@ -9,10 +9,11 @@ type Args = {
 
 export default createMutation<Args, number>(
   'deleteStoryPayments',
-  (args, { db }) => db.command(
-    sql`
+  (args, { db }) =>
+    db.command(
+      sql`
       delete from "${storyPayment}"
       where "${storyPayment.storyId}" = ${args.storyId}
     `
-  )
+    )
 )
