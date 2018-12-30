@@ -1,5 +1,5 @@
 import { Sql, literal, sql } from 'sql'
-import { category } from 'store/names'
+import { source } from 'store/names'
 import conjunction from '../../helpers/conjunction'
 import createWhereSql from '../../helpers/createWhereSql'
 import disjunction from '../../helpers/disjunction'
@@ -17,9 +17,9 @@ const sourcePredicateSql = (
   const alias$: Sql = typeof alias === 'string' ? literal(alias) : alias
 
   const branches: (undefined | Sql)[] = [
-    createWhereSql(sql`"${alias$}"."${category.id}"`, where.id),
-    createWhereSql(sql`"${alias$}"."${category.pid}"`, where.pid),
-    createWhereSql(sql`"${alias$}"."${category.name}"`, where.name),
+    createWhereSql(sql`"${alias$}"."${source.id}"`, where.id),
+    createWhereSql(sql`"${alias$}"."${source.pid}"`, where.pid),
+    createWhereSql(sql`"${alias$}"."${source.name}"`, where.name),
     sourceAccountPredicateSql(alias$, where.account),
   ]
 
