@@ -22,6 +22,7 @@ const paymentFieldsSql = (alias: string | Sql) => {
       sql`"${alias$}"."${payment.accountId}"`,
       sql`"${alias$}"."${payment.peerId}"`,
       sql`"${alias$}"."${payment.categoryId}"`,
+      sql`"${alias$}"."${payment.sourceId}"`,
       sql`"${alias$}"."${payment.descriptionUpdaterId}"`,
       sql`"${alias$}"."${payment.categoryUpdaterId}"`,
       sql`"${alias$}"."${payment.peerUpdaterId}"`,
