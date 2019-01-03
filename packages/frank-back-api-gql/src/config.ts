@@ -89,6 +89,17 @@ const buildMailConfig = () => {
   }
 
   if (
+    !env.MAIL_ACCOUNT_AGGREGATION_ISSUES_LINK ||
+    env.MAIL_ACCOUNT_AGGREGATION_ISSUES_LINK.indexOf('@(ACCOUNT_PID)') < 0
+  ) {
+    throw new Error(
+      `Invalid configuration: MAIL_ACCOUNT_AGGREGATION_ISSUES_LINK should be present and contain token "@(ACCOUNT_PID)"; got: ${
+        env.MAIL_ACCOUNT_AGGREGATION_ISSUES_LINK
+      }`
+    )
+  }
+
+  if (
     !env.MAIL_STORY_PUBLICATION_NOTIFICATION_LINK ||
     env.MAIL_STORY_PUBLICATION_NOTIFICATION_LINK.indexOf('@(STORY_PID)') < 0
   ) {
@@ -122,6 +133,12 @@ const buildMailConfig = () => {
       ),
       accountCreationNotification: createLinkBuilder(
         buildLink(env.MAIL_ACCOUNT_CREATION_NOTIFICATION_LINK),
+        {
+          accountPid: 'ACCOUNT_PID',
+        }
+      ),
+      accountAggregationIssues: createLinkBuilder(
+        buildLink(env.MAIL_ACCOUNT_AGGREGATION_ISSUES_LINK),
         {
           accountPid: 'ACCOUNT_PID',
         }

@@ -4,6 +4,10 @@ import { SourceStatus, SystemUserId } from 'store/enums'
 import Id from 'store/types/Id'
 import Scope from 'api/Scope'
 import updateSource from 'api/dal/Source/updateSource'
+import accountAggregationIssues from '@frankmoney/frank-mail/accountAggregationIssues'
+import { TeamMemberRole } from 'store/enums'
+import listUsers from 'api/dal/User/listUsers'
+import getSource from 'api/dal/Source/getSource'
 
 const handleImportFailedHook = async (
   ctx: Context,
@@ -33,6 +37,51 @@ const handleImportFailedHook = async (
     )
 
     if (updatedSourceId) {
+      await scope.uow.commit()
+
+      const account = await getSource(
+        { where: { id: { eq: updatedSourceId } } },
+        scope
+      )
+
+      const link = scope.config.MAIL.links.accountAggregationIssues({
+        accountPid: account.pid,
+      })
+
+      const users = await listUsers(
+        {
+          where: {
+            teamMembers: {
+              any: {
+                roleId: { eq: TeamMemberRole.administrator },
+                team: {
+                  accounts: {
+                    any: {
+                      id: { eq: account.id },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        scope
+      )
+
+      await Promise.all(
+        users.map(async user => {
+          const mail = accountAggregationIssues({
+            data: {
+              account,
+              user,
+              link,
+            },
+          })
+
+          await scope.mailer.send({ to: user.email }, mail)
+        })
+      )
+
       ctx.response.status = 200
       ctx.response.body = { code: 'ok' }
     } else {
