@@ -40,7 +40,7 @@ const sourceUpdate = createPrivateResolver(
 )
 
 export default createMutations(field => ({
-  sourceActivate: field
+  sourceUpdate: field
     .ofType(SourceStateType)
     .args(arg => ({
       sourcePid: arg.ofId(),
