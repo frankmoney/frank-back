@@ -15,22 +15,22 @@ export default createMutation<Args, Id>(
   async (args, { db }) =>
     await db.scalar<Id>(
       sql`
-      insert into
-        "${teamMember}" (
-          "${teamMember.creatorId}",
-          "${teamMember.teamId}",
-          "${teamMember.userId}",
-          "${teamMember.roleId}"
-        )
-      values
-        (
-          ${SystemUserId.system},
-          ${args.teamId},
-          ${args.userId},
-          ${args.roleId}
-        )
-      returning
-        "${teamMember.id}"
-    `
+        insert into
+          "${teamMember}" (
+            "${teamMember.creatorId}",
+            "${teamMember.teamId}",
+            "${teamMember.userId}",
+            "${teamMember.roleId}"
+          )
+        values
+          (
+            ${SystemUserId.system},
+            ${args.teamId},
+            ${args.userId},
+            ${args.roleId}
+          )
+        returning
+          "${teamMember.id}"
+      `
     )
 )

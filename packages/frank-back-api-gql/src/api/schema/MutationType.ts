@@ -20,7 +20,10 @@ import getStory from 'api/dal/Story/getStory'
 import updateStory, { Args as UpdateStoryArgs } from 'api/dal/Story/updateStory'
 import deleteStoryPayments from 'api/dal/StoryPayment/deleteStoryPayments'
 import mergeStoryPayments from 'api/dal/StoryPayment/mergeStoryPayments'
+import getTeam from 'api/dal/Team/getTeam'
 import updateTeamMemberByPidAndUserId from 'api/dal/TeamMember/updateTeamMemberByPidAndUserId'
+import createTeamMemberInvite from 'api/dal/TeamMemberInvite/createTeamMemberInvite'
+import getTeamMemberInvite from 'api/dal/TeamMemberInvite/getTeamMemberInvite'
 import getUser from 'api/dal/User/getUser'
 import listUsers from 'api/dal/User/listUsers'
 import updateUserAvatarById from 'api/dal/User/updateUserAvatarById'
@@ -33,6 +36,7 @@ import mapCategory from 'api/mappers/mapCategory'
 import mapPeer from 'api/mappers/mapPeer'
 import mapStory from 'api/mappers/mapStory'
 import mapTeamMember from 'api/mappers/mapTeamMember'
+import mapTeamMemberInvite from 'api/mappers/mapTeamMemberInvite'
 import mapUser from 'api/mappers/mapUser'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import AccountUpdateUpdate from 'api/types/AccountUpdateUpdate'
@@ -54,6 +58,7 @@ import PeerUpdateUpdateInput from './PeerUpdateUpdateInput'
 import StoryDeleteType from './StoryDeleteType'
 import StoryType from './StoryType'
 import StoryUpdateUpdateInput from './StoryUpdateUpdateInput'
+import TeamMemberInviteType from './TeamMemberInviteType'
 import TeamMemberRoleType from './TeamMemberRoleType'
 import TeamMemberType from './TeamMemberType'
 import UserType from './UserType'
@@ -159,6 +164,67 @@ const MutationType = Type('Mutation', type =>
             )
 
             return mapTeamMember({ member, user, currentUserId: scope.user.id })
+          }
+        )
+      ),
+    teamMemberInviteCreate: field
+      .ofType(TeamMemberInviteType)
+      .args(arg => ({
+        teamPid: arg.ofId(),
+        email: arg.ofString(),
+        note: arg.ofString().nullable(),
+      }))
+      .resolve(
+        createPrivateResolver(
+          'teamMemberInviteCreate',
+          async ({ args, scope }) => {
+            const userId = scope.user.id
+
+            const team = await getTeam(
+              {
+                where: {
+                  pid: { eq: args.teamPid },
+                  members: {
+                    any: {
+                      user: { id: { eq: userId } },
+                      and: {
+                        or: [
+                          { roleId: { eq: TeamMemberRole.manager } },
+                          { roleId: { eq: TeamMemberRole.administrator } },
+                        ],
+                      },
+                    },
+                  },
+                },
+              },
+              scope
+            )
+
+            if (!team) {
+              throw notFoundError()
+            }
+
+            const inviteId = await createTeamMemberInvite(
+              {
+                creatorId: userId,
+                email: args.email.trim(),
+                note: (args.note && args.note.trim()) || null,
+                teamId: team.id,
+                roleId: TeamMemberRole.manager,
+              },
+              scope
+            )
+
+            const invite = await getTeamMemberInvite(
+              { where: { id: { eq: inviteId } } },
+              scope
+            )
+
+            if (!invite) {
+              throw notFoundError()
+            }
+
+            return mapTeamMemberInvite(invite)
           }
         )
       ),
