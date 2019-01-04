@@ -217,6 +217,17 @@ declare module 'mx-atrium' {
           memberGuid: string
         }
       }): Promise<Response<any>>
+
+      public listMemberCredentials(args: {
+        params: {
+          userGuid: string
+          memberGuid: string
+        }
+      }): Promise<
+        Response<{
+          credentials: any[]
+        }>
+      >
     }
   }
 

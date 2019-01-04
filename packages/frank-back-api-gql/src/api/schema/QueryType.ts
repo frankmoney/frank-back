@@ -12,8 +12,10 @@ import onboarding from 'api/resolvers/onboarding'
 import onboardingInstitutions from 'api/resolvers/onboardingInstitutions'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import createResolver from 'api/resolvers/utils/createResolver'
+import sourceState from 'api/resolvers/sourceState'
 import OnboardingType from './OnboardingType'
 import AccountType from './AccountType'
+import SourceStateType from './SourceStateType'
 import TeamType from './TeamType'
 import UserType from './UserType'
 
@@ -118,6 +120,12 @@ const QueryType = Type('Query', type =>
         name: arg.ofString().nullable(),
       }))
       .resolve(onboardingInstitutions),
+    sourceState: field
+      .ofType(SourceStateType)
+      .args(arg => ({
+        sourcePid: arg.ofId(),
+      }))
+      .resolve(sourceState),
   }))
 )
 

@@ -248,6 +248,24 @@ export default class AtriumClient {
     )
   }
 
+  public async listMemberCredentials({
+    userGuid,
+    memberGuid,
+  }: {
+    userGuid: string
+    memberGuid: string
+  }) {
+    return this.handleResponse(
+      await this.client.listMemberCredentials({
+        params: {
+          userGuid,
+          memberGuid,
+        },
+      }),
+      `listMemberCredentials(${userGuid}, ${memberGuid})`
+    )
+  }
+
   private readonly log: Log
   private readonly client: Atrium.Client
 

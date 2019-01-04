@@ -42,6 +42,7 @@ import PeerUpdateUpdate from 'api/types/PeerUpdateUpdate'
 import Pid from 'api/types/Pid'
 import StoryUpdateUpdate from 'api/types/StoryUpdateUpdate'
 import paymentUpdate from 'api/resolvers/mutations/paymentUpdate'
+import sourceUpdate from 'api/resolvers/mutations/sourceUpdate'
 import AccountType from './AccountType'
 import AccountUpdateUpdateInput from './AccountUpdateUpdateInput'
 import CategoryDeleteType from './CategoryDeleteType'
@@ -62,6 +63,7 @@ const MutationType = Type('Mutation', type =>
   type.fields(field => ({
     ...onboarding(field),
     ...paymentUpdate(field),
+    ...sourceUpdate(field),
     meChangeAvatar: field
       .ofType(UserType)
       .args(arg => ({
