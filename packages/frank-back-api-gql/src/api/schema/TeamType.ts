@@ -5,10 +5,13 @@ import { TeamMemberRole } from 'store/enums'
 import getTeamMemberByPidAndTeamId from 'api/dal/TeamMember/getTeamMemberByPidAndTeamId'
 import getTeamMemberRoleByUserId from 'api/dal/TeamMember/getTeamMemberRoleByUserId'
 import listTeamMembersByTeamId from 'api/dal/TeamMember/listTeamMembersByTeamId'
+import listTeamMemberInvites from 'api/dal/TeamMemberInvite/listTeamMemberInvites'
 import getUser from 'api/dal/User/getUser'
 import listUsers from 'api/dal/User/listUsers'
 import mapTeamMember from 'api/mappers/mapTeamMember'
+import mapTeamMemberInvite from 'api/mappers/mapTeamMemberInvite'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import TeamMemberInviteType from './TeamMemberInviteType'
 import TeamMemberType from './TeamMemberType'
 
 const TeamType = Type('Team', type =>
@@ -22,7 +25,7 @@ const TeamType = Type('Team', type =>
       }))
       .resolve(
         createPrivateResolver(
-          'team:member',
+          'Team:member',
           async ({ parent, args, scope }) => {
             const team: Team = parent.$source
 
@@ -56,7 +59,7 @@ const TeamType = Type('Team', type =>
         )
       ),
     members: field.listOf(TeamMemberType).resolve(
-      createPrivateResolver('team:members', async ({ parent, args, scope }) => {
+      createPrivateResolver('Team:members', async ({ parent, args, scope }) => {
         const team: Team = parent.$source
 
         const members = await listTeamMembersByTeamId(
@@ -90,6 +93,23 @@ const TeamType = Type('Team', type =>
         )
 
         return result
+      })
+    ),
+    invites: field.listOf(TeamMemberInviteType).resolve(
+      createPrivateResolver('Team:invites', async ({ parent, args, scope }) => {
+        const team: Team = parent.$source
+
+        const invites = await listTeamMemberInvites(
+          {
+            where: {
+              team: { id: { eq: team.id } },
+              usedAt: { isNull: true },
+            },
+          },
+          scope
+        )
+
+        return mapTeamMemberInvite(invites)
       })
     ),
   }))

@@ -7,7 +7,6 @@ import TeamType from './TeamType'
 
 const TeamMemberInviteType = Type('TeamMemberInvite', type =>
   type.fields(field => ({
-    token: field.ofString(),
     email: field.ofString(),
     note: field.ofString().nullable(),
     team: field.ofType(TeamType).resolve(

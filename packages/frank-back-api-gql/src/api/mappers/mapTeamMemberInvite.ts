@@ -5,7 +5,6 @@ import map from './map'
 
 const mapTeamMemberInvite: Mapper<Target, Source> = map<Target>()
   .from<Source>()
-  .for('token', 'token')
   .for('createdAt', 'createdAt')
   .for('updatedAt', 'updatedAt')
   .for('email', 'email')

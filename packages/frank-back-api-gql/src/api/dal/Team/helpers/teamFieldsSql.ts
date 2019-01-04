@@ -14,7 +14,7 @@ const teamFieldsSql = (alias: string | Sql): Sql => {
       sql`"${alias$}"."${team.updaterId}"`,
       sql`"${alias$}"."${team.name}"`,
     ],
-    ' '
+    ', '
   )
 }
 

@@ -10,6 +10,7 @@ export const up = async ({ ddl }: MigrationContext) => {
   const idSeqName = `sq:${teamMemberInvite}(${teamMemberInvite.id})`
 
   await ddl(
+    x => x.create.sequence(idSeqName),
     x =>
       x.create
         .table(teamMemberInvite)

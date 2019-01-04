@@ -1,4 +1,5 @@
 import { sql, where } from 'sql'
+import mapTeamMemberInvite from 'store/mappers/mapTeamMemberInvite'
 import { teamMemberInvite } from 'store/names'
 import TeamMemberInvite from 'store/types/TeamMemberInvite'
 import createQuery from '../createQuery'
@@ -8,17 +9,20 @@ import teamMemberInvitePredicateSql from './helpers/teamMemberInvitePredicateSql
 
 export type Args = {
   where: TeamMemberInviteWhere
+  take?: number
+  skip?: number
 }
 
-export default createQuery<Args, TeamMemberInvite>(
-  'getTeamMemberInvite',
+export default createQuery<Args, TeamMemberInvite[]>(
+  'listTeamMemberInvites',
   (args, { db }) =>
-    db.first(
+    db.query(
       sql`
         select ${teamMemberInviteFieldsSql('i')}
         from "${teamMemberInvite}" i
         ${where(teamMemberInvitePredicateSql('i', args.where))}
-        limit 1
-      `
+        order by "${teamMemberInvite.createdAt}" asc
+      `,
+      mapTeamMemberInvite
     )
 )
