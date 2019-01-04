@@ -1,5 +1,6 @@
 import { isNil } from 'ramda'
 import storyPublicationNotification from '@frankmoney/frank-mail/storyPublicationNotification'
+import teamMemberInviteLetter from '@frankmoney/frank-mail/teamMemberInvite'
 import { Type } from 'gql'
 import { sql } from 'sql'
 import { TeamMemberRole, UserType as UserTypeEnum } from 'store/enums'
@@ -177,7 +178,7 @@ const MutationType = Type('Mutation', type =>
       .resolve(
         createPrivateResolver(
           'teamMemberInviteCreate',
-          async ({ args, scope }) => {
+          async ({ log, args, scope }) => {
             const userId = scope.user.id
 
             const team = await getTeam(
@@ -222,6 +223,42 @@ const MutationType = Type('Mutation', type =>
 
             if (!invite) {
               throw notFoundError()
+            }
+
+            const creator = await getUser(
+              { where: { id: { eq: userId } } },
+              scope
+            )
+
+            await scope.uow.commit()
+
+            try {
+              const mail = teamMemberInviteLetter({
+                data: {
+                  admin: {
+                    lastName: creator.lastName,
+                    firstName: creator.firstName,
+                  },
+                  team: {
+                    name: team.name,
+                  },
+                  link: scope.config.MAIL.links.teamMemberInvite({
+                    token: invite.token,
+                  }),
+                },
+              })
+
+              await scope.mailer.send({ to: invite.email }, mail)
+
+              log.debug(
+                'Sent team member invitation ' + `mail to ${invite.email}`
+              )
+            } catch (exc) {
+              log.error(
+                exc,
+                'Failed to send team member ' +
+                  `invitation mail to ${invite.email}`
+              )
             }
 
             return mapTeamMemberInvite(invite)

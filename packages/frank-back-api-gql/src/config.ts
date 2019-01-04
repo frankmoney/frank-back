@@ -67,6 +67,17 @@ const buildMailConfig = () => {
   }
 
   if (
+    !env.MAIL_TEAM_MEMBER_INVITE_LINK ||
+    env.MAIL_TEAM_MEMBER_INVITE_LINK.indexOf('@(TOKEN)') < 0
+  ) {
+    throw new Error(
+      `Invalid configuration: MAIL_TEAM_MEMBER_INVITE_LINK should be present and contain token "@(TOKEN)"; got: ${
+        env.MAIL_TEAM_MEMBER_INVITE_LINK
+      }`
+    )
+  }
+
+  if (
     !env.MAIL_PASSWORD_RESET_REQUEST_LINK ||
     env.MAIL_PASSWORD_RESET_REQUEST_LINK.indexOf('@(TOKEN)') < 0
   ) {
@@ -121,6 +132,12 @@ const buildMailConfig = () => {
       base: linkBase,
       userCreationConfirmation: createLinkBuilder(
         buildLink(env.MAIL_USER_CREATION_CONFIRMATION_LINK),
+        {
+          token: 'TOKEN',
+        }
+      ),
+      teamMemberInvite: createLinkBuilder(
+        buildLink(env.MAIL_TEAM_MEMBER_INVITE_LINK),
         {
           token: 'TOKEN',
         }
