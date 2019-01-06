@@ -76,6 +76,8 @@ const syncMemberStatus = async (
       scope,
     }
 
+    log.trace(`member status: ${member.connection_status}`)
+
     const handler = handlers[member.connection_status]
 
     if (handler) {

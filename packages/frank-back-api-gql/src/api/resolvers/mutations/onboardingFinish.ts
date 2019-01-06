@@ -54,6 +54,8 @@ const onboardingFinish = createPrivateResolver(
       scope
     )
 
+    await scope.uow.commit()
+
     const categories = existingOnboarding.categories || {}
 
     const spendingCategories = R.map(
