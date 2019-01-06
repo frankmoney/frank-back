@@ -10,6 +10,7 @@ import { Image } from 'react-html-email'
 export type TeamMemberInviteData = {
   admin: UserType
   team: TeamType
+  note?: string
   link: string
 }
 
@@ -37,6 +38,10 @@ const mainTextStyle = {
   paddingTop: '23px',
 }
 
+const noteTextStyle = {
+  color: 'rgba(32, 40, 74, 0.5)',
+}
+
 const secondPicContainerStyle = {
   paddingTop: '70px',
 }
@@ -57,7 +62,7 @@ const linkStyle = {
 
 
 export default createTemplate<TeamMemberInviteData>(
-  ({ data: { link, admin, team } }) => {
+  ({ data: { link, admin, team, note } }) => {
 
     const adminFullName = getUserFullName(admin)
 
@@ -72,9 +77,12 @@ export default createTemplate<TeamMemberInviteData>(
           <Item style={headerStyle}>
             <b>Alex has invited you to join team at Frank</b>
           </Item>
-          <Item style={mainTextStyle}>
-            A note for you: Please help me out with connecting our bank account to Frank
-          </Item>
+          {
+            note &&
+            <Item style={mainTextStyle}>
+              A note for you: <span style={noteTextStyle}>Please help me out with connecting our bank account to Frank</span>
+            </Item>
+          }
           <Item>
             <Button link={link} name='Join now' align='center'/>
           </Item>

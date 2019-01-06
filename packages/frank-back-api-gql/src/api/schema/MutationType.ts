@@ -242,6 +242,7 @@ const MutationType = Type('Mutation', type =>
                   team: {
                     name: team.name,
                   },
+                  note: invite.note || undefined,
                   link: scope.config.MAIL.links.teamMemberInvite({
                     token: invite.token,
                   }),

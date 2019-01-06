@@ -59,6 +59,7 @@ const mails = {
       team: {
         name: 'Frank Team'
       },
+      note: 'Please help me out with connecting our bank account to Frank',
       link: 'http://paste.org'
     }
   }),
