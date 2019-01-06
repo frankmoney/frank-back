@@ -23,8 +23,8 @@ const mails = {
       creator: { firstName: 'Nick' },
       account: { name: 'Frank Money Inc' },
       story: {
-        paymentsCount: 3,
-        paymentsDates: 'May 2018',
+        paymentCount: 3,
+        paymentDates: ['2018-03-10', '2019-03-10'],
         imageUrl: 'https://iso.500px.com/wp-content/uploads/2016/11/stock-photo-159533631-1500x1000.jpg',
         title: 'Breakwater reaches 500 backers. New reward levels are released',
         description: 'Greetings to our Awesome Backers!!! Since we launched our campaign we have been working on a new and exciting feature...',

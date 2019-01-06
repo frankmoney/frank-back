@@ -1,4 +1,4 @@
-import { format, isSameDay, isSameYear } from 'date-fns'
+import { format, isSameMonth, isSameYear } from 'date-fns'
 import { UserType } from './types'
 
 const MONTH_DATE_FORMAT = 'MMM'
@@ -13,13 +13,13 @@ export const formatPaymentDates = (dates: undefined | null | [null | string, nul
     return ''
   }
 
-  if (!dates[1] || isSameDay(dates[0]!, dates[1]!)) {
+  if (!dates[1] || isSameMonth(dates[0]!, dates[1]!)) {
     return format(dates[0]!, MONTH_YEAR_DATE_FORMAT)
   }
 
   const [start, end] =
     isSameYear(dates[0]!, dates[1]!)
-      ? dates.map(x => format(x!, MONTH_DATE_FORMAT))
+      ? [format(dates[0]!, MONTH_DATE_FORMAT), format(dates[1]!, MONTH_YEAR_DATE_FORMAT)]
       : dates.map(x => format(x!, MONTH_YEAR_DATE_FORMAT))
 
   return `${start} - ${end}`
