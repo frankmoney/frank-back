@@ -3,7 +3,7 @@ import PaymentType from './PaymentType'
 
 const PaymentUpdateResultType = Type('PaymentUpdateResult', type =>
   type.fields(field => ({
-    payment: field.ofType(PaymentType),
+    payments: field.listOf(PaymentType),
     suggestedPayments: field.listOf(PaymentType),
   }))
 )
