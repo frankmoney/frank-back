@@ -1,4 +1,5 @@
 import { sql, where } from 'sql'
+import mapTeamMemberInvite from 'store/mappers/mapTeamMemberInvite'
 import { teamMemberInvite } from 'store/names'
 import TeamMemberInvite from 'store/types/TeamMemberInvite'
 import createQuery from '../createQuery'
@@ -19,6 +20,7 @@ export default createQuery<Args, TeamMemberInvite>(
         from "${teamMemberInvite}" i
         ${where(teamMemberInvitePredicateSql('i', args.where))}
         limit 1
-      `
+      `,
+      mapTeamMemberInvite
     )
 )
