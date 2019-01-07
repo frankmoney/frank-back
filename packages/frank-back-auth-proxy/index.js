@@ -146,6 +146,8 @@ app.use(
       switch (req.url) {
         case '/http/sign-in':
         case '/http/sign-in/':
+        case '/http/sign-up':
+        case '/http/sign-up/':
           const userId = proxyRes.headers['x-authenticated-user-id']
           if (userId) {
             const token = jwt.sign({ userId }, authenticationJwtKey)

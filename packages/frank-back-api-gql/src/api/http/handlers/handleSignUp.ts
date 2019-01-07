@@ -155,8 +155,9 @@ const handleSignUp = async (
       }
 
       ctx.response.status = 201
+      ctx.response.set('X-Authenticated-User-Id', userId.toString())
       ctx.response.body = {
-        token: body.user.email.trim().toLowerCase(),
+        code: 'signed_in',
       }
     } else {
       ctx.response.status = 415
