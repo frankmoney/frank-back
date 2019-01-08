@@ -4,7 +4,7 @@ import getAccount from 'api/dal/Account/getAccount'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
 import PaymentUpdateResultType from 'api/schema/PaymentUpdateResultType'
 import Payment from 'store/types/Payment'
-import Pid from 'store/types/Pid'
+import R from 'ramda'
 import paymentUpdate from './paymentUpdate'
 import suggestPayments from './suggestPayments'
 
@@ -37,9 +37,11 @@ const paymentsUpdate = createPrivateResolver(
       verified,
     }
 
-    const updatedPayments = await Promise.all<Payment>(
-      paymentsPids.map((paymentPid: Pid) =>
-        paymentUpdate(
+    const updatedPayments: Payment[] = []
+
+    for (const paymentPid of paymentsPids) {
+      updatedPayments.push(
+        await paymentUpdate(
           {
             ...paymentUpdateArgs,
             paymentPid,
@@ -47,14 +49,18 @@ const paymentsUpdate = createPrivateResolver(
           scope
         )
       )
-    )
+    }
 
     await scope.uow.commit()
 
     let suggestedPayments: Payment[] = []
 
-    if (verified === true && updatedPayments.length === 1) {
-      suggestedPayments = await suggestPayments(updatedPayments[0], scope)
+    if (verified === true) {
+      for (const payment of updatedPayments) {
+        suggestedPayments.push(...(await suggestPayments(payment, scope)))
+      }
+
+      suggestedPayments = R.uniqBy(R.prop('id'), suggestedPayments)
     }
 
     return {

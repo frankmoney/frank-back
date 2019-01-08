@@ -33,6 +33,10 @@ export default async (args: Args, scope: Scope): Promise<Payment> => {
     scope
   )
 
+  if (!payment) {
+    throw argumentError(`Payment not found; paymentPid=${paymentPid}`)
+  }
+
   const processedUserInput = await processingUserInput({
     existingPayment: payment,
     scope,
