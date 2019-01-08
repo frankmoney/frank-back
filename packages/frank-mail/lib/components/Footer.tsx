@@ -16,13 +16,6 @@ const frankLinkStyle = {
   opacity: 0.5,
 }
 
-const mediaLinkStyle = {
-  ...DEFAULT_LINK_STYLE,
-  color: LINK_COLOR,
-  opacity: 0.3,
-  marginLeft: '15px',
-}
-
 const dividerStyle = {
   backgroundColor: DIVIDER_COLOR,
   height: '1px',
@@ -36,13 +29,8 @@ export default () => {
       <Item>
         <div style={dividerStyle}/>
       </Item>
-      <Item>
-        <div style={{ float: 'right' }}>
-          <A href="#" style={mediaLinkStyle}>Medium</A>
-          <A href="#" style={mediaLinkStyle}>Facebook</A>
-          <A href="#" style={mediaLinkStyle}>Twitter</A>
-        </div>
-        <A href="#" style={frankLinkStyle}>Frank Team</A>
+      <Item align='center'>
+        <A href="https://frank.ly" style={frankLinkStyle}>Frank Team</A>
       </Item>
     </Box>
   )

@@ -39,9 +39,9 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@frankmoney/frank-mail@^1.0.19":
-  version "1.0.19"
-  resolved "https://registry.yarnpkg.com/@frankmoney/frank-mail/-/frank-mail-1.0.19.tgz#bab5f0b1ffcc252a2f200da272ea6122e5424189"
+"@frankmoney/frank-mail@^1.0.20":
+  version "1.0.20"
+  resolved "https://registry.yarnpkg.com/@frankmoney/frank-mail/-/frank-mail-1.0.20.tgz#b717436b467677e211e9bd7b28177044ff141513"
   dependencies:
     "@types/express" "^4.16.0"
     date-fns "1.29.0"
