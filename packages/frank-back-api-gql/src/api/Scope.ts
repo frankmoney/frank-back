@@ -26,6 +26,7 @@ export default class Scope {
         mailgunDomain: this.config.MAILGUN_DOMAIN,
         mailgunApiKey: this.config.MAILGUN_API_KEY,
         from: this.config.MAIL.from,
+        debugEmailAddress: this.config.MAIL.debugEmailAddress,
       }))
     )
   }

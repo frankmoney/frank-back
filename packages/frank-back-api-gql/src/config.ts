@@ -123,11 +123,14 @@ const buildMailConfig = () => {
 
   const from = env.MAIL_FROM
   const linkBase = env.MAIL_LINK_BASE
+  const debugEmailAddress =
+    (env.MAIL_DEBUG_ADDRESS && env.MAIL_DEBUG_ADDRESS.trim()) || undefined
 
   const buildLink = (link: string) => new URL(link, linkBase).toString()
 
   const result = {
     from,
+    debugEmailAddress,
     links: {
       base: linkBase,
       userCreationConfirmation: createLinkBuilder(
