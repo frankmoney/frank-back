@@ -767,7 +767,12 @@ const MutationType = Type('Mutation', type =>
 
           await deleteStory({ userId, where: { id: { eq: story.id } } }, scope)
 
-          return mapStory(story)
+          const account = await getAccount(
+            { userId, where: { id: { eq: story.accountId } } },
+            scope
+          )
+
+          return { account }
         })
       ),
     storyUpdate: field
