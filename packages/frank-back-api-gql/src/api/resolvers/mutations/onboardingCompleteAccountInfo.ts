@@ -22,6 +22,7 @@ export default createOnboardingMutation({
           ...existingOnboarding.account,
           bankName: existingOnboarding.institution.name,
           bankLogo: existingOnboarding.institution.mediumLogoUrl,
+          bankLink: existingOnboarding.institution.url,
         },
         creatorId: scope.user!.id,
       },
