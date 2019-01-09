@@ -73,7 +73,7 @@ export default async (sourceId, daysAgo) => {
 
     const sourceDataList = [
       source.data,
-      { lastUpdateDate: (new Date).toISOString },
+      { lastUpdateDate: (new Date()).toISOString() },
       humps.camelizeKeys(mxResponseAccount.account),
     ]
 
