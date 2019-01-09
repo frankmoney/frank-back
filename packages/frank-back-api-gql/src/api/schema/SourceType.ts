@@ -43,7 +43,7 @@ const SourceType = Type('Source', type =>
       .resolve(
         createResolver(
           'Source:bankLogo',
-          async ({ parent }) => parent.$source.data.bankLogo
+          ({ parent }) => parent.$source.data.bankLogo
         )
       ),
     bankName: field
@@ -52,7 +52,41 @@ const SourceType = Type('Source', type =>
       .resolve(
         createResolver(
           'Source:bankName',
-          async ({ parent }) => parent.$source.data.bankName
+          ({ parent }) => parent.$source.data.bankName
+        )
+      ),
+    bankLink: field
+      .ofString()
+      .nullable()
+      .resolve(
+        createResolver(
+          'Source:bankLink',
+          ({ parent }) => parent.$source.data.bankLink
+        )
+      ),
+    balance: field
+      .ofFloat()
+      .resolve(
+        createResolver(
+          'Source:balance',
+          ({ parent }) => parent.$source.data.balance
+        )
+      ),
+    connectedOn: field
+      .ofDate()
+      .resolve(
+        createResolver(
+          'Source.connectedOn',
+          ({parent}) => parent.$source.createdAt
+        )
+      ),
+    lastUpdate: field
+      .ofDate()
+      .nullable()
+      .resolve(
+        createResolver(
+          'Source.lastUpdate',
+          ({parent}) => parent.$source.data.lastUpdateDate
         )
       ),
   }))
