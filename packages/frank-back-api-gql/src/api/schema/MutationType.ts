@@ -48,6 +48,7 @@ import Pid from 'api/types/Pid'
 import StoryUpdateUpdate from 'api/types/StoryUpdateUpdate'
 import paymentUpdate from 'api/resolvers/mutations/paymentUpdate'
 import sourceUpdate from 'api/resolvers/mutations/sourceUpdate'
+import acceptInvite from 'api/resolvers/mutations/acceptInvite'
 import AccountType from './AccountType'
 import AccountUpdateUpdateInput from './AccountUpdateUpdateInput'
 import CategoryDeleteType from './CategoryDeleteType'
@@ -70,6 +71,7 @@ const MutationType = Type('Mutation', type =>
     ...onboarding(field),
     ...paymentUpdate(field),
     ...sourceUpdate(field),
+    ...acceptInvite(field),
     meChangeAvatar: field
       .ofType(UserType)
       .args(arg => ({
