@@ -8,6 +8,12 @@ import Scope from 'api/Scope'
 import createTeam from 'api/dal/Team/createTeam'
 import createTeamMember from 'api/dal/TeamMember/createTeamMember'
 import createPersonUserMaybe from 'api/dal/User/createPersonUserMaybe'
+import TeamMemberInvite from 'store/types/TeamMemberInvite'
+import getTeamMemberInvite from 'api/dal/TeamMemberInvite/getTeamMemberInvite'
+import { argumentError } from 'api/errors/ArgumentError'
+import Id from 'store/types/Id'
+import getTeam from 'api/dal/Team/getTeam'
+import updateTeamMemberInvite from 'api/dal/TeamMemberInvite/updateTeamMemberInvite'
 
 type Body = {
   team: {
@@ -22,6 +28,7 @@ type Body = {
     firstName: string
     phone?: string
   }
+  inviteToken?: string
 }
 
 const nullOrEmpty = (str: undefined | null | string) => !str || !str.trim()
@@ -47,20 +54,46 @@ const handleSignUp = async (
 
       const body: Body = await parseBody.json(ctx)
 
+      let teamMemberInvite: TeamMemberInvite | undefined
+
       if (!body) {
         return respondWithInvalidArgument()
       }
 
-      if (!body.team) {
-        return respondWithInvalidArgument('team')
+      if (body.inviteToken) {
+        try {
+
+          teamMemberInvite = await getTeamMemberInvite(
+            {
+              where: {
+                token: { eq: body.inviteToken.trim() },
+              },
+            },
+            scope
+          )
+
+          if (!teamMemberInvite) {
+            throw argumentError('Invalid invite token')
+          }
+
+          if (teamMemberInvite.usedAt) {
+            throw argumentError('Invite already used')
+          }
+        } catch (e) {
+          return respondWithInvalidArgument('inviteToken')
+        }
+      } else {
+        if (!body.team) {
+          return respondWithInvalidArgument('team')
+        }
+
+        if (nullOrEmpty(body.team.name)) {
+          return respondWithInvalidArgument('team.name')
+        }
       }
 
       if (!body.user) {
         return respondWithInvalidArgument('user')
-      }
-
-      if (nullOrEmpty(body.team.name)) {
-        return respondWithInvalidArgument('team.name')
       }
 
       if (nullOrEmpty(body.user.email)) {
@@ -75,9 +108,33 @@ const handleSignUp = async (
         return respondWithInvalidArgument('user.firstName')
       }
 
-      const name = body.team.name.trim()
-      const city = normalize(body.team.city)
-      const size = normalize(body.team.size)
+      let teamId: Id
+
+      if (teamMemberInvite) {
+        const team = await getTeam(
+          {
+            where: {
+              id: { eq: teamMemberInvite.teamId },
+            },
+          },
+          scope
+        )
+
+        teamId = team.id
+      } else {
+        const name = body.team.name.trim()
+        const city = normalize(body.team.city)
+        const size = normalize(body.team.size)
+
+        teamId = await createTeam(
+          {
+            name,
+            city,
+            size,
+          },
+          scope
+        )
+      }
 
       const email = body.user.email.trim()
       const lastName = normalize(body.user.lastName)
@@ -90,15 +147,6 @@ const handleSignUp = async (
         config.USER_COLORS[
           Math.floor(Math.random() * config.USER_COLORS.length)
         ]
-
-      const teamId = await createTeam(
-        {
-          name,
-          city,
-          size,
-        },
-        scope
-      )
 
       const { status, userId } = await createPersonUserMaybe(
         {
@@ -128,6 +176,18 @@ const handleSignUp = async (
         },
         scope
       )
+
+      if (teamMemberInvite) {
+        // invalidate invite
+        await updateTeamMemberInvite(
+          {
+            teamMemberInviteId: teamMemberInvite.id,
+            usedAt: new Date().toISOString(),
+            userId,
+          },
+          scope
+        )
+      }
 
       await scope.uow.commit()
 
