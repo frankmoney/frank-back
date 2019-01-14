@@ -545,7 +545,7 @@ const MutationType = Type('Mutation', type =>
             {
               userId,
               where: {
-                id: { eq: args.accountId },
+                pid: { eq: args.accountPid },
                 team: {
                   members: {
                     any: {
