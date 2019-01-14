@@ -62,7 +62,6 @@ const handleSignUp = async (
 
       if (body.inviteToken) {
         try {
-
           teamMemberInvite = await getTeamMemberInvite(
             {
               where: {
@@ -97,7 +96,9 @@ const handleSignUp = async (
       }
 
       if (nullOrEmpty(body.user.email)) {
-        return respondWithInvalidArgument('user.email')
+        if (!teamMemberInvite) {
+          return respondWithInvalidArgument('user.email')
+        }
       }
 
       if (nullOrEmpty(body.user.password)) {
@@ -136,7 +137,10 @@ const handleSignUp = async (
         )
       }
 
-      const email = body.user.email.trim()
+      const email = teamMemberInvite
+        ? teamMemberInvite.email
+        : body.user.email.trim()
+
       const lastName = normalize(body.user.lastName)
       const firstName = body.user.firstName.trim()
       const phone = normalize(body.user.phone)
