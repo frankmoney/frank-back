@@ -54,7 +54,8 @@ const mails = {
   'TeamMemberInvite': TeamMemberInvite({
     data: {
       admin: {
-        firstName: 'Tom'
+        firstName: 'Tom',
+        lastName: 'Kzkv',
       },
       team: {
         name: 'Frank Team'

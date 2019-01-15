@@ -60,7 +60,7 @@ export default createTemplate<TeamMemberInviteData>(
             <Image src={IMAGE1_URL} width={IMAGE1_WIDTH} height={IMAGE1_HEIGHT} alt='Invite pic'/>
           </Item>
           <Item style={headerStyle}>
-            <b>Alex has invited you to join team at Frank</b>
+            <b>{admin.firstName} has invited you to join team at Frank</b>
           </Item>
           {
             note &&
