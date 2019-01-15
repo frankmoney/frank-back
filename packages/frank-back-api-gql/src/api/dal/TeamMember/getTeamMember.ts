@@ -11,16 +11,14 @@ export type Args = {
   where: TeamMemberWhere
 }
 
-export default createQuery<Args, TeamMember>(
-  'getTeamMember',
-  (args, { db }) =>
-    db.first(
-      sql`
+export default createQuery<Args, TeamMember>('getTeamMember', (args, { db }) =>
+  db.first(
+    sql`
         select ${teamMemberFieldsSql('m')}
         from "${teamMember}" m
         ${where(teamMemberPredicateSql('m', args.where))}
         limit 1
       `,
-      mapTeamMember
-    )
+    mapTeamMember
+  )
 )

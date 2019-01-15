@@ -77,7 +77,7 @@ const SourceType = Type('Source', type =>
       .resolve(
         createResolver(
           'Source.connectedOn',
-          ({parent}) => parent.$source.createdAt
+          ({ parent }) => parent.$source.createdAt
         )
       ),
     lastUpdate: field
@@ -86,7 +86,7 @@ const SourceType = Type('Source', type =>
       .resolve(
         createResolver(
           'Source.lastUpdate',
-          ({parent}) => parent.$source.data.lastUpdateDate
+          ({ parent }) => parent.$source.data.lastUpdateDate
         )
       ),
   }))

@@ -2,6 +2,7 @@ import parseBody from 'co-body'
 import { Context } from 'koa'
 import userCreationConfirmationMail from '@frankmoney/frank-mail/userCreationConfirmation'
 import config from 'config'
+import { sql } from 'sql'
 import { TeamMemberRole } from 'store/enums'
 import hashPassword from 'utils/hashPassword'
 import Scope from 'api/Scope'
@@ -137,9 +138,9 @@ const handleSignUp = async (
         )
       }
 
-      const email = teamMemberInvite
-        ? teamMemberInvite.email
-        : body.user.email.trim()
+      const email =
+        (body.user.email && body.user.email.trim()) ||
+        teamMemberInvite!.email.trim()
 
       const lastName = normalize(body.user.lastName)
       const firstName = body.user.firstName.trim()
@@ -185,9 +186,11 @@ const handleSignUp = async (
         // invalidate invite
         await updateTeamMemberInvite(
           {
-            teamMemberInviteId: teamMemberInvite.id,
-            usedAt: new Date().toISOString(),
-            userId,
+            update: {
+              userId,
+              usedAt: sql`now() at time zone 'utc'`,
+            },
+            where: { id: { eq: teamMemberInvite.id } },
           },
           scope
         )

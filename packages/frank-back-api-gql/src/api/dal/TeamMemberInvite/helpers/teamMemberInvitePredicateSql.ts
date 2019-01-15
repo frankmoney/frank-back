@@ -4,6 +4,7 @@ import conjunction from '../../helpers/conjunction'
 import createWhereSql from '../../helpers/createWhereSql'
 import disjunction from '../../helpers/disjunction'
 import TeamMemberInviteWhere from './TeamMemberInviteWhere'
+import teamMemberInviteTeamPredicateSql from './teamMemberInviteTeamPredicateSql'
 
 const teamMemberInvitePredicateSql = (
   alias: string | Sql,
@@ -19,6 +20,8 @@ const teamMemberInvitePredicateSql = (
     createWhereSql(sql`"${alias$}"."${teamMemberInvite.id}"`, where.id),
     createWhereSql(sql`"${alias$}"."${teamMemberInvite.token}"`, where.token),
     createWhereSql(sql`"${alias$}"."${teamMemberInvite.email}"`, where.email),
+    createWhereSql(sql`"${alias$}"."${teamMemberInvite.usedAt}"`, where.usedAt),
+    teamMemberInviteTeamPredicateSql(alias$, where.team),
   ]
 
   if (where.and) {
