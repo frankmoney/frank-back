@@ -93,7 +93,7 @@ const promise = scope.uow.start().then(async () => {
     context.requestId = Math.random()
     
     // CORS *
-    context.set('Access-Control-Allow-Origin', '*')
+    ctx.set('Access-Control-Allow-Origin', '*')
     
     log.debug(
       `%s %s | user id: %s #%s`,
