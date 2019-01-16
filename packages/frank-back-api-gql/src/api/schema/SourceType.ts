@@ -66,6 +66,7 @@ const SourceType = Type('Source', type =>
       ),
     balance: field
       .ofFloat()
+      .nullable()
       .resolve(
         createResolver(
           'Source:balance',
