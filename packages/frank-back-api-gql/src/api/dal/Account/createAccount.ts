@@ -11,6 +11,7 @@ import createMutation from '../createMutation'
 type Args = {
   teamId: Id
   name: string
+  description?: string
   currencyCode: string
   creatorId: Id
 }
@@ -21,6 +22,7 @@ export default createMutation<Args, Account>(
     const columns = [
       account.teamId,
       account.name,
+      account.description,
       account.currencyCode,
       account.creatorId,
       account.public,
@@ -29,6 +31,7 @@ export default createMutation<Args, Account>(
     const values = [
       args.teamId,
       args.name,
+      args.description || null,
       args.currencyCode,
       args.creatorId,
       false,
