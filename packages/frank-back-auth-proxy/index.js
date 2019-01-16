@@ -169,5 +169,12 @@ app.use(
   }),
 )
 
+//CORS
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // tslint:disable-next-line:no-console
 app.listen(PORT, () => console.log(`Auth proxy listening on port http://localhost:${PORT}`))
