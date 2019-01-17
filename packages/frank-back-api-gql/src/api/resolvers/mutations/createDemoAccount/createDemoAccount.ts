@@ -1,14 +1,15 @@
-import Id from 'store/types/Id'
+import SqlFragment from 'sql/ast/SqlFragment'
+import { sql, join } from 'sql'
 import Scope from 'api/Scope'
 import parse from 'csv-parse/lib/sync'
 import fs from 'fs'
-import { sql } from 'sql'
 import { SystemUserId } from 'store/enums'
 import { payment } from 'store/names'
 import createAccount from 'api/dal/Account/createAccount'
 import getTeamByUserId from 'api/dal/Team/getTeamByUserId'
 import { subDays } from 'date-fns'
-import { createCategory, findCategory, isTrue } from './helpers'
+import { throwArgumentError } from 'api/errors/ArgumentError'
+import { createCategory, findCategory, findPeer, createPeer, isTrue } from './helpers'
 
 export default async (scope: Scope) => {
   const team = await getTeamByUserId({ userId: scope.user!.id }, scope)
@@ -21,7 +22,7 @@ export default async (scope: Scope) => {
       currencyCode: 'USD',
       creatorId: SystemUserId.system,
     },
-    scope
+    scope,
   )
 
   const currentDate = new Date()
@@ -33,21 +34,50 @@ export default async (scope: Scope) => {
     skip_empty_lines: true,
   })
 
+  const values: SqlFragment[] = []
+
   for (const record of records) {
     const peerName = record.peerName.trim()
     const description = record.description.trim()
-    const date = subDays(currentDate, record.daysAgo)
+    const daysAgo = parseInt(record.daysAgo, 10) || throwArgumentError()
+    const date = subDays(currentDate, daysAgo)
+    const amount = parseFloat(record.sum) || throwArgumentError()
     const categoryName = record.category.trim()
     const pending = isTrue(record.pending)
     const verified = isTrue(record.verified)
 
-    let categoryId = await findCategory(account.id, categoryName, scope.db)
+    let categoryId = verified ? await findCategory(account.id, categoryName, scope.db) : null
 
-    if (categoryName && !categoryId) {
-      categoryId = await createCategory(account.id, categoryName, scope.db)
+    let peerId = verified ? await findPeer(account.id, peerName, scope.db) : null
+
+    if (verified) {
+
+      if (!categoryId && categoryName) {
+        categoryId = await createCategory(account.id, categoryName, scope.db)
+      }
+
+      if (!peerId && peerName) {
+        peerId = await createPeer(account.id, peerName, scope.db)
+      }
     }
 
-    await scope.db.command(sql`
+    values.push(
+      sql`(
+      ${account.id},
+      ${categoryId || null},
+      ${peerId || null},
+      ${peerName},
+      ${date},
+      ${amount},
+      ${description || null},
+      ${{}},
+      ${pending},
+      ${verified}
+      )`,
+    )
+  }
+
+  await scope.db.command(sql`
       insert into
         ${payment} (
           ${payment.accountId},
@@ -62,20 +92,8 @@ export default async (scope: Scope) => {
           ${payment.verified}
         )
       values
-        ${sql`(
-          ${account.id},
-          ${categoryId || null},
-          ${null},
-          ${peerName},
-          ${date},
-          ${record.sum},
-          ${description || null},
-          ${{}},
-          ${pending},
-          ${verified}
-        )`};
+        ${join(values, ', ')};
     `)
-  }
 
   return 1
 }
