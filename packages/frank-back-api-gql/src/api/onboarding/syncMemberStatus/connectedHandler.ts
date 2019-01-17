@@ -15,6 +15,7 @@ const handler: StatusHandler = async ({
 
   if (
     !onboarding.accounts ||
+    onboarding.accounts.length < 1 ||
     onboarding.step !== ACCOUNTS_STEP ||
     onboarding.credentials.status !== SUCCESS_STATUS ||
     (onboarding.mfa && onboarding.mfa.status !== SUCCESS_STATUS)
