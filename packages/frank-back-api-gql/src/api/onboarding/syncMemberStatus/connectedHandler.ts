@@ -15,7 +15,6 @@ const handler: StatusHandler = async ({
 
   if (
     !onboarding.accounts ||
-    onboarding.accounts.length < 1 ||
     onboarding.step !== ACCOUNTS_STEP ||
     onboarding.credentials.status !== SUCCESS_STATUS ||
     (onboarding.mfa && onboarding.mfa.status !== SUCCESS_STATUS)
@@ -27,17 +26,11 @@ const handler: StatusHandler = async ({
       memberGuid,
     })
 
-    // const accountNumbersResp = await scope.mx.listMemberAccountNumbers({
-    //   userGuid,
-    //   memberGuid,
-    // })
-
-    // console.log('HERE accountNumbersResp')
-    // console.log(accountNumbersResp)
+    const step = accounts && accounts.length > 0 ? ACCOUNTS_STEP : onboarding.step
 
     const data = {
       pid: onboarding.pid,
-      step: ACCOUNTS_STEP,
+      step,
       credentials: {
         ...onboarding.credentials,
         status: SUCCESS_STATUS,
