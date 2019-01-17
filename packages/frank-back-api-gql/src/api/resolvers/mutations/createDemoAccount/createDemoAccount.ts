@@ -1,4 +1,5 @@
 import SqlFragment from 'sql/ast/SqlFragment'
+import R from 'ramda'
 import { sql, join } from 'sql'
 import Scope from 'api/Scope'
 import parse from 'csv-parse/lib/sync'
@@ -9,20 +10,41 @@ import createAccount from 'api/dal/Account/createAccount'
 import getTeamByUserId from 'api/dal/Team/getTeamByUserId'
 import { subDays } from 'date-fns'
 import { throwArgumentError } from 'api/errors/ArgumentError'
+import createSource from 'api/dal/Source/createSource'
+import env from 'env'
 import { createCategory, findCategory, findPeer, createPeer, isTrue } from './helpers'
 
 export default async (scope: Scope) => {
   const team = await getTeamByUserId({ userId: scope.user!.id }, scope)
 
+  const settings = JSON.parse(env.DEMO_ACCOUNT_SETTINGS)
+
   const account = await createAccount(
     {
       teamId: team.id,
-      name: 'Demo account',
-      description: 'Demo account description',
-      currencyCode: 'USD',
       creatorId: SystemUserId.system,
+      name: settings.name,
+      description: settings.description,
+      currencyCode: settings.currencyCode,
     },
     scope,
+  )
+
+  const source = await createSource(
+    {
+      accountId: account.id,
+      name: settings.sourceName, // original name
+      data: {
+        bankName: settings.bankName,
+        bankLogo: settings.bankLogo,
+        bankLink: settings.bankLink,
+        currencyCode: settings.currencyCode,
+        balance: settings.balance,
+        lastUpdateDate: new Date().toISOString(),
+      },
+      creatorId: scope.user!.id,
+    },
+    scope
   )
 
   const currentDate = new Date()
@@ -46,6 +68,10 @@ export default async (scope: Scope) => {
     const pending = isTrue(record.pending)
     const verified = isTrue(record.verified)
 
+    if (pending && verified) {
+      throwArgumentError()
+    }
+
     let categoryId = verified ? await findCategory(account.id, categoryName, scope.db) : null
 
     let peerId = verified ? await findPeer(account.id, peerName, scope.db) : null
@@ -64,6 +90,7 @@ export default async (scope: Scope) => {
     values.push(
       sql`(
       ${account.id},
+      ${source.id},
       ${categoryId || null},
       ${peerId || null},
       ${peerName},
@@ -81,6 +108,7 @@ export default async (scope: Scope) => {
       insert into
         ${payment} (
           ${payment.accountId},
+          ${payment.sourceId},
           ${payment.categoryId},
           ${payment.peerId},
           ${payment.peerName},
