@@ -4,6 +4,7 @@ import createLogger from './createLogger'
 import syncPayments from './syncPayments'
 import atriumClient from './atriumClient'
 import Source from './model/source'
+import request from 'request'
 
 const log = createLogger('import:handleSource')
 
