@@ -9,6 +9,7 @@ const TeamMemberType = Type('TeamMember', type =>
     email: field.ofString(),
     lastName: field.ofString().nullable(),
     firstName: field.ofString(),
+    color: field.ofInt(),
     avatar: field.ofJson().nullable(),
     role: field.ofType(TeamMemberRoleType),
     acl: field.ofType(TeamMemberAclType),
