@@ -1180,7 +1180,7 @@ const MutationType = Type('Mutation', type =>
                         story: {
                           title: updatedStory.title!,
                           imageUrl: updatedStory.cover.thumbs.sized,
-                          description: updatedStory.body.text,
+                          // description: updatedStory.body.text, // body is draftjs data
                           paymentCount: updatedAggregatedPayments.count!,
                           paymentDates: [
                             updatedAggregatedPayments.postedOnMin!,
