@@ -22,6 +22,7 @@ import updateStory, { Args as UpdateStoryArgs } from 'api/dal/Story/updateStory'
 import deleteStoryPayments from 'api/dal/StoryPayment/deleteStoryPayments'
 import mergeStoryPayments from 'api/dal/StoryPayment/mergeStoryPayments'
 import getTeam from 'api/dal/Team/getTeam'
+import updateTeam from 'api/dal/Team/updateTeam'
 import countTeamMembers from 'api/dal/TeamMember/countTeamMembers'
 import createTeamMember from 'api/dal/TeamMember/createTeamMember'
 import deleteTeamMember from 'api/dal/TeamMember/deleteTeamMember'
@@ -70,6 +71,7 @@ import TeamMemberInviteMaybeAcceptResultType from './TeamMemberInviteMaybeAccept
 import TeamMemberInviteType from './TeamMemberInviteType'
 import TeamMemberRoleType from './TeamMemberRoleType'
 import TeamMemberType from './TeamMemberType'
+import TeamType from './TeamType'
 import UserType from './UserType'
 import onboarding from './onboarding'
 
@@ -124,6 +126,59 @@ const MutationType = Type('Mutation', type =>
 
           return mapUser(user)
         })
+      ),
+    meChangeTeamName: field
+      .ofType(TeamType)
+      .args(arg => ({
+        name: arg.ofString(),
+      }))
+      .resolve(
+        createPrivateResolver(
+          'meChangeTeamName',
+          async ({ args, scope }) => {
+            const userId = scope.user.id
+
+            const teamId = await updateTeam(
+              {
+                updaterId: userId,
+                update: {
+                  name: args.name,
+                },
+                where: {
+                  members: {
+                    any: {
+                      user: {
+                        id: { eq: userId },
+                      },
+                      and: {
+                        or: [
+                          { roleId: { eq: TeamMemberRole.manager } },
+                          { roleId: { eq: TeamMemberRole.administrator } },
+                        ],
+                      },
+                    },
+                  },
+                },
+              },
+              scope
+            )
+
+            if (!teamId) {
+              throw forbiddenError()
+            }
+
+            const team = await getTeam(
+              { where: { id: { eq: teamId } } },
+              scope
+            )
+
+            if (!team) {
+              throw notFoundError()
+            }
+
+            return mapTeam(team)
+          }
+        )
       ),
     teamMemberUpdateRole: field
       .ofType(TeamMemberType)
