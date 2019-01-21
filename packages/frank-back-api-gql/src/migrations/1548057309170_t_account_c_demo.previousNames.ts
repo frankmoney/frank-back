@@ -8,7 +8,6 @@ export const account = tableEx('t_account', {
   public: 'c_public',
   teamId: 'c_team_id',
   currencyCode: 'c_currency_code',
-  demo: 'c_demo'
 })
 
 export const category = tableEx('t_category', {

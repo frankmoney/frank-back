@@ -11,6 +11,7 @@ type Account = ExtendedBase & {
   public: boolean
   teamId: Id
   currencyCode: string
+  demo: boolean
 }
 
 export default Account

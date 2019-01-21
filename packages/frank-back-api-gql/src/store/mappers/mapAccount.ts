@@ -13,6 +13,7 @@ const mapAccount: Mapper<Account> = map<Account>()
   .for('public', x => x.public)
   .for('teamId', x => x.teamId)
   .for('currencyCode', x => x.currencyCode)
+  .for('demo', x => x.demo)
   .build()
 
 export default mapAccount
