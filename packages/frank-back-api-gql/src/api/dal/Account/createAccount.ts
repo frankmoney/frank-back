@@ -12,6 +12,7 @@ type Args = {
   teamId: Id
   name: string
   description?: string
+  demo?: boolean
   currencyCode: string
   creatorId: Id
 }
@@ -26,6 +27,7 @@ export default createMutation<Args, Account>(
       account.currencyCode,
       account.creatorId,
       account.public,
+      account.demo,
     ]
 
     const values = [
@@ -35,6 +37,7 @@ export default createMutation<Args, Account>(
       args.currencyCode,
       args.creatorId,
       false,
+      args.demo || false
     ]
 
     return await db.first(

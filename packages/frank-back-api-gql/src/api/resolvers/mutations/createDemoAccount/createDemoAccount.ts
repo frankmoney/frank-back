@@ -26,6 +26,7 @@ export default async (scope: Scope) => {
       name: settings.name,
       description: settings.description,
       currencyCode: settings.currencyCode,
+      demo: true
     },
     scope,
   )
