@@ -10,7 +10,7 @@ const mapAccount: Mapper<Target, Source> = map<Target>()
   .for('name', 'name')
   .for('description', 'description')
   .for('public', 'public')
-  .for('isDemo', 'demo')
+  .for('demo', 'demo')
   .build()
 
 export default mapAccount

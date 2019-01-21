@@ -59,7 +59,7 @@ const AccountType = Type('Account', type =>
     name: field.ofString(),
     description: field.ofString().nullable(),
     public: field.ofBool(),
-    isDemo: field.ofBool(),
+    demo: field.ofBool(),
     access: field.ofType(AccountAccessType).resolve(
       createResolver(
         'Account.access',

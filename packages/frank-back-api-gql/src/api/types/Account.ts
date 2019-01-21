@@ -8,7 +8,7 @@ type Account = {
   description: string
   public: boolean
   currencyCode: string
-  isDemo: boolean
+  demo: boolean
 }
 
 export default Account
