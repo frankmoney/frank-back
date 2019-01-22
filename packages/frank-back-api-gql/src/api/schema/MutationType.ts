@@ -74,6 +74,7 @@ import TeamMemberType from './TeamMemberType'
 import TeamType from './TeamType'
 import UserType from './UserType'
 import onboarding from './onboarding'
+import mapBodyToPlainShortText from 'api/dal/Story/helpers/mapBodyToPlainShortText'
 
 const MutationType = Type('Mutation', type =>
   type.fields(field => ({
@@ -133,52 +134,46 @@ const MutationType = Type('Mutation', type =>
         name: arg.ofString(),
       }))
       .resolve(
-        createPrivateResolver(
-          'meChangeTeamName',
-          async ({ args, scope }) => {
-            const userId = scope.user.id
+        createPrivateResolver('meChangeTeamName', async ({ args, scope }) => {
+          const userId = scope.user.id
 
-            const teamId = await updateTeam(
-              {
-                updaterId: userId,
-                update: {
-                  name: args.name,
-                },
-                where: {
-                  members: {
-                    any: {
-                      user: {
-                        id: { eq: userId },
-                      },
-                      and: {
-                        or: [
-                          { roleId: { eq: TeamMemberRole.manager } },
-                          { roleId: { eq: TeamMemberRole.administrator } },
-                        ],
-                      },
+          const teamId = await updateTeam(
+            {
+              updaterId: userId,
+              update: {
+                name: args.name,
+              },
+              where: {
+                members: {
+                  any: {
+                    user: {
+                      id: { eq: userId },
+                    },
+                    and: {
+                      or: [
+                        { roleId: { eq: TeamMemberRole.manager } },
+                        { roleId: { eq: TeamMemberRole.administrator } },
+                      ],
                     },
                   },
                 },
               },
-              scope
-            )
+            },
+            scope
+          )
 
-            if (!teamId) {
-              throw forbiddenError()
-            }
-
-            const team = await getTeam(
-              { where: { id: { eq: teamId } } },
-              scope
-            )
-
-            if (!team) {
-              throw notFoundError()
-            }
-
-            return mapTeam(team)
+          if (!teamId) {
+            throw forbiddenError()
           }
-        )
+
+          const team = await getTeam({ where: { id: { eq: teamId } } }, scope)
+
+          if (!team) {
+            throw notFoundError()
+          }
+
+          return mapTeam(team)
+        })
       ),
     teamMemberUpdateRole: field
       .ofType(TeamMemberType)
@@ -1224,6 +1219,10 @@ const MutationType = Type('Mutation', type =>
                 scope
               )
 
+              const storyDescription = mapBodyToPlainShortText(
+                updatedStory.body
+              )
+
               await Promise.all(
                 users.map(async user => {
                   try {
@@ -1235,7 +1234,7 @@ const MutationType = Type('Mutation', type =>
                         story: {
                           title: updatedStory.title!,
                           imageUrl: updatedStory.cover.thumbs.sized,
-                          // description: updatedStory.body.text, // body is draftjs data
+                          description: storyDescription, // body is draftjs data
                           paymentCount: updatedAggregatedPayments.count!,
                           paymentDates: [
                             updatedAggregatedPayments.postedOnMin!,
