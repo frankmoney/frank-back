@@ -22,8 +22,13 @@ import updateStory, { Args as UpdateStoryArgs } from 'api/dal/Story/updateStory'
 import deleteStoryPayments from 'api/dal/StoryPayment/deleteStoryPayments'
 import mergeStoryPayments from 'api/dal/StoryPayment/mergeStoryPayments'
 import getTeam from 'api/dal/Team/getTeam'
+import updateTeam from 'api/dal/Team/updateTeam'
+import countTeamMembers from 'api/dal/TeamMember/countTeamMembers'
+import createTeamMember from 'api/dal/TeamMember/createTeamMember'
+import deleteTeamMember from 'api/dal/TeamMember/deleteTeamMember'
 import updateTeamMemberByPidAndUserId from 'api/dal/TeamMember/updateTeamMemberByPidAndUserId'
 import createTeamMemberInvite from 'api/dal/TeamMemberInvite/createTeamMemberInvite'
+import updateTeamMemberInvite from 'api/dal/TeamMemberInvite/updateTeamMemberInvite'
 import getTeamMemberInvite from 'api/dal/TeamMemberInvite/getTeamMemberInvite'
 import getUser from 'api/dal/User/getUser'
 import listUsers from 'api/dal/User/listUsers'
@@ -36,6 +41,7 @@ import mapAccount from 'api/mappers/mapAccount'
 import mapCategory from 'api/mappers/mapCategory'
 import mapPeer from 'api/mappers/mapPeer'
 import mapStory from 'api/mappers/mapStory'
+import mapTeam from 'api/mappers/mapTeam'
 import mapTeamMember from 'api/mappers/mapTeamMember'
 import mapTeamMemberInvite from 'api/mappers/mapTeamMemberInvite'
 import mapUser from 'api/mappers/mapUser'
@@ -48,6 +54,7 @@ import Pid from 'api/types/Pid'
 import StoryUpdateUpdate from 'api/types/StoryUpdateUpdate'
 import paymentsUpdate from 'api/resolvers/mutations/paymentsUpdate'
 import sourceUpdate from 'api/resolvers/mutations/sourceUpdate'
+import TeamMemberInviteMaybeAcceptResultCode from 'api/types/TeamMemberInviteMaybeAcceptResultCode'
 import AccountType from './AccountType'
 import AccountUpdateUpdateInput from './AccountUpdateUpdateInput'
 import CategoryDeleteType from './CategoryDeleteType'
@@ -59,11 +66,15 @@ import PeerUpdateUpdateInput from './PeerUpdateUpdateInput'
 import StoryDeleteType from './StoryDeleteType'
 import StoryType from './StoryType'
 import StoryUpdateUpdateInput from './StoryUpdateUpdateInput'
+import TeamMemberInviteAcceptResultType from './TeamMemberInviteAcceptResultType'
+import TeamMemberInviteMaybeAcceptResultType from './TeamMemberInviteMaybeAcceptResultType'
 import TeamMemberInviteType from './TeamMemberInviteType'
 import TeamMemberRoleType from './TeamMemberRoleType'
 import TeamMemberType from './TeamMemberType'
+import TeamType from './TeamType'
 import UserType from './UserType'
 import onboarding from './onboarding'
+import mapBodyToPlainShortText from 'api/dal/Story/helpers/mapBodyToPlainShortText'
 
 const MutationType = Type('Mutation', type =>
   type.fields(field => ({
@@ -115,6 +126,53 @@ const MutationType = Type('Mutation', type =>
           await updateUserPasswordById({ id: scope.user.id, hash }, scope)
 
           return mapUser(user)
+        })
+      ),
+    meChangeTeamName: field
+      .ofType(TeamType)
+      .args(arg => ({
+        name: arg.ofString(),
+      }))
+      .resolve(
+        createPrivateResolver('meChangeTeamName', async ({ args, scope }) => {
+          const userId = scope.user.id
+
+          const teamId = await updateTeam(
+            {
+              updaterId: userId,
+              update: {
+                name: args.name,
+              },
+              where: {
+                members: {
+                  any: {
+                    user: {
+                      id: { eq: userId },
+                    },
+                    and: {
+                      or: [
+                        { roleId: { eq: TeamMemberRole.manager } },
+                        { roleId: { eq: TeamMemberRole.administrator } },
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+            scope
+          )
+
+          if (!teamId) {
+            throw forbiddenError()
+          }
+
+          const team = await getTeam({ where: { id: { eq: teamId } } }, scope)
+
+          if (!team) {
+            throw notFoundError()
+          }
+
+          return mapTeam(team)
         })
       ),
     teamMemberUpdateRole: field
@@ -263,6 +321,207 @@ const MutationType = Type('Mutation', type =>
             }
 
             return mapTeamMemberInvite(invite)
+          }
+        )
+      ),
+    teamMemberInviteAccept: field
+      .ofType(TeamMemberInviteAcceptResultType)
+      .args(arg => ({
+        token: arg.ofString(),
+      }))
+      .resolve(
+        createPrivateResolver(
+          'teamMemberInviteAccept',
+          async ({ log, args, scope }) => {
+            const userId = scope.user.id
+
+            const user = await getUser({ where: { id: { eq: userId } } }, scope)
+
+            const invite = await getTeamMemberInvite(
+              {
+                where: {
+                  token: { eq: args.token },
+                  email: { eq: user.name },
+                },
+              },
+              scope
+            )
+
+            if (!invite) {
+              throw notFoundError()
+            }
+
+            if (invite.usedAt) {
+              log.error(
+                `Can not accept invitation #${
+                  invite.id
+                } because it is already used`
+              )
+              throw notFoundError()
+            }
+
+            const nextTeam = await getTeam(
+              { where: { id: { eq: invite.teamId } } },
+              scope
+            )
+
+            if (!nextTeam) {
+              log.error(
+                `Could not accept invite #${invite.id} - team #${
+                  invite.teamId
+                } not found`
+              )
+              throw notFoundError()
+            }
+
+            await deleteTeamMember({ userId: user.id }, scope)
+
+            await createTeamMember(
+              {
+                teamId: nextTeam.id,
+                userId: user.id,
+                roleId: invite.roleId || TeamMemberRole.manager,
+              },
+              scope
+            )
+
+            await updateTeamMemberInvite(
+              {
+                update: {
+                  userId: user.id,
+                  usedAt: sql`now() at time zone 'utc'`,
+                },
+                where: { id: { eq: invite.id } },
+              },
+              scope
+            )
+
+            return {
+              team: mapTeam(nextTeam),
+            }
+          }
+        )
+      ),
+    teamMemberInviteMaybeAccept: field
+      .ofType(TeamMemberInviteMaybeAcceptResultType)
+      .args(arg => ({
+        token: arg.ofString(),
+      }))
+      .resolve(
+        createPrivateResolver(
+          'teamMemberInviteMaybeAccept',
+          async ({ log, args, scope }) => {
+            const userId = scope.user.id
+
+            const user = await getUser({ where: { id: { eq: userId } } }, scope)
+
+            const invite = await getTeamMemberInvite(
+              {
+                where: {
+                  token: { eq: args.token },
+                  email: { eq: user.name },
+                },
+              },
+              scope
+            )
+
+            const team = await getTeam(
+              {
+                where: {
+                  members: {
+                    any: {
+                      user: {
+                        id: { eq: userId },
+                      },
+                    },
+                  },
+                },
+              },
+              scope
+            )
+
+            const sameTeam = invite.teamId === team.id
+
+            if (invite && (invite.usedAt ? sameTeam : !sameTeam)) {
+              if (sameTeam) {
+                return {
+                  code: TeamMemberInviteMaybeAcceptResultCode.outdated,
+                  team: mapTeam(team),
+                  invite: mapTeamMemberInvite(invite),
+                }
+              }
+
+              const otherMemberCount = await countTeamMembers(
+                {
+                  where: {
+                    team: { id: { eq: team.id } },
+                    user: { id: { neq: user.id } },
+                  },
+                },
+                scope
+              )
+
+              if (otherMemberCount > 0) {
+                const nextTeam = await getTeam(
+                  { where: { id: { eq: invite.teamId } } },
+                  scope
+                )
+
+                if (!nextTeam) {
+                  log.error(
+                    `Could not accept invite #${invite.id} - team #${
+                      invite.teamId
+                    } not found`
+                  )
+
+                  return {
+                    code: TeamMemberInviteMaybeAcceptResultCode.other,
+                    team: mapTeam(team),
+                    invite: mapTeamMemberInvite(invite),
+                  }
+                }
+
+                await deleteTeamMember({ userId: user.id }, scope)
+
+                await createTeamMember(
+                  {
+                    teamId: nextTeam.id,
+                    userId: user.id,
+                    roleId: invite.roleId || TeamMemberRole.manager,
+                  },
+                  scope
+                )
+
+                await updateTeamMemberInvite(
+                  {
+                    update: {
+                      userId: user.id,
+                      usedAt: sql`now() at time zone 'utc'`,
+                    },
+                    where: { id: { eq: invite.id } },
+                  },
+                  scope
+                )
+
+                return {
+                  code: TeamMemberInviteMaybeAcceptResultCode.accepted,
+                  team: mapTeam(nextTeam),
+                  invite: mapTeamMemberInvite(invite),
+                }
+              } else {
+                return {
+                  code: TeamMemberInviteMaybeAcceptResultCode.lastTeamMember,
+                  team: mapTeam(team),
+                  invite: mapTeamMemberInvite(invite),
+                }
+              }
+            } else {
+              return {
+                code: TeamMemberInviteMaybeAcceptResultCode.other,
+                team: mapTeam(team),
+                invite: mapTeamMemberInvite(invite),
+              }
+            }
           }
         )
       ),
@@ -543,7 +802,7 @@ const MutationType = Type('Mutation', type =>
             {
               userId,
               where: {
-                id: { eq: args.accountId },
+                pid: { eq: args.accountPid },
                 team: {
                   members: {
                     any: {
@@ -767,7 +1026,12 @@ const MutationType = Type('Mutation', type =>
 
           await deleteStory({ userId, where: { id: { eq: story.id } } }, scope)
 
-          return mapStory(story)
+          const account = await getAccount(
+            { userId, where: { id: { eq: story.accountId } } },
+            scope
+          )
+
+          return { account }
         })
       ),
     storyUpdate: field
@@ -955,6 +1219,10 @@ const MutationType = Type('Mutation', type =>
                 scope
               )
 
+              const storyDescription = mapBodyToPlainShortText(
+                updatedStory.body
+              )
+
               await Promise.all(
                 users.map(async user => {
                   try {
@@ -966,7 +1234,7 @@ const MutationType = Type('Mutation', type =>
                         story: {
                           title: updatedStory.title!,
                           imageUrl: updatedStory.cover.thumbs.sized,
-                          description: updatedStory.body.text,
+                          description: storyDescription, // body is draftjs data
                           paymentCount: updatedAggregatedPayments.count!,
                           paymentDates: [
                             updatedAggregatedPayments.postedOnMin!,

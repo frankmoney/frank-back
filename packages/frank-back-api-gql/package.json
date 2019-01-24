@@ -29,10 +29,11 @@
     }
   },
   "dependencies": {
-    "@frankmoney/frank-mail": "^1.0.19",
+    "@frankmoney/frank-mail": "^1.0.21",
     "@sentry/node": "4.4.1",
     "@types/co-body": "^0.0.3",
     "@types/debug": "^0.0.30",
+    "@types/draft-js": "^0.10.27",
     "@types/escape-string-regexp": "^1.0.0",
     "@types/graphql-type-json": "^0.1.2",
     "@types/humps": "^1.1.2",
@@ -49,6 +50,7 @@
     "damerau-levenshtein": "^1.0.4",
     "date-fns": "^1.29.0",
     "debug": "^3.1.0",
+    "draft-js": "^0.10.5",
     "escape-string-regexp": "^1.0.5",
     "graphql": "^0.13.2",
     "graphql-import": "^0.6.0",

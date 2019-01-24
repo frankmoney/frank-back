@@ -7,6 +7,7 @@ type TeamMember = {
   email: string
   lastName?: string
   firstName: string
+  color: number
   avatar?: Json
   role: string
   acl: TeamMemberAcl

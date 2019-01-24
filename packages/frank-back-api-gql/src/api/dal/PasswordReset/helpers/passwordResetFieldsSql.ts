@@ -11,6 +11,7 @@ const passwordResetFieldsSql = (alias: string | Sql): Sql => {
       sql`"${alias$}"."${passwordReset.createdAt}"`,
       sql`"${alias$}"."${passwordReset.updatedAt}"`,
       sql`"${alias$}"."${passwordReset.usedAt}"`,
+      sql`"${alias$}"."${passwordReset.userId}"`,
     ],
     ',\r\n'
   )

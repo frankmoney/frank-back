@@ -7,6 +7,7 @@ export interface MailerScope {
   mailgunDomain: string
   mailgunApiKey: string
   from: string
+  debugEmailAddress?: string
 }
 
 export default class Mailer {
@@ -18,19 +19,26 @@ export default class Mailer {
       apiKey: scope.mailgunApiKey,
     })
 
-    return new Mailer(log, scope.from, client)
+    return new Mailer(log, scope.from, client, scope.debugEmailAddress)
   }
 
   public readonly log: Log
   public readonly from: string
   public readonly client: Mailgun
   public readonly messages: Messages
+  public readonly debugEmailAddress?: string
 
-  public constructor(log: Log, from: string, client: Mailgun) {
+  public constructor(
+    log: Log,
+    from: string,
+    client: Mailgun,
+    debugEmailAddress?: string
+  ) {
     this.log = log
     this.from = from
     this.client = client
     this.messages = client.messages()
+    this.debugEmailAddress = debugEmailAddress
   }
 
   public async send(
@@ -40,8 +48,10 @@ export default class Mailer {
     try {
       const req = {
         from: this.from,
-        to,
-        subject,
+        to: this.debugEmailAddress || to,
+        subject: this.debugEmailAddress
+          ? `(Debug redirect) ${subject}`
+          : subject,
         html,
       }
 

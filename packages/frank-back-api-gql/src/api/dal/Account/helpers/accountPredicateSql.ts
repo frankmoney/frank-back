@@ -24,6 +24,7 @@ const accountPredicateSql = (
     createWhereSql(sql`"${alias$}"."${account.id}"`, where.id),
     createWhereSql(sql`"${alias$}"."${account.pid}"`, where.pid),
     createWhereSql(sql`"${alias$}"."${account.name}"`, where.name),
+    createWhereSql(sql`"${alias$}"."${account.public}"`, where.public),
     accountTeamPredicateSql(alias$, where.team),
     accountCategoriesPredicateSql(alias$, where.categories),
     accountPeersPredicateSql(alias$, where.peers),

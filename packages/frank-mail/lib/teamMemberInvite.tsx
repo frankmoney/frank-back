@@ -46,21 +46,6 @@ const secondPicContainerStyle = {
   paddingTop: '70px',
 }
 
-const footerTextStyle = {
-  ...DEFAULT_TEXT_STYLE,
-  textAlign: 'center',
-  fontSize: '18px',
-  lineHeight: '26px',
-  color: 'rgba(32, 40, 74, 0.5)',
-  paddingTop: '95px',
-}
-
-const linkStyle = {
-  color: '#484DE7',
-  textDecoration: 'none',
-}
-
-
 export default createTemplate<TeamMemberInviteData>(
   ({ data: { link, admin, team, note } }) => {
 
@@ -75,7 +60,7 @@ export default createTemplate<TeamMemberInviteData>(
             <Image src={IMAGE1_URL} width={IMAGE1_WIDTH} height={IMAGE1_HEIGHT} alt='Invite pic'/>
           </Item>
           <Item style={headerStyle}>
-            <b>Alex has invited you to join team at Frank</b>
+            <b>{admin.firstName} has invited you to join team at Frank</b>
           </Item>
           {
             note &&
@@ -94,10 +79,6 @@ export default createTemplate<TeamMemberInviteData>(
           </Item>
           <Item style={mainTextStyle}>
             Frank radically simplifies fundraising and creates new view of financial transparency
-          </Item>
-          <Item style={footerTextStyle}>
-            Questions? We’re available 24/7.<br/>
-            Reply to this email or <A href='#' style={linkStyle}>request a call back</A>.
           </Item>
         </Box>
       ),

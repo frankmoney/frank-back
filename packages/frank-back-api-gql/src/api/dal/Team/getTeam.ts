@@ -8,7 +8,7 @@ import teamFieldsSql from './helpers/teamFieldsSql'
 import teamPredicateSql from './helpers/teamPredicateSql'
 
 export type Args = {
-  where?: TeamWhere
+  where: TeamWhere
 }
 
 export default createQuery<Args, Team>('getTeam', (args, { db }) =>

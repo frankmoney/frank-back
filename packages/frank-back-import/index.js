@@ -5,6 +5,7 @@ import queue from './queue'
 import createLogger from './createLogger'
 import express from 'express'
 import bodyParser from 'body-parser'
+import clearMxUsers from './clearMxUsers'
 
 Sentry.init({ dsn: process.env.SENTRY_DSN })
 
@@ -28,6 +29,8 @@ const putAllSourcesInQueue = async () => {
 }
 
 new CronJob(CRON, putAllSourcesInQueue, null, true, 'UTC')
+
+new CronJob('0 11 * * *', clearMxUsers, null, true, 'UTC')
 
 app.post('/import', bodyParser.json(), function(req, res) {
 

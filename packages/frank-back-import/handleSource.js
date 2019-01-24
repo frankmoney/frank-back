@@ -4,6 +4,7 @@ import createLogger from './createLogger'
 import syncPayments from './syncPayments'
 import atriumClient from './atriumClient'
 import Source from './model/source'
+import request from 'request'
 
 const log = createLogger('import:handleSource')
 
@@ -47,10 +48,6 @@ export default async (sourceId, daysAgo) => {
       throw new Error(`MX account response isn't normal. sourceId: ${sourceId}, status: ${mxResponseAccount.status}`)
     }
 
-    await source.update({
-      data: Object.assign({}, source.data, humps.camelizeKeys(mxResponseAccount.account)),
-    })
-
     const mxResponseTransactions = await atriumClient.listAccountTransactions({
       params: Object.assign({}, params, { from_date: format(fromDate, DATE_FORMAT) }),
     })
@@ -74,6 +71,16 @@ export default async (sourceId, daysAgo) => {
 
       log.trace(`MX has no payments`)
     }
+
+    const sourceDataList = [
+      source.data,
+      { lastUpdateDate: (new Date()).toISOString() },
+      humps.camelizeKeys(mxResponseAccount.account),
+    ]
+
+    await source.update({
+      data: Object.assign({}, ...sourceDataList),
+    })
 
   } else {
 

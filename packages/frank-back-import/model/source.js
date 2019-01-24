@@ -23,4 +23,9 @@ export default sequelize.define('t_source', {
   freezeTableName: true,
   createdAt: false,
   updatedAt: false,
+  getterMethods: {
+    userGuid() {
+      return this.data && this.data.userGuid;
+    }
+  },
 })

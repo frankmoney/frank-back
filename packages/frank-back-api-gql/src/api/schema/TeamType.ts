@@ -2,15 +2,18 @@ import * as R from 'ramda'
 import { Type } from 'gql'
 import Team from 'store/types/Team'
 import { TeamMemberRole } from 'store/enums'
+import listAccounts from 'api/dal/Account/listAccounts'
 import getTeamMemberByPidAndTeamId from 'api/dal/TeamMember/getTeamMemberByPidAndTeamId'
 import getTeamMemberRoleByUserId from 'api/dal/TeamMember/getTeamMemberRoleByUserId'
 import listTeamMembersByTeamId from 'api/dal/TeamMember/listTeamMembersByTeamId'
 import listTeamMemberInvites from 'api/dal/TeamMemberInvite/listTeamMemberInvites'
 import getUser from 'api/dal/User/getUser'
 import listUsers from 'api/dal/User/listUsers'
+import mapAccount from 'api/mappers/mapAccount'
 import mapTeamMember from 'api/mappers/mapTeamMember'
 import mapTeamMemberInvite from 'api/mappers/mapTeamMemberInvite'
 import createPrivateResolver from 'api/resolvers/utils/createPrivateResolver'
+import AccountType from './AccountType'
 import TeamMemberInviteType from './TeamMemberInviteType'
 import TeamMemberType from './TeamMemberType'
 
@@ -18,6 +21,40 @@ const TeamType = Type('Team', type =>
   type.fields(field => ({
     pid: field.ofId(),
     name: field.ofString(),
+    accounts: field.listOf(AccountType).resolve(
+      createPrivateResolver('Team:accounts', async ({ parent, scope }) => {
+        const team: Team = parent.$source
+        const userId = scope.user.id
+
+        const accounts = await listAccounts(
+          {
+            userId,
+            where: {
+              team: { id: { eq: team.id } },
+              and: {
+                or: [
+                  { public: { eq: true } },
+                  {
+                    team: {
+                      members: {
+                        any: {
+                          user: {
+                            id: { eq: userId },
+                          },
+                        },
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+          scope
+        )
+
+        return mapAccount(accounts)
+      })
+    ),
     member: field
       .ofType(TeamMemberType)
       .args(arg => ({

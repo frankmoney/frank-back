@@ -7,6 +7,7 @@ import handleRecoverPassword from './handlers/handleRecoverPassword'
 import handleResetPassword from './handlers/handleResetPassword'
 import handleSignIn from './handlers/handleSignIn'
 import handleSignUp from './handlers/handleSignUp'
+import handleInviteInfo from './handlers/handleInviteInfo'
 
 const useHttpApi = (app: Koa, prefix?: string) => {
   prefix = prefix ? `/${prefix.replace(/(^\/+)|(\/+$)/g, '')}` : ''
@@ -47,6 +48,11 @@ const useHttpApi = (app: Koa, prefix?: string) => {
         case url.pathname === `${prefix}/sign-up`:
         case url.pathname === `${prefix}/sign-up/`:
           await handleSignUp(ctx, next, scope)
+          break
+
+        case url.pathname === `${prefix}/invite-info`:
+        case url.pathname === `${prefix}/invite-info/`:
+          await handleInviteInfo(ctx, next, scope)
           break
 
         default:

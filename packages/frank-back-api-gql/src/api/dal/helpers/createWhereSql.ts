@@ -35,6 +35,16 @@ const defaultHandlers: Handlers = {
       return sql`${expression} = ${value}`
     }
   },
+  neq: (expression, value) => {
+    if (Array.isArray(value)) {
+      const [val, cs] = value
+      return cs
+        ? sql`${expression} <> ${val}`
+        : sql`lower(${expression}) <> lower(${val})`
+    } else {
+      return sql`${expression} <> ${value}`
+    }
+  },
   gt: (expression, value) => sql`${expression} > ${value}`,
   lt: (expression, value) => sql`${expression} < ${value}`,
   gte: (expression, value) => sql`${expression} >= ${value}`,
