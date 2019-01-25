@@ -12,7 +12,13 @@ import { subDays } from 'date-fns'
 import { throwArgumentError } from 'api/errors/ArgumentError'
 import createSource from 'api/dal/Source/createSource'
 import env from 'env'
-import { createCategory, findCategory, findPeer, createPeer, isTrue } from './helpers'
+import {
+  createCategory,
+  findCategory,
+  findPeer,
+  createPeer,
+  isTrue,
+} from './helpers'
 
 export default async (scope: Scope) => {
   const team = await getTeamByUserId({ userId: scope.user!.id }, scope)
@@ -26,9 +32,9 @@ export default async (scope: Scope) => {
       name: settings.name,
       description: settings.description,
       currencyCode: settings.currencyCode,
-      demo: true
+      demo: true,
     },
-    scope,
+    scope
   )
 
   const source = await createSource(
@@ -73,12 +79,15 @@ export default async (scope: Scope) => {
       throwArgumentError()
     }
 
-    let categoryId = verified ? await findCategory(account.id, categoryName, scope.db) : null
+    let categoryId = verified
+      ? await findCategory(account.id, categoryName, scope.db)
+      : null
 
-    let peerId = verified ? await findPeer(account.id, peerName, scope.db) : null
+    let peerId = verified
+      ? await findPeer(account.id, peerName, scope.db)
+      : null
 
     if (verified) {
-
       if (!categoryId && categoryName) {
         categoryId = await createCategory(account.id, categoryName, scope.db)
       }
@@ -101,7 +110,7 @@ export default async (scope: Scope) => {
       ${{}},
       ${pending},
       ${verified}
-      )`,
+      )`
     )
   }
 

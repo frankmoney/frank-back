@@ -7,6 +7,7 @@ import PaymentWhere from './PaymentWhere'
 import paymentAccountPredicateSql from './paymentAccountPredicateSql'
 import paymentCategoryPredicateSql from './paymentCategoryPredicateSql'
 import paymentPeerPredicateSql from './paymentPeerPredicateSql'
+import paymentSourcePredicateSql from './paymentSourcePredicateSql'
 import paymentStoriesPredicateSql from './paymentStoriesPredicateSql'
 
 const paymentPredicateSql = (
@@ -27,6 +28,7 @@ const paymentPredicateSql = (
     createWhereSql(sql`"${alias$}"."${payment.verified}"`, where.verified),
     createWhereSql(sql`"${alias$}"."${payment.pending}"`, where.pending),
     paymentAccountPredicateSql(alias$, where.account),
+    paymentSourcePredicateSql(alias$, where.source),
     paymentCategoryPredicateSql(alias$, where.category),
     paymentPeerPredicateSql(alias$, where.peer),
     paymentStoriesPredicateSql(alias$, where.stories),

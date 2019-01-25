@@ -37,7 +37,7 @@ export default createMutation<Args, Account>(
       args.currencyCode,
       args.creatorId,
       false,
-      args.demo || false
+      args.demo || false,
     ]
 
     return await db.first(

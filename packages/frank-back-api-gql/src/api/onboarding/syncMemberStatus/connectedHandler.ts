@@ -26,7 +26,8 @@ const handler: StatusHandler = async ({
       memberGuid,
     })
 
-    const step = accounts && accounts.length > 0 ? ACCOUNTS_STEP : onboarding.step
+    const step =
+      accounts && accounts.length > 0 ? ACCOUNTS_STEP : onboarding.step
 
     const data = {
       pid: onboarding.pid,

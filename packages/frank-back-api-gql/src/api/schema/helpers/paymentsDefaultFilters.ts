@@ -8,6 +8,7 @@ const paymentsDefaultFilters = (arg: FieldArgumentBuilder) => ({
   amountMax: arg.ofFloat().nullable(),
   verified: arg.ofBool().nullable(),
   pending: arg.ofBool().nullable(),
+  sourcePids: arg.listOfId().nullable(),
   search: arg.ofString().nullable(),
   categoryType: arg.ofType(CategoryTypeType).nullable(),
 })

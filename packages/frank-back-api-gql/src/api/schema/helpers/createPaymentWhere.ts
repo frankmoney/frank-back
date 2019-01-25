@@ -2,6 +2,7 @@ import { isNil, mergeDeepRight } from 'ramda'
 import PaymentWhere from 'api/dal/Payment/helpers/PaymentWhere'
 import CategoryType from 'api/types/CategoryType'
 import Date from 'api/types/Date'
+import Pid from 'api/types/Pid'
 
 const createPaymentWhere = (
   args: {
@@ -11,6 +12,7 @@ const createPaymentWhere = (
     amountMax?: number
     verified?: boolean
     pending?: boolean
+    sourcePids?: null | Pid[]
     search?: string
     categoryType?: CategoryType
   },
@@ -45,6 +47,10 @@ const createPaymentWhere = (
 
     if (!isNil(args.pending)) {
       where.pending = { eq: args.pending }
+    }
+
+    if (!isNil(args.sourcePids)) {
+      where.source = { pid: { in: args.sourcePids.map(x => Number(x)) } }
     }
 
     if (args.search) {

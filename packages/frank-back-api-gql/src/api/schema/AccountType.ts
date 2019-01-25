@@ -554,12 +554,15 @@ const AccountType = Type('Account', type =>
           ({ parent, args: { search }, scope }) => {
             const account: Account = parent.$source
 
-            return listPaymentDescriptionsByAccountId({
-              accountId: account.id,
-              search,
-            }, scope)
-          },
-        ),
+            return listPaymentDescriptionsByAccountId(
+              {
+                accountId: account.id,
+                search,
+              },
+              scope
+            )
+          }
+        )
       ),
   }))
 )

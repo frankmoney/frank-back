@@ -6,4 +6,5 @@ export default interface WherePidBase {
   lt?: Pid
   gte?: Pid
   lte?: Pid
+  in?: Pid[]
 }

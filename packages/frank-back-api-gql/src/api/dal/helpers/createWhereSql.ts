@@ -49,6 +49,7 @@ const defaultHandlers: Handlers = {
   lt: (expression, value) => sql`${expression} < ${value}`,
   gte: (expression, value) => sql`${expression} >= ${value}`,
   lte: (expression, value) => sql`${expression} <= ${value}`,
+  in: (expression, value) => sql`${expression} in (${value})`,
   startsWith: (expression, value) => {
     if (Array.isArray(value)) {
       const [substring, cs] = value
