@@ -8,6 +8,7 @@ export const REVENUE_CATEGORIES_STEP = 'revenueCategories'
 export const TEAM_STEP = 'team'
 export const COMPLETED_STEP = 'completed'
 export const CANCELED_STEP = 'canceled'
+export const EXPIRED_STEP = 'expired'
 
 // statuses
 export const AWAITING_INPUT_STATUS = 'awaiting_input'

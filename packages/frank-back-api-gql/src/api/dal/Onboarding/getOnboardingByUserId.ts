@@ -3,7 +3,7 @@ import mapOnboarding from 'store/mappers/mapOnboarding'
 import { onboarding } from 'store/names'
 import Id from 'store/types/Id'
 import Onboarding from 'store/types/Onboarding'
-import { CANCELED_STEP, COMPLETED_STEP } from 'api/onboarding/constants'
+import { CANCELED_STEP, COMPLETED_STEP, EXPIRED_STEP } from 'api/onboarding/constants'
 import createQuery from '../createQuery'
 
 export type Args = {
@@ -36,6 +36,7 @@ export default createQuery<Args, Onboarding>(
       where ${onboarding.creatorId} = ${args.userId} 
       and ${onboarding.step} != ${COMPLETED_STEP}
       and ${onboarding.step} != ${CANCELED_STEP}
+      and ${onboarding.step} != ${EXPIRED_STEP}
       limit 1
     `,
       mapOnboarding
