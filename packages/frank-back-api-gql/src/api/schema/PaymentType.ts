@@ -230,7 +230,7 @@ const PaymentType = Type('Payment', type =>
       }))
       .resolve(
         createResolver(
-          'Account:suggestedDescriptions',
+          'Payment:suggestedDescriptions',
           ({ parent, args: { search }, scope }) => {
             const payment: Payment = parent.$source
 

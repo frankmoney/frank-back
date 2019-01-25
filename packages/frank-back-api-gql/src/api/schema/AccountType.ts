@@ -30,6 +30,7 @@ import mapStory from 'api/mappers/mapStory'
 import createResolver from 'api/resolvers/utils/createResolver'
 import AccountAccess from 'api/types/AccountAccess'
 import AggregatedPayments from 'api/types/AggregatedPayments'
+import listPaymentDescriptionsByAccountId from 'api/dal/Payment/listPaymentDescriptionsByAccountId'
 import AccountAccessType from './AccountAccessType'
 import AggregatedPaymentsType from './AggregatedPaymentsType'
 import CategoryType from './CategoryType'
@@ -37,6 +38,7 @@ import CurrencyType from './CurrencyType'
 import LedgerBarChartType from './LedgerBarChartType'
 import LedgerPieChartType from './LedgerPieChartType'
 import PaymentsOrderType from './PaymentsOrderType'
+import PaymentSuggestedDescriptionType from './PaymentSuggestedDescriptionType'
 import PaymentType from './PaymentType'
 import PeersOrderType from './PeersOrderType'
 import PeerType from './PeerType'
@@ -540,6 +542,24 @@ const AccountType = Type('Account', type =>
 
           return mapStory(stories)
         })
+      ),
+    paymentsDescriptions: field
+      .listOf(PaymentSuggestedDescriptionType)
+      .args(arg => ({
+        search: arg.ofString().nullable(),
+      }))
+      .resolve(
+        createResolver(
+          'Account:paymentsDescriptions',
+          ({ parent, args: { search }, scope }) => {
+            const account: Account = parent.$source
+
+            return listPaymentDescriptionsByAccountId({
+              accountId: account.id,
+              search,
+            }, scope)
+          },
+        ),
       ),
   }))
 )
