@@ -19,7 +19,7 @@ const createPeerWhere = (
   if (args) {
     if (!isNil(args.donors) || !isNil(args.recipients)) {
       // { donors: true, recipients: true } is equivalent to all
-      if (args.donors !== true || args.recipients !== null) {
+      if (args.donors !== true || args.recipients !== true) {
         const wherePaymentsBranches: PeerPaymentsWhere[] = []
 
         if (!isNil(args.donors)) {
