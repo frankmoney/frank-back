@@ -90,12 +90,6 @@ export default async (args: Args, scope: Scope): Promise<Payment> => {
       categoryUpdaterId = SystemUserId.suggestion
     }
 
-    if (canSuggestPeer(canSuggestParams)) {
-      peerId = similarPayment.peerId
-      peerName = similarPayment.peerName
-      peerUpdaterId = SystemUserId.suggestion
-    }
-
     if (canSuggestDescription(canSuggestParams)) {
       description = similarPayment.description
       descriptionUpdaterId = SystemUserId.suggestion

@@ -26,6 +26,7 @@ export const canSuggestCategory = (args: Args): boolean => {
   const { existingPayment, userInput } = args
 
   return (
+    existingPayment.verified !== true &&  // payment is new
     userInput.categoryId === undefined && // user don't set new category
     (R.isNil(existingPayment.categoryId) || // category empty
     R.isNil(existingPayment.categoryUpdaterId) || // updater is empty
@@ -37,6 +38,7 @@ export const canSuggestPeer = (args: Args): boolean => {
   const { existingPayment, userInput } = args
 
   return (
+    existingPayment.verified !== true &&  // payment is new
     userInput.peerName === undefined && // user don't set new peer
     (R.isNil(existingPayment.peerName) || // peer empty
     R.isNil(existingPayment.peerUpdaterId) || // updater is empty
@@ -48,6 +50,7 @@ export const canSuggestDescription = (args: Args): boolean => {
   const { existingPayment, userInput } = args
 
   return (
+    existingPayment.verified !== true &&  // payment is new
     userInput.description === undefined && // user don't set new description
     (R.isNil(existingPayment.description) || // description empty
     R.isNil(existingPayment.descriptionUpdaterId) || // updater is empty
