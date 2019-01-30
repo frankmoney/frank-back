@@ -44,8 +44,8 @@ export default createMutations(field => ({
     .ofType(SourceStateType)
     .args(arg => ({
       sourcePid: arg.ofId(),
-      credentials: arg.listOf(OnboardingCredentialsInput),
-      challenges: arg.listOf(OnboardingMfaChallengesInput),
+      credentials: arg.listOf(OnboardingCredentialsInput).nullable(),
+      challenges: arg.listOf(OnboardingMfaChallengesInput).nullable(),
     }))
     .resolve(sourceUpdate),
 }))
