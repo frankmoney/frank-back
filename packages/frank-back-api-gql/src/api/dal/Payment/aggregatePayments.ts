@@ -18,6 +18,7 @@ const fieldSqlMap: { [K in keyof AggregatedPayments]: Sql } = {
   postedOnMax: sql`max(p."${payment.postedOn}")`,
   amountMin: sql`min(p."${payment.amount}")`,
   amountMax: sql`max(p."${payment.amount}")`,
+  totalSum: sql`sum(p."${payment.amount}")`,
 }
 
 export default createQuery<Args, AggregatedPayments>(

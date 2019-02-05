@@ -7,6 +7,7 @@ type AggregatedPayments = Base & {
   postedOnMax?: null | Date
   amountMin?: null | number
   amountMax?: null | number
+  totalSum?: null | number
 }
 
 export default AggregatedPayments

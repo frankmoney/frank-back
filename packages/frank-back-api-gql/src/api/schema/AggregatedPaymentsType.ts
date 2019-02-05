@@ -7,6 +7,7 @@ const AggregatedPaymentsType = Type('AggregatedPayments', type =>
     postedOnMax: field.ofDate().nullable(),
     amountMin: field.ofFloat().nullable(),
     amountMax: field.ofFloat().nullable(),
+    totalSum: field.ofFloat().nullable(),
   }))
 )
 
