@@ -93,11 +93,11 @@ export default createPrivateResolver(
     const memberGuids = { userGuid, memberGuid }
 
     const {
-      member: { status },
+      member: { connection_status: connectionStatus },
     } = await scope.mx.readMember(memberGuids)
 
     for (const { mxStatuses, handler } of HANDLERS) {
-      if (mxStatuses.includes(status)) {
+      if (mxStatuses.includes(connectionStatus)) {
         return await handler(memberGuids, scope)
       }
     }
