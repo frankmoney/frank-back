@@ -22,6 +22,8 @@ import {
   FAILED_STATUS,
 } from 'api/schema/SourceStateType'
 import OnboardingScope from 'api/onboarding/OnboardingScope'
+import { SourceStatus } from 'store/enums'
+import updateSource from 'api/dal/Source/updateSource'
 import createPrivateResolver from './utils/createPrivateResolver'
 import getSource from 'api/dal/Source/getSource'
 
@@ -95,6 +97,18 @@ export default createPrivateResolver(
     const {
       member: { connection_status: connectionStatus },
     } = await scope.mx.readMember(memberGuids)
+
+    if (connectionStatus === CONNECTED_MXSTATUS && source.status !== SourceStatus.active) {
+
+      await updateSource(
+        {
+          userId: scope.user.id,
+          update: { status: SourceStatus.active },
+          where: { pid: { eq: sourcePid } },
+        },
+        scope
+      )
+    }
 
     for (const { mxStatuses, handler } of HANDLERS) {
       if (mxStatuses.includes(connectionStatus)) {
