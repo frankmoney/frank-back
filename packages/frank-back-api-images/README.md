@@ -4,7 +4,7 @@ image processing server
 
 #### Scripts
 
-`yarn start` - starts the server
+- `yarn start` - starts the server
 
 #### Environment Variables
 
