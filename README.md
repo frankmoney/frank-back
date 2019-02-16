@@ -1,23 +1,16 @@
-## frank-api-gql
+#### packages
 
-#### Scripts
-- `yarn start` - starts the server (runs `gen schema` first)
-- `yarn deploy prisma` - deploys data model to prisma server (::= `prisma deploy` with proper env)
-- `yarn gen prisma` - generates schema and types for prisma server
-- `yarn gen schema` - generates schema file from source tree
-- `yarn lint` - runs linters
-- `yarn lint-fix` - runs linters in write mode
-- `yarn prettier` - runs prettier with `--list-different` flag
-- `yarn prettier-fix` - runs prettier with `--write` flag
+- [frank-back-api-gql](packages/frank-back-api-gql)  
+GraphQL backend server
 
-#### Git hooks
-- `pre-commit` - via `lint-staged` 1) runs prettier with `--write-flag` 2) runs `tslint` 3) runs `gen schema` 4) runs `git add` (to add prettier-formatted files)
+- [frank-back-api-images](packages/frank-back-api-images)  
+image processing server
 
-#### Dev flow
-- pull latest
-- make changes to `prisma/datamodel.graphql`
-- run `prisma deploy` to update shared prisma instance
-- run `yarn gen prisma` to update `app/generated/prisma.*` files
-- make changes in `app/graphql` schema and/or resolvers
-- run `yarn gen schema` to update `app/generated/schema.graphql`
-- run/commit/push changes to repo
+- [frank-back-auth-proxy](packages/frank-back-auth-proxy)  
+authentication and router for other backend services
+
+- [frank-back-import](packages/frank-back-import)  
+imports user data from MX
+
+- [frank-mail](packages/frank-mail)  
+mail templates
