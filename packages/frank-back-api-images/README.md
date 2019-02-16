@@ -4,7 +4,7 @@ image processing server
 
 #### Scripts
 
-`node .` - starts the server
+`yarn start` - starts the server
 
 #### Environment Variables
 
