@@ -30,7 +30,7 @@ const putAllSourcesInQueue = async () => {
 
 new CronJob(CRON, putAllSourcesInQueue, null, true, 'UTC')
 
-new CronJob('0 11 * * *', clearMxUsers, null, true, 'UTC')
+// new CronJob('0 11 * * *', clearMxUsers, null, true, 'UTC')
 
 app.post('/import', bodyParser.json(), function(req, res) {
 
