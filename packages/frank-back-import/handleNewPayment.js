@@ -80,7 +80,7 @@ export default (
 
     if (similarPayment) {
 
-      log.trace(`cascade[${i}] found similar payment`)
+      log.trace(`cascade[${cascade.indexOf(matcher)}] found similar payment`)
 
       break
     }
