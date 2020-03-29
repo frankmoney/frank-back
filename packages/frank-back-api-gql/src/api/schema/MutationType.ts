@@ -825,7 +825,7 @@ const MutationType = Type('Mutation', type =>
             throw notFoundError()
           }
 
-          const payments = args.paymentPids
+          const payments = (args.paymentPids && args.paymentPids.length > 0)
             ? await listPayments(
                 {
                   where: {
