@@ -1073,7 +1073,7 @@ const MutationType = Type('Mutation', type =>
             throw notFoundError()
           }
 
-          const payments = update.paymentPids
+          const payments = (update.paymentPids && update.paymentPids.length > 0)
             ? await listPayments(
                 {
                   where: {
@@ -1089,7 +1089,7 @@ const MutationType = Type('Mutation', type =>
                 },
                 scope
               )
-            : undefined
+            : []
 
           const dalUpdate: UpdateStoryArgs['update'] = {
             title: isNil(update.title) ? undefined : update.title || null,
