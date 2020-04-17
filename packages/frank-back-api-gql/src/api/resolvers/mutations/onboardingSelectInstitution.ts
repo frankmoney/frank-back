@@ -1,4 +1,5 @@
 import humps from 'humps'
+import hcb from './../../hcb'
 import createMutations from 'utils/createMutations'
 import createOnboarding from 'api/dal/Onboarding/createOnboarding'
 import getOnboardingByUserId from 'api/dal/Onboarding/getOnboardingByUserId'
@@ -23,16 +24,28 @@ const onboardingSelectInstitution = createPrivateResolver(
       return throwArgumentError()
     }
 
-    const { credentials } = await scope.mx.listCredentials({ institutionCode })
+    let institution = null
+    let credentials = null
 
-    if (!credentials) {
-      throw new Error("mx.listCredentials didn't return credentials")
-    }
+    if (hcb.isHcbCode(institutionCode)) {
 
-    const { institution } = await scope.mx.readInstitution({ institutionCode })
+      credentials = hcb.credentials
+      institution = hcb.institution
 
-    if (!institution) {
-      throw new Error("mx.readInstitution didn't return institution")
+    } else {
+
+      credentials = (await scope.mx.listCredentials({ institutionCode })).credentials
+
+      if (!credentials) {
+        throw new Error("mx.listCredentials didn't return credentials")
+      }
+
+      institution = (await scope.mx.readInstitution({ institutionCode })).institution
+
+      if (!institution) {
+        throw new Error("mx.readInstitution didn't return institution")
+      }
+
     }
 
     return mapOnboarding(
