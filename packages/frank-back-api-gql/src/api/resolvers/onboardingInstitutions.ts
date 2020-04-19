@@ -12,7 +12,8 @@ export default createPrivateResolver(
     }
 
     if (name && name.length > 0 && hcb.isMatchSearch(name)) {
-    	institutions.push(hcb.institution)
+      
+    	institutions.unshift(hcb.institution)
     }
 
     return humps.camelizeKeys(institutions)

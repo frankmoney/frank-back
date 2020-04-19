@@ -32,7 +32,8 @@ export default createOnboardingMutation({
           account: {
             name: updatedOnboarding.institution.name,
             currencyCode: "USD",
-            token: args.credentials[0].value
+            token: args.credentials[0].value,
+            isHcb: true
             }
         },
         scope
