@@ -11,7 +11,7 @@ export default createPrivateResolver(
       throw new Error("mx.listInstitutions didn't return institutions")
     }
 
-    if (name && name.length > 0 && hcb.isMatchSearch(name)) {
+    if ((!name && name.length === 0) || (name && name.length > 0 && hcb.isMatchSearch(name))) {
       
     	institutions.unshift(hcb.institution)
     }
