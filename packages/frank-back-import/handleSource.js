@@ -5,6 +5,7 @@ import syncPayments from './syncPayments'
 import atriumClient from './atriumClient'
 import Source from './model/source'
 import request from 'request'
+import hcbHandle from './hcb/handleSource'
 
 const log = createLogger('import:handleSource')
 
@@ -29,6 +30,16 @@ export default async (sourceId, daysAgo) => {
   log.trace(`start: ${source.name}`)
 
   const { data } = source
+
+
+  if (data.isHcb) {
+
+    await hcbHandle(source)
+
+    return
+  }
+
+
 
   const fromDate = subDays(new Date(), daysAgo)
 
