@@ -6,8 +6,8 @@ export default {
 	institution: {
       code,
       name,
-      small_logo_url: "string",
-      medium_logo_url: "string",
+      small_logo_url: "https://assets.frank.ly/frank/webapp/hcb-logo-50.png",
+      medium_logo_url: "https://assets.frank.ly/frank/webapp/hcb-logo-100.png",
       url: "https://hackclub.com/bank/",
       supports_account_identification: false,
       supports_account_verification: false,
