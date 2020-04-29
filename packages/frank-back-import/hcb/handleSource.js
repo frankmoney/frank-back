@@ -57,9 +57,12 @@ export default async (source) => {
       throw new Error(`HCB response 'balance' undefined`)
     }
 
-    if (data.balance !== body.balance) {
+    const balance = body.balance / 100
+
+    if (data.balance !== balance) {
           
-      data.balance = body.balance
+      data.balance = balance
+      data.lastUpdateDate = (new Date()).toISOString()
 
       await source.update({data})
     }

@@ -34,6 +34,8 @@ const secondMatcher = (paymentData, payments) => {
 
 export default (paymentData, filledPayments, importUserId) => {
 
+	paymentData.amount = paymentData.amount/100
+
 	const {amount, created_at, memo} = paymentData	
 
 	paymentData.originalDescription = memo
