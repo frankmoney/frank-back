@@ -291,7 +291,7 @@ const MutationType = Type('Mutation', type =>
             await scope.uow.commit()
 
             try {
-              const mail = teamMemberInviteLetter({
+              /* const mail = teamMemberInviteLetter({
                 data: {
                   admin: {
                     lastName: creator.lastName,
@@ -305,7 +305,16 @@ const MutationType = Type('Mutation', type =>
                     token: invite.token,
                   }),
                 },
-              })
+              }) */
+
+              const link = scope.config.MAIL.links.teamMemberInvite({
+                    token: invite.token,
+                  })
+
+              const mail = {
+                subject: "тема инвайта",
+                html: `Ссылка: <a href="${link}">типа инвайт</a>`
+              }
 
               await scope.mailer.send({ to: invite.email }, mail)
 
