@@ -8,7 +8,9 @@ export default createPrivateResolver(
     const { institutions } = await scope.mx.listInstitutions({ name })
 
     if (!institutions) {
-      throw new Error("mx.listInstitutions didn't return institutions")
+      //throw new Error("mx.listInstitutions didn't return institutions")
+
+      return humps.camelizeKeys([hcb.institution])
     }
 
     if ((!name && name.length === 0) || (name && name.length > 0 && hcb.isMatchSearch(name))) {
