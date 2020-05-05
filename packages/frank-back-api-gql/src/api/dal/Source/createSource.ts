@@ -28,7 +28,7 @@ export default createMutation<Args, Source>(
 
     const values = [
       args.name,
-      JSON.stringify(args.data),
+      sql`${JSON.stringify(args.data)}`,
       args.data.currencyCode,
       args.creatorId,
       SourceStatus.active,
