@@ -28,7 +28,7 @@ export default createMutation<Args, Source>(
 
     const values = [
       args.name,
-      JSON.stringify(args.data).replace(/'/g, "\\'"),
+      JSON.stringify(args.data).replace(/'/g, "''"),
       args.data.currencyCode,
       args.creatorId,
       SourceStatus.active,
