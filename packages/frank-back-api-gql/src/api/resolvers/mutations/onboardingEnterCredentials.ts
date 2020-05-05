@@ -30,6 +30,7 @@ export default createOnboardingMutation({
       const account = {
         name: updatedOnboarding.institution.name,
         currencyCode: "USD",
+        guid: `hcb_account_guid_${token}`,
         isHcb: true,
         token
       }
