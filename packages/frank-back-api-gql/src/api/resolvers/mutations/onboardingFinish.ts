@@ -33,13 +33,15 @@ const onboardingFinish = createPrivateResolver(
     const name =
       existingOnboarding.account.frankTitle || existingOnboarding.account.name
 
+    const description = existingOnboarding.account.frankDescription && existingOnboarding.account.frankDescription.replace(/'/g, "''")
+
     const team = await getTeamByUserId({ userId: scope.user.id }, scope)
 
     const account = await createAccount(
       {
         teamId: team.id,
-        name,
-        description: existingOnboarding.account.frankDescription,
+        name: name.replace(/'/g, "''"),
+        description,
         currencyCode: existingOnboarding.account.currencyCode,
         creatorId: scope.user.id,
       },
