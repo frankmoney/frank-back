@@ -1,5 +1,5 @@
 const code = "HCB"
-const name = "HackClub Bank"
+const name = "Hack Club Bank"
 
 export default {
 	

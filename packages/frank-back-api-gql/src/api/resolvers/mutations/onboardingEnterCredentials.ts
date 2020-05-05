@@ -25,16 +25,21 @@ export default createOnboardingMutation({
 
     if (updatedOnboarding.institution.isHcb) {
 
+      const token = args.credentials[0].value
+
+      const account = {
+        name: updatedOnboarding.institution.name,
+        currencyCode: "USD",
+        isHcb: true,
+        token
+      }
+
       updatedOnboarding = await updateOnboardingByPid(
         {
           pid: updatedOnboarding.pid,
           step: ACCOUNT_STEP,
-          account: {
-            name: updatedOnboarding.institution.name,
-            currencyCode: "USD",
-            token: args.credentials[0].value,
-            isHcb: true
-            }
+          accounts: [account],
+          account
         },
         scope
       )
