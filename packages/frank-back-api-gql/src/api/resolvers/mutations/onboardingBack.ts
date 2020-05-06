@@ -45,7 +45,7 @@ const onboardingBack = createPrivateResolver(
         newStep = ACCOUNT_STEP
         break
       case ACCOUNT_STEP:
-        newStep = ACCOUNTS_STEP
+        newStep = existingOnboarding.institution.isHcb ? CREDENTIALS_STEP : ACCOUNTS_STEP
         break
       case ACCOUNTS_STEP:
       case MFA_STEP:
