@@ -39,6 +39,7 @@ const handleImportFailedHook = async (
     if (updatedSourceId) {
       await scope.uow.commit()
 
+/*
       const account = await getSource(
         { where: { id: { eq: updatedSourceId } } },
         scope
@@ -81,7 +82,7 @@ const handleImportFailedHook = async (
           await scope.mailer.send({ to: user.email }, mail)
         })
       )
-
+*/
       ctx.response.status = 200
       ctx.response.body = { code: 'ok' }
     } else {

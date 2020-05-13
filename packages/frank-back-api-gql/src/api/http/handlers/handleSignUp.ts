@@ -198,6 +198,8 @@ const handleSignUp = async (
 
       await scope.uow.commit()
 
+/*
+
       try {
         const mail = userCreationConfirmationMail({
           data: {
@@ -220,6 +222,8 @@ const handleSignUp = async (
           `Failed to send user creation confirmation mail to "${email}"`
         )
       }
+
+*/
 
       ctx.response.status = 201
       ctx.response.set('X-Authenticated-User-Id', userId.toString())
