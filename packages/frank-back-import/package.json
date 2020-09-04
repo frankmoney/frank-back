@@ -22,7 +22,7 @@
     "pg-hstore": "^2.3.2",
     "ramda": "^0.25.0",
     "request": "^2.88.0",
-    "sequelize": "^4.41.0"
+    "sequelize": "^5.15.1"
   },
   "devDependencies": {
     "babel-register": "^6.26.0",
